@@ -14,23 +14,26 @@ datasource db {
 }
 
 model Archive {
-  id           String    @id
-  created_at   DateTime  @default(now()) @db.Timestamp(6)
-  updated_at   DateTime? @updatedAt @db.Timestamp(6)
-  title        String?   @db.VarChar(255)
-  info         String?   @db.VarChar(255)
-  url          String?   @db.VarChar(255)
-  address      String?   @db.VarChar(255)
-  phone_number String?   @db.VarChar(50)
-  email        String?   @db.VarChar(255)
-  logo_url     String?   @db.VarChar(255)
+  id           String        @id
+  created_at   DateTime      @default(now()) @db.Timestamp(6)
+  updated_at   DateTime?     @updatedAt @db.Timestamp(6)
+  title        String?       @db.VarChar(255)
+  info         String?       @db.VarChar(255)
+  url          String?       @db.VarChar(255)
+  address      String?       @db.VarChar(255)
+  phone_number String?       @db.VarChar(50)
+  email        String?       @db.VarChar(255)
+  logo_url     String?       @db.VarChar(255)
   funds        Fund[]
+  Description  Description[]
+  Case         Case[]
+  Match        Match[]
 
   @@map("archives")
 }
 
 model Fund {
-  id           String        @id
+  id           String
   created_at   DateTime      @default(now()) @db.Timestamp(6)
   updated_at   DateTime?     @updatedAt @db.Timestamp(6)
   title        String?       @db.VarChar(255)
@@ -39,34 +42,44 @@ model Fund {
   archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   descriptions Description[]
   matches      Match[]
+  Case         Case[]
 
+  @@id([id, archive_id])
   @@map("funds")
 }
 
 model Description {
-  id         String    @id
+  id         String
   created_at DateTime  @default(now()) @db.Timestamp(6)
   updated_at DateTime? @updatedAt @db.Timestamp(6)
   title      String?   @db.VarChar(255)
   info       String?   @db.VarChar(255)
+  archive_id String    @db.VarChar(50)
+  archive    Archive   @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   fund_id    String    @db.VarChar(50)
-  fund       Fund      @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fund       Fund      @relation(fields: [fund_id, archive_id], references: [id, archive_id], onDelete: NoAction, onUpdate: NoAction)
   cases      Case[]
   matches    Match[]
 
+  @@id([id, archive_id, fund_id])
   @@map("descriptions")
 }
 
 model Case {
-  id             String      @id
+  id             String
   created_at     DateTime    @default(now()) @db.Timestamp(6)
   updated_at     DateTime?   @updatedAt @db.Timestamp(6)
   title          String?     @db.VarChar(255)
   info           String?     @db.VarChar(255)
+  archive_id     String      @db.VarChar(50)
+  archive        Archive     @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fund_id        String      @db.VarChar(50)
+  fund           Fund        @relation(fields: [fund_id, archive_id], references: [id, archive_id], onDelete: NoAction, onUpdate: NoAction)
   description_id String      @db.VarChar(50)
-  description    Description @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  description    Description @relation(fields: [description_id, archive_id, fund_id], references: [id, archive_id, fund_id], onDelete: NoAction, onUpdate: NoAction)
   matches        Match[]
 
+  @@id([id, archive_id, fund_id, description_id])
   @@map("cases")
 }
 
@@ -94,12 +107,14 @@ model Match {
   resource       Resource     @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   api_criteria   String       @db.VarChar(255)
   api_url        String       @db.VarChar(255)
+  archive_id     String       @db.VarChar(50)
+  archive        Archive      @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   fund_id        String?      @db.VarChar(50)
-  fund           Fund?        @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fund           Fund?        @relation(fields: [fund_id, archive_id], references: [id, archive_id], onDelete: NoAction, onUpdate: NoAction)
   description_id String?      @db.VarChar(50)
-  description    Description? @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  description    Description? @relation(fields: [description_id, archive_id, fund_id], references: [id, archive_id, fund_id], onDelete: NoAction, onUpdate: NoAction)
   case_id        String?      @db.VarChar(50)
-  case           Case?        @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  case           Case?        @relation(fields: [case_id, archive_id, fund_id, description_id], references: [id, archive_id, fund_id, description_id], onDelete: NoAction, onUpdate: NoAction)
   results        Result[]
 
   @@map("matches")
