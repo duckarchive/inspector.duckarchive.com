@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "archives" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "code" VARCHAR(10) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
@@ -17,46 +17,46 @@ CREATE TABLE "archives" (
 
 -- CreateTable
 CREATE TABLE "funds" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "code" VARCHAR(10) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
     "title" VARCHAR(255),
     "info" VARCHAR(255),
-    "archive_id" VARCHAR(50) NOT NULL,
+    "archive_id" UUID NOT NULL,
 
     CONSTRAINT "funds_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "descriptions" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "code" VARCHAR(10) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
     "title" VARCHAR(255),
     "info" VARCHAR(255),
-    "fund_id" VARCHAR(50) NOT NULL,
+    "fund_id" UUID NOT NULL,
 
     CONSTRAINT "descriptions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "cases" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "code" VARCHAR(20) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
     "title" VARCHAR(255),
     "info" VARCHAR(255),
-    "description_id" VARCHAR(50) NOT NULL,
+    "description_id" UUID NOT NULL,
 
     CONSTRAINT "cases_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "resources" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
     "code" VARCHAR(50) NOT NULL,
@@ -70,17 +70,18 @@ CREATE TABLE "resources" (
 
 -- CreateTable
 CREATE TABLE "matches" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
-    "url" VARCHAR(255),
-    "resource_id" VARCHAR(50) NOT NULL,
-    "api_criteria" VARCHAR(255) NOT NULL,
-    "api_type" VARCHAR(20) NOT NULL,
-    "archive_id" VARCHAR(50),
-    "fund_id" VARCHAR(50),
-    "description_id" VARCHAR(50),
-    "case_id" VARCHAR(50),
+    "resource_id" UUID NOT NULL,
+    "api_url" VARCHAR(255) NOT NULL,
+    "api_method" VARCHAR(10),
+    "api_headers" VARCHAR(255),
+    "api_params" VARCHAR(255),
+    "archive_id" UUID,
+    "fund_id" UUID,
+    "description_id" UUID,
+    "case_id" UUID,
 
     CONSTRAINT "matches_pkey" PRIMARY KEY ("id")
 );
@@ -89,7 +90,7 @@ CREATE TABLE "matches" (
 CREATE TABLE "results" (
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
-    "match_id" VARCHAR(50) NOT NULL,
+    "match_id" UUID NOT NULL,
     "count" INTEGER NOT NULL,
     "error" TEXT,
 

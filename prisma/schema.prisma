@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Archive {
-  id           String    @id @default(uuid())
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   code         String    @db.VarChar(10)
   created_at   DateTime  @default(now()) @db.Timestamp(6)
   updated_at   DateTime? @updatedAt @db.Timestamp(6)
@@ -32,13 +32,13 @@ model Archive {
 }
 
 model Fund {
-  id           String        @id @default(uuid())
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   code         String        @db.VarChar(10)
   created_at   DateTime      @default(now()) @db.Timestamp(6)
   updated_at   DateTime?     @updatedAt @db.Timestamp(6)
   title        String?       @db.VarChar(255)
   info         String?       @db.VarChar(255)
-  archive_id   String        @db.VarChar(50)
+  archive_id   String        @db.Uuid
   archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   descriptions Description[]
   matches      Match[]
@@ -48,13 +48,13 @@ model Fund {
 }
 
 model Description {
-  id         String    @id @default(uuid())
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   code       String    @db.VarChar(10)
   created_at DateTime  @default(now()) @db.Timestamp(6)
   updated_at DateTime? @updatedAt @db.Timestamp(6)
   title      String?   @db.VarChar(255)
   info       String?   @db.VarChar(255)
-  fund_id    String    @db.VarChar(50)
+  fund_id    String    @db.Uuid
   fund       Fund      @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   cases      Case[]
   matches    Match[]
@@ -64,13 +64,13 @@ model Description {
 }
 
 model Case {
-  id             String      @id @default(uuid())
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   code           String      @db.VarChar(20)
   created_at     DateTime    @default(now()) @db.Timestamp(6)
   updated_at     DateTime?   @updatedAt @db.Timestamp(6)
   title          String?     @db.VarChar(255)
   info           String?     @db.VarChar(255)
-  description_id String      @db.VarChar(50)
+  description_id String      @db.Uuid
   description    Description @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   matches        Match[]
 
@@ -79,7 +79,7 @@ model Case {
 }
 
 model Resource {
-  id         String    @id @default(uuid())
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   created_at DateTime  @default(now()) @db.Timestamp(6)
   updated_at DateTime? @updatedAt @db.Timestamp(6)
   code       String    @db.VarChar(50)
@@ -93,21 +93,22 @@ model Resource {
 }
 
 model Match {
-  id             String       @id @default(uuid())
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   created_at     DateTime     @default(now()) @db.Timestamp(6)
   updated_at     DateTime?    @updatedAt @db.Timestamp(6)
-  url            String?      @db.VarChar(255)
-  resource_id    String       @db.VarChar(50)
+  resource_id    String       @db.Uuid
   resource       Resource     @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  api_criteria   String       @db.VarChar(255)
-  api_type       String       @db.VarChar(20)
-  archive_id     String?      @db.VarChar(50)
+  api_url        String       @db.VarChar(255)
+  api_method     String?      @db.VarChar(10)
+  api_headers    String?      @db.VarChar(255)
+  api_params     String?      @db.VarChar(255)
+  archive_id     String?      @db.Uuid
   archive        Archive?     @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  fund_id        String?      @db.VarChar(50)
+  fund_id        String?      @db.Uuid
   fund           Fund?        @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  description_id String?      @db.VarChar(50)
+  description_id String?      @db.Uuid
   description    Description? @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  case_id        String?      @db.VarChar(50)
+  case_id        String?      @db.Uuid
   case           Case?        @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   results        Result[]
 
@@ -117,7 +118,7 @@ model Match {
 model Result {
   created_at DateTime  @default(now()) @db.Timestamp(6)
   updated_at DateTime? @updatedAt @db.Timestamp(6)
-  match_id   String    @db.VarChar(50)
+  match_id   String    @db.Uuid
   match      Match     @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   count      Int
   error      String?
