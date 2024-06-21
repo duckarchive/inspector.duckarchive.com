@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Archive {
+  id           String    @id
+  created_at   DateTime  @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @updatedAt @db.Timestamp(6)
+  title        String?   @db.VarChar(255)
+  info         String?   @db.VarChar(255)
+  url          String?   @db.VarChar(255)
+  address      String?   @db.VarChar(255)
+  phone_number String?   @db.VarChar(50)
+  email        String?   @db.VarChar(255)
+  logo_url     String?   @db.VarChar(255)
+  funds        Fund[]
+
+  @@map("archives")
+}
+
+model Fund {
+  id           String        @id
+  created_at   DateTime      @default(now()) @db.Timestamp(6)
+  updated_at   DateTime?     @updatedAt @db.Timestamp(6)
+  title        String?       @db.VarChar(255)
+  info         String?       @db.VarChar(255)
+  archive_id   String        @db.VarChar(50)
+  archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  descriptions Description[]
+  matches      Match[]
+
+  @@map("funds")
+}
+
+model Description {
+  id         String    @id
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @updatedAt @db.Timestamp(6)
+  title      String?   @db.VarChar(255)
+  info       String?   @db.VarChar(255)
+  fund_id    String    @db.VarChar(50)
+  fund       Fund      @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cases      Case[]
+  matches    Match[]
+
+  @@map("descriptions")
+}
+
+model Case {
+  id             String      @id
+  created_at     DateTime    @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?   @updatedAt @db.Timestamp(6)
+  title          String?     @db.VarChar(255)
+  info           String?     @db.VarChar(255)
+  description_id String      @db.VarChar(50)
+  description    Description @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  matches        Match[]
+
+  @@map("cases")
+}
+
+model Resource {
+  id         String    @id @default(uuid())
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @updatedAt @db.Timestamp(6)
+  code       String    @db.VarChar(50)
+  title      String?   @db.VarChar(255)
+  info       String?   @db.VarChar(255)
+  url        String?   @db.VarChar(255)
+  logo_url   String?   @db.VarChar(255)
+  table_name String    @db.VarChar(50)
+  matches    Match[]
+
+  @@map("resources")
+}
+
+model Match {
+  id             String       @id @default(uuid())
+  created_at     DateTime     @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?    @updatedAt @db.Timestamp(6)
+  url            String?      @db.VarChar(255)
+  resource_id    String       @db.VarChar(50)
+  resource       Resource     @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  api_criteria   String       @db.VarChar(255)
+  api_url        String       @db.VarChar(255)
+  fund_id        String?      @db.VarChar(50)
+  fund           Fund?        @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  description_id String?      @db.VarChar(50)
+  description    Description? @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  case_id        String?      @db.VarChar(50)
+  case           Case?        @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  results        Result[]
+
+  @@map("matches")
+}
+
+model Result {
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @updatedAt @db.Timestamp(6)
+  match_id   String    @db.VarChar(50)
+  match      Match     @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  count      Int
+  error      String?
+
+  @@id([match_id, created_at])
+  @@map("results")
+}
