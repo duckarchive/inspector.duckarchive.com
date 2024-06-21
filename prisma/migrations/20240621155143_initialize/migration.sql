@@ -76,7 +76,7 @@ CREATE TABLE "matches" (
     "url" VARCHAR(255),
     "resource_id" VARCHAR(50) NOT NULL,
     "api_criteria" VARCHAR(255) NOT NULL,
-    "api_url" VARCHAR(255) NOT NULL,
+    "api_type" VARCHAR(20) NOT NULL,
     "archive_id" VARCHAR(50),
     "fund_id" VARCHAR(50),
     "description_id" VARCHAR(50),

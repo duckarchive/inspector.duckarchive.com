@@ -100,7 +100,7 @@ model Match {
   resource_id    String       @db.VarChar(50)
   resource       Resource     @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   api_criteria   String       @db.VarChar(255)
-  api_url        String       @db.VarChar(255)
+  api_type       String       @db.VarChar(20)
   archive_id     String?      @db.VarChar(50)
   archive        Archive?     @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   fund_id        String?      @db.VarChar(50)
