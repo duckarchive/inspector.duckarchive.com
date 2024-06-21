@@ -25,7 +25,7 @@ export default async function handler(
             "ac4d6a76-4cdc-4382-ba7d-aeb42e9ef737",
             "b73cfbed-3dde-439f-9f7b-acb0e4b31b70",
             "4dca72d1-7be6-40d0-b1ae-9d51d1e976fe",
-          ]
+          ],
         },
         archive_id: {
           not: null,
@@ -37,36 +37,44 @@ export default async function handler(
     });
 
     const archivesWithTotals = await Promise.all(
-      archiumMatches.map(async ({ archive, api_url, api_method, api_headers, api_params }) => {
-        if (!archive) {
-          throw new Error("Archive not found");
+      archiumMatches.map(
+        async ({ archive, api_url, api_method, api_headers, api_params }) => {
+          if (!archive) {
+            throw new Error("Archive not found");
+          }
+          try {
+            const {
+              data: { View },
+            } = await axios.request({
+              url: api_url,
+              method: api_method || "GET",
+              headers: parseDBParams(api_headers),
+              params: parseDBParams(api_params),
+            });
+
+            const root = parse(View);
+
+            const totalCases = [
+              ...root.querySelectorAll("div.single-data > p > a > span"),
+            ]
+              .map((el) => el.innerText)
+              .map((el) => +el.split(" справ")[0].split(", ")[1])
+              .filter(Boolean)
+              .reduce((prev, el) => (prev += el), 0);
+
+            return {
+              ...archive,
+              total: totalCases,
+            };
+          } catch (error) {
+            console.error(error);
+            return {
+              ...archive,
+              total: 0,
+            };
+          }
         }
-        const {
-          data: { View }
-        } = await axios.request({
-          url: api_url,
-          method: api_method || "GET",
-          headers: parseDBParams(api_headers),
-          params: parseDBParams(api_params),
-        });
-
-        const root = parse(View);
-
-        const totalCases = [
-          ...root.querySelectorAll(
-            "div.single-data > p > a > span"
-          ),
-        ]
-          .map((el) => el.innerText)
-          .map((el) => +el.split(" справ")[0].split(", ")[1])
-          .filter(Boolean)
-          .reduce((prev, el) => (prev += el), 0);
-
-        return {
-          ...archive,
-          total: totalCases,
-        };
-      })
+      )
     );
 
     res.json(archivesWithTotals);
