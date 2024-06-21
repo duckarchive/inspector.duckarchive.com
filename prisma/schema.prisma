@@ -25,9 +25,9 @@ model Archive {
   email        String?       @db.VarChar(255)
   logo_url     String?       @db.VarChar(255)
   funds        Fund[]
-  Description  Description[]
-  Case         Case[]
-  Match        Match[]
+  description  Description[]
+  cases        Case[]
+  matches      Match[]
 
   @@map("archives")
 }
@@ -42,7 +42,7 @@ model Fund {
   archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   descriptions Description[]
   matches      Match[]
-  Case         Case[]
+  cases        Case[]
 
   @@id([id, archive_id])
   @@map("funds")
