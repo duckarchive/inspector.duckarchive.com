@@ -17,9 +17,11 @@ const ARCHIUM_RESOURCES = [
 ];
 
 interface SyncArchiumResponse {
+  created_at: Date;
   match_id: string;
   total: number;
   diff: number;
+  error?: string;
 }
 
 const prisma = new PrismaClient();
@@ -76,7 +78,7 @@ export default async function handler(
               },
             });
 
-            await prisma.result.create({
+            const { created_at } = await prisma.result.create({
               data: {
                 match_id: id,
                 count: totalCases,
@@ -86,6 +88,7 @@ export default async function handler(
 
             if (prevResult) {
               return {
+                created_at,
                 match_id: id,
                 total: totalCases,
                 diff: totalCases - prevResult.count,
@@ -94,16 +97,28 @@ export default async function handler(
             }
 
             return {
+              created_at,
               match_id: id,
               total: totalCases,
               diff: 0,
             };
           } catch (error: any) {
             console.error(error);
+
+            const { created_at } = await prisma.result.create({
+              data: {
+                match_id: id,
+                count: 0,
+                error: error.message,
+              },
+            });
+
             return {
+              created_at,
               match_id: id,
               total: 0,
               diff: 0,
+              error: error.message,
             };
           }
         }
