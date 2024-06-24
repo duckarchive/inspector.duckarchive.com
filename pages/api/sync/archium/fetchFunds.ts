@@ -1,0 +1,182 @@
+import { PrismaClient } from "@prisma/client";
+import axios from "axios";
+import { parseDBParams } from "../../helpers";
+import { parse } from "node-html-parser";
+import { NextApiRequest, NextApiResponse } from "next";
+
+const DOM_QUERY = "table.fond-groups > tbody > tr";
+
+const prisma = new PrismaClient();
+
+export const fetchFunds = async (
+  resourceId: string
+): Promise<FetchArchiumResponse> => {
+  const match = await prisma.fetch.findFirst({
+    where: {
+      resource_id: resourceId,
+      archive_id: {
+        not: null,
+      },
+      fund_id: null,
+      description_id: null,
+      case_id: null,
+    },
+  });
+
+  if (!match || !match.archive_id) {
+    throw new Error("Fetch not found");
+  }
+
+  const { api_headers, api_method, api_params, api_url } = match;
+
+  const {
+    data: { View },
+  } = await axios.request({
+    url: api_url,
+    method: api_method || "GET",
+    headers: parseDBParams(api_headers),
+    params: parseDBParams(api_params),
+  });
+
+  const dom = parse(View);
+  // https://archium.cdiak.archives.gov.ua/fonds/1/
+  const BASE_URL = match.api_url.split("/api")[0];
+  const funds = [...dom.querySelectorAll(DOM_QUERY)]
+    .filter(Boolean)
+    .map((el) => el.querySelectorAll("td"))
+    .map(([code, title]) => ({
+      code: code.innerText.trim(),
+      title: title.innerText.trim(),
+      matchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
+    }));
+
+  const prevFonds = await prisma.fund.findMany({
+    where: {
+      archive_id: match.archive_id,
+    },
+  });
+
+  const newFunds = funds.filter(
+    (f) => !prevFonds.some((pf) => pf.code === f.code)
+  );
+
+  await Promise.all(
+    newFunds.map(async (f) => {
+      if (match.archive_id) {
+        const newFund = await prisma.fund.create({
+          data: {
+            archive_id: match.archive_id,
+            code: f.code,
+            title: f.title,
+          },
+        });
+
+        await prisma.match.create({
+          data: {
+            resource_id: resourceId,
+            archive_id: newFund.archive_id,
+            fund_id: newFund.id,
+            api_url: f.matchApiUrl,
+            api_headers: null,
+            api_params: "Limit:9999,Page:1",
+          },
+        });
+      }
+    })
+  );
+
+  const removedFunds = prevFonds.filter(
+    (pf) => !funds.some((f) => f.code === pf.code)
+  );
+
+  await Promise.all(
+    removedFunds.map(async (f) => {
+      await prisma.fund.delete({
+        where: {
+          id: f.id,
+        },
+      });
+
+      await prisma.match.deleteMany({
+        where: {
+          fund_id: f.code,
+        },
+      });
+    })
+  );
+
+
+  return {
+    created_at: new Date(),
+    match_id: match.id,
+    total: funds.length,
+    added: newFunds.length,
+    removed: removedFunds.length,
+  };
+
+
+  // const { created_at } = await prisma.result.create({
+  //   data: {
+  //     match_id: match.id,
+  //     count,
+  //     error: null,
+  //   },
+  // });
+
+  // if (prevResult) {
+  //   const diff = count - prevResult.count;
+
+  //   if (diff) {
+  //     const fundMatches = await prisma.match.findMany({
+  //       where: {
+  //         resource_id: resourceId,
+  //         archive_id: match.archive_id,
+  //         fund_id: {
+  //           not: null,
+  //         },
+  //         description_id: null,
+  //         case_id: null,
+  //       },
+  //     });
+
+  //     const syncedFunds = await Promise.all(
+  //       fundMatches.map((f) => syncFund(f, count))
+  //     );
+
+  //     const calculatedDiff = syncedFunds.reduce(
+  //       (prev, el) => (prev += el.total),
+  //       0
+  //     );
+
+  //     if (calculatedDiff < count) {
+  //       console.log("New fund added for archive", match.archive_id);
+  //     }
+  //   }
+
+  //   return {
+  //     created_at,
+  //     match_id: match.id,
+  //     total: count,
+  //     diff,
+  //   };
+  // }
+
+  // return {
+  //   created_at,
+  //   match_id: match.id,
+  //   total: count,
+  //   diff: 0,
+  // };
+};
+
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const resourceId = req.query.id as string;
+
+  fetchFunds(resourceId)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).json({ error: error.message }));
+};
