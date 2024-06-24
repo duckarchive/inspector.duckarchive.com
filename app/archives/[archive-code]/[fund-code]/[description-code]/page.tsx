@@ -61,7 +61,7 @@ const DescriptionPage: NextPage = () => {
             <Th>Індекс</Th>
             <Th>Справа</Th>
             <Th textAlign="right">Справ онлайн</Th>
-            <Th textAlign="right">Остання зміна</Th>
+            <Th textAlign="right">Оновлено</Th>
           </Tr>
           {description?.cases.map((caseItem) => (
             <Tr key={caseItem.id} w="full">

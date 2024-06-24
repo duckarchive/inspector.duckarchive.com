@@ -58,7 +58,7 @@ const FundPage: NextPage = () => {
             <Th>Індекс</Th>
             <Th>Опис</Th>
             <Th textAlign="right">Справ онлайн</Th>
-            <Th textAlign="right">Остання зміна</Th>
+            <Th textAlign="right">Оновлено</Th>
           </Tr>
           {fund?.descriptions.map((description) => (
             <Tr key={description.id} w="full">

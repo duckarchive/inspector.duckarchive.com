@@ -30,7 +30,7 @@ const ArchivesPage: NextPage = () => {
             <Th>Індекс</Th>
             <Th>Назва</Th>
             <Th textAlign="right">Справ онлайн</Th>
-            <Th textAlign="right">Остання зміна</Th>
+            <Th textAlign="right">Оновлено</Th>
           </Tr>
           {archives.map((archive) => (
             <Tr key={archive.id} w="full">

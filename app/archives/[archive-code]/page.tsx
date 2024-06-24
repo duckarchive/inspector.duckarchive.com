@@ -48,7 +48,7 @@ const ArchivePage: NextPage = () => {
             <Th>Індекс</Th>
             <Th>Фонд</Th>
             <Th textAlign="right">Справ онлайн</Th>
-            <Th textAlign="right">Остання зміна</Th>
+            <Th textAlign="right">Оновлено</Th>
           </Tr>
           {archive?.funds.map((fund) => (
             <Tr key={fund.id} w="full">
