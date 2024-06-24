@@ -2,16 +2,19 @@
 
 import {
   Badge,
-  Container,
   Heading,
   ListItem,
-  UnorderedList,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Tr,
 } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
+import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toText } from "../../utils/text";
 
 const ArchivePage: NextPage = () => {
   const params = useParams();
@@ -20,24 +23,14 @@ const ArchivePage: NextPage = () => {
   const [archive, setArchive] = useState<
     Prisma.ArchiveGetPayload<{
       select: {
-        matches: {
+        id: true;
+        code: true;
+        title: true;
+        funds: {
           select: {
             id: true;
-            resource: {
-              select: { code: true; title: true };
-            };
-            archive: {
-              select: { code: true };
-            };
-            fund: {
-              select: { code: true };
-            };
-            description: {
-              select: { code: true };
-            };
-            case: {
-              select: { code: true };
-            };
+            code: true;
+            title: true;
           };
         };
       };
@@ -55,24 +48,31 @@ const ArchivePage: NextPage = () => {
 
   return (
     <>
-      <Heading fontSize="xl">
-        Ресурси де можна знайти архів {toText({ archive: code })}
+      <Heading as="h1" size="lg" mb="4">
+        {archive?.title}
       </Heading>
-      <UnorderedList>
-        {archive?.matches?.map((match) => (
-          <ListItem key={match.id} id={match.id}>
-            <Badge>{match.resource.title}</Badge>
-            {[
-              match.archive?.code,
-              match.fund?.code,
-              match.description?.code,
-              match.case?.code,
-            ]
-              .filter(Boolean)
-              .join(" / ")}
-          </ListItem>
-        ))}
-      </UnorderedList>
+      <Table bg="white">
+        <Tbody>
+          <Tr key="archives-table-header" w="full">
+            <Th>Індекс</Th>
+            <Th>Фонд</Th>
+            <Th textAlign="right">Справ онлайн</Th>
+            <Th textAlign="right">Остання зміна</Th>
+          </Tr>
+          {archive?.funds.map((fund) => (
+            <Tr key={fund.id} w="full">
+              <Td>{fund.code}</Td>
+              <Td>
+                <Link href={`/archives/${code}/${fund.code}`} color="blue.600">
+                  {fund.title}
+                </Link>
+              </Td>
+              <Td textAlign="right">566471</Td>
+              <Td textAlign="right">вчора</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </>
   );
 };

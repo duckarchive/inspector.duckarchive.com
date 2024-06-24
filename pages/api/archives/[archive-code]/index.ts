@@ -10,27 +10,25 @@ export default async function handler(
   const archiveCode = req.query["archive-code"] as string;
   // READ ONE DATA
   if (req.method === "GET") {
-    const match = await prisma.match.findFirst({
+    const archive = await prisma.archive.findFirst({
       where: {
-        archive: {
-          code: archiveCode,
-        },
+        code: archiveCode,
       },
       select: {
         id: true,
-        resource: {
+        code: true,
+        title: true,
+        funds: {
           select: {
+            id: true,
             code: true,
             title: true,
           },
         },
-        archive: {
-          select: { code: true },
-        },
       },
     });
-    if (match) {
-      res.json(match);
+    if (archive) {
+      res.json(archive);
     } else {
       res.status(404);
     }

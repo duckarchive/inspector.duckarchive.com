@@ -13,36 +13,27 @@ export default async function handler(
   const caseCode = req.query["case-code"] as string;
   // READ ONE DATA
   if (req.method === "GET") {
-    const match = await prisma.match.findFirst({
+    const caseItem = await prisma.case.findFirst({
       where: {
-        archive: {
-          code: archiveCode,
-        },
-        fund: {
-          code: fundCode,
-        },
         description: {
           code: descriptionCode,
+          fund: {
+            code: fundCode,
+            archive: {
+              code: archiveCode,
+            },
+          },
         },
-        case: {
-          code: caseCode,
-        },
+        code: caseCode,
       },
       select: {
         id: true,
-        resource: {
-          select: {
-            code: true,
-            title: true,
-          },
-        },
-        archive: {
-          select: { code: true },
-        },
+        code: true,
+        title: true,
       },
     });
-    if (match) {
-      res.json(match);
+    if (caseItem) {
+      res.json(caseItem);
     } else {
       res.status(404);
     }

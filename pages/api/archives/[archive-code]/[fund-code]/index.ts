@@ -11,30 +11,28 @@ export default async function handler(
   const fundCode = req.query["fund-code"] as string;
   // READ ONE DATA
   if (req.method === "GET") {
-    const match = await prisma.match.findFirst({
+    const fund = await prisma.fund.findFirst({
       where: {
         archive: {
           code: archiveCode,
         },
-        fund: {
-          code: fundCode,
-        }
+        code: fundCode,
       },
       select: {
         id: true,
-        resource: {
+        code: true,
+        title: true,
+        descriptions: {
           select: {
+            id: true,
             code: true,
             title: true,
           },
         },
-        archive: {
-          select: { code: true },
-        },
       },
     });
-    if (match) {
-      res.json(match);
+    if (fund) {
+      res.json(fund);
     } else {
       res.status(404);
     }

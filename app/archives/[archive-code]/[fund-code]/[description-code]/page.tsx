@@ -1,66 +1,84 @@
 "use client";
 
-import { Badge, Container, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Heading,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Tr,
+} from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
+import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toText } from "../../../../utils/text";
 
 const DescriptionPage: NextPage = () => {
   const params = useParams();
-  const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
+  const archiveCode = decodeURIComponent(
+    params?.["archive-code"].toString() || ""
+  );
   const fundCode = decodeURIComponent(params?.["fund-code"].toString() || "");
-  const code = decodeURIComponent(params?.["description-code"].toString() || "");
+  const code = decodeURIComponent(
+    params?.["description-code"].toString() || ""
+  );
 
-  const [archive, setArchive] = useState<
+  const [description, setDescription] = useState<
     Prisma.DescriptionGetPayload<{
       select: {
-        matches: {
+        id: true;
+        code: true;
+        title: true;
+        cases: {
           select: {
             id: true;
-            resource: {
-              select: { code: true; title: true };
-            };
-            archive: {
-              select: { code: true };
-            };
-            fund: {
-              select: { code: true };
-            };
-            description: {
-              select: { code: true };
-            };
-            case: {
-              select: { code: true };
-            }
-          }
-        }};
+            code: true;
+            title: true;
+          };
+        };
+      };
     }>
   >();
 
   useEffect(() => {
-    const fetchArchive = async () => {
+    const fetchDescription = async () => {
       const response = await fetch(`/api/archives/${archiveCode}/${fundCode}/${code}`);
       const data = await response.json();
-      setArchive(data);
+      setDescription(data);
     };
-    fetchArchive();
+    fetchDescription();
   }, [archiveCode, fundCode, code]);
 
-  return <>
-    <Heading fontSize="xl">
-      Ресурси де можна знайти опис {toText({ archive: archiveCode, fund: fundCode, description: code })}
-    </Heading>
-    <UnorderedList>
-      {archive?.matches?.map((match) => 
-        <ListItem key={match.id} id={match.id}>
-          <Badge>{match.resource.title}</Badge>
-          {[match.archive?.code, match.fund?.code, match.description?.code, match.case?.code].filter(Boolean).join(" / ")}
-        </ListItem>
-      )}
-    </UnorderedList>
-  </>;
+  return (
+    <>
+      <Heading as="h1" size="lg" mb="4">
+        {description?.title}
+      </Heading>
+      <Table bg="white">
+        <Tbody>
+          <Tr key="archives-table-header" w="full">
+            <Th>Індекс</Th>
+            <Th>Справа</Th>
+            <Th textAlign="right">Справ онлайн</Th>
+            <Th textAlign="right">Остання зміна</Th>
+          </Tr>
+          {description?.cases.map((caseItem) => (
+            <Tr key={caseItem.id} w="full">
+              <Td>{caseItem.code}</Td>
+              <Td>
+                <Link href={`/archives/${archiveCode}/${fundCode}/${code}/${caseItem.code}`} color="blue.600">
+                  {caseItem.title || `Справа ${caseItem.code}`}
+                </Link>
+              </Td>
+              <Td textAlign="right">566471</Td>
+              <Td textAlign="right">вчора</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </>
+  );
 };
 
 export default DescriptionPage;

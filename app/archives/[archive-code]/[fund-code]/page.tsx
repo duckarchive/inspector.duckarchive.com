@@ -1,65 +1,81 @@
 "use client";
 
-import { Badge, Container, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Heading,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Tr,
+} from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
+import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toText } from "../../../utils/text";
 
 const FundPage: NextPage = () => {
   const params = useParams();
-  const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
+  const archiveCode = decodeURIComponent(
+    params?.["archive-code"].toString() || ""
+  );
   const code = decodeURIComponent(params?.["fund-code"].toString() || "");
 
-  const [archive, setArchive] = useState<
+  const [fund, setFund] = useState<
     Prisma.FundGetPayload<{
       select: {
-        matches: {
+        id: true;
+        code: true;
+        title: true;
+        descriptions: {
           select: {
             id: true;
-            resource: {
-              select: { code: true; title: true };
-            };
-            archive: {
-              select: { code: true };
-            };
-            fund: {
-              select: { code: true };
-            };
-            description: {
-              select: { code: true };
-            };
-            case: {
-              select: { code: true };
-            }
-          }
-        }};
+            code: true;
+            title: true;
+          };
+        };
+      };
     }>
   >();
 
   useEffect(() => {
-    const fetchArchive = async () => {
+    const fetchFund = async () => {
       const response = await fetch(`/api/archives/${archiveCode}/${code}`);
       const data = await response.json();
-      setArchive(data);
+      setFund(data);
     };
-    fetchArchive();
+    fetchFund();
   }, [code, archiveCode]);
 
-  return <>
-    <Heading fontSize="xl">
-      Ресурси де можна знайти фонд {toText({ archive: archiveCode, fund: code })}
-    </Heading>
-    <UnorderedList>
-      {archive?.matches?.map((match) => 
-        <ListItem key={match.id} id={match.id}>
-          <Badge>{match.resource.title}</Badge>
-          {[match.archive?.code, match.fund?.code, match.description?.code, match.case?.code].filter(Boolean).join(" / ")}
-        </ListItem>
-      )}
-    </UnorderedList>
-  </>;
+  return (
+    <>
+      <Heading as="h1" size="lg" mb="4">
+        {fund?.title}
+      </Heading>
+      <Table bg="white">
+        <Tbody>
+          <Tr key="archives-table-header" w="full">
+            <Th>Індекс</Th>
+            <Th>Опис</Th>
+            <Th textAlign="right">Справ онлайн</Th>
+            <Th textAlign="right">Остання зміна</Th>
+          </Tr>
+          {fund?.descriptions.map((description) => (
+            <Tr key={description.id} w="full">
+              <Td>{description.code}</Td>
+              <Td>
+                <Link href={`/archives/${archiveCode}/${code}/${description.code}`} color="blue.600">
+                  {description.title || `Опис ${description.code}`}
+                </Link>
+              </Td>
+              <Td textAlign="right">566471</Td>
+              <Td textAlign="right">вчора</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </>
+  );
 };
 
 export default FundPage;

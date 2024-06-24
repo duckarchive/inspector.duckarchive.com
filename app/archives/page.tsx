@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Archive } from "@prisma/client";
-import { Table, Td, Th, Tr } from "@chakra-ui/react";
+import { Heading, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 
@@ -20,24 +20,33 @@ const ArchivesPage: NextPage = () => {
   }, []);
 
   return (
-    <Table bg="white">
-      <Tr key="archives-table-header" w="full">
-        <Th>Назва</Th>
-        <Th textAlign="right">Доступно онлайн</Th>
-        <Th textAlign="right">Остання зміна</Th>
-      </Tr>
-      {archives.map((archive) => (
-        <Tr key={archive.id} w="full">
-          <Td>
-            <Link href={`archives/${archive.code}`} color="blue.600">
-              {archive.title}
-            </Link>
-          </Td>
-          <Td textAlign="right">566471</Td>
-          <Td textAlign="right">вчора</Td>
-        </Tr>
-      ))}
-    </Table>
+    <>
+      <Heading as="h1" size="lg" mb="4">
+        Архіви
+      </Heading>
+      <Table bg="white">
+        <Tbody>
+          <Tr key="archives-table-header" w="full">
+            <Th>Індекс</Th>
+            <Th>Назва</Th>
+            <Th textAlign="right">Справ онлайн</Th>
+            <Th textAlign="right">Остання зміна</Th>
+          </Tr>
+          {archives.map((archive) => (
+            <Tr key={archive.id} w="full">
+              <Td>{archive.code}</Td>
+              <Td>
+                <Link href={`archives/${archive.code}`} color="blue.600">
+                  {archive.title}
+                </Link>
+              </Td>
+              <Td textAlign="right">566471</Td>
+              <Td textAlign="right">вчора</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </>
   );
 };
 
