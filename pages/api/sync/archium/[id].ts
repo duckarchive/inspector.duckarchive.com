@@ -3,14 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "node-html-parser";
 import axios, { Axios, AxiosRequestConfig } from "axios";
 import { parseDBParams } from "../../helpers";
-
-interface SyncArchiumResponse {
-  created_at: Date;
-  match_id: string;
-  total: number;
-  diff: number;
-  error?: string;
-}
+import { syncArchive } from "./syncArchive";
 
 const prisma = new PrismaClient();
 
@@ -71,41 +64,6 @@ const syncFromArchium = async (
     total: count,
     diff: 0,
   };
-};
-
-const syncArchive = async (resourceId: string): Promise<SyncArchiumResponse> => {
-  const archiveMatch = await prisma.match.findFirst({
-    where: {
-      resource_id: resourceId,
-      archive_id: {
-        not: null,
-      },
-      fund_id: null,
-      description_id: null,
-      case_id: null,
-    },
-    include: {
-      archive: true,
-    },
-  });
-
-  if (!archiveMatch || !archiveMatch.archive_id) {
-    throw new Error("Match not found");
-  }
-
-  return await syncFromArchium(
-    resourceId,
-    archiveMatch.id,
-    {
-      url: archiveMatch.api_url,
-      method: archiveMatch.api_method || "GET",
-      headers: parseDBParams(archiveMatch.api_headers),
-      params: parseDBParams(archiveMatch.api_params),
-    },
-    "div.single-data > p > a > span",
-    (el) => +el.split(" справ")[0].split(", ")[1],
-    (...args) => syncFonds(args[0], archiveMatch.archive_id as string)
-  );
 };
 
 const syncFonds = async (resourceId: string, archiveId: string) => {
