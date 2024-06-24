@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Badge,
-  Heading,
-  ListItem,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Tr,
-} from "@chakra-ui/react";
+import { Heading, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";

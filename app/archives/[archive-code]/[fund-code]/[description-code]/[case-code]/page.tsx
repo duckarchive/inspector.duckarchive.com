@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Badge,
-  Container,
-  Heading,
-  ListItem,
-  UnorderedList,
-} from "@chakra-ui/react";
+import { Badge, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { useParams } from "next/navigation";
