@@ -48,7 +48,7 @@ const DescriptionPage: NextPage = () => {
     fetchArchive();
   }, [archiveCode, fundCode, code]);
 
-  return <Container>
+  return <>
     <Heading fontSize="xl">
       Ресурси де можна знайти опис {toText({ archive: archiveCode, fund: fundCode, description: code })}
     </Heading>
@@ -60,7 +60,7 @@ const DescriptionPage: NextPage = () => {
         </ListItem>
       )}
     </UnorderedList>
-  </Container>;
+  </>;
 };
 
 export default DescriptionPage;

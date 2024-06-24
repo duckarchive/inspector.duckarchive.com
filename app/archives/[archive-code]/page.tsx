@@ -1,6 +1,12 @@
 "use client";
 
-import { Badge, Container, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Badge,
+  Container,
+  Heading,
+  ListItem,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { useParams } from "next/navigation";
@@ -31,9 +37,10 @@ const ArchivePage: NextPage = () => {
             };
             case: {
               select: { code: true };
-            }
-          }
-        }};
+            };
+          };
+        };
+      };
     }>
   >();
 
@@ -46,19 +53,28 @@ const ArchivePage: NextPage = () => {
     fetchArchive();
   }, [code]);
 
-  return <Container>
-    <Heading fontSize="xl">
-      Ресурси де можна знайти архів {toText({ archive: code })}
-    </Heading>
-    <UnorderedList>
-      {archive?.matches?.map((match) => 
-        <ListItem key={match.id} id={match.id}>
-          <Badge>{match.resource.title}</Badge>
-          {[match.archive?.code, match.fund?.code, match.description?.code, match.case?.code].filter(Boolean).join(" / ")}
-        </ListItem>
-      )}
-    </UnorderedList>
-  </Container>;
+  return (
+    <>
+      <Heading fontSize="xl">
+        Ресурси де можна знайти архів {toText({ archive: code })}
+      </Heading>
+      <UnorderedList>
+        {archive?.matches?.map((match) => (
+          <ListItem key={match.id} id={match.id}>
+            <Badge>{match.resource.title}</Badge>
+            {[
+              match.archive?.code,
+              match.fund?.code,
+              match.description?.code,
+              match.case?.code,
+            ]
+              .filter(Boolean)
+              .join(" / ")}
+          </ListItem>
+        ))}
+      </UnorderedList>
+    </>
+  );
 };
 
 export default ArchivePage;

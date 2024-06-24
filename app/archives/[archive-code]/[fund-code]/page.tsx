@@ -47,7 +47,7 @@ const FundPage: NextPage = () => {
     fetchArchive();
   }, [code, archiveCode]);
 
-  return <Container>
+  return <>
     <Heading fontSize="xl">
       Ресурси де можна знайти фонд {toText({ archive: archiveCode, fund: code })}
     </Heading>
@@ -59,7 +59,7 @@ const FundPage: NextPage = () => {
         </ListItem>
       )}
     </UnorderedList>
-  </Container>;
+  </>;
 };
 
 export default FundPage;
