@@ -5,11 +5,15 @@ import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toText } from "../../../utils/text";
 
-const ArchivePage: NextPage = () => {
+const FundPage: NextPage = () => {
   const params = useParams();
+  const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
+  const code = decodeURIComponent(params?.["fund-code"].toString() || "");
+
   const [archive, setArchive] = useState<
-    Prisma.ArchiveGetPayload<{
+    Prisma.FundGetPayload<{
       select: {
         matches: {
           select: {
@@ -36,16 +40,16 @@ const ArchivePage: NextPage = () => {
 
   useEffect(() => {
     const fetchArchive = async () => {
-      const response = await fetch(`/api/archives/${params?.id}`);
+      const response = await fetch(`/api/archives/${archiveCode}/${code}`);
       const data = await response.json();
       setArchive(data);
     };
     fetchArchive();
-  }, [params?.id]);
+  }, [code, archiveCode]);
 
   return <Container>
     <Heading fontSize="xl">
-      Список синхронізацій по даному архіву
+      Ресурси де можна знайти фонд {toText({ archive: archiveCode, fund: code })}
     </Heading>
     <UnorderedList>
       {archive?.matches?.map((match) => 
@@ -58,4 +62,4 @@ const ArchivePage: NextPage = () => {
   </Container>;
 };
 
-export default ArchivePage;
+export default FundPage;
