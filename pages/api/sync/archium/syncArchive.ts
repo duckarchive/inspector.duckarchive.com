@@ -25,11 +25,11 @@ export const syncArchive = async (
     },
   });
 
-  if (!match) {
+  if (!match || !match.archive_id) {
     throw new Error("Match not found");
   }
 
-  const { api_headers, api_method, api_params, api_url } = match;
+  const { api_headers, api_method, api_params, api_url, archive_id } = match;
 
   const {
     data: { View },
@@ -66,6 +66,15 @@ export const syncArchive = async (
     },
   });
 
+  await prisma.archive.update({
+    where: {
+      id: archive_id,
+    },
+    data: {
+      count,
+    },
+  });
+
   if (prevResult) {
     const diff = count - prevResult.count;
 
@@ -73,7 +82,7 @@ export const syncArchive = async (
       const fundMatches = await prisma.match.findMany({
         where: {
           resource_id: resourceId,
-          archive_id: match.archive_id,
+          archive_id: archive_id,
           fund_id: {
             not: null,
           },
@@ -92,7 +101,7 @@ export const syncArchive = async (
       );
 
       if (calculatedDiff !== count) {
-        console.log("New fund added for archive", match.archive_id);
+        console.log("New fund added for archive", archive_id);
 
         const funds = await fetchFunds(resourceId);
 

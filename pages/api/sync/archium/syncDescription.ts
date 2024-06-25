@@ -16,9 +16,12 @@ export const syncDescription = async ({
   api_headers,
   api_params,
   fund_id,
-  archive_id,
-  resource_id,
+  description_id
 }: Match) => {
+  if (!description_id) {
+    throw new Error("No description_id");
+  }
+
   const {
     data: { View },
   } = await axios.request({
@@ -47,6 +50,15 @@ export const syncDescription = async ({
       match_id: id,
       count: count,
       error: null,
+    },
+  });
+
+  await prisma.description.update({
+    where: {
+      id: description_id,
+    },
+    data: {
+      count,
     },
   });
 

@@ -23,6 +23,10 @@ export const syncFund = async (
   }: Match,
   targetTotal: number
 ) => {
+  if (!fund_id) {
+    throw new Error("No fund_id");
+  }
+
   const {
     data: { View },
   } = await axios.request({
@@ -55,6 +59,15 @@ export const syncFund = async (
       match_id: id,
       count: count,
       error: null,
+    },
+  });
+
+  await prisma.fund.update({
+    where: {
+      id: fund_id,
+    },
+    data: {
+      count,
     },
   });
 
