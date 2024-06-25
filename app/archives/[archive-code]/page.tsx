@@ -6,6 +6,7 @@ import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { sortByCode } from "../../utils/table";
 
 const ArchivePage: NextPage = () => {
   const params = useParams();
@@ -50,7 +51,7 @@ const ArchivePage: NextPage = () => {
             <Th textAlign="right">Справ онлайн</Th>
             <Th textAlign="right">Оновлено</Th>
           </Tr>
-          {archive?.funds.map((fund) => (
+          {archive?.funds.sort(sortByCode).map((fund) => (
             <Tr key={fund.id} w="full">
               <Td>{fund.code}</Td>
               <Td>
