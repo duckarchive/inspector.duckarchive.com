@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Heading, Table, Tbody, Td, Text, Th, Tr } from "@chakra-ui/react";
+import { Button, Heading, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
 import { sortByDate } from "../utils/table";
+import { IoRefresh } from "react-icons/io5";
 
 const ArchivesPage: NextPage = () => {
   const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
@@ -19,6 +20,16 @@ const ArchivesPage: NextPage = () => {
 
     fetchArchives();
   }, []);
+
+  const handleSyncArchiveClick = (archiveId: string) => async () => {
+    const response = await fetch(`/api/sync/archium/${archiveId}`);
+    const data = await response.json();
+    setArchives((prev) =>
+      prev.map((archive) =>
+        archive.id === archiveId ? { ...archive, ...data } : archive
+      )
+    );
+  };
 
   return (
     <>
@@ -41,7 +52,17 @@ const ArchivesPage: NextPage = () => {
                   {archive.title}
                 </Link>
               </Td>
-              <Td textAlign="right">{archive.count}</Td>
+              <Td textAlign="right">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  rightIcon={<IoRefresh />}
+                  fontSize="sm"
+                  onClick={handleSyncArchiveClick(archive.id)}
+                >
+                  {archive.count}
+                </Button>
+              </Td>
               <Td textAlign="right">
                 {
                   (archive.updated_at || archive.created_at)

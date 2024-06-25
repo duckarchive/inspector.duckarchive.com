@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parseDBParams } from "../../helpers";
 import { parse } from "node-html-parser";
@@ -11,25 +11,25 @@ const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
 const prisma = new PrismaClient();
 
 export const syncArchive = async (
-  resourceId: string
+  archiveId: string
 ): Promise<FullSyncArchiumResponse> => {
   const match = await prisma.match.findFirst({
     where: {
-      resource_id: resourceId,
-      archive_id: {
-        not: null,
+      resource: {
+        type: ResourceType.ARCHIUM,
       },
+      archive_id: archiveId,
       fund_id: null,
       description_id: null,
       case_id: null,
     },
   });
 
-  if (!match || !match.archive_id) {
+  if (!match) {
     throw new Error("Match not found");
   }
 
-  const { api_headers, api_method, api_params, api_url, archive_id } = match;
+  const { api_headers, api_method, api_params, api_url } = match;
 
   const {
     data: { View },
@@ -68,7 +68,7 @@ export const syncArchive = async (
 
   await prisma.archive.update({
     where: {
-      id: archive_id,
+      id: archiveId,
     },
     data: {
       count,
@@ -81,8 +81,10 @@ export const syncArchive = async (
     if (diff) {
       const fundMatches = await prisma.match.findMany({
         where: {
-          resource_id: resourceId,
-          archive_id: archive_id,
+          resource: {
+            type: ResourceType.ARCHIUM,
+          },
+          archive_id: archiveId,
           fund_id: {
             not: null,
           },
@@ -101,9 +103,9 @@ export const syncArchive = async (
       );
 
       if (calculatedDiff !== count) {
-        console.log("New fund added for archive", archive_id);
+        console.log("New fund added for archive", archiveId);
 
-        const funds = await fetchFunds(resourceId);
+        const funds = await fetchFunds(archiveId);
 
         return {
           sync: {

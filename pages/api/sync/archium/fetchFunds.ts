@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parseDBParams } from "../../helpers";
 import { parse } from "node-html-parser";
@@ -8,14 +8,14 @@ const DOM_QUERY = "table.fond-groups > tbody > tr";
 const prisma = new PrismaClient();
 
 export const fetchFunds = async (
-  resourceId: string
+  archiveId: string
 ): Promise<FetchArchiumResponse> => {
   const match = await prisma.fetch.findFirst({
     where: {
-      resource_id: resourceId,
-      archive_id: {
-        not: null,
+      resource: {
+        type: ResourceType.ARCHIUM,
       },
+      archive_id: archiveId,
       fund_id: null,
       description_id: null,
       case_id: null,
@@ -72,7 +72,7 @@ export const fetchFunds = async (
 
         await prisma.match.create({
           data: {
-            resource_id: resourceId,
+            resource_id: match.resource_id,
             archive_id: newFund.archive_id,
             fund_id: newFund.id,
             api_url: f.matchApiUrl,

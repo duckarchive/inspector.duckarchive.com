@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ResourceType {
+  ARCHIUM
+  FAMILY_SEARCH
+  WIKIPEDIA
+}
+
 model Archive {
   id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   code         String    @db.VarChar(10)
@@ -28,7 +34,7 @@ model Archive {
   count        Int       @default(0)
   funds        Fund[]
   matches      Match[]
-  fetch        Fetch[]
+  fetches      Fetch[]
 
   @@map("archives")
 }
@@ -45,7 +51,7 @@ model Fund {
   archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   descriptions Description[]
   matches      Match[]
-  fetch        Fetch[]
+  fetches      Fetch[]
 
   @@unique([code, archive_id])
   @@map("funds")
@@ -63,7 +69,7 @@ model Description {
   fund       Fund      @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   cases      Case[]
   matches    Match[]
-  fetch      Fetch[]
+  fetches    Fetch[]
 
   @@unique([code, fund_id])
   @@map("descriptions")
@@ -80,23 +86,24 @@ model Case {
   description_id String      @db.Uuid
   description    Description @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   matches        Match[]
-  fetch          Fetch[]
+  fetches        Fetch[]
 
   @@unique([code, description_id])
   @@map("cases")
 }
 
 model Resource {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at DateTime  @default(now()) @db.Timestamp(6)
-  updated_at DateTime? @updatedAt @db.Timestamp(6)
-  code       String    @db.VarChar(50)
-  title      String?   @db.VarChar(255)
-  info       String?   @db.VarChar(255)
-  url        String?   @db.VarChar(255)
-  logo_url   String?   @db.VarChar(255)
+  id         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at DateTime      @default(now()) @db.Timestamp(6)
+  updated_at DateTime?     @updatedAt @db.Timestamp(6)
+  code       String        @db.VarChar(50)
+  title      String?       @db.VarChar(255)
+  info       String?       @db.VarChar(255)
+  url        String?       @db.VarChar(255)
+  logo_url   String?       @db.VarChar(255)
+  type       ResourceType?
   matches    Match[]
-  fetch      Fetch[]
+  fetches    Fetch[]
 
   @@map("resources")
 }
