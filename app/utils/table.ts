@@ -5,6 +5,10 @@ export const sortByCode = (a: WithCode, b: WithCode) => {
   return parseInt(a.code) - parseInt(b.code);
 };
 
+export const sortByTextCode = (a: WithCode, b: WithCode) => {
+  return a.code.localeCompare(b.code);
+};
+
 interface WithDates {
   created_at: Date | string;
   updated_at?: Date | string | null;

@@ -5,8 +5,10 @@ import { Button, Heading, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
-import { sortByDate } from "../utils/table";
+import { sortByTextCode } from "../utils/table";
 import { IoRefresh } from "react-icons/io5";
+import { intlFormatDistance } from "date-fns/intlFormatDistance";
+import { ArchiumArchiveSyncResponse } from "../../pages/api/sync/archium/[archive_id]";
 
 const ArchivesPage: NextPage = () => {
   const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
@@ -23,7 +25,7 @@ const ArchivesPage: NextPage = () => {
 
   const handleSyncArchiveClick = (archiveId: string) => async () => {
     const response = await fetch(`/api/sync/archium/${archiveId}`);
-    const data = await response.json();
+    const data: ArchiumArchiveSyncResponse = await response.json();
     setArchives((prev) =>
       prev.map((archive) =>
         archive.id === archiveId ? { ...archive, ...data } : archive
@@ -44,7 +46,7 @@ const ArchivesPage: NextPage = () => {
             <Th textAlign="right">Справ онлайн</Th>
             <Th textAlign="right">Оновлено</Th>
           </Tr>
-          {archives.sort(sortByDate).map((archive) => (
+          {archives.sort(sortByTextCode).map((archive) => (
             <Tr key={archive.id} w="full">
               <Td>{archive.code}</Td>
               <Td>
@@ -64,11 +66,11 @@ const ArchivesPage: NextPage = () => {
                 </Button>
               </Td>
               <Td textAlign="right">
-                {
-                  (archive.updated_at || archive.created_at)
-                    .toString()
-                    .split("T")[0]
-                }
+                {intlFormatDistance(
+                  new Date(archive.updated_at || archive.created_at),
+                  new Date(),
+                  { locale: "uk" }
+                )}
               </Td>
             </Tr>
           ))}

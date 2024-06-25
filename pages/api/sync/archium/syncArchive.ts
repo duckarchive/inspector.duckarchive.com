@@ -1,4 +1,4 @@
-import { PrismaClient, ResourceType } from "@prisma/client";
+import { Archive, PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parseDBParams } from "../../helpers";
 import { parse } from "node-html-parser";
@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 
 export const syncArchive = async (
   archiveId: string
-): Promise<FullSyncArchiumResponse> => {
+): Promise<Archive> => {
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -66,7 +66,7 @@ export const syncArchive = async (
     },
   });
 
-  await prisma.archive.update({
+  const updatedArchive = await prisma.archive.update({
     where: {
       id: archiveId,
     },
@@ -105,36 +105,10 @@ export const syncArchive = async (
       if (calculatedDiff !== count) {
         console.log("New fund added for archive", archiveId);
 
-        const funds = await fetchFunds(archiveId);
-
-        return {
-          sync: {
-            created_at,
-            match_id: match.id,
-            total: count,
-            diff,
-          },
-          fetch: funds,
-        };
+        await fetchFunds(archiveId);
       }
     }
-
-    return {
-      sync: {
-        created_at,
-        match_id: match.id,
-        total: count,
-        diff,
-      },
-    };
   }
 
-  return {
-    sync: {
-      created_at,
-      match_id: match.id,
-      total: count,
-      diff: 0,
-    },
-  };
+  return updatedArchive;
 };
