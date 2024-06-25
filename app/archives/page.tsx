@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Archive } from "@prisma/client";
 import { Heading, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
+import { GetAllArchivesResponse } from "../../pages/api/archives";
+import { sortByDate } from "../utils/table";
 
 const ArchivesPage: NextPage = () => {
-  const [archives, setArchives] = useState<Archive[]>([]);
+  const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
 
   useEffect(() => {
     const fetchArchives = async () => {
@@ -32,7 +33,7 @@ const ArchivesPage: NextPage = () => {
             <Th textAlign="right">Справ онлайн</Th>
             <Th textAlign="right">Оновлено</Th>
           </Tr>
-          {archives.map((archive) => (
+          {archives.sort(sortByDate).map((archive) => (
             <Tr key={archive.id} w="full">
               <Td>{archive.code}</Td>
               <Td>
@@ -40,9 +41,9 @@ const ArchivesPage: NextPage = () => {
                   {archive.title}
                 </Link>
               </Td>
-              <Td textAlign="right">566471</Td>
-              <Td textAlign="right">вчора</Td>
-            </Tr>
+              <Td textAlign="right">{archive.count}</Td>
+              <Td textAlign="right">{(archive.updated_at || archive.created_at).toString().split('T')[0]}</Td>
+            </Tr> 
           ))}
         </Tbody>
       </Table>

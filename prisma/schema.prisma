@@ -25,9 +25,10 @@ model Archive {
   phone_number String?   @db.VarChar(20)
   email        String?   @db.VarChar(255)
   logo_url     String?   @db.VarChar(255)
+  count        Int       @default(0)
   funds        Fund[]
   matches      Match[]
-  Fetch        Fetch[]
+  fetch        Fetch[]
 
   @@map("archives")
 }
@@ -39,11 +40,12 @@ model Fund {
   updated_at   DateTime?     @updatedAt @db.Timestamp(6)
   title        String?       @db.VarChar(255)
   info         String?       @db.VarChar(255)
+  count        Int           @default(0)
   archive_id   String        @db.Uuid
   archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   descriptions Description[]
   matches      Match[]
-  Fetch        Fetch[]
+  fetch        Fetch[]
 
   @@unique([code, archive_id])
   @@map("funds")
@@ -56,11 +58,12 @@ model Description {
   updated_at DateTime? @updatedAt @db.Timestamp(6)
   title      String?   @db.VarChar(255)
   info       String?   @db.VarChar(255)
+  count      Int       @default(0)
   fund_id    String    @db.Uuid
   fund       Fund      @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   cases      Case[]
   matches    Match[]
-  Fetch      Fetch[]
+  fetch      Fetch[]
 
   @@unique([code, fund_id])
   @@map("descriptions")
@@ -73,10 +76,11 @@ model Case {
   updated_at     DateTime?   @updatedAt @db.Timestamp(6)
   title          String?     @db.VarChar(255)
   info           String?     @db.VarChar(255)
+  count          Int         @default(0)
   description_id String      @db.Uuid
   description    Description @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   matches        Match[]
-  Fetch          Fetch[]
+  fetch          Fetch[]
 
   @@unique([code, description_id])
   @@map("cases")
@@ -92,7 +96,7 @@ model Resource {
   url        String?   @db.VarChar(255)
   logo_url   String?   @db.VarChar(255)
   matches    Match[]
-  Fetch      Fetch[]
+  fetch      Fetch[]
 
   @@map("resources")
 }

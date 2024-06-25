@@ -39,6 +39,9 @@ export default async function handler(
         archive_id: {
           not: null,
         },
+        fund_id: null,
+        description_id: null,
+        case_id: null,
       },
       include: {
         archive: true,
@@ -47,8 +50,13 @@ export default async function handler(
 
     const results: SyncArchiumResponse[] = await Promise.all(
       archiumMatches.map(
-        async ({ id, api_url, api_method, api_headers, api_params }) => {
+        async ({ id, api_url, api_method, api_headers, api_params, archive_id }) => {
           try {
+
+            if (!archive_id) {
+              throw new Error("No archive_id");
+            }
+
             const {
               data: { View },
             } = await axios.request({
@@ -86,6 +94,16 @@ export default async function handler(
               },
             });
 
+            // update archive count
+            await prisma.archive.update({
+              where: {
+                id: archive_id,
+              },
+              data: {
+                count: totalCases,
+              },
+            });
+
             if (prevResult) {
               return {
                 created_at,
@@ -103,7 +121,7 @@ export default async function handler(
               diff: 0,
             };
           } catch (error: any) {
-            console.error(error);
+            // console.error(error);
 
             const { created_at } = await prisma.result.create({
               data: {

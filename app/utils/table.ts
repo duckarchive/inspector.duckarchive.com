@@ -1,3 +1,17 @@
-export const sortByCode = (a: { code: string }, b: { code: string }) => {
-  return parseInt(a.code) - parseInt(b.code);
+interface WithCode {
+  code: string;
 }
+export const sortByCode = (a: WithCode, b: WithCode) => {
+  return parseInt(a.code) - parseInt(b.code);
+};
+
+interface WithDates {
+  created_at: Date | string;
+  updated_at?: Date | string | null;
+}
+export const sortByDate = (a: WithDates, b: WithDates) => {
+  return (
+    new Date(b.updated_at || b.created_at).valueOf() -
+    new Date(a.updated_at || a.created_at).valueOf()
+  );
+};
