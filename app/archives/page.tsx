@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Heading, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
+import { Heading, Table, Tbody, Td, Text, Th, Tr } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
@@ -42,8 +42,14 @@ const ArchivesPage: NextPage = () => {
                 </Link>
               </Td>
               <Td textAlign="right">{archive.count}</Td>
-              <Td textAlign="right">{(archive.updated_at || archive.created_at).toString().split('T')[0]}</Td>
-            </Tr> 
+              <Td textAlign="right">
+                {
+                  (archive.updated_at || archive.created_at)
+                    .toString()
+                    .split("T")[0]
+                }
+              </Td>
+            </Tr>
           ))}
         </Tbody>
       </Table>
