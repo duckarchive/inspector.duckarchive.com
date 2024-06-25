@@ -14,3 +14,8 @@ interface FetchArchiumResponse {
   removed: number;
   error?: string;
 }
+
+interface FullSyncArchiumResponse {
+  sync: SyncArchiumResponse;
+  fetch?: FetchArchiumResponse;
+}

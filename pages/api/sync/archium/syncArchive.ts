@@ -3,13 +3,16 @@ import axios from "axios";
 import { parseDBParams } from "../../helpers";
 import { parse } from "node-html-parser";
 import { syncFund } from "./syncFund";
+import { fetchFunds } from "./fetchFunds";
 
 const DOM_QUERY = "div.single-data > p > a > span";
 const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
 
 const prisma = new PrismaClient();
 
-export const syncArchive = async (resourceId: string): Promise<SyncArchiumResponse> => {
+export const syncArchive = async (
+  resourceId: string
+): Promise<FullSyncArchiumResponse> => {
   const match = await prisma.match.findFirst({
     where: {
       resource_id: resourceId,
@@ -19,7 +22,7 @@ export const syncArchive = async (resourceId: string): Promise<SyncArchiumRespon
       fund_id: null,
       description_id: null,
       case_id: null,
-    }
+    },
   });
 
   if (!match) {
@@ -27,7 +30,7 @@ export const syncArchive = async (resourceId: string): Promise<SyncArchiumRespon
   }
 
   const { api_headers, api_method, api_params, api_url } = match;
-  
+
   const {
     data: { View },
   } = await axios.request({
@@ -76,7 +79,7 @@ export const syncArchive = async (resourceId: string): Promise<SyncArchiumRespon
           },
           description_id: null,
           case_id: null,
-        }
+        },
       });
 
       const syncedFunds = await Promise.all(
@@ -88,23 +91,39 @@ export const syncArchive = async (resourceId: string): Promise<SyncArchiumRespon
         0
       );
 
-      if (calculatedDiff < count) {
+      if (calculatedDiff !== count) {
         console.log("New fund added for archive", match.archive_id);
+
+        const funds = await fetchFunds(resourceId);
+
+        return {
+          sync: {
+            created_at,
+            match_id: match.id,
+            total: count,
+            diff,
+          },
+          fetch: funds,
+        };
       }
     }
 
     return {
-      created_at,
-      match_id: match.id,
-      total: count,
-      diff,
+      sync: {
+        created_at,
+        match_id: match.id,
+        total: count,
+        diff,
+      },
     };
   }
 
   return {
-    created_at,
-    match_id: match.id,
-    total: count,
-    diff: 0,
+    sync: {
+      created_at,
+      match_id: match.id,
+      total: count,
+      diff: 0,
+    },
   };
 };
