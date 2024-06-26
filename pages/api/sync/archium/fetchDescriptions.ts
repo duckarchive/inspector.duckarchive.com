@@ -3,12 +3,14 @@ import axios from "axios";
 import { parseDBParams } from "../../helpers";
 import { parse } from "node-html-parser";
 
-const DOM_QUERY = "table.fond-groups > tbody > tr";
+const DOM_QUERY =
+  "div.container > div.row.with-border-bottom.thin-row > div.left > a";
 
 const prisma = new PrismaClient();
 
-export const fetchFunds = async (
-  archiveId: string
+export const fetchDescriptions = async (
+  archiveId: string,
+  fundId: string
 ): Promise<FetchArchiumResponse> => {
   const fetch = await prisma.fetch.findFirst({
     where: {
@@ -16,13 +18,13 @@ export const fetchFunds = async (
         type: ResourceType.ARCHIUM,
       },
       archive_id: archiveId,
-      fund_id: null,
+      fund_id: fundId,
       description_id: null,
       case_id: null,
     },
   });
 
-  if (!fetch || !fetch.archive_id) {
+  if (!fetch) {
     throw new Error("Fetch not found");
   }
 
@@ -38,33 +40,36 @@ export const fetchFunds = async (
   });
 
   const dom = parse(View);
-
   const BASE_URL = fetch.api_url.split("/api")[0];
-  const funds = [...dom.querySelectorAll(DOM_QUERY)]
+  const descriptions = [...dom.querySelectorAll(DOM_QUERY)]
     .filter(Boolean)
-    .map((el) => el.querySelectorAll("td"))
-    .map(([code, title]) => ({
-      code: code.innerText.trim(),
-      title: title.innerText.trim().slice(0, 200),
-      matchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
-    }));
+    .map((anchorEl) => {
+      const title = anchorEl.innerText.trim();
+      const code = title.replace(/опис/gi, "").replace(/ /g, "");
+      const matchApiUrl = BASE_URL + anchorEl.getAttribute("href")?.trim();
+      return {
+        code: code.trim(),
+        title: title.slice(0, 200),
+        matchApiUrl: matchApiUrl.trim(),
+      };
+    });
 
-  const prevFonds = await prisma.fund.findMany({
+  const prevDescriptions = await prisma.description.findMany({
     where: {
-      archive_id: fetch.archive_id,
+      fund_id: fundId,
     },
   });
 
-  const newFunds = funds.filter(
-    (f) => !prevFonds.some((pf) => pf.code === f.code)
+  const newDescriptions = descriptions.filter(
+    (f) => !prevDescriptions.some((pf) => pf.code === f.code)
   );
 
   await Promise.all(
-    newFunds.map(async (f) => {
+    newDescriptions.map(async (f) => {
       if (fetch.archive_id) {
-        const newFund = await prisma.fund.create({
+        const newFund = await prisma.description.create({
           data: {
-            archive_id: fetch.archive_id,
+            fund_id: fundId,
             code: f.code,
             title: f.title,
           },
@@ -73,7 +78,7 @@ export const fetchFunds = async (
         await prisma.fetch.create({
           data: {
             resource_id: fetch.resource_id,
-            archive_id: newFund.archive_id,
+            archive_id: archiveId,
             fund_id: newFund.id,
             api_url: f.matchApiUrl,
             api_headers: null,
@@ -84,32 +89,31 @@ export const fetchFunds = async (
     })
   );
 
-  const removedFunds = prevFonds.filter(
-    (pf) => !funds.some((f) => f.code === pf.code)
+  const removedDescriptions = prevDescriptions.filter(
+    (pd) => !descriptions.some((d) => d.code === pd.code)
   );
 
   await Promise.all(
-    removedFunds.map(async (f) => {
-      await prisma.fund.delete({
+    removedDescriptions.map(async (d) => {
+      await prisma.description.delete({
         where: {
-          id: f.id,
+          id: d.id,
         },
       });
 
       await prisma.fetch.deleteMany({
         where: {
-          fund_id: f.code,
+          description_id: d.code,
         },
       });
     })
   );
 
-
   return {
     created_at: new Date(),
     match_id: fetch.id,
-    total: funds.length,
-    added: newFunds.length,
-    removed: removedFunds.length,
+    total: descriptions.length,
+    added: newDescriptions.length,
+    removed: removedDescriptions.length,
   };
 };
