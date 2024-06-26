@@ -52,6 +52,7 @@ const ArchivesPage: NextPage = () => {
             field: "title",
             headerName: "Назва",
             flex: 3,
+            filter: true,
             cellRenderer: (row: { value: number; data: Archive }) => (
               <Link href={`archives/${row.data.code}`} color="blue.600">
                 {row.value}
@@ -63,6 +64,7 @@ const ArchivesPage: NextPage = () => {
             headerName: "Справ онлайн",
             flex: 1,
             resizable: false,
+            filter: true,
             cellRenderer: (row: { value: number; data: Archive }) => (
               <Button
                 size="sm"

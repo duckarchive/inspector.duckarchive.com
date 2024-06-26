@@ -2,8 +2,9 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Box } from "@chakra-ui/react";
+import { AG_GRID_LOCALE_UK } from "../utils/i18n";
 
 interface DuckTableProps<T> {
   columns: ColDef<T>[];
@@ -41,6 +42,7 @@ const DuckTable = <T extends { id: string }>({
         columnDefs={columns}
         suppressHorizontalScroll
         colResizeDefault="shift"
+        localeText={AG_GRID_LOCALE_UK}
         defaultColDef={{
           resizable: true,
           minWidth: 100,
