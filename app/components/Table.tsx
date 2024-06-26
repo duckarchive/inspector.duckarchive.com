@@ -40,12 +40,13 @@ const DuckTable = <T extends { id: string }>({
         rowData={rows}
         columnDefs={columns}
         suppressHorizontalScroll
+        colResizeDefault="shift"
         defaultColDef={{
           resizable: true,
+          minWidth: 100,
         }}
         autoSizeStrategy={{
           type: "fitGridWidth",
-          defaultMinWidth: 100,
         }}
       />
     </Box>

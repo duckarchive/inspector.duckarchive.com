@@ -62,6 +62,7 @@ const ArchivesPage: NextPage = () => {
             field: "count",
             headerName: "Справ онлайн",
             flex: 1,
+            resizable: false,
             cellRenderer: (row: { value: number; data: Archive }) => (
               <Button
                 size="sm"

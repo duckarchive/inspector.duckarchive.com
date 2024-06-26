@@ -58,7 +58,7 @@ export const syncArchive = async (
     },
   });
 
-  const { created_at } = await prisma.result.create({
+  await prisma.result.create({
     data: {
       match_id: match.id,
       count,
