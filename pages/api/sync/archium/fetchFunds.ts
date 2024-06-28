@@ -47,6 +47,7 @@ export const fetchFunds = async (
       code: code.innerText.trim(),
       title: title.innerText.trim().slice(0, 200),
       matchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
+      fetchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
     }));
 
   const prevFonds = await prisma.fund.findMany({
@@ -70,12 +71,23 @@ export const fetchFunds = async (
           },
         });
 
-        await prisma.fetch.create({
+        await prisma.match.create({
           data: {
             resource_id: fetch.resource_id,
             archive_id: newFund.archive_id,
             fund_id: newFund.id,
             api_url: f.matchApiUrl,
+            api_headers: null,
+            api_params: "Limit:9999,Page:1",
+          },
+        });
+
+        await prisma.fetch.create({
+          data: {
+            resource_id: fetch.resource_id,
+            archive_id: newFund.archive_id,
+            fund_id: newFund.id,
+            api_url: f.fetchApiUrl,
             api_headers: null,
             api_params: "Limit:9999,Page:1",
           },
@@ -93,6 +105,12 @@ export const fetchFunds = async (
       await prisma.fund.delete({
         where: {
           id: f.id,
+        },
+      });
+
+      await prisma.match.deleteMany({
+        where: {
+          fund_id: f.code,
         },
       });
 
