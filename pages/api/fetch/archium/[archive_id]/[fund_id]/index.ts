@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { OperationType, PrismaClient, ResourceType } from "@prisma/client";
+import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../../helpers";
@@ -45,7 +45,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
       throw new Error("Fetch not found");
     }
 
-    const { data: View, status } = await axios.request({
+    const { data: View } = await axios.request({
       url: fetch.api_url,
       method: fetch.api_method || "GET",
       headers: parseDBParams(fetch.api_headers),
@@ -67,10 +67,8 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
       };
     });
 
-    await prisma.result.create({
+    await prisma.fetchResult.create({
       data: {
-        type: OperationType.FETCH,
-        match_id: "",
         fetch_id: fetch.id,
         count: descriptions.length,
       },

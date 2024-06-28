@@ -19,11 +19,6 @@ enum ResourceType {
   WIKIPEDIA
 }
 
-enum OperationType {
-  FETCH
-  MATCH
-}
-
 model Archive {
   id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   code         String    @db.VarChar(10)
@@ -131,9 +126,21 @@ model Match {
   description    Description? @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   case_id        String?      @db.Uuid
   case           Case?        @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  results        Result[]
+  results        MatchResult[]
 
   @@map("matches")
+}
+
+model MatchResult {
+  created_at DateTime      @default(now()) @db.Timestamp(6)
+  updated_at DateTime?     @updatedAt @db.Timestamp(6)
+  match_id   String        @db.Uuid
+  match      Match         @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  count      Int
+  error      String?
+
+  @@id([match_id, created_at])
+  @@map("match_results")
 }
 
 model Fetch {
@@ -154,22 +161,19 @@ model Fetch {
   description    Description? @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   case_id        String?      @db.Uuid
   case           Case?        @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  results        Result[]
+  results        FetchResult[]
 
   @@map("fetches")
 }
 
-model Result {
+model FetchResult {
   created_at DateTime      @default(now()) @db.Timestamp(6)
   updated_at DateTime?     @updatedAt @db.Timestamp(6)
-  match_id   String        @db.Uuid
-  match      Match         @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  count      Int
-  error      String?
   fetch_id   String        @db.Uuid
   fetch      Fetch?        @relation(fields: [fetch_id], references: [id])
-  type       OperationType
+  count      Int
+  error      String?
 
-  @@id([fetch_id, match_id, created_at])
-  @@map("results")
+  @@id([fetch_id, created_at])
+  @@map("fetch_results")
 }
