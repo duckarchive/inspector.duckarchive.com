@@ -1,41 +1,108 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Fund, PrismaClient, ResourceType } from "@prisma/client";
+import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../../helpers";
 
 const prisma = new PrismaClient();
 
-export type ArchiumFetchFundResponse = Fund;
+export type ArchiumFetchFundResponse = {
+  total: number;
+  added: number;
+  removed: number;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumFetchFundResponse>) {
   if (req.method === "GET") {
     const archiveId = req.query.archive_id as string;
     const fundId = req.query.fund_id as string;
 
-    const count = await getFundCasesCount(archiveId, fundId);
+    const descriptions = await fetchFundDescriptions(archiveId, fundId);
 
-    const updatedFund = await prisma.fund.update({
+    const prevDescriptions = await prisma.description.findMany({
       where: {
-        id: fundId,
-      },
-      data: {
-        count,
+        fund_id: fundId,
       },
     });
 
-    res.json(updatedFund);
+    const newDescriptions = descriptions.filter((f) => !prevDescriptions.some((pf) => pf.code === f.code));
+
+    await Promise.all(
+      newDescriptions.map(async (f) => {
+        if (archiveId) {
+          const newDescription = await prisma.description.create({
+            data: {
+              fund_id: fundId,
+              code: f.code,
+              title: f.title,
+            },
+          });
+
+          await prisma.match.create({
+            data: {
+              resource_id: f.resourceId,
+              archive_id: archiveId,
+              fund_id: newDescription.id,
+              description_id: newDescription.id,
+              api_url: f.matchApiUrl,
+              api_headers: null,
+              api_params: "Limit:9999,Page:1",
+            },
+          });
+
+          await prisma.fetch.create({
+            data: {
+              resource_id: f.resourceId,
+              archive_id: archiveId,
+              fund_id: newDescription.id,
+              description_id: newDescription.id,
+              api_url: f.fetchApiUrl,
+              api_headers: null,
+              api_params: "Limit:9999,Page:1",
+            },
+          });
+        }
+      })
+    );
+
+    const removedDescriptions = prevDescriptions.filter((pd) => !descriptions.some((d) => d.code === pd.code));
+
+    await Promise.all(
+      removedDescriptions.map(async (d) => {
+        await prisma.description.delete({
+          where: {
+            id: d.id,
+          },
+        });
+
+        await prisma.match.deleteMany({
+          where: {
+            description_id: d.code,
+          },
+        });
+
+        await prisma.fetch.deleteMany({
+          where: {
+            description_id: d.code,
+          },
+        });
+      })
+    );
+
+    res.json({
+      total: descriptions.length,
+      added: newDescriptions.length,
+      removed: removedDescriptions.length,
+    });
   } else {
     res.status(405);
   }
 }
 
-export const getFundCasesCount = async (archiveId: string, fundId: string) => {
+export const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
   try {
-    const DOM_QUERY =
-      "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
-    const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
-    const match = await prisma.match.findFirst({
+    const DOM_QUERY = "div.container > div.row.with-border-bottom.thin-row > div.left > a";
+    const fetch = await prisma.fetch.findFirst({
       where: {
         resource: {
           type: ResourceType.ARCHIUM,
@@ -47,38 +114,35 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
       },
     });
 
-    if (!match) {
-      throw new Error("No match found");
+    if (!fetch) {
+      throw new Error("Fetch not found");
     }
 
-    const {
-      data: View,
-    } = await axios.request({
-      url: match.api_url,
-      method: match.api_method || "GET",
-      headers: parseDBParams(match.api_headers),
-      params: parseDBParams(match.api_params),
+    const { data: View, status } = await axios.request({
+      url: fetch.api_url,
+      method: fetch.api_method || "GET",
+      headers: parseDBParams(fetch.api_headers),
+      params: parseDBParams(fetch.api_params),
     });
 
     const dom = parse(View);
-
-    const count = [...dom.querySelectorAll(DOM_QUERY)]
-      .map((el) => el.innerText)
-      .map(DOM_PARSER)
-      .filter(Boolean)
-      .reduce((prev, el) => (prev += el), 0);
-
-    await prisma.result.create({
-      data: {
-        match_id: match.id,
-        count: count,
-        error: null,
-      },
+    const BASE_URL = fetch.api_url.split("/api")[0];
+    const descriptions = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).map((anchorEl) => {
+      const title = anchorEl.innerText.trim();
+      const code = title.replace(/опис/gi, "").replace(/ /g, "");
+      const matchApiUrl = BASE_URL + anchorEl.getAttribute("href")?.trim();
+      return {
+        resourceId: fetch.resource_id,
+        code: code.trim(),
+        title: title.slice(0, 200),
+        matchApiUrl: matchApiUrl.trim(),
+        fetchApiUrl: matchApiUrl.trim(),
+      };
     });
 
-    return count;
+    return descriptions;
   } catch (error) {
-    console.error("sync fund error", error);
-    return 0;
+    console.error("fetch fond descriptions error", error);
+    return [];
   }
 };

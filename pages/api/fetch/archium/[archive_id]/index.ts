@@ -113,15 +113,13 @@ export const fetchArchiveFonds = async (archiveId: string) => {
       throw new Error("Fetch not found");
     }
 
-    const { api_headers, api_method, api_params, api_url } = fetch;
-
     const {
       data: { View },
     } = await axios.request({
-      url: api_url,
-      method: api_method || "GET",
-      headers: parseDBParams(api_headers),
-      params: parseDBParams(api_params),
+      url: fetch.api_url,
+      method: fetch.api_method || "GET",
+      headers: parseDBParams(fetch.api_headers),
+      params: parseDBParams(fetch.api_params),
     });
 
     const dom = parse(View);
@@ -140,7 +138,7 @@ export const fetchArchiveFonds = async (archiveId: string) => {
 
     return funds;
   } catch (error) {
-    console.error("sync archive error", error);
+    console.error("fetch archive fonds error", error);
     return [];
   }
 };

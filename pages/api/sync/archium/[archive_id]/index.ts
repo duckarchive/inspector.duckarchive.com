@@ -49,15 +49,13 @@ export const getArchiveCasesCount = async (archiveId: string) => {
       throw new Error("Match not found");
     }
 
-    const { api_headers, api_method, api_params, api_url } = match;
-
     const {
       data: { View },
     } = await axios.request({
-      url: api_url,
-      method: api_method || "GET",
-      headers: parseDBParams(api_headers),
-      params: parseDBParams(api_params),
+      url: match.api_url,
+      method: match.api_method || "GET",
+      headers: parseDBParams(match.api_headers),
+      params: parseDBParams(match.api_params),
     });
 
     const dom = parse(View);

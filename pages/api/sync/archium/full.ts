@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const chunks = chunk(matches, 10);
 
     for (const chunk of chunks) {
-      console.log(`Processing chunk ${counter++} of ${chunks.length}`);
+      console.log(`archium full sync chunk ${counter++} of ${chunks.length}`);
       await Promise.all(
         chunk.map(async ({ archive_id, fund_id, description_id }) => {
           if (archive_id && fund_id && description_id) {
