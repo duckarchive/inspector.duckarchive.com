@@ -15,37 +15,42 @@ export type ArchiumFetchFundResponse = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumFetchFundResponse>) {
   if (req.method === "GET") {
-    const archiveId = req.query.archive_id as string;
-    const fundId = req.query.fund_id as string;
+    try {
+      const archiveId = req.query.archive_id as string;
+      const fundId = req.query.fund_id as string;
 
-    const descriptions = await fetchFundDescriptions(archiveId, fundId);
-    const result = await saveFundDescriptions(archiveId, fundId, descriptions);
+      const descriptions = await fetchFundDescriptions(archiveId, fundId);
+      const result = await saveFundDescriptions(archiveId, fundId, descriptions);
 
-    res.status(200).json(result);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("ARCHIUM: Fetch fund handler", error, req.query);
+      res.status(500);
+    }
   } else {
     res.status(405);
   }
 }
 
 export const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
-  try {
-    const DOM_QUERY = "div.container > div.row.with-border-bottom.thin-row > div.left > a";
-    const fetch = await prisma.fetch.findFirst({
-      where: {
-        resource: {
-          type: ResourceType.ARCHIUM,
-        },
-        archive_id: archiveId,
-        fund_id: fundId,
-        description_id: null,
-        case_id: null,
+  const DOM_QUERY = "div.container > div.row.with-border-bottom.thin-row > div.left > a";
+  const fetch = await prisma.fetch.findFirst({
+    where: {
+      resource: {
+        type: ResourceType.ARCHIUM,
       },
-    });
+      archive_id: archiveId,
+      fund_id: fundId,
+      description_id: null,
+      case_id: null,
+    },
+  });
 
-    if (!fetch) {
-      throw new Error("Fetch not found");
-    }
+  if (!fetch) {
+    throw new Error("Fetch not found");
+  }
 
+  try {
     const { data: View } = await axios.request({
       url: fetch.api_url,
       method: fetch.api_method || "GET",
@@ -77,7 +82,15 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
 
     return descriptions;
   } catch (error) {
-    console.error("fetch fund descriptions error", error);
+    console.error("ARCHIUM: fetchFundDescriptions", error, { archiveId, fundId });
+    await prisma.fetchResult.create({
+      data: {
+        fetch_id: fetch.id,
+        count: 0,
+        error: error?.toString().slice(0, 200) || "Unknown error",
+      },
+    });
+
     return [];
   }
 };

@@ -15,37 +15,42 @@ export type ArchiumFetchArchiveResponse = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumFetchArchiveResponse>) {
   if (req.method === "GET") {
-    const archiveId = req.query.archive_id as string;
-
-    const funds = await fetchArchiveFunds(archiveId);
-
-    const result = await saveArchiveFunds(archiveId, funds);
-
-    res.json(result);
+    try {
+      const archiveId = req.query.archive_id as string;
+  
+      const funds = await fetchArchiveFunds(archiveId);
+  
+      const result = await saveArchiveFunds(archiveId, funds);
+  
+      res.json(result);
+    } catch (error) {
+      console.error("ARCHIUM: Fetch archive handler", error, req.query);
+      res.status(500);
+    }
   } else {
     res.status(405);
   }
 }
 
 export const fetchArchiveFunds = async (archiveId: string) => {
-  try {
-    const DOM_QUERY = "table.fond-groups > tbody > tr";
-    const fetch = await prisma.fetch.findFirst({
-      where: {
-        resource: {
-          type: ResourceType.ARCHIUM,
-        },
-        archive_id: archiveId,
-        fund_id: null,
-        description_id: null,
-        case_id: null,
+  const DOM_QUERY = "table.fond-groups > tbody > tr";
+  const fetch = await prisma.fetch.findFirst({
+    where: {
+      resource: {
+        type: ResourceType.ARCHIUM,
       },
-    });
+      archive_id: archiveId,
+      fund_id: null,
+      description_id: null,
+      case_id: null,
+    },
+  });
 
-    if (!fetch) {
-      throw new Error("Fetch not found");
-    }
+  if (!fetch) {
+    throw new Error("Fetch not found");
+  }
 
+  try {
     const {
       data: { View },
     } = await axios.request({
@@ -78,7 +83,16 @@ export const fetchArchiveFunds = async (archiveId: string) => {
 
     return funds;
   } catch (error) {
-    console.error("fetch archive funds error", error);
+    console.error("ARCHIUM: fetchArchiveFunds", error, { archiveId });
+
+    await prisma.fetchResult.create({
+      data: {
+        fetch_id: fetch.id,
+        count: 0,
+        error: error?.toString().slice(0, 200) || "Unknown error",
+      },
+    });
+
     return [];
   }
 };
