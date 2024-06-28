@@ -3,6 +3,7 @@ import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../helpers";
+import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -46,7 +47,7 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     }
 
     const {
-      data: View,
+      data: { View },
     } = await axios.request({
       url: fetch.api_url,
       method: fetch.api_method || "GET",
@@ -91,63 +92,71 @@ export const saveArchiveFunds = async (archiveId: string, funds: any[]) => {
 
   const newFunds = funds.filter((f) => !prevFunds.some((pf) => pf.code === f.code));
 
-  await Promise.all(
-    newFunds.map(async (f) => {
-      const newFund = await prisma.fund.create({
-        data: {
-          archive_id: archiveId,
-          code: f.code,
-          title: f.title,
-        },
-      });
+  const newFundsChunks = chunk(newFunds, 10);
 
-      await prisma.match.create({
-        data: {
-          resource_id: f.resourceId,
-          archive_id: newFund.archive_id,
-          fund_id: newFund.id,
-          api_url: f.matchApiUrl,
-          api_headers: null,
-          api_params: "Limit:9999,Page:1",
-        },
-      });
+  for (const chunk of newFundsChunks) {
+    await Promise.all(
+      chunk.map(async (f) => {
+        const newFund = await prisma.fund.create({
+          data: {
+            archive_id: archiveId,
+            code: f.code,
+            title: f.title,
+          },
+        });
 
-      await prisma.fetch.create({
-        data: {
-          resource_id: f.resourceId,
-          archive_id: newFund.archive_id,
-          fund_id: newFund.id,
-          api_url: f.fetchApiUrl,
-          api_headers: null,
-          api_params: "Limit:9999,Page:1",
-        },
-      });
-    })
-  );
+        await prisma.match.create({
+          data: {
+            resource_id: f.resourceId,
+            archive_id: newFund.archive_id,
+            fund_id: newFund.id,
+            api_url: f.matchApiUrl,
+            api_headers: null,
+            api_params: "Limit:9999,Page:1",
+          },
+        });
+
+        await prisma.fetch.create({
+          data: {
+            resource_id: f.resourceId,
+            archive_id: newFund.archive_id,
+            fund_id: newFund.id,
+            api_url: f.fetchApiUrl,
+            api_headers: null,
+            api_params: "Limit:9999,Page:1",
+          },
+        });
+      })
+    );
+  }
 
   const removedFunds = prevFunds.filter((pf) => !funds.some((f) => f.code === pf.code));
 
-  await Promise.all(
-    removedFunds.map(async (f) => {
-      await prisma.fund.delete({
-        where: {
-          id: f.id,
-        },
-      });
+  const removedFundsChunks = chunk(removedFunds, 10);
 
-      await prisma.match.deleteMany({
-        where: {
-          fund_id: f.code,
-        },
-      });
+  for (const chunk of removedFundsChunks) {
+    await Promise.all(
+      chunk.map(async (f) => {
+        await prisma.fund.delete({
+          where: {
+            id: f.id,
+          },
+        });
 
-      await prisma.fetch.deleteMany({
-        where: {
-          fund_id: f.code,
-        },
-      });
-    })
-  );
+        await prisma.match.deleteMany({
+          where: {
+            fund_id: f.code,
+          },
+        });
+
+        await prisma.fetch.deleteMany({
+          where: {
+            fund_id: f.code,
+          },
+        });
+      })
+    );
+  }
 
   return {
     total: prevFunds.length,

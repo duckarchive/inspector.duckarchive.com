@@ -3,6 +3,7 @@ import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../../helpers";
+import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const descriptions = await fetchFundDescriptions(archiveId, fundId);
     const result = await saveFundDescriptions(archiveId, fundId, descriptions);
-    
+
     res.status(200).json(result);
   } else {
     res.status(405);
@@ -90,67 +91,75 @@ export const saveFundDescriptions = async (archiveId: string, fundId: string, de
 
   const newDescriptions = descriptions.filter((f) => !prevDescriptions.some((pf) => pf.code === f.code));
 
-  await Promise.all(
-    newDescriptions.map(async (f) => {
-      if (archiveId) {
-        const newDescription = await prisma.description.create({
-          data: {
-            fund_id: fundId,
-            code: f.code,
-            title: f.title,
-          },
-        });
+  const newDescriptionsChunks = chunk(newDescriptions, 10);
 
-        await prisma.match.create({
-          data: {
-            resource_id: f.resourceId,
-            archive_id: archiveId,
-            fund_id: newDescription.id,
-            description_id: newDescription.id,
-            api_url: f.matchApiUrl,
-            api_headers: null,
-            api_params: "Limit:9999,Page:1",
-          },
-        });
+  for (const chunk of newDescriptionsChunks) {
+    await Promise.all(
+      chunk.map(async (f) => {
+        if (archiveId) {
+          const newDescription = await prisma.description.create({
+            data: {
+              fund_id: fundId,
+              code: f.code,
+              title: f.title,
+            },
+          });
 
-        await prisma.fetch.create({
-          data: {
-            resource_id: f.resourceId,
-            archive_id: archiveId,
-            fund_id: newDescription.id,
-            description_id: newDescription.id,
-            api_url: f.fetchApiUrl,
-            api_headers: null,
-            api_params: "Limit:9999,Page:1",
-          },
-        });
-      }
-    })
-  );
+          await prisma.match.create({
+            data: {
+              resource_id: f.resourceId,
+              archive_id: archiveId,
+              fund_id: newDescription.id,
+              description_id: newDescription.id,
+              api_url: f.matchApiUrl,
+              api_headers: null,
+              api_params: "Limit:9999,Page:1",
+            },
+          });
+
+          await prisma.fetch.create({
+            data: {
+              resource_id: f.resourceId,
+              archive_id: archiveId,
+              fund_id: newDescription.id,
+              description_id: newDescription.id,
+              api_url: f.fetchApiUrl,
+              api_headers: null,
+              api_params: "Limit:9999,Page:1",
+            },
+          });
+        }
+      })
+    );
+  }
 
   const removedDescriptions = prevDescriptions.filter((pd) => !descriptions.some((d) => d.code === pd.code));
 
-  await Promise.all(
-    removedDescriptions.map(async (d) => {
-      await prisma.description.delete({
-        where: {
-          id: d.id,
-        },
-      });
+  const removedDescriptionsChunks = chunk(removedDescriptions, 10);
 
-      await prisma.match.deleteMany({
-        where: {
-          description_id: d.code,
-        },
-      });
+  for (const chunk of removedDescriptionsChunks) {
+    await Promise.all(
+      chunk.map(async (d) => {
+        await prisma.description.delete({
+          where: {
+            id: d.id,
+          },
+        });
 
-      await prisma.fetch.deleteMany({
-        where: {
-          description_id: d.code,
-        },
-      });
-    })
-  );
+        await prisma.match.deleteMany({
+          where: {
+            description_id: d.code,
+          },
+        });
+
+        await prisma.fetch.deleteMany({
+          where: {
+            description_id: d.code,
+          },
+        });
+      })
+    );
+  }
 
   return {
     total: descriptions.length,
