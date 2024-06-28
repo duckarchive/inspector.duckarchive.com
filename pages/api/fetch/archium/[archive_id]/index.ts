@@ -16,85 +16,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (req.method === "GET") {
     const archiveId = req.query.archive_id as string;
 
-    const funds = await fetchArchiveFonds(archiveId);
+    const funds = await fetchArchiveFunds(archiveId);
 
-    const prevFonds = await prisma.fund.findMany({
-      where: {
-        archive_id: archiveId,
-      },
-    });
+    const result = await saveArchiveFunds(archiveId, funds);
 
-    const newFunds = funds.filter((f) => !prevFonds.some((pf) => pf.code === f.code));
-
-    await Promise.all(
-      newFunds.map(async (f) => {
-        const newFund = await prisma.fund.create({
-          data: {
-            archive_id: archiveId,
-            code: f.code,
-            title: f.title,
-          },
-        });
-
-        await prisma.match.create({
-          data: {
-            resource_id: f.resourceId,
-            archive_id: newFund.archive_id,
-            fund_id: newFund.id,
-            api_url: f.matchApiUrl,
-            api_headers: null,
-            api_params: "Limit:9999,Page:1",
-          },
-        });
-
-        await prisma.fetch.create({
-          data: {
-            resource_id: f.resourceId,
-            archive_id: newFund.archive_id,
-            fund_id: newFund.id,
-            api_url: f.fetchApiUrl,
-            api_headers: null,
-            api_params: "Limit:9999,Page:1",
-          },
-        });
-      })
-    );
-
-    const removedFunds = prevFonds.filter((pf) => !funds.some((f) => f.code === pf.code));
-
-    await Promise.all(
-      removedFunds.map(async (f) => {
-        await prisma.fund.delete({
-          where: {
-            id: f.id,
-          },
-        });
-
-        await prisma.match.deleteMany({
-          where: {
-            fund_id: f.code,
-          },
-        });
-
-        await prisma.fetch.deleteMany({
-          where: {
-            fund_id: f.code,
-          },
-        });
-      })
-    );
-
-    res.json({
-      total: funds.length,
-      added: newFunds.length,
-      removed: removedFunds.length,
-    });
+    res.json(result);
   } else {
     res.status(405);
   }
 }
 
-export const fetchArchiveFonds = async (archiveId: string) => {
+export const fetchArchiveFunds = async (archiveId: string) => {
   try {
     const DOM_QUERY = "table.fond-groups > tbody > tr";
     const fetch = await prisma.fetch.findFirst({
@@ -138,7 +70,81 @@ export const fetchArchiveFonds = async (archiveId: string) => {
 
     return funds;
   } catch (error) {
-    console.error("fetch archive fonds error", error);
+    console.error("fetch archive funds error", error);
     return [];
   }
+};
+
+export const saveArchiveFunds = async (archiveId: string, funds: any[]) => {
+  const prevFunds = await prisma.fund.findMany({
+    where: {
+      archive_id: archiveId,
+    },
+  });
+
+  const newFunds = funds.filter((f) => !prevFunds.some((pf) => pf.code === f.code));
+
+  await Promise.all(
+    newFunds.map(async (f) => {
+      const newFund = await prisma.fund.create({
+        data: {
+          archive_id: archiveId,
+          code: f.code,
+          title: f.title,
+        },
+      });
+
+      await prisma.match.create({
+        data: {
+          resource_id: f.resourceId,
+          archive_id: newFund.archive_id,
+          fund_id: newFund.id,
+          api_url: f.matchApiUrl,
+          api_headers: null,
+          api_params: "Limit:9999,Page:1",
+        },
+      });
+
+      await prisma.fetch.create({
+        data: {
+          resource_id: f.resourceId,
+          archive_id: newFund.archive_id,
+          fund_id: newFund.id,
+          api_url: f.fetchApiUrl,
+          api_headers: null,
+          api_params: "Limit:9999,Page:1",
+        },
+      });
+    })
+  );
+
+  const removedFunds = prevFunds.filter((pf) => !funds.some((f) => f.code === pf.code));
+
+  await Promise.all(
+    removedFunds.map(async (f) => {
+      await prisma.fund.delete({
+        where: {
+          id: f.id,
+        },
+      });
+
+      await prisma.match.deleteMany({
+        where: {
+          fund_id: f.code,
+        },
+      });
+
+      await prisma.fetch.deleteMany({
+        where: {
+          fund_id: f.code,
+        },
+      });
+    })
+  );
+
+  return {
+    total: prevFunds.length,
+    added: newFunds.length,
+    removed: removedFunds.length,
+  };
 };
