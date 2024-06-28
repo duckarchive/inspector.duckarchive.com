@@ -34,14 +34,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const chunks = chunk(matches, 10);
 
     for (const chunk of chunks) {
-      console.log(`archium full sync chunk ${counter++} of ${chunks.length}`);
       await Promise.all(
         chunk.map(async ({ archive_id, fund_id, description_id }) => {
+          console.log(`ARCHIUM: full sync progress (${counter++}/${matches.length})`);
           if (archive_id && fund_id && description_id) {
             const count = await getDescriptionCasesCount(archive_id, fund_id, description_id);
-  
+
             result.descriptionCasesCount += count;
-  
+
             await prisma.description.update({
               where: {
                 id: description_id,
@@ -52,9 +52,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             });
           } else if (archive_id && fund_id) {
             const count = await getFundCasesCount(archive_id, fund_id);
-  
+
             result.fundCasesCount += count;
-  
+
             await prisma.fund.update({
               where: {
                 id: fund_id,
@@ -65,9 +65,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             });
           } else if (archive_id) {
             const count = await getArchiveCasesCount(archive_id);
-  
+
             result.archiveCasesCount += count;
-  
+
             await prisma.archive.update({
               where: {
                 id: archive_id,
@@ -80,7 +80,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         })
       );
     }
-
 
     res.status(200).json(result);
   } else {

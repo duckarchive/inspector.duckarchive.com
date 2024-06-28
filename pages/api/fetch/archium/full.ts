@@ -47,9 +47,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const chunks = chunk(fetches, 10);
 
     for (const chunk of chunks) {
-      console.log(`archium full fetch chunk ${counter++} of ${chunks.length}`);
       await Promise.all(
         chunk.map(async ({ archive_id, fund_id }) => {
+          console.log(`ARCHIUM: full fetch progress (${counter++}/${fetches.length})`);
           if (archive_id && fund_id) {
             const descriptions = await fetchFundDescriptions(archive_id, fund_id);
             const descriptionsResult = await saveFundDescriptions(archive_id, fund_id, descriptions);
