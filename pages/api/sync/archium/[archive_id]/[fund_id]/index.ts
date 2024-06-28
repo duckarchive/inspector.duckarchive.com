@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Fund, PrismaClient, ResourceType } from "@prisma/client";
+import { Fund, OperationType, PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../../helpers";
@@ -70,9 +70,10 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
 
     await prisma.result.create({
       data: {
+        type: OperationType.MATCH,
+        fetch_id: "",
         match_id: match.id,
-        count: count,
-        error: null,
+        count,
       },
     });
 

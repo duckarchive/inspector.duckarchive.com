@@ -19,6 +19,11 @@ enum ResourceType {
   WIKIPEDIA
 }
 
+enum OperationType {
+  FETCH
+  MATCH
+}
+
 model Archive {
   id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   code         String    @db.VarChar(10)
@@ -155,15 +160,16 @@ model Fetch {
 }
 
 model Result {
-  created_at DateTime  @default(now()) @db.Timestamp(6)
-  updated_at DateTime? @updatedAt @db.Timestamp(6)
-  match_id   String    @db.Uuid
-  match      Match     @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_at DateTime      @default(now()) @db.Timestamp(6)
+  updated_at DateTime?     @updatedAt @db.Timestamp(6)
+  match_id   String        @db.Uuid
+  match      Match         @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   count      Int
   error      String?
-  fetch_id   String?   @db.Uuid
-  fetch      Fetch?    @relation(fields: [fetch_id], references: [id])
+  fetch_id   String        @db.Uuid
+  fetch      Fetch?        @relation(fields: [fetch_id], references: [id])
+  type       OperationType
 
-  @@id([match_id, created_at])
+  @@id([fetch_id, match_id, created_at])
   @@map("results")
 }

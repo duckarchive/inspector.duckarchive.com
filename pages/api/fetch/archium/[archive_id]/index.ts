@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, ResourceType } from "@prisma/client";
+import { OperationType, PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../helpers";
@@ -67,6 +67,15 @@ export const fetchArchiveFunds = async (archiveId: string) => {
         matchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
         fetchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
       }));
+
+    await prisma.result.create({
+      data: {
+        type: OperationType.FETCH,
+        match_id: "",
+        fetch_id: fetch.id,
+        count: funds.length,
+      },
+    });
 
     return funds;
   } catch (error) {
