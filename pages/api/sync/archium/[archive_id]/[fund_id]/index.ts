@@ -31,48 +31,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const getFundCasesCount = async (archiveId: string, fundId: string) => {
-  const DOM_QUERY = "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
-  const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
-  const match = await prisma.match.findFirst({
-    where: {
-      resource: {
-        type: ResourceType.ARCHIUM,
+  try {
+    const DOM_QUERY =
+      "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
+    const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
+    const match = await prisma.match.findFirst({
+      where: {
+        resource: {
+          type: ResourceType.ARCHIUM,
+        },
+        archive_id: archiveId,
+        fund_id: fundId,
+        description_id: null,
+        case_id: null,
       },
-      archive_id: archiveId,
-      fund_id: fundId,
-      description_id: null,
-      case_id: null,
-    },
-  });
+    });
 
-  if (!match) {
-    throw new Error("No match found");
+    if (!match) {
+      throw new Error("No match found");
+    }
+
+    const {
+      data: View,
+    } = await axios.request({
+      url: match.api_url,
+      method: match.api_method || "GET",
+      headers: parseDBParams(match.api_headers),
+      params: parseDBParams(match.api_params),
+    });
+
+    const dom = parse(View);
+
+    const count = [...dom.querySelectorAll(DOM_QUERY)]
+      .map((el) => el.innerText)
+      .map(DOM_PARSER)
+      .filter(Boolean)
+      .reduce((prev, el) => (prev += el), 0);
+
+    await prisma.result.create({
+      data: {
+        match_id: match.id,
+        count: count,
+        error: null,
+      },
+    });
+
+    return count;
+  } catch (error) {
+    console.error("sync fund error", error);
+    return 0;
   }
-
-  const {
-    data: { View },
-  } = await axios.request({
-    url: match.api_url,
-    method: match.api_method || "GET",
-    headers: parseDBParams(match.api_headers),
-    params: parseDBParams(match.api_params),
-  });
-
-  const dom = parse(View);
-
-  const count = [...dom.querySelectorAll(DOM_QUERY)]
-    .map((el) => el.innerText)
-    .map(DOM_PARSER)
-    .filter(Boolean)
-    .reduce((prev, el) => (prev += el), 0);
-
-  await prisma.result.create({
-    data: {
-      match_id: match.id,
-      count: count,
-      error: null,
-    },
-  });
-
-  return count;
 };
