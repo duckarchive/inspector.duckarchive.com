@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { syncArchive } from "./syncArchive";
-import { Archive } from "@prisma/client";
+import { syncArchive } from "../../syncArchive";
+import { Fund } from "@prisma/client";
 
-export type ArchiumArchiveSyncResponse = Archive;
+export type ArchiumSyncFundResponse = Fund;
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ArchiumArchiveSyncResponse>
+  res: NextApiResponse<ArchiumSyncFundResponse>
 ) {
   const archiveId = req.query.archive_id as string;
   if (req.method === "GET") {

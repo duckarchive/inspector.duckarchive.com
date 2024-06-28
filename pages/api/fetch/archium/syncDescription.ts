@@ -3,8 +3,7 @@ import axios from "axios";
 import { parseDBParams } from "../../helpers";
 import { parse } from "node-html-parser";
 
-const DOM_QUERY =
-  "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
+const DOM_QUERY = "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
 const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
 
 const prisma = new PrismaClient();
@@ -16,7 +15,7 @@ export const syncDescription = async ({
   api_headers,
   api_params,
   fund_id,
-  description_id
+  description_id,
 }: Match) => {
   if (!description_id) {
     throw new Error("No description_id");

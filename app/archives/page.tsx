@@ -8,7 +8,7 @@ import { GetAllArchivesResponse } from "../../pages/api/archives";
 import { sortByTextCode } from "../utils/table";
 import { IoRefresh } from "react-icons/io5";
 import { intlFormatDistance } from "date-fns/intlFormatDistance";
-import { ArchiumArchiveSyncResponse } from "../../pages/api/sync/archium/[archive_id]";
+import { ArchiumSyncArchiveResponse } from "../../pages/api/sync/archium/[archive_id]";
 import DuckTable from "../components/Table";
 import { Archive } from "@prisma/client";
 import Image from "next/image";
@@ -28,7 +28,7 @@ const ArchivesPage: NextPage = () => {
 
   const handleSyncArchiveClick = (archiveId: string) => async () => {
     const response = await fetch(`/api/sync/archium/${archiveId}`);
-    const data: ArchiumArchiveSyncResponse = await response.json();
+    const data: ArchiumSyncArchiveResponse = await response.json();
     setArchives((prev) =>
       prev.map((archive) =>
         archive.id === archiveId ? { ...archive, ...data } : archive
