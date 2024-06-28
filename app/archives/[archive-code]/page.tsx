@@ -1,33 +1,28 @@
 "use client";
 
-import { Heading, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
+import {
+  HStack,
+  Heading,
+  Image,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Tr,
+  VStack,
+} from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { sortByCode } from "../../utils/table";
+import { GetArchiveResponse } from "../../../pages/api/archives/[archive-code]";
 
 const ArchivePage: NextPage = () => {
   const params = useParams();
   const code = decodeURIComponent(params?.["archive-code"].toString() || "");
 
-  const [archive, setArchive] = useState<
-    Prisma.ArchiveGetPayload<{
-      select: {
-        id: true;
-        code: true;
-        title: true;
-        funds: {
-          select: {
-            id: true;
-            code: true;
-            title: true;
-          };
-        };
-      };
-    }>
-  >();
+  const [archive, setArchive] = useState<GetArchiveResponse>();
 
   useEffect(() => {
     const fetchArchive = async () => {
@@ -40,9 +35,28 @@ const ArchivePage: NextPage = () => {
 
   return (
     <>
-      <Heading as="h1" size="lg" mb="4">
-        {archive?.title}
-      </Heading>
+      <HStack
+        justifyContent="space-between"
+        alignItems="flex-start"
+        bg="white"
+        mb={2}
+        p={2}
+        borderRadius="lg"
+        minH="32"
+      >
+        <VStack>
+          <Heading as="h1" size="lg" mb="4">
+            {archive?.title}
+          </Heading>
+        </VStack>
+        {archive?.logo_url && (
+          <Image
+            src={`/${archive.logo_url}`}
+            alt={`Прапор ${archive?.title}`}
+            maxH="32"
+          />
+        )}
+      </HStack>
       <Table bg="white">
         <Tbody>
           <Tr key="archives-table-header" w="full">

@@ -11,6 +11,7 @@ import { intlFormatDistance } from "date-fns/intlFormatDistance";
 import { ArchiumArchiveSyncResponse } from "../../pages/api/sync/archium/[archive_id]";
 import DuckTable from "../components/Table";
 import { Archive } from "@prisma/client";
+import Image from "next/image";
 
 const ArchivesPage: NextPage = () => {
   const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
