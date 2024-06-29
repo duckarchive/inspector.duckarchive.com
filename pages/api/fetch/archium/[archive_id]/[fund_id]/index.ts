@@ -19,10 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const archiveId = req.query.archive_id as string;
       const fundId = req.query.fund_id as string;
 
-      const descriptions = await fetchFundDescriptions(archiveId, fundId);
-      const result = await saveFundDescriptions(archiveId, fundId, descriptions);
+      const result = await fetchFundDescriptions(archiveId, fundId);
 
-      res.status(200).json(result);
+      res.json(result);
     } catch (error) {
       console.error("ARCHIUM: Fetch fund handler", error, req.query);
       res.status(500);
@@ -80,7 +79,89 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
       },
     });
 
-    return descriptions;
+    const prevDescriptions = await prisma.description.findMany({
+      where: {
+        fund_id: fundId,
+      },
+    });
+
+    const newDescriptions = descriptions.filter((f) => !prevDescriptions.some((pf) => pf.code === f.code));
+
+    const newDescriptionsChunks = chunk(newDescriptions, 10);
+
+    for (const chunk of newDescriptionsChunks) {
+      await Promise.all(
+        chunk.map(async (f) => {
+          if (archiveId) {
+            const newDescription = await prisma.description.create({
+              data: {
+                fund_id: fundId,
+                code: f.code,
+                title: f.title,
+              },
+            });
+
+            await prisma.match.create({
+              data: {
+                resource_id: f.resourceId,
+                archive_id: archiveId,
+                fund_id: newDescription.id,
+                description_id: newDescription.id,
+                api_url: f.matchApiUrl,
+                api_headers: null,
+                api_params: "Limit:9999,Page:1",
+              },
+            });
+
+            await prisma.fetch.create({
+              data: {
+                resource_id: f.resourceId,
+                archive_id: archiveId,
+                fund_id: newDescription.id,
+                description_id: newDescription.id,
+                api_url: f.fetchApiUrl,
+                api_headers: null,
+                api_params: "Limit:9999,Page:1",
+              },
+            });
+          }
+        })
+      );
+    }
+
+    const removedDescriptions = prevDescriptions.filter((pd) => !descriptions.some((d) => d.code === pd.code));
+
+    const removedDescriptionsChunks = chunk(removedDescriptions, 10);
+
+    for (const chunk of removedDescriptionsChunks) {
+      await Promise.all(
+        chunk.map(async (d) => {
+          await prisma.description.delete({
+            where: {
+              id: d.id,
+            },
+          });
+
+          await prisma.match.deleteMany({
+            where: {
+              description_id: d.code,
+            },
+          });
+
+          await prisma.fetch.deleteMany({
+            where: {
+              description_id: d.code,
+            },
+          });
+        })
+      );
+    }
+
+    return {
+      total: descriptions.length,
+      added: newDescriptions.length,
+      removed: removedDescriptions.length,
+    };
   } catch (error) {
     console.error("ARCHIUM: fetchFundDescriptions", error, { archiveId, fundId });
     await prisma.fetchResult.create({
@@ -91,92 +172,10 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
       },
     });
 
-    return [];
+    return {
+      total: 0,
+      added: 0,
+      removed: 0,
+    };
   }
-};
-
-export const saveFundDescriptions = async (archiveId: string, fundId: string, descriptions: any[]) => {
-  const prevDescriptions = await prisma.description.findMany({
-    where: {
-      fund_id: fundId,
-    },
-  });
-
-  const newDescriptions = descriptions.filter((f) => !prevDescriptions.some((pf) => pf.code === f.code));
-
-  const newDescriptionsChunks = chunk(newDescriptions, 10);
-
-  for (const chunk of newDescriptionsChunks) {
-    await Promise.all(
-      chunk.map(async (f) => {
-        if (archiveId) {
-          const newDescription = await prisma.description.create({
-            data: {
-              fund_id: fundId,
-              code: f.code,
-              title: f.title,
-            },
-          });
-
-          await prisma.match.create({
-            data: {
-              resource_id: f.resourceId,
-              archive_id: archiveId,
-              fund_id: newDescription.id,
-              description_id: newDescription.id,
-              api_url: f.matchApiUrl,
-              api_headers: null,
-              api_params: "Limit:9999,Page:1",
-            },
-          });
-
-          await prisma.fetch.create({
-            data: {
-              resource_id: f.resourceId,
-              archive_id: archiveId,
-              fund_id: newDescription.id,
-              description_id: newDescription.id,
-              api_url: f.fetchApiUrl,
-              api_headers: null,
-              api_params: "Limit:9999,Page:1",
-            },
-          });
-        }
-      })
-    );
-  }
-
-  const removedDescriptions = prevDescriptions.filter((pd) => !descriptions.some((d) => d.code === pd.code));
-
-  const removedDescriptionsChunks = chunk(removedDescriptions, 10);
-
-  for (const chunk of removedDescriptionsChunks) {
-    await Promise.all(
-      chunk.map(async (d) => {
-        await prisma.description.delete({
-          where: {
-            id: d.id,
-          },
-        });
-
-        await prisma.match.deleteMany({
-          where: {
-            description_id: d.code,
-          },
-        });
-
-        await prisma.fetch.deleteMany({
-          where: {
-            description_id: d.code,
-          },
-        });
-      })
-    );
-  }
-
-  return {
-    total: descriptions.length,
-    added: newDescriptions.length,
-    removed: removedDescriptions.length,
-  };
 };
