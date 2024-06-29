@@ -4,6 +4,7 @@ import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../helpers";
 import { chunk } from "lodash";
+import { fetchFundDescriptions } from "./[fund_id]";
 
 const prisma = new PrismaClient();
 
@@ -90,11 +91,11 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     let newFundsCounter = 0;
     const newFundsChunks = chunk(newFunds, 100);
 
-    for (const chunk of newFundsChunks) {
+    for (const newFundsChunk of newFundsChunks) {
       console.log(`ARCHIUM: fetchArchiveFunds: newFunds progress (${++newFundsCounter}/${newFundsChunks.length})`);
       try {
-        const newFunds = await prisma.fund.createManyAndReturn({
-          data: chunk.map((f) => ({
+        const newFundsCreated = await prisma.fund.createManyAndReturn({
+          data: newFundsChunk.map((f) => ({
             code: f.code,
             title: f.title,
             archive_id: archiveId,
@@ -103,24 +104,31 @@ export const fetchArchiveFunds = async (archiveId: string) => {
         });
 
         await prisma.match.createMany({
-          data: newFunds.map((newFund, i) => ({
-            resource_id: chunk[i].resourceId,
+          data: newFundsCreated.map((newFundCreated, i) => ({
+            resource_id: newFundsChunk[i].resourceId,
             archive_id: archiveId,
-            fund_id: newFund.id,
-            api_url: chunk[i].matchApiUrl,
+            fund_id: newFundCreated.id,
+            api_url: newFundsChunk[i].matchApiUrl,
             api_params: "Limit:9999,Page:1",
           })),
         });
 
         await prisma.fetch.createMany({
-          data: newFunds.map((newFund, i) => ({
-            resource_id: chunk[i].resourceId,
+          data: newFundsCreated.map((newFundCreated, i) => ({
+            resource_id: newFundsChunk[i].resourceId,
             archive_id: archiveId,
-            fund_id: newFund.id,
-            api_url: chunk[i].fetchApiUrl,
+            fund_id: newFundCreated.id,
+            api_url: newFundsChunk[i].fetchApiUrl,
             api_params: "Limit:9999,Page:1",
           })),
         });
+
+        const newFundsCreatedChunks = chunk(newFundsCreated, 10);
+
+        for (const newFundCreatedChunk of newFundsCreatedChunks) {
+          await Promise.all(newFundCreatedChunk.map(async (newFundCreated) => fetchFundDescriptions(archiveId, newFundCreated.id)));
+        }
+
       } catch (error) {
         console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { chunk });
       }

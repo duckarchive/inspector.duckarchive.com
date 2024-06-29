@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
-import { chunk } from "lodash";
 import { fetchArchiveFunds } from "./[archive_id]";
-import { fetchFundDescriptions } from "./[archive_id]/[fund_id]";
 
 const prisma = new PrismaClient();
 
@@ -26,6 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         resource: {
           type: ResourceType.ARCHIUM,
         },
+        archive_id: {
+          not: null,
+        },
+        fund_id: null,
+        description_id: null,
+        case_id: null,
       },
     });
 
@@ -44,15 +48,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     let counter = 0;
 
-    for (const { archive_id, fund_id } of fetches) {
+    for (const { archive_id } of fetches) {
       console.log(`ARCHIUM: full fetch progress (${++counter}/${fetches.length})`);
-      if (archive_id && fund_id) {
-        const descriptionsResult = await fetchFundDescriptions(archive_id, fund_id);
-
-        result.descriptions.total += descriptionsResult.total;
-        result.descriptions.added += descriptionsResult.added;
-        result.descriptions.removed += descriptionsResult.removed;
-      } else if (archive_id) {
+      if (archive_id) {
         const fundsResult = await fetchArchiveFunds(archive_id);
 
         result.funds.total += fundsResult.total;
