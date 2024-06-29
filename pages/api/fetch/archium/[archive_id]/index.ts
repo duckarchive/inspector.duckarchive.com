@@ -61,7 +61,7 @@ export const fetchArchiveFunds = async (archiveId: string) => {
 
     const dom = parse(View);
 
-    const BASE_URL = fetch.api_url.split("/api")[0];
+    const BASE_URL = fetch.api_url.split("/")[0];
     const funds = [...dom.querySelectorAll(DOM_QUERY)]
       .filter(Boolean)
       .map((el) => el.querySelectorAll("td"))
@@ -146,9 +146,9 @@ export const fetchArchiveFunds = async (archiveId: string) => {
             `ARCHIUM: fetchArchiveFunds: removedFunds progress (${++removedFundsCounter}/${removedFunds.length})`
           );
           try {
-            await prisma.fund.delete({
+            await prisma.description.deleteMany({
               where: {
-                id: f.id,
+                fund_id: f.id,
               },
             });
 
@@ -161,6 +161,12 @@ export const fetchArchiveFunds = async (archiveId: string) => {
             await prisma.fetch.deleteMany({
               where: {
                 fund_id: f.code,
+              },
+            });
+
+            await prisma.fund.delete({
+              where: {
+                id: f.id,
               },
             });
           } catch (error) {

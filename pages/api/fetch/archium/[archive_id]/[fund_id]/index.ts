@@ -58,7 +58,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
     });
 
     const dom = parse(View);
-    const BASE_URL = fetch.api_url.split("/api")[0];
+    const BASE_URL = fetch.api_url.split("/")[0];
     const descriptions = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).map((anchorEl) => {
       const title = anchorEl.innerText.trim();
       const code = title.replace(/опис/gi, "").replace(/ /g, "");
@@ -146,12 +146,6 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
             })`
           );
           try {
-            await prisma.description.delete({
-              where: {
-                id: d.id,
-              },
-            });
-
             await prisma.match.deleteMany({
               where: {
                 description_id: d.code,
@@ -161,6 +155,18 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
             await prisma.fetch.deleteMany({
               where: {
                 description_id: d.code,
+              },
+            });
+
+            await prisma.case.deleteMany({
+              where: {
+                description_id: d.code,
+              },
+            });
+
+            await prisma.description.delete({
+              where: {
+                id: d.id,
               },
             });
           } catch (error) {

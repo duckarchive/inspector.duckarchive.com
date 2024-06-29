@@ -1,9 +1,7 @@
 ## TODO
 
-- check if description is removed if fund is removed
 - add child count to response of instance
 - add unescape HTML https://stackoverflow.com/questions/18749591/encode-html-entities-in-javascript/39243641#39243641
-- fix "https://e.archivelviv.gov.ua/fonds/196//inventories/620/"
 - add logs saving to file
 
 
