@@ -93,7 +93,7 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     for (const chunk of newFundsChunks) {
       await Promise.all(
         chunk.map(async (f) => {
-          console.log(`ARCHIUM: fetchArchiveFunds: newFunds progress (${newFundsCounter++}/${newFunds.length})`);
+          console.log(`ARCHIUM: fetchArchiveFunds: newFunds progress (${++newFundsCounter}/${newFunds.length})`);
           try {
             const newFund = await prisma.fund.create({
               data: {
@@ -117,7 +117,7 @@ export const fetchArchiveFunds = async (archiveId: string) => {
             await prisma.fetch.create({
               data: {
                 resource_id: f.resourceId,
-                archive_id: newFund.archive_id,
+                archive_id: archiveId,
                 fund_id: newFund.id,
                 api_url: f.fetchApiUrl,
                 api_headers: null,
@@ -140,7 +140,7 @@ export const fetchArchiveFunds = async (archiveId: string) => {
       await Promise.all(
         chunk.map(async (f) => {
           console.log(
-            `ARCHIUM: fetchArchiveFunds: removedFunds progress (${removedFundsCounter++}/${removedFunds.length})`
+            `ARCHIUM: fetchArchiveFunds: removedFunds progress (${++removedFundsCounter}/${removedFunds.length})`
           );
           try {
             await prisma.fund.delete({

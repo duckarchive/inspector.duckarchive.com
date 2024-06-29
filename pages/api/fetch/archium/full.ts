@@ -44,27 +44,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     let counter = 0;
 
-    const chunks = chunk(fetches, 10);
+    for (const { archive_id, fund_id } of fetches) {
+      console.log(`ARCHIUM: full fetch progress (${++counter}/${fetches.length})`);
+      if (archive_id && fund_id) {
+        const descriptionsResult = await fetchFundDescriptions(archive_id, fund_id);
 
-    for (const chunk of chunks) {
-      await Promise.all(
-        chunk.map(async ({ archive_id, fund_id }) => {
-          console.log(`ARCHIUM: full fetch progress (${counter++}/${fetches.length})`);
-          if (archive_id && fund_id) {
-            const descriptionsResult = await fetchFundDescriptions(archive_id, fund_id);
+        result.descriptions.total += descriptionsResult.total;
+        result.descriptions.added += descriptionsResult.added;
+        result.descriptions.removed += descriptionsResult.removed;
+      } else if (archive_id) {
+        const fundsResult = await fetchArchiveFunds(archive_id);
 
-            result.descriptions.total += descriptionsResult.total;
-            result.descriptions.added += descriptionsResult.added;
-            result.descriptions.removed += descriptionsResult.removed;
-          } else if (archive_id) {
-            const fundsResult = await fetchArchiveFunds(archive_id);
-
-            result.funds.total += fundsResult.total;
-            result.funds.added += fundsResult.added;
-            result.funds.removed += fundsResult.removed;
-          }
-        })
-      );
+        result.funds.total += fundsResult.total;
+        result.funds.added += fundsResult.added;
+        result.funds.removed += fundsResult.removed;
+      }
     }
 
     res.status(200).json(result);

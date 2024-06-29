@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     for (const chunk of chunks) {
       await Promise.all(
         chunk.map(async ({ archive_id, fund_id, description_id }) => {
-          console.log(`ARCHIUM: full sync progress (${counter++}/${matches.length})`);
+          console.log(`ARCHIUM: full sync progress (${++counter}/${matches.length})`);
           if (archive_id && fund_id && description_id) {
             const count = await getDescriptionCasesCount(archive_id, fund_id, description_id);
 

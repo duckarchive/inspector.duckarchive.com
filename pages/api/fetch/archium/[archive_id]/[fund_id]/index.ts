@@ -94,7 +94,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
       await Promise.all(
         chunk.map(async (f) => {
           console.log(
-            `ARCHIUM: fetchFundDescriptions: newDescriptions progress (${newDescriptionsCounter++}/${
+            `ARCHIUM: fetchFundDescriptions: newDescriptions progress (${++newDescriptionsCounter}/${
               newDescriptions.length
             })`
           );
@@ -146,7 +146,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
       await Promise.all(
         chunk.map(async (d) => {
           console.log(
-            `ARCHIUM: fetchFundDescriptions: removedDescriptions progress (${removedDescriptionsCounter++}/${
+            `ARCHIUM: fetchFundDescriptions: removedDescriptions progress (${++removedDescriptionsCounter}/${
               removedDescriptions.length
             })`
           );
