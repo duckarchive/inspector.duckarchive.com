@@ -70,6 +70,7 @@ const ArchivesPage: NextPage = () => {
                 variant="ghost"
                 rightIcon={<IoRefresh />}
                 fontSize="sm"
+                w="full"
                 onClick={handleSyncArchiveClick(row.data.id)}
               >
                 {row.value}
