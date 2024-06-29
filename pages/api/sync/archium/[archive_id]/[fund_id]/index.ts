@@ -80,7 +80,7 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
 
     return count;
   } catch (error) {
-    console.error("ARCHIUM: getFundCasesCount", error, { archiveId });
+    console.error("ARCHIUM: getFundCasesCount", error, { archiveId, fundId });
 
     await prisma.matchResult.create({
       data: {

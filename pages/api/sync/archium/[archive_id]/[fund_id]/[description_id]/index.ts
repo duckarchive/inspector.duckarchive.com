@@ -55,7 +55,7 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
   }
   try {
     const {
-      data: { View },
+      data: View,
     } = await axios.request({
       url: match.api_url,
       method: match.api_method || "GET",
@@ -76,7 +76,7 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
 
     return count;
   } catch (error) {
-    console.error("ARCHIUM: getDescriptionCasesCount", error, { archiveId });
+    console.error("ARCHIUM: getDescriptionCasesCount", error, { archiveId, fundId, descriptionId });
 
     await prisma.matchResult.create({
       data: {
