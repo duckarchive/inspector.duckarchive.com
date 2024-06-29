@@ -111,7 +111,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
               data: {
                 resource_id: f.resourceId,
                 archive_id: archiveId,
-                fund_id: newDescription.id,
+                fund_id: fundId,
                 description_id: newDescription.id,
                 api_url: f.matchApiUrl,
                 api_headers: null,
@@ -123,7 +123,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
               data: {
                 resource_id: f.resourceId,
                 archive_id: archiveId,
-                fund_id: newDescription.id,
+                fund_id: fundId,
                 description_id: newDescription.id,
                 api_url: f.fetchApiUrl,
                 api_headers: null,
