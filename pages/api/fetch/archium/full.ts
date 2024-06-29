@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
 import { chunk } from "lodash";
-import { fetchArchiveFunds, saveArchiveFunds } from "./[archive_id]";
-import { fetchFundDescriptions, saveFundDescriptions } from "./[archive_id]/[fund_id]";
+import { fetchArchiveFunds } from "./[archive_id]";
+import { fetchFundDescriptions } from "./[archive_id]/[fund_id]";
 
 const prisma = new PrismaClient();
 
@@ -51,15 +51,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         chunk.map(async ({ archive_id, fund_id }) => {
           console.log(`ARCHIUM: full fetch progress (${counter++}/${fetches.length})`);
           if (archive_id && fund_id) {
-            const descriptions = await fetchFundDescriptions(archive_id, fund_id);
-            const descriptionsResult = await saveFundDescriptions(archive_id, fund_id, descriptions);
+            const descriptionsResult = await fetchFundDescriptions(archive_id, fund_id);
 
             result.descriptions.total += descriptionsResult.total;
             result.descriptions.added += descriptionsResult.added;
             result.descriptions.removed += descriptionsResult.removed;
           } else if (archive_id) {
-            const funds = await fetchArchiveFunds(archive_id);
-            const fundsResult = await saveArchiveFunds(archive_id, funds);
+            const fundsResult = await fetchArchiveFunds(archive_id);
 
             result.funds.total += fundsResult.total;
             result.funds.added += fundsResult.added;
