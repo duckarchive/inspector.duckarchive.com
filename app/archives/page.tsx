@@ -5,13 +5,11 @@ import { Button, Heading } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
-import { sortByTextCode } from "../utils/table";
 import { IoRefresh } from "react-icons/io5";
 import { intlFormatDistance } from "date-fns/intlFormatDistance";
 import { ArchiumSyncArchiveResponse } from "../../pages/api/sync/archium/[archive_id]";
 import DuckTable from "../components/Table";
 import { Archive } from "@prisma/client";
-import Image from "next/image";
 
 const ArchivesPage: NextPage = () => {
   const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
@@ -64,8 +62,8 @@ const ArchivesPage: NextPage = () => {
             field: "count",
             headerName: "Справ онлайн",
             flex: 1,
+            maxWidth: 120,
             resizable: false,
-            filter: true,
             cellRenderer: (row: { value: number; data: Archive }) => (
               <Button
                 size="sm"

@@ -34,7 +34,7 @@ const DuckTable = <T extends { id: string }>({
   // }, [rows]);
 
   return (
-    <Box className="ag-theme-alpine" h="60vh" w="960px">
+    <Box className="ag-theme-alpine" h="60vh" w="100%">
       <AgGridReact
         ref={gridRef}
         domLayout="autoHeight"
