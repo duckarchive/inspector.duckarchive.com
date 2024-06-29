@@ -88,47 +88,42 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     const newFunds = funds.filter((f) => !prevFunds.some((pf) => pf.code === f.code));
 
     let newFundsCounter = 0;
-    const newFundsChunks = chunk(newFunds, 10);
+    const newFundsChunks = chunk(newFunds, 100);
 
     for (const chunk of newFundsChunks) {
-      await Promise.all(
-        chunk.map(async (f) => {
-          console.log(`ARCHIUM: fetchArchiveFunds: newFunds progress (${++newFundsCounter}/${newFunds.length})`);
-          try {
-            const newFund = await prisma.fund.create({
-              data: {
-                archive_id: archiveId,
-                code: f.code,
-                title: f.title,
-              },
-            });
+      console.log(`ARCHIUM: fetchArchiveFunds: newFunds progress (${++newFundsCounter}/${newFundsChunks.length})`);
+      try {
+        const newFunds = await prisma.fund.createManyAndReturn({
+          data: chunk.map((f) => ({
+            code: f.code,
+            title: f.title,
+            archive_id: archiveId,
+          })),
+          skipDuplicates: true,
+        });
 
-            await prisma.match.create({
-              data: {
-                resource_id: f.resourceId,
-                archive_id: archiveId,
-                fund_id: newFund.id,
-                api_url: f.matchApiUrl,
-                api_headers: null,
-                api_params: "Limit:9999,Page:1",
-              },
-            });
+        await prisma.match.createMany({
+          data: newFunds.map((newFund, i) => ({
+            resource_id: chunk[i].resourceId,
+            archive_id: archiveId,
+            fund_id: newFund.id,
+            api_url: chunk[i].matchApiUrl,
+            api_params: "Limit:9999,Page:1",
+          })),
+        });
 
-            await prisma.fetch.create({
-              data: {
-                resource_id: f.resourceId,
-                archive_id: archiveId,
-                fund_id: newFund.id,
-                api_url: f.fetchApiUrl,
-                api_headers: null,
-                api_params: "Limit:9999,Page:1",
-              },
-            });
-          } catch (error) {
-            console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { f });
-          }
-        })
-      );
+        await prisma.fetch.createMany({
+          data: newFunds.map((newFund, i) => ({
+            resource_id: chunk[i].resourceId,
+            archive_id: archiveId,
+            fund_id: newFund.id,
+            api_url: chunk[i].fetchApiUrl,
+            api_params: "Limit:9999,Page:1",
+          })),
+        });
+      } catch (error) {
+        console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { chunk });
+      }
     }
 
     const removedFunds = prevFunds.filter((pf) => !funds.some((f) => f.code === pf.code));
