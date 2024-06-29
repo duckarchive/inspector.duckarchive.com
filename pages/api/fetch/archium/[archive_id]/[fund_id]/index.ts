@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
-import { parseDBParams } from "../../../../helpers";
+import { parseCode, parseDBParams, parseTitle } from "../../../../helpers";
 import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
@@ -60,13 +60,13 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
     const dom = parse(View);
     const BASE_URL = fetch.api_url.split("/")[0];
     const descriptions = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).map((anchorEl) => {
-      const title = anchorEl.innerText.trim();
-      const code = title.replace(/опис/gi, "").replace(/ /g, "");
+      const title = parseTitle(anchorEl.innerText);
+      const code = parseCode(title.replace(/опис/gi, ""));
       const matchApiUrl = BASE_URL + anchorEl.getAttribute("href")?.trim();
       return {
         resourceId: fetch.resource_id,
-        code: code.trim(),
-        title: title.slice(0, 200),
+        code,
+        title,
         matchApiUrl: matchApiUrl.trim(),
         fetchApiUrl: matchApiUrl.trim(),
       };

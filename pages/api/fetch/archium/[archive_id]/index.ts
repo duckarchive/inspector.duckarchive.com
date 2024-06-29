@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
-import { parseDBParams } from "../../../helpers";
+import { parseCode, parseDBParams, parseTitle } from "../../../helpers";
 import { chunk } from "lodash";
 import { fetchFundDescriptions } from "./[fund_id]";
 
@@ -67,8 +67,8 @@ export const fetchArchiveFunds = async (archiveId: string) => {
       .map((el) => el.querySelectorAll("td"))
       .map(([code, title]) => ({
         resourceId: fetch.resource_id,
-        code: code.innerText.trim(),
-        title: title.innerText.trim().slice(0, 200),
+        code: parseCode(code.innerText),
+        title: parseTitle(title.innerText),
         matchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
         fetchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
       }));
