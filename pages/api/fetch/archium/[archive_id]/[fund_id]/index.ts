@@ -87,12 +87,18 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
 
     const newDescriptions = descriptions.filter((f) => !prevDescriptions.some((pf) => pf.code === f.code));
 
+    let newDescriptionsCounter = 0;
     const newDescriptionsChunks = chunk(newDescriptions, 10);
 
     for (const chunk of newDescriptionsChunks) {
       await Promise.all(
         chunk.map(async (f) => {
-          if (archiveId) {
+          console.log(
+            `ARCHIUM: fetchFundDescriptions: newDescriptions progress (${newDescriptionsCounter++}/${
+              newDescriptions.length
+            })`
+          );
+          try {
             const newDescription = await prisma.description.create({
               data: {
                 fund_id: fundId,
@@ -124,6 +130,8 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
                 api_params: "Limit:9999,Page:1",
               },
             });
+          } catch (error) {
+            console.error("ARCHIUM: fetchFundDescriptions: newDescriptions", error, { f });
           }
         })
       );
@@ -131,28 +139,38 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
 
     const removedDescriptions = prevDescriptions.filter((pd) => !descriptions.some((d) => d.code === pd.code));
 
+    let removedDescriptionsCounter = 0;
     const removedDescriptionsChunks = chunk(removedDescriptions, 10);
 
     for (const chunk of removedDescriptionsChunks) {
       await Promise.all(
         chunk.map(async (d) => {
-          await prisma.description.delete({
-            where: {
-              id: d.id,
-            },
-          });
+          console.log(
+            `ARCHIUM: fetchFundDescriptions: removedDescriptions progress (${removedDescriptionsCounter++}/${
+              removedDescriptions.length
+            })`
+          );
+          try {
+            await prisma.description.delete({
+              where: {
+                id: d.id,
+              },
+            });
 
-          await prisma.match.deleteMany({
-            where: {
-              description_id: d.code,
-            },
-          });
+            await prisma.match.deleteMany({
+              where: {
+                description_id: d.code,
+              },
+            });
 
-          await prisma.fetch.deleteMany({
-            where: {
-              description_id: d.code,
-            },
-          });
+            await prisma.fetch.deleteMany({
+              where: {
+                description_id: d.code,
+              },
+            });
+          } catch (error) {
+            console.error("ARCHIUM: fetchFundDescriptions: removedDescriptions", error, { d });
+          }
         })
       );
     }

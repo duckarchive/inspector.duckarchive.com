@@ -87,68 +87,82 @@ export const fetchArchiveFunds = async (archiveId: string) => {
 
     const newFunds = funds.filter((f) => !prevFunds.some((pf) => pf.code === f.code));
 
+    let newFundsCounter = 0;
     const newFundsChunks = chunk(newFunds, 10);
 
     for (const chunk of newFundsChunks) {
       await Promise.all(
         chunk.map(async (f) => {
-          const newFund = await prisma.fund.create({
-            data: {
-              archive_id: archiveId,
-              code: f.code,
-              title: f.title,
-            },
-          });
+          console.log(`ARCHIUM: fetchArchiveFunds: newFunds progress (${newFundsCounter++}/${newFunds.length})`);
+          try {
+            const newFund = await prisma.fund.create({
+              data: {
+                archive_id: archiveId,
+                code: f.code,
+                title: f.title,
+              },
+            });
 
-          await prisma.match.create({
-            data: {
-              resource_id: f.resourceId,
-              archive_id: newFund.archive_id,
-              fund_id: newFund.id,
-              api_url: f.matchApiUrl,
-              api_headers: null,
-              api_params: "Limit:9999,Page:1",
-            },
-          });
+            await prisma.match.create({
+              data: {
+                resource_id: f.resourceId,
+                archive_id: archiveId,
+                fund_id: newFund.id,
+                api_url: f.matchApiUrl,
+                api_headers: null,
+                api_params: "Limit:9999,Page:1",
+              },
+            });
 
-          await prisma.fetch.create({
-            data: {
-              resource_id: f.resourceId,
-              archive_id: newFund.archive_id,
-              fund_id: newFund.id,
-              api_url: f.fetchApiUrl,
-              api_headers: null,
-              api_params: "Limit:9999,Page:1",
-            },
-          });
+            await prisma.fetch.create({
+              data: {
+                resource_id: f.resourceId,
+                archive_id: newFund.archive_id,
+                fund_id: newFund.id,
+                api_url: f.fetchApiUrl,
+                api_headers: null,
+                api_params: "Limit:9999,Page:1",
+              },
+            });
+          } catch (error) {
+            console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { f });
+          }
         })
       );
     }
 
     const removedFunds = prevFunds.filter((pf) => !funds.some((f) => f.code === pf.code));
 
+    let removedFundsCounter = 0;
     const removedFundsChunks = chunk(removedFunds, 10);
 
     for (const chunk of removedFundsChunks) {
       await Promise.all(
         chunk.map(async (f) => {
-          await prisma.fund.delete({
-            where: {
-              id: f.id,
-            },
-          });
+          console.log(
+            `ARCHIUM: fetchArchiveFunds: removedFunds progress (${removedFundsCounter++}/${removedFunds.length})`
+          );
+          try {
+            await prisma.fund.delete({
+              where: {
+                id: f.id,
+              },
+            });
 
-          await prisma.match.deleteMany({
-            where: {
-              fund_id: f.code,
-            },
-          });
+            await prisma.match.deleteMany({
+              where: {
+                fund_id: f.code,
+              },
+            });
 
-          await prisma.fetch.deleteMany({
-            where: {
-              fund_id: f.code,
-            },
-          });
+            await prisma.fetch.deleteMany({
+              where: {
+                fund_id: f.code,
+              },
+            });
+          } catch (error) {
+            console.error("ARCHIUM: fetchArchiveFunds: removedFunds", error, { f });
+          }
         })
       );
     }
