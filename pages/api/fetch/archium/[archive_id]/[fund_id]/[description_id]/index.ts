@@ -51,7 +51,7 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
   }
 
   try {
-    const { data: View } = await axios.request({
+    const { data: { View }} = await axios.request({
       url: fetch.api_url,
       method: fetch.api_method || "GET",
       headers: parseDBParams(fetch.api_headers),
@@ -107,21 +107,23 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
         });
 
         await prisma.match.createMany({
-          data: newCases.map((newDescription, i) => ({
+          data: newCases.map((newCase, i) => ({
             resource_id: chunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
-            description_id: newDescription.id,
+            description_id: descriptionId,
+            case_id: newCase.id,
             api_url: chunk[i].matchApiUrl,
           })),
         });
 
         await prisma.fetch.createMany({
-          data: newCases.map((newDescription, i) => ({
+          data: newCases.map((newCase, i) => ({
             resource_id: chunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
-            description_id: newDescription.id,
+            description_id: descriptionId,
+            case_id: newCase.id,
             api_url: chunk[i].fetchApiUrl,
           })),
         });

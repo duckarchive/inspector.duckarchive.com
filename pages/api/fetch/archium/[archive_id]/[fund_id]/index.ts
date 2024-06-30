@@ -4,6 +4,7 @@ import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseCode, parseDBParams, parseTitle } from "../../../../helpers";
 import { chunk } from "lodash";
+import { fetchDescriptionCases } from "./[description_id]";
 
 const prisma = new PrismaClient();
 
@@ -90,15 +91,15 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
     let newDescriptionsCounter = 0;
     const newDescriptionsChunks = chunk(newDescriptions, 100);
 
-    for (const chunk of newDescriptionsChunks) {
+    for (const newDescriptionsChunk of newDescriptionsChunks) {
       console.log(
         `ARCHIUM: fetchFundDescriptions: newDescriptions progress (${++newDescriptionsCounter}/${
           newDescriptionsChunks.length
         })`
       );
       try {
-        const newDescriptions = await prisma.description.createManyAndReturn({
-          data: chunk.map((f) => ({
+        const newDescriptionsCreated = await prisma.description.createManyAndReturn({
+          data: newDescriptionsChunk.map((f) => ({
             code: f.code,
             title: f.title,
             fund_id: fundId,
@@ -107,26 +108,32 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
         });
 
         await prisma.match.createMany({
-          data: newDescriptions.map((newDescription, i) => ({
-            resource_id: chunk[i].resourceId,
+          data: newDescriptionsCreated.map((newDescription, i) => ({
+            resource_id: newDescriptionsChunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
             description_id: newDescription.id,
-            api_url: chunk[i].matchApiUrl,
+            api_url: newDescriptionsChunk[i].matchApiUrl,
             api_params: "Limit:9999,Page:1",
           })),
         });
 
         await prisma.fetch.createMany({
-          data: newDescriptions.map((newDescription, i) => ({
-            resource_id: chunk[i].resourceId,
+          data: newDescriptionsCreated.map((newDescription, i) => ({
+            resource_id: newDescriptionsChunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
             description_id: newDescription.id,
-            api_url: chunk[i].fetchApiUrl,
+            api_url: newDescriptionsChunk[i].fetchApiUrl,
             api_params: "Limit:9999,Page:1",
           })),
         });
+
+        const newDescriptionsCreatedChunks = chunk(newDescriptionsCreated, 10);
+
+        for (const newDescriptionCreatedChunk of newDescriptionsCreatedChunks) {
+          await Promise.all(newDescriptionCreatedChunk.map(async (newDescriptionCreated) => fetchDescriptionCases(archiveId, fundId, newDescriptionCreated.id)));
+        }
       } catch (error) {
         console.error("ARCHIUM: fetchFundDescriptions: newDescriptions", error, { chunk });
       }
