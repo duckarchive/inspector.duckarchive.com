@@ -6,7 +6,9 @@ import parse from "node-html-parser";
 
 const prisma = new PrismaClient();
 
-export type ArchiumSyncDescriptionResponse = Description;
+export type ArchiumSyncDescriptionResponse = {
+  count: number;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumSyncDescriptionResponse>) {
   if (req.method === "GET") {
@@ -14,19 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const archiveId = req.query.archive_id as string;
       const fundId = req.query.fund_id as string;
       const descriptionId = req.query.description_id as string;
-  
+
       const count = await getDescriptionCasesCount(archiveId, fundId, descriptionId);
-  
-      const updatedDescription = await prisma.description.update({
-        where: {
-          id: descriptionId,
-        },
-        data: {
-          count,
-        },
-      });
-  
-      res.status(200).json(updatedDescription);
+
+      res.status(200).json({ count });
     } catch (error) {
       console.error("ARCHIUM: Sync description handler", error, req.query);
       res.status(500);

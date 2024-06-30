@@ -31,7 +31,6 @@ model Archive {
   phone_number String?   @db.VarChar(20)
   email        String?   @db.VarChar(255)
   logo_url     String?   @db.VarChar(255)
-  count        Int       @default(0)
   funds        Fund[]
   matches      Match[]
   fetches      Fetch[]
@@ -46,7 +45,6 @@ model Fund {
   updated_at   DateTime?     @updatedAt @db.Timestamp(6)
   title        String?       @db.VarChar(255)
   info         String?       @db.VarChar(255)
-  count        Int           @default(0)
   archive_id   String        @db.Uuid
   archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   descriptions Description[]
@@ -64,7 +62,6 @@ model Description {
   updated_at DateTime? @updatedAt @db.Timestamp(6)
   title      String?   @db.VarChar(255)
   info       String?   @db.VarChar(255)
-  count      Int       @default(0)
   fund_id    String    @db.Uuid
   fund       Fund      @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   cases      Case[]
@@ -82,7 +79,6 @@ model Case {
   updated_at     DateTime?   @updatedAt @db.Timestamp(6)
   title          String?     @db.VarChar(255)
   info           String?     @db.VarChar(255)
-  count          Int         @default(0)
   description_id String      @db.Uuid
   description    Description @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   matches        Match[]

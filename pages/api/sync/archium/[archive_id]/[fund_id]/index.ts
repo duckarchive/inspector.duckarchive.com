@@ -3,10 +3,13 @@ import { Fund, PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { parseDBParams } from "../../../../helpers";
+import { getDescriptionCasesCount } from "./[description_id]";
 
 const prisma = new PrismaClient();
 
-export type ArchiumSyncFundResponse = Fund;
+export type ArchiumSyncFundResponse = {
+  count: number;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumSyncFundResponse>) {
   if (req.method === "GET") {
@@ -16,16 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       const count = await getFundCasesCount(archiveId, fundId);
 
-      const updatedFund = await prisma.fund.update({
-        where: {
-          id: fundId,
-        },
-        data: {
-          count,
-        },
-      });
-
-      res.json(updatedFund);
+      res.json({ count });
     } catch (error) {
       console.error("ARCHIUM: Sync fund handler", error, req.query);
       res.status(500);
@@ -36,8 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const getFundCasesCount = async (archiveId: string, fundId: string) => {
-  const DOM_QUERY =
-    "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
+  const DOM_QUERY = "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
   const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
   const match = await prisma.match.findFirst({
     where: {
@@ -55,7 +48,6 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
     throw new Error("No match found");
   }
   try {
-
     const { data: View } = await axios.request({
       url: match.api_url,
       method: match.api_method || "GET",
@@ -71,12 +63,33 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
       .filter(Boolean)
       .reduce((prev, el) => (prev += el), 0);
 
+    const prevMatchResult = await prisma.matchResult.findFirst({
+      where: {
+        match_id: match.id,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+
     await prisma.matchResult.create({
       data: {
         match_id: match.id,
         count,
       },
     });
+
+    if (prevMatchResult?.count !== count) {
+      const descriptions = await prisma.description.findMany({
+        where: {
+          fund_id: fundId,
+        },
+      });
+
+      for (const description of descriptions) {
+        await getDescriptionCasesCount(archiveId, fundId, description.id);
+      }
+    }
 
     return count;
   } catch (error) {

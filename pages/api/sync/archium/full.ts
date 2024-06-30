@@ -1,16 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
-import { getDescriptionCasesCount } from "./[archive_id]/[fund_id]/[description_id]";
-import { getFundCasesCount } from "./[archive_id]/[fund_id]";
 import { getArchiveCasesCount } from "./[archive_id]";
-import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
 
 export type ArchiumFullSyncResponse = {
-  archiveCasesCount: number;
-  fundCasesCount: number;
-  descriptionCasesCount: number;
+  count: number;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumFullSyncResponse>) {
@@ -29,12 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       },
     });
 
-    const result = {
-      archiveCasesCount: 0,
-      fundCasesCount: 0,
-      descriptionCasesCount: 0,
-    };
-
+    
+    let totalCount = 0;
     let counter = 0;
 
     for (const { archive_id } of matches) {
@@ -42,20 +33,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       if (archive_id) {
         const count = await getArchiveCasesCount(archive_id);
 
-        result.archiveCasesCount += count;
-
-        await prisma.archive.update({
-          where: {
-            id: archive_id,
-          },
-          data: {
-            count,
-          },
-        });
+        totalCount += count;
       }
     }
 
-    res.status(200).json(result);
+    res.status(200).json({ count: totalCount });
   } else {
     res.status(405);
   }
