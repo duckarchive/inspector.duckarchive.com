@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Archive, PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parse } from "node-html-parser";
-import { parseDBParams } from "../../../helpers";
+import { PrismaClient, ResourceType } from "@prisma/client";
+import { scrapping } from "../../../helpers";
 import { getFundCasesCount } from "./[fund_id]";
 
 const prisma = new PrismaClient();
@@ -28,8 +26,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const getArchiveCasesCount = async (archiveId: string) => {
-  const DOM_QUERY = "div.single-data > p > a > span";
-  const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -46,21 +42,12 @@ export const getArchiveCasesCount = async (archiveId: string) => {
     throw new Error("Match not found");
   }
   try {
-    const {
-      data: { View },
-    } = await axios.request({
-      url: match.api_url,
-      method: match.api_method || "GET",
-      headers: parseDBParams(match.api_headers),
-      params: parseDBParams(match.api_params),
+    const parsed = await scrapping(match, {
+      selector: "div.single-data > p > a > span",
+      responseKey: "View",
     });
-
-    const dom = parse(View);
-
-    const count = [...dom.querySelectorAll(DOM_QUERY)]
-      .map((el) => el.innerText)
-      .map(DOM_PARSER)
-      .filter(Boolean)
+    const count = parsed
+      .map((el) => +el.innerText.split(" справ")[0].split(", ")[1])
       .reduce((prev, el) => (prev += el), 0);
 
     await prisma.matchResult.create({

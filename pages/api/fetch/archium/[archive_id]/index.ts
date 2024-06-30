@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parse } from "node-html-parser";
-import { parseCode, parseDBParams, parseTitle } from "../../../helpers";
+import { parseCode, parseTitle, scrapping } from "../../../helpers";
 import { chunk } from "lodash";
 import { fetchFundDescriptions } from "./[fund_id]";
 
@@ -32,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const fetchArchiveFunds = async (archiveId: string) => {
-  const DOM_QUERY = "table.fond-groups > tbody > tr";
   const fetch = await prisma.fetch.findFirst({
     where: {
       resource: {
@@ -50,19 +47,12 @@ export const fetchArchiveFunds = async (archiveId: string) => {
   }
 
   try {
-    const {
-      data: { View },
-    } = await axios.request({
-      url: fetch.api_url,
-      method: fetch.api_method || "GET",
-      headers: parseDBParams(fetch.api_headers),
-      params: parseDBParams(fetch.api_params),
+    const parsed = await scrapping(fetch, {
+      selector: "table.fond-groups > tbody > tr",
+      responseKey: "View",
     });
-
-    const dom = parse(View);
     const BASE_URL = new URL(fetch.api_url).origin;
-    const funds = [...dom.querySelectorAll(DOM_QUERY)]
-      .filter(Boolean)
+    const funds = parsed
       .map((el) => el.querySelectorAll("td"))
       .map(([code, title]) => ({
         resourceId: fetch.resource_id,
@@ -125,9 +115,10 @@ export const fetchArchiveFunds = async (archiveId: string) => {
         const newFundsCreatedChunks = chunk(newFundsCreated, 10);
 
         for (const newFundCreatedChunk of newFundsCreatedChunks) {
-          await Promise.all(newFundCreatedChunk.map(async (newFundCreated) => fetchFundDescriptions(archiveId, newFundCreated.id)));
+          await Promise.all(
+            newFundCreatedChunk.map(async (newFundCreated) => fetchFundDescriptions(archiveId, newFundCreated.id))
+          );
         }
-
       } catch (error) {
         console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { chunk });
       }

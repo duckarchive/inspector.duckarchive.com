@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parse } from "node-html-parser";
-import { parseCode, parseDBParams, parseTitle } from "../../../../../helpers";
+import { parseCode, parseTitle, scrapping } from "../../../../../helpers";
 import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
@@ -33,7 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const fetchDescriptionCases = async (archiveId: string, fundId: string, descriptionId: string) => {
-  const DOM_QUERY = "div.row.with-border-bottom";
   const fetch = await prisma.fetch.findFirst({
     where: {
       resource: {
@@ -51,22 +48,18 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
   }
 
   try {
-    const { data: { View }} = await axios.request({
-      url: fetch.api_url,
-      method: fetch.api_method || "GET",
-      headers: parseDBParams(fetch.api_headers),
-      params: parseDBParams(fetch.api_params),
+    const parsed = await scrapping(fetch, {
+      selector: "div.row.with-border-bottom",
+      responseKey: "View",
     });
 
-    const dom = parse(View);
     const BASE_URL = new URL(fetch.api_url).origin;
-    const cases = [...dom.querySelectorAll(DOM_QUERY)]
-      .filter(Boolean)
+    const cases = parsed
       .map((el) => el.querySelectorAll("a"))
       .map(([codeEl, titleEl]) => {
         const code = parseCode(codeEl.innerText.replace(/справа/gi, ""));
         const title = parseTitle(titleEl.innerText);
-        const href = `${BASE_URL}${codeEl.getAttribute("href")?.replace('files', 'file-viewer').trim()}`;
+        const href = `${BASE_URL}${codeEl.getAttribute("href")?.replace("files", "file-viewer").trim()}`;
         return {
           resourceId: fetch.resource_id,
           code,

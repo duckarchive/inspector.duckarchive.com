@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parse } from "node-html-parser";
-import { parseCode, parseDBParams, parseTitle } from "../../../../helpers";
+import { parseCode, parseTitle, scrapping } from "../../../../helpers";
 import { chunk } from "lodash";
 import { fetchDescriptionCases } from "./[description_id]";
 
@@ -33,7 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
-  const DOM_QUERY = "div.container > div.row.with-border-bottom.thin-row > div.left > a";
   const fetch = await prisma.fetch.findFirst({
     where: {
       resource: {
@@ -51,16 +48,11 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
   }
 
   try {
-    const { data: View } = await axios.request({
-      url: fetch.api_url,
-      method: fetch.api_method || "GET",
-      headers: parseDBParams(fetch.api_headers),
-      params: parseDBParams(fetch.api_params),
+    const parsed = await scrapping(fetch, {
+      selector: "div.container > div.row.with-border-bottom.thin-row > div.left > a",
     });
-
-    const dom = parse(View);
     const BASE_URL = new URL(fetch.api_url).origin;
-    const descriptions = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).map((anchorEl) => {
+    const descriptions = parsed.map((anchorEl) => {
       const title = parseTitle(anchorEl.innerText);
       const code = parseCode(title.replace(/опис/gi, ""));
       const href = `${BASE_URL}/api/v1${anchorEl.getAttribute("href")?.trim()}`;
@@ -132,7 +124,11 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
         const newDescriptionsCreatedChunks = chunk(newDescriptionsCreated, 10);
 
         for (const newDescriptionCreatedChunk of newDescriptionsCreatedChunks) {
-          await Promise.all(newDescriptionCreatedChunk.map(async (newDescriptionCreated) => fetchDescriptionCases(archiveId, fundId, newDescriptionCreated.id)));
+          await Promise.all(
+            newDescriptionCreatedChunk.map(async (newDescriptionCreated) =>
+              fetchDescriptionCases(archiveId, fundId, newDescriptionCreated.id)
+            )
+          );
         }
       } catch (error) {
         console.error("ARCHIUM: fetchFundDescriptions: newDescriptions", error, { chunk });

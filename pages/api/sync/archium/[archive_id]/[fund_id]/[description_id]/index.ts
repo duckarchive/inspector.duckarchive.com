@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Description, PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parseDBParams } from "../../../../../helpers";
-import parse from "node-html-parser";
+import { PrismaClient, ResourceType } from "@prisma/client";
+import { scrapping } from "../../../../../helpers";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const getDescriptionCasesCount = async (archiveId: string, fundId: string, descriptionId: string) => {
-  const DOM_QUERY = "div.row.with-border-bottom > div.left > a";
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -47,17 +44,8 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
     throw new Error("No match found");
   }
   try {
-    const {
-      data: { View },
-    } = await axios.request({
-      url: match.api_url,
-      method: match.api_method || "GET",
-      headers: parseDBParams(match.api_headers),
-      params: parseDBParams(match.api_params),
-    });
-
-    const dom = parse(View);
-    const count = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).length;
+    const parsed = await scrapping(match, { selector: "div.row.with-border-bottom > div.left > a", responseKey: "View" });
+    const count = parsed.length;
 
     await prisma.matchResult.create({
       data: {
