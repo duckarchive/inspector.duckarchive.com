@@ -66,7 +66,7 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
       .map(([codeEl, titleEl]) => {
         const code = parseCode(codeEl.innerText.replace(/справа/gi, ""));
         const title = parseTitle(titleEl.innerText);
-        const href = `${BASE_URL}${codeEl.getAttribute("href")?.trim()}`;
+        const href = `${BASE_URL}${codeEl.getAttribute("href")?.replace('files', 'file-viewer').trim()}`;
         return {
           resourceId: fetch.resource_id,
           code,
