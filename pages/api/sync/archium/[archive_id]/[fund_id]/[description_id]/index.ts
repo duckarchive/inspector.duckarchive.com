@@ -47,7 +47,9 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
     throw new Error("No match found");
   }
   try {
-    const { data: View } = await axios.request({
+    const {
+      data: { View },
+    } = await axios.request({
       url: match.api_url,
       method: match.api_method || "GET",
       headers: parseDBParams(match.api_headers),

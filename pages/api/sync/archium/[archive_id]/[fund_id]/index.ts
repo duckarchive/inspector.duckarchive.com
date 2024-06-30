@@ -87,7 +87,9 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
         },
       });
 
+      let descriptionCounter = 0;
       for (const description of descriptions) {
+        console.log(`ARCHIUM: getFundCasesCount: descriptions progress (${++descriptionCounter}/${descriptions.length})`);
         await getDescriptionCasesCount(archiveId, fundId, description.id);
       }
     }

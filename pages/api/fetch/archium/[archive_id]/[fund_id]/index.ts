@@ -62,13 +62,13 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
     const descriptions = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).map((anchorEl) => {
       const title = parseTitle(anchorEl.innerText);
       const code = parseCode(title.replace(/опис/gi, ""));
-      const matchApiUrl = BASE_URL + anchorEl.getAttribute("href")?.trim();
+      const href = anchorEl.getAttribute("href")?.trim();
       return {
         resourceId: fetch.resource_id,
         code,
         title,
-        matchApiUrl: matchApiUrl.trim(),
-        fetchApiUrl: matchApiUrl.trim(),
+        matchApiUrl: `${BASE_URL}/api/v1${href}`,
+        fetchApiUrl: `${BASE_URL}${href}`,
       };
     });
 
