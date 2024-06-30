@@ -153,13 +153,13 @@ export const fetchArchiveFunds = async (archiveId: string) => {
 
             await prisma.match.deleteMany({
               where: {
-                fund_id: f.code,
+                fund_id: f.id,
               },
             });
 
             await prisma.fetch.deleteMany({
               where: {
-                fund_id: f.code,
+                fund_id: f.id,
               },
             });
 
