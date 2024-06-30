@@ -66,6 +66,7 @@ export const getArchiveCasesCount = async (archiveId: string) => {
     const prevMatchResult = await prisma.matchResult.findFirst({
       where: {
         match_id: match.id,
+        error: null,
       },
       orderBy: {
         created_at: "desc",
