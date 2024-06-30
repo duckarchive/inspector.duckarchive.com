@@ -58,7 +58,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
     });
 
     const dom = parse(View);
-    const BASE_URL = fetch.api_url.split("/")[0];
+    const BASE_URL = new URL(fetch.api_url).origin;
     const descriptions = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).map((anchorEl) => {
       const title = parseTitle(anchorEl.innerText);
       const code = parseCode(title.replace(/опис/gi, ""));

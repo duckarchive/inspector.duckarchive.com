@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const getDescriptionCasesCount = async (archiveId: string, fundId: string, descriptionId: string) => {
-  const DOM_QUERY = "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
+  const DOM_QUERY = "div.row.with-border-bottom > div.left > a";
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -57,7 +57,6 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
     });
 
     const dom = parse(View);
-
     const count = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).length;
 
     await prisma.matchResult.create({

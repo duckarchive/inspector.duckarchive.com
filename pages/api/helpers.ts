@@ -24,5 +24,5 @@ export const parseCode = (str: string): string => {
 }
 
 export const parseTitle = (str: string): string => {
-  return unescape(str.slice(0, 200))
+  return unescape(str.trim().slice(0, 200))
 };

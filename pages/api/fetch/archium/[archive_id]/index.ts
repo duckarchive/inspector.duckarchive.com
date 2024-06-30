@@ -60,8 +60,7 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     });
 
     const dom = parse(View);
-
-    const BASE_URL = fetch.api_url.split("/")[0];
+    const BASE_URL = new URL(fetch.api_url).origin;
     const funds = [...dom.querySelectorAll(DOM_QUERY)]
       .filter(Boolean)
       .map((el) => el.querySelectorAll("td"))
