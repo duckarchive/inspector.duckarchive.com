@@ -66,6 +66,17 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
       },
     });
 
+    if (match.last_count !== count) {
+      await prisma.match.update({
+        where: {
+          id: match.id,
+        },
+        data: {
+          last_count: count,
+        },
+      });
+    }
+
     return count;
   } catch (error) {
     console.error("ARCHIUM: getDescriptionCasesCount", error, { archiveId, fundId, descriptionId });

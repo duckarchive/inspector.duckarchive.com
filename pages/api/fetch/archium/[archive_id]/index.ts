@@ -175,8 +175,19 @@ export const fetchArchiveFunds = async (archiveId: string) => {
       );
     }
 
+    if (fetch.last_count !== funds.length) {
+      await prisma.fetch.update({
+        where: {
+          id: fetch.id,
+        },
+        data: {
+          last_count: funds.length,
+        },
+      });
+    }
+
     return {
-      total: prevFunds.length,
+      total: funds.length,
       added: newFunds.length,
       removed: removedFunds.length,
     };

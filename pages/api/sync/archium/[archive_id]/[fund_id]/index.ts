@@ -63,16 +63,6 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
       .filter(Boolean)
       .reduce((prev, el) => (prev += el), 0);
 
-    const prevMatchResult = await prisma.matchResult.findFirst({
-      where: {
-        match_id: match.id,
-        error: null,
-      },
-      orderBy: {
-        created_at: "desc",
-      },
-    });
-
     await prisma.matchResult.create({
       data: {
         match_id: match.id,
@@ -80,7 +70,7 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
       },
     });
 
-    if (prevMatchResult?.count !== count) {
+    if (match.last_count !== count) {
       const descriptions = await prisma.description.findMany({
         where: {
           fund_id: fundId,
@@ -92,6 +82,15 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
         console.log(`ARCHIUM: getFundCasesCount: descriptions progress (${++descriptionCounter}/${descriptions.length})`);
         await getDescriptionCasesCount(archiveId, fundId, description.id);
       }
+
+      await prisma.match.update({
+        where: {
+          id: match.id,
+        },
+        data: {
+          last_count: count,
+        },
+      });
     }
 
     return count;
