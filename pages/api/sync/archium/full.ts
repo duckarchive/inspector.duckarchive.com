@@ -20,6 +20,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         resource: {
           type: ResourceType.ARCHIUM,
         },
+        archive_id: {
+          not: null,
+        },
+        fund_id: null,
+        description_id: null,
+        case_id: null,
       },
     });
 
@@ -31,54 +37,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     let counter = 0;
 
-    const chunks = chunk(matches, 10);
+    for (const { archive_id } of matches) {
+      console.log(`ARCHIUM: full sync progress (${++counter}/${matches.length})`);
+      if (archive_id) {
+        const count = await getArchiveCasesCount(archive_id);
 
-    for (const chunk of chunks) {
-      await Promise.all(
-        chunk.map(async ({ archive_id, fund_id, description_id }) => {
-          console.log(`ARCHIUM: full sync progress (${++counter}/${matches.length})`);
-          if (archive_id && fund_id && description_id) {
-            const count = await getDescriptionCasesCount(archive_id, fund_id, description_id);
+        result.archiveCasesCount += count;
 
-            result.descriptionCasesCount += count;
-
-            await prisma.description.update({
-              where: {
-                id: description_id,
-              },
-              data: {
-                count,
-              },
-            });
-          } else if (archive_id && fund_id) {
-            const count = await getFundCasesCount(archive_id, fund_id);
-
-            result.fundCasesCount += count;
-
-            await prisma.fund.update({
-              where: {
-                id: fund_id,
-              },
-              data: {
-                count,
-              },
-            });
-          } else if (archive_id) {
-            const count = await getArchiveCasesCount(archive_id);
-
-            result.archiveCasesCount += count;
-
-            await prisma.archive.update({
-              where: {
-                id: archive_id,
-              },
-              data: {
-                count,
-              },
-            });
-          }
-        })
-      );
+        await prisma.archive.update({
+          where: {
+            id: archive_id,
+          },
+          data: {
+            count,
+          },
+        });
+      }
     }
 
     res.status(200).json(result);

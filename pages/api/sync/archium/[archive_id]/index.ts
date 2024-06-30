@@ -52,7 +52,6 @@ export const getArchiveCasesCount = async (archiveId: string) => {
     throw new Error("Match not found");
   }
   try {
-
     const {
       data: { View },
     } = await axios.request({
