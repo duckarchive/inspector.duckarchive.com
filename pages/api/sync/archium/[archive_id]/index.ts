@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Archive, PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parse } from "node-html-parser";
-import { parseDBParams } from "../../../helpers";
+import { PrismaClient, ResourceType } from "@prisma/client";
+import { scrapping } from "../../../helpers";
+import { getFundCasesCount } from "./[fund_id]";
 
 const prisma = new PrismaClient();
 
-export type ArchiumSyncArchiveResponse = Archive;
+export type ArchiumSyncArchiveResponse = {
+  count: number;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumSyncArchiveResponse>) {
   if (req.method === "GET") {
@@ -14,16 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const archiveId = req.query.archive_id as string;
       const count = await getArchiveCasesCount(archiveId);
 
-      const updatedArchive = await prisma.archive.update({
-        where: {
-          id: archiveId,
-        },
-        data: {
-          count,
-        },
-      });
-
-      res.json(updatedArchive);
+      res.json({ count });
     } catch (error) {
       console.error("ARCHIUM: Sync archive handler", error, req.query);
       res.status(500);
@@ -34,8 +26,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const getArchiveCasesCount = async (archiveId: string) => {
-  const DOM_QUERY = "div.single-data > p > a > span";
-  const DOM_PARSER = (el: string) => +el.split(" справ")[0].split(", ")[1];
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -52,22 +42,12 @@ export const getArchiveCasesCount = async (archiveId: string) => {
     throw new Error("Match not found");
   }
   try {
-
-    const {
-      data: { View },
-    } = await axios.request({
-      url: match.api_url,
-      method: match.api_method || "GET",
-      headers: parseDBParams(match.api_headers),
-      params: parseDBParams(match.api_params),
+    const parsed = await scrapping(match, {
+      selector: "div.single-data > p > a > span",
+      responseKey: "View",
     });
-
-    const dom = parse(View);
-
-    const count = [...dom.querySelectorAll(DOM_QUERY)]
-      .map((el) => el.innerText)
-      .map(DOM_PARSER)
-      .filter(Boolean)
+    const count = parsed
+      .map((el) => +el.innerText.split(" справ")[0].split(", ")[1])
       .reduce((prev, el) => (prev += el), 0);
 
     await prisma.matchResult.create({
@@ -76,6 +56,47 @@ export const getArchiveCasesCount = async (archiveId: string) => {
         count,
       },
     });
+
+    if (match.last_count !== count) {
+      const funds = await prisma.fund.findMany({
+        where: {
+          archive_id: archiveId,
+        },
+      });
+
+      let fundsCounter = 0;
+      for (const fund of funds) {
+        console.log(`ARCHIUM: getArchiveCasesCount: funds progress (${++fundsCounter}/${funds.length})`);
+        await getFundCasesCount(archiveId, fund.id);
+      }
+
+      const onlineFundsCount = await prisma.match.count({
+        where: {
+          resource: {
+            type: ResourceType.ARCHIUM,
+          },
+          archive_id: archiveId,
+          fund_id: {
+            not: null,
+          },
+          description_id: null,
+          case_id: null,
+          children_count: {
+            gt: 0,
+          }
+        },
+      });
+
+      await prisma.match.update({
+        where: {
+          id: match.id,
+        },
+        data: {
+          last_count: count,
+          children_count: onlineFundsCount,
+        },
+      });
+    }
 
     return count;
   } catch (error) {

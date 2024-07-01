@@ -4,11 +4,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 const prisma = new PrismaClient();
 
 export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
-  select: {
-    id: true;
-    code: true;
-    title: true;
-    logo_url: true;
+  include: {
+    matches: {
+      where: {
+        fund_id: null;
+        description_id: null;
+        case_id: null;
+      };
+      select: {
+        last_count: true;
+        children_count: true;
+        resource: {
+          select: {
+            type: true;
+          };
+        };
+      };
+    };
     funds: {
       select: {
         id: true;
@@ -30,11 +42,23 @@ export default async function handler(
       where: {
         code: archiveCode,
       },
-      select: {
-        id: true,
-        code: true,
-        title: true,
-        logo_url: true,
+      include: {
+        matches: {
+          where: {
+            fund_id: null,
+            description_id: null,
+            case_id: null,
+          },
+          select: {
+            last_count: true,
+            children_count: true,
+            resource: {
+              select: {
+                type: true,
+              },
+            },
+          }
+        },
         funds: {
           select: {
             id: true,
@@ -42,7 +66,7 @@ export default async function handler(
             title: true,
           },
         },
-      },
+      }
     });
     if (archive) {
       res.json(archive);

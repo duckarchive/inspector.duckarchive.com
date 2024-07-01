@@ -1,12 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Description, PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parseDBParams } from "../../../../../helpers";
-import parse from "node-html-parser";
+import { PrismaClient, ResourceType } from "@prisma/client";
+import { scrapping } from "../../../../../helpers";
+import { getCaseFilesCount } from "./[case_id]";
+import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
 
-export type ArchiumSyncDescriptionResponse = Description;
+export type ArchiumSyncDescriptionResponse = {
+  count: number;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumSyncDescriptionResponse>) {
   if (req.method === "GET") {
@@ -14,19 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const archiveId = req.query.archive_id as string;
       const fundId = req.query.fund_id as string;
       const descriptionId = req.query.description_id as string;
-  
+
       const count = await getDescriptionCasesCount(archiveId, fundId, descriptionId);
-  
-      const updatedDescription = await prisma.description.update({
-        where: {
-          id: descriptionId,
-        },
-        data: {
-          count,
-        },
-      });
-  
-      res.status(200).json(updatedDescription);
+
+      res.status(200).json({ count });
     } catch (error) {
       console.error("ARCHIUM: Sync description handler", error, req.query);
       res.status(500);
@@ -37,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const getDescriptionCasesCount = async (archiveId: string, fundId: string, descriptionId: string) => {
-  const DOM_QUERY = "div.main-content > div.items-wrapper > div.container > div.loading-part > div.row > div.right > a";
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -54,18 +46,8 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
     throw new Error("No match found");
   }
   try {
-    const {
-      data: View,
-    } = await axios.request({
-      url: match.api_url,
-      method: match.api_method || "GET",
-      headers: parseDBParams(match.api_headers),
-      params: parseDBParams(match.api_params),
-    });
-
-    const dom = parse(View);
-
-    const count = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).length;
+    const parsed = await scrapping(match, { selector: "div.row.with-border-bottom > div.left > a", responseKey: "View" });
+    const count = parsed.length;
 
     await prisma.matchResult.create({
       data: {
@@ -73,6 +55,40 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
         count,
       },
     });
+
+    if (match.last_count !== count) {
+      const cases = await prisma.case.findMany({
+        where: {
+          description_id: descriptionId,
+        },
+      });
+
+      const casesChunks = chunk(cases, 10);
+
+      let caseCounter = 0;
+      let onlineCasesCount = 0;
+      for (const caseChunk of casesChunks) {
+        await Promise.all(
+          caseChunk.map(async (caseItem) => {
+            console.log(
+              `ARCHIUM: getDescriptionCasesCount: cases progress (${++caseCounter}/${cases.length})`
+            );
+            const filesCount = await getCaseFilesCount(archiveId, fundId, descriptionId, caseItem.id);
+            onlineCasesCount += filesCount > 0 ? 1 : 0;
+          })
+        );
+      }
+
+      await prisma.match.update({
+        where: {
+          id: match.id,
+        },
+        data: {
+          last_count: count,
+          children_count: onlineCasesCount,
+        },
+      });
+    }
 
     return count;
   } catch (error) {

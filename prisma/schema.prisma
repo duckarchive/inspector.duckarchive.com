@@ -31,7 +31,6 @@ model Archive {
   phone_number String?   @db.VarChar(20)
   email        String?   @db.VarChar(255)
   logo_url     String?   @db.VarChar(255)
-  count        Int       @default(0)
   funds        Fund[]
   matches      Match[]
   fetches      Fetch[]
@@ -46,7 +45,6 @@ model Fund {
   updated_at   DateTime?     @updatedAt @db.Timestamp(6)
   title        String?       @db.VarChar(255)
   info         String?       @db.VarChar(255)
-  count        Int           @default(0)
   archive_id   String        @db.Uuid
   archive      Archive       @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   descriptions Description[]
@@ -64,7 +62,6 @@ model Description {
   updated_at DateTime? @updatedAt @db.Timestamp(6)
   title      String?   @db.VarChar(255)
   info       String?   @db.VarChar(255)
-  count      Int       @default(0)
   fund_id    String    @db.Uuid
   fund       Fund      @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   cases      Case[]
@@ -82,7 +79,6 @@ model Case {
   updated_at     DateTime?   @updatedAt @db.Timestamp(6)
   title          String?     @db.VarChar(255)
   info           String?     @db.VarChar(255)
-  count          Int         @default(0)
   description_id String      @db.Uuid
   description    Description @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   matches        Match[]
@@ -109,23 +105,25 @@ model Resource {
 }
 
 model Match {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at     DateTime     @default(now()) @db.Timestamp(6)
-  updated_at     DateTime?    @updatedAt @db.Timestamp(6)
-  resource_id    String       @db.Uuid
-  resource       Resource     @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  api_url        String       @db.VarChar(255)
-  api_method     String?      @db.VarChar(10)
-  api_headers    String?      @db.VarChar(255)
-  api_params     String?      @db.VarChar(255)
-  archive_id     String?      @db.Uuid
-  archive        Archive?     @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  fund_id        String?      @db.Uuid
-  fund           Fund?        @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  description_id String?      @db.Uuid
-  description    Description? @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  case_id        String?      @db.Uuid
-  case           Case?        @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at     DateTime      @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?     @updatedAt @db.Timestamp(6)
+  resource_id    String        @db.Uuid
+  resource       Resource      @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  api_url        String        @db.VarChar(255)
+  api_method     String?       @db.VarChar(10)
+  api_headers    String?       @db.VarChar(255)
+  api_params     String?       @db.VarChar(255)
+  archive_id     String?       @db.Uuid
+  archive        Archive?      @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fund_id        String?       @db.Uuid
+  fund           Fund?         @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  description_id String?       @db.Uuid
+  description    Description?  @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  case_id        String?       @db.Uuid
+  case           Case?         @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  last_count     Int?
+  children_count Int?
   results        MatchResult[]
 
   @@unique([resource_id, archive_id, fund_id, description_id, case_id])
@@ -133,10 +131,10 @@ model Match {
 }
 
 model MatchResult {
-  created_at DateTime      @default(now()) @db.Timestamp(6)
-  updated_at DateTime?     @updatedAt @db.Timestamp(6)
-  match_id   String        @db.Uuid
-  match      Match         @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @updatedAt @db.Timestamp(6)
+  match_id   String    @db.Uuid
+  match      Match     @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   count      Int
   error      String?
 
@@ -145,23 +143,25 @@ model MatchResult {
 }
 
 model Fetch {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at     DateTime     @default(now()) @db.Timestamp(6)
-  updated_at     DateTime?    @updatedAt @db.Timestamp(6)
-  resource_id    String       @db.Uuid
-  resource       Resource     @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  api_url        String       @db.VarChar(255)
-  api_method     String?      @db.VarChar(10)
-  api_headers    String?      @db.VarChar(255)
-  api_params     String?      @db.VarChar(255)
-  archive_id     String?      @db.Uuid
-  archive        Archive?     @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  fund_id        String?      @db.Uuid
-  fund           Fund?        @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  description_id String?      @db.Uuid
-  description    Description? @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  case_id        String?      @db.Uuid
-  case           Case?        @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at     DateTime      @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?     @updatedAt @db.Timestamp(6)
+  resource_id    String        @db.Uuid
+  resource       Resource      @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  api_url        String        @db.VarChar(255)
+  api_method     String?       @db.VarChar(10)
+  api_headers    String?       @db.VarChar(255)
+  api_params     String?       @db.VarChar(255)
+  archive_id     String?       @db.Uuid
+  archive        Archive?      @relation(fields: [archive_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fund_id        String?       @db.Uuid
+  fund           Fund?         @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  description_id String?       @db.Uuid
+  description    Description?  @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  case_id        String?       @db.Uuid
+  case           Case?         @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  last_count     Int?
+  children_count Int?
   results        FetchResult[]
 
   @@unique([resource_id, archive_id, fund_id, description_id, case_id])
@@ -169,10 +169,10 @@ model Fetch {
 }
 
 model FetchResult {
-  created_at DateTime      @default(now()) @db.Timestamp(6)
-  updated_at DateTime?     @updatedAt @db.Timestamp(6)
-  fetch_id   String        @db.Uuid
-  fetch      Fetch?        @relation(fields: [fetch_id], references: [id])
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @updatedAt @db.Timestamp(6)
+  fetch_id   String    @db.Uuid
+  fetch      Fetch?    @relation(fields: [fetch_id], references: [id])
   count      Int
   error      String?
 

@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
-import { parse } from "node-html-parser";
-import { parseCode, parseDBParams, parseTitle } from "../../../../helpers";
+import { parseCode, parseTitle, scrapping } from "../../../../helpers";
 import { chunk } from "lodash";
+import { fetchDescriptionCases } from "./[description_id]";
 
 const prisma = new PrismaClient();
 
@@ -32,7 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
-  const DOM_QUERY = "div.container > div.row.with-border-bottom.thin-row > div.left > a";
   const fetch = await prisma.fetch.findFirst({
     where: {
       resource: {
@@ -50,25 +48,20 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
   }
 
   try {
-    const { data: View } = await axios.request({
-      url: fetch.api_url,
-      method: fetch.api_method || "GET",
-      headers: parseDBParams(fetch.api_headers),
-      params: parseDBParams(fetch.api_params),
+    const parsed = await scrapping(fetch, {
+      selector: "div.container > div.row.with-border-bottom.thin-row > div.left > a",
     });
-
-    const dom = parse(View);
-    const BASE_URL = fetch.api_url.split("/")[0];
-    const descriptions = [...dom.querySelectorAll(DOM_QUERY)].filter(Boolean).map((anchorEl) => {
+    const BASE_URL = new URL(fetch.api_url).origin;
+    const descriptions = parsed.map((anchorEl) => {
       const title = parseTitle(anchorEl.innerText);
       const code = parseCode(title.replace(/опис/gi, ""));
-      const matchApiUrl = BASE_URL + anchorEl.getAttribute("href")?.trim();
+      const href = `${BASE_URL}/api/v1${anchorEl.getAttribute("href")?.trim()}`;
       return {
         resourceId: fetch.resource_id,
         code,
         title,
-        matchApiUrl: matchApiUrl.trim(),
-        fetchApiUrl: matchApiUrl.trim(),
+        matchApiUrl: href,
+        fetchApiUrl: href,
       };
     });
 
@@ -90,15 +83,15 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
     let newDescriptionsCounter = 0;
     const newDescriptionsChunks = chunk(newDescriptions, 100);
 
-    for (const chunk of newDescriptionsChunks) {
+    for (const newDescriptionsChunk of newDescriptionsChunks) {
       console.log(
         `ARCHIUM: fetchFundDescriptions: newDescriptions progress (${++newDescriptionsCounter}/${
           newDescriptionsChunks.length
         })`
       );
       try {
-        const newDescriptions = await prisma.description.createManyAndReturn({
-          data: chunk.map((f) => ({
+        const newDescriptionsCreated = await prisma.description.createManyAndReturn({
+          data: newDescriptionsChunk.map((f) => ({
             code: f.code,
             title: f.title,
             fund_id: fundId,
@@ -107,26 +100,36 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
         });
 
         await prisma.match.createMany({
-          data: newDescriptions.map((newDescription, i) => ({
-            resource_id: chunk[i].resourceId,
+          data: newDescriptionsCreated.map((newDescription, i) => ({
+            resource_id: newDescriptionsChunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
             description_id: newDescription.id,
-            api_url: chunk[i].matchApiUrl,
+            api_url: newDescriptionsChunk[i].matchApiUrl,
             api_params: "Limit:9999,Page:1",
           })),
         });
 
         await prisma.fetch.createMany({
-          data: newDescriptions.map((newDescription, i) => ({
-            resource_id: chunk[i].resourceId,
+          data: newDescriptionsCreated.map((newDescription, i) => ({
+            resource_id: newDescriptionsChunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
             description_id: newDescription.id,
-            api_url: chunk[i].fetchApiUrl,
+            api_url: newDescriptionsChunk[i].fetchApiUrl,
             api_params: "Limit:9999,Page:1",
           })),
         });
+
+        const newDescriptionsCreatedChunks = chunk(newDescriptionsCreated, 10);
+
+        for (const newDescriptionCreatedChunk of newDescriptionsCreatedChunks) {
+          await Promise.all(
+            newDescriptionCreatedChunk.map(async (newDescriptionCreated) =>
+              fetchDescriptionCases(archiveId, fundId, newDescriptionCreated.id)
+            )
+          );
+        }
       } catch (error) {
         console.error("ARCHIUM: fetchFundDescriptions: newDescriptions", error, { chunk });
       }
@@ -146,21 +149,21 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
             })`
           );
           try {
+            await prisma.case.deleteMany({
+              where: {
+                description_id: d.id,
+              },
+            });
+
             await prisma.match.deleteMany({
               where: {
-                description_id: d.code,
+                description_id: d.id,
               },
             });
 
             await prisma.fetch.deleteMany({
               where: {
-                description_id: d.code,
-              },
-            });
-
-            await prisma.case.deleteMany({
-              where: {
-                description_id: d.code,
+                description_id: d.id,
               },
             });
 
@@ -174,6 +177,17 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
           }
         })
       );
+    }
+
+    if (fetch.last_count !== descriptions.length) {
+      await prisma.fetch.update({
+        where: {
+          id: fetch.id,
+        },
+        data: {
+          last_count: descriptions.length,
+        },
+      });
     }
 
     return {
