@@ -1,3 +1,5 @@
+import { intlFormatDistance } from "date-fns/intlFormatDistance";
+
 interface WithCode {
   code: string;
 }
@@ -14,8 +16,13 @@ interface WithDates {
   updated_at?: Date | string | null;
 }
 export const sortByDate = (a: WithDates, b: WithDates) => {
-  return (
-    new Date(b.updated_at || b.created_at).valueOf() -
-    new Date(a.updated_at || a.created_at).valueOf()
-  );
+  return new Date(b.updated_at || b.created_at).valueOf() - new Date(a.updated_at || a.created_at).valueOf();
+};
+
+export const getSyncAtLabel = (updatedAt?: Date | string | null) => {
+  return updatedAt
+    ? `Оновлено ${intlFormatDistance(new Date(updatedAt), new Date(), {
+        locale: "uk",
+      })}`
+    : "Не синхронізовано";
 };

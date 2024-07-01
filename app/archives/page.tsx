@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HStack, Heading, Text, Tooltip } from "@chakra-ui/react";
+import { Heading, Text, Tooltip } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
-import { intlFormatDistance } from "date-fns/intlFormatDistance";
-import { ArchiumSyncArchiveResponse } from "../../pages/api/sync/archium/[archive_id]";
 import DuckTable from "../components/Table";
+import { getSyncAtLabel } from "../utils/table";
 
 type TableItem = GetAllArchivesResponse[number];
 
@@ -23,12 +22,6 @@ const ArchivesPage: NextPage = () => {
 
     fetchArchives();
   }, []);
-
-  const handleSyncArchiveClick = (archiveId: string) => async () => {
-    const response = await fetch(`/api/sync/archium/${archiveId}`);
-    const data: ArchiumSyncArchiveResponse = await response.json();
-    setArchives((prev) => prev.map((archive) => (archive.id === archiveId ? { ...archive, ...data } : archive)));
-  };
 
   return (
     <>
@@ -62,23 +55,12 @@ const ArchivesPage: NextPage = () => {
             maxWidth: 120,
             resizable: false,
             sortable: false,
-            cellRenderer: (row: { data: TableItem }) => (
-              <HStack>
-                {row.data.matches.map(({ updated_at, children_count, resource: { type } }) => (
-                  <Tooltip
-                    key={`${row.data.id}_match_${type}`}
-                    label={"Оновлено " + intlFormatDistance(new Date(updated_at || 0), new Date(), {
-                      locale: "uk",
-                    })}
-                    hasArrow
-                  >
-                    <Text>
-                      {children_count} {type}
-                    </Text>
-                  </Tooltip>
-                ))}
-              </HStack>
-            ),
+            cellRenderer: (row: { data: TableItem }) =>
+              row.data.matches.map(({ updated_at, children_count, resource: { type } }) => (
+                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
+                  <Text>{children_count}</Text>
+                </Tooltip>
+              )),
           },
         ]}
         rows={archives}
