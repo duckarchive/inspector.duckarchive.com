@@ -1,7 +1,33 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
+
+export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
+  include: {
+    matches: {
+      where: {
+        case_id: null;
+      };
+      select: {
+        last_count: true;
+        children_count: true;
+        resource: {
+          select: {
+            type: true;
+          };
+        };
+      };
+    };
+    cases: {
+      select: {
+        id: true;
+        code: true;
+        title: true;
+      };
+    };
+  };
+}>;
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,10 +48,21 @@ export default async function handler(
         },
         code: descriptionCode,
       },
-      select: {
-        id: true,
-        code: true,
-        title: true,
+      include: {
+        matches: {
+          where: {
+            case_id: null,
+          },
+          select: {
+            last_count: true,
+            children_count: true,
+            resource: {
+              select: {
+                type: true,
+              },
+            },
+          }
+        },
         cases: {
           select: {
             id: true,
