@@ -1,43 +1,22 @@
 "use client";
 
-import {
-  Heading,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Tr,
-} from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
+import { Heading, Text, Tooltip } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { sortByCode } from "../../../utils/table";
+import DuckTable from "../../../components/Table";
+import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[fund-code]";
+import { getSyncAtLabel } from "../../../utils/table";
+
+type TableItem = GetFundResponse["descriptions"][number];
 
 const FundPage: NextPage = () => {
   const params = useParams();
-  const archiveCode = decodeURIComponent(
-    params?.["archive-code"].toString() || ""
-  );
+  const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
   const code = decodeURIComponent(params?.["fund-code"].toString() || "");
 
-  const [fund, setFund] = useState<
-    Prisma.FundGetPayload<{
-      select: {
-        id: true;
-        code: true;
-        title: true;
-        descriptions: {
-          select: {
-            id: true;
-            code: true;
-            title: true;
-          };
-        };
-      };
-    }>
-  >();
+  const [fund, setFund] = useState<GetFundResponse>();
 
   useEffect(() => {
     const fetchFund = async () => {
@@ -53,28 +32,43 @@ const FundPage: NextPage = () => {
       <Heading as="h1" size="lg" mb="4">
         {fund?.title}
       </Heading>
-      <Table bg="white">
-        <Tbody>
-          <Tr key="archives-table-header" w="full">
-            <Th>Індекс</Th>
-            <Th>Опис</Th>
-            <Th textAlign="right">Справ онлайн</Th>
-            <Th textAlign="right">Оновлено</Th>
-          </Tr>
-          {fund?.descriptions.sort(sortByCode).map((description) => (
-            <Tr key={description.id} w="full">
-              <Td>{description.code}</Td>
-              <Td>
-                <Link href={`/archives/${archiveCode}/${code}/${description.code}`} color="blue.600">
-                  {description.title || `Опис ${description.code}`}
-                </Link>
-              </Td>
-              <Td textAlign="right">566471</Td>
-              <Td textAlign="right">вчора</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <DuckTable<TableItem>
+        columns={[
+          {
+            field: "code",
+            headerName: "Індекс",
+            maxWidth: 100,
+            resizable: false,
+          },
+          {
+            field: "title",
+            headerName: "Назва",
+            flex: 3,
+            filter: true,
+            cellRenderer: (row: { value: number; data: TableItem }) => (
+              <Link href={`/archives/${archiveCode}/${code}/${row.data.code}`} color="blue.600">
+                {row.value}
+              </Link>
+            ),
+          },
+          {
+            colId: "sync",
+            type: "numericColumn",
+            headerName: "Справи",
+            flex: 1,
+            maxWidth: 120,
+            resizable: false,
+            sortable: false,
+            cellRenderer: (row: { data: TableItem }) =>
+              row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
+                  <Text>{children_count}</Text>
+                </Tooltip>
+              )),
+          },
+        ]}
+        rows={fund?.descriptions || []}
+      />
     </>
   );
 };

@@ -2,18 +2,19 @@
 
 import {
   Heading,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Tr,
+  Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { sortByCode } from "../../../../utils/table";
+import { getSyncAtLabel, sortByCode } from "../../../../utils/table";
+import DuckTable from "../../../../components/Table";
+import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
+
+type TableItem = GetDescriptionResponse["cases"][number];
 
 const DescriptionPage: NextPage = () => {
   const params = useParams();
@@ -25,22 +26,7 @@ const DescriptionPage: NextPage = () => {
     params?.["description-code"].toString() || ""
   );
 
-  const [description, setDescription] = useState<
-    Prisma.DescriptionGetPayload<{
-      select: {
-        id: true;
-        code: true;
-        title: true;
-        cases: {
-          select: {
-            id: true;
-            code: true;
-            title: true;
-          };
-        };
-      };
-    }>
-  >();
+  const [description, setDescription] = useState<GetDescriptionResponse>();
 
   useEffect(() => {
     const fetchDescription = async () => {
@@ -56,28 +42,43 @@ const DescriptionPage: NextPage = () => {
       <Heading as="h1" size="lg" mb="4">
         {description?.title}
       </Heading>
-      <Table bg="white">
-        <Tbody>
-          <Tr key="archives-table-header" w="full">
-            <Th>Індекс</Th>
-            <Th>Справа</Th>
-            <Th textAlign="right">Справ онлайн</Th>
-            <Th textAlign="right">Оновлено</Th>
-          </Tr>
-          {description?.cases.sort(sortByCode).map((caseItem) => (
-            <Tr key={caseItem.id} w="full">
-              <Td>{caseItem.code}</Td>
-              <Td>
-                <Link href={`/archives/${archiveCode}/${fundCode}/${code}/${caseItem.code}`} color="blue.600">
-                  {caseItem.title || `Справа ${caseItem.code}`}
-                </Link>
-              </Td>
-              <Td textAlign="right">566471</Td>
-              <Td textAlign="right">вчора</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <DuckTable<TableItem>
+        columns={[
+          {
+            field: "code",
+            headerName: "Індекс",
+            maxWidth: 100,
+            resizable: false,
+          },
+          {
+            field: "title",
+            headerName: "Назва",
+            flex: 3,
+            filter: true,
+            cellRenderer: (row: { value: number; data: TableItem }) => (
+              <Link href={`/archives/${archiveCode}/${fundCode}/${code}/${row.data.code}`} color="blue.600">
+                {row.value}
+              </Link>
+            ),
+          },
+          {
+            colId: "sync",
+            type: "numericColumn",
+            headerName: "Файли",
+            flex: 1,
+            maxWidth: 120,
+            resizable: false,
+            sortable: false,
+            cellRenderer: (row: { data: TableItem }) =>
+              row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
+                  <Text>{children_count}</Text>
+                </Tooltip>
+              )),
+          },
+        ]}
+        rows={description?.cases || []}
+      />
     </>
   );
 };

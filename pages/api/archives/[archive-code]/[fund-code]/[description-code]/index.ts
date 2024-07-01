@@ -5,26 +5,23 @@ const prisma = new PrismaClient();
 
 export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
   include: {
-    matches: {
-      where: {
-        case_id: null;
-      };
-      select: {
-        updated_at: true,
-        last_count: true;
-        children_count: true;
-        resource: {
-          select: {
-            type: true;
-          };
-        };
-      };
-    };
     cases: {
       select: {
         id: true;
         code: true;
         title: true;
+        matches: {
+          select: {
+            updated_at: true,
+            last_count: true;
+            children_count: true;
+            resource: {
+              select: {
+                type: true;
+              };
+            };
+          };
+        };
       };
     };
   };
@@ -50,26 +47,23 @@ export default async function handler(
         code: descriptionCode,
       },
       include: {
-        matches: {
-          where: {
-            case_id: null,
-          },
-          select: {
-            updated_at: true,
-            last_count: true,
-            children_count: true,
-            resource: {
-              select: {
-                type: true,
-              },
-            },
-          }
-        },
         cases: {
           select: {
             id: true,
             code: true,
             title: true,
+            matches: {
+              select: {
+                updated_at: true,
+                last_count: true,
+                children_count: true,
+                resource: {
+                  select: {
+                    type: true,
+                  },
+                },
+              }
+            },
           },
         },
       },

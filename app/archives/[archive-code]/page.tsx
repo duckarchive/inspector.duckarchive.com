@@ -1,22 +1,15 @@
 "use client";
 
-import {
-  HStack,
-  Heading,
-  Image,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Tr,
-  VStack,
-} from "@chakra-ui/react";
+import { HStack, Heading, Image, Table, Tbody, Td, Text, Th, Tooltip, Tr, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { sortByCode } from "../../utils/table";
 import { GetArchiveResponse } from "../../../pages/api/archives/[archive-code]";
+import DuckTable from "../../components/Table";
+import { getSyncAtLabel } from "../../utils/table";
+
+type TableItem = GetArchiveResponse["funds"][number];
 
 const ArchivePage: NextPage = () => {
   const params = useParams();
@@ -49,36 +42,45 @@ const ArchivePage: NextPage = () => {
             {archive?.title}
           </Heading>
         </VStack>
-        {archive?.logo_url && (
-          <Image
-            src={`/${archive.logo_url}`}
-            alt={`Прапор ${archive?.title}`}
-            maxH="32"
-          />
-        )}
+        {archive?.logo_url && <Image src={`/${archive.logo_url}`} alt={`Прапор ${archive?.title}`} maxH="32" />}
       </HStack>
-      <Table bg="white">
-        <Tbody>
-          <Tr key="archives-table-header" w="full">
-            <Th>Індекс</Th>
-            <Th>Фонд</Th>
-            <Th textAlign="right">Справ онлайн</Th>
-            <Th textAlign="right">Оновлено</Th>
-          </Tr>
-          {archive?.funds.sort(sortByCode).map((fund) => (
-            <Tr key={fund.id} w="full">
-              <Td>{fund.code}</Td>
-              <Td>
-                <Link href={`/archives/${code}/${fund.code}`} color="blue.600">
-                  {fund.title}
-                </Link>
-              </Td>
-              <Td textAlign="right">566471</Td>
-              <Td textAlign="right">вчора</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <DuckTable<TableItem>
+        columns={[
+          {
+            field: "code",
+            headerName: "Індекс",
+            maxWidth: 100,
+            resizable: false,
+          },
+          {
+            field: "title",
+            headerName: "Назва",
+            flex: 3,
+            filter: true,
+            cellRenderer: (row: { value: number; data: TableItem }) => (
+              <Link href={`/archives/${code}/${row.data.code}`} color="blue.600">
+                {row.value}
+              </Link>
+            ),
+          },
+          {
+            colId: "sync",
+            type: "numericColumn",
+            headerName: "Описи",
+            flex: 1,
+            maxWidth: 120,
+            resizable: false,
+            sortable: false,
+            cellRenderer: (row: { data: TableItem }) =>
+              row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
+                  <Text>{children_count}</Text>
+                </Tooltip>
+              )),
+          },
+        ]}
+        rows={archive?.funds || []}
+      />
     </>
   );
 };

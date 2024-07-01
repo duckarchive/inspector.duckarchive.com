@@ -1,59 +1,29 @@
 "use client";
 
 import { Badge, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toText } from "../../../../../utils/text";
+import { GetCaseResponse } from "../../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]";
+import { Link } from "@chakra-ui/next-js";
 
 const CasePage: NextPage = () => {
   const params = useParams();
-  const archiveCode = decodeURIComponent(
-    params?.["archive-code"].toString() || ""
-  );
+  const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
   const fundCode = decodeURIComponent(params?.["fund-code"].toString() || "");
-  const descriptionCode = decodeURIComponent(
-    params?.["description-code"].toString() || ""
-  );
+  const descriptionCode = decodeURIComponent(params?.["description-code"].toString() || "");
   const code = decodeURIComponent(params?.["case-code"].toString() || "");
 
-  const [archive, setArchive] = useState<
-    Prisma.CaseGetPayload<{
-      select: {
-        matches: {
-          select: {
-            id: true;
-            resource: {
-              select: { code: true; title: true };
-            };
-            archive: {
-              select: { code: true };
-            };
-            fund: {
-              select: { code: true };
-            };
-            description: {
-              select: { code: true };
-            };
-            case: {
-              select: { code: true };
-            };
-          };
-        };
-      };
-    }>
-  >();
+  const [caseItem, setCaseItem] = useState<GetCaseResponse>();
 
   useEffect(() => {
-    const fetchArchive = async () => {
-      const response = await fetch(
-        `/api/archives/${archiveCode}/${descriptionCode}/${code}`
-      );
+    const fetchCase = async () => {
+      const response = await fetch(`/api/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`);
       const data = await response.json();
-      setArchive(data);
+      setCaseItem(data);
     };
-    fetchArchive();
+    fetchCase();
   }, [archiveCode, fundCode, descriptionCode, code]);
 
   return (
@@ -68,17 +38,11 @@ const CasePage: NextPage = () => {
         })}
       </Heading>
       <UnorderedList>
-        {archive?.matches?.map((match) => (
+        {caseItem?.matches?.map((match) => (
           <ListItem key={match.id} id={match.id}>
-            <Badge>{match.resource.title}</Badge>
-            {[
-              match.archive?.code,
-              match.fund?.code,
-              match.description?.code,
-              match.case?.code,
-            ]
-              .filter(Boolean)
-              .join(" / ")}
+            <Link href={match.api_url} target="_blank">
+              <Badge>{match.resource.type}</Badge>
+            </Link>
           </ListItem>
         ))}
       </UnorderedList>

@@ -5,27 +5,23 @@ const prisma = new PrismaClient();
 
 export type GetFundResponse = Prisma.FundGetPayload<{
   include: {
-    matches: {
-      where: {
-        description_id: null;
-        case_id: null;
-      };
-      select: {
-        updated_at: true,
-        last_count: true;
-        children_count: true;
-        resource: {
-          select: {
-            type: true;
-          };
-        };
-      };
-    };
     descriptions: {
       select: {
         id: true;
         code: true;
         title: true;
+        matches: {
+          select: {
+            updated_at: true,
+            last_count: true;
+            children_count: true;
+            resource: {
+              select: {
+                type: true;
+              };
+            };
+          };
+        };
       };
     };
   };
@@ -47,27 +43,26 @@ export default async function handler(
         code: fundCode,
       },
       include: {
-        matches: {
-          where: {
-            description_id: null,
-            case_id: null,
-          },
-          select: {
-            updated_at: true,
-            last_count: true,
-            children_count: true,
-            resource: {
-              select: {
-                type: true,
-              },
-            },
-          }
-        },
         descriptions: {
           select: {
             id: true,
             code: true,
             title: true,
+            matches: {
+              where: {
+                case_id: null,
+              },
+              select: {
+                updated_at: true,
+                last_count: true,
+                children_count: true,
+                resource: {
+                  select: {
+                    type: true,
+                  },
+                },
+              }
+            },
           },
         },
       },

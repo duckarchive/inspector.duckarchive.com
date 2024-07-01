@@ -6,13 +6,7 @@ const prisma = new PrismaClient();
 export type GetCaseResponse = Prisma.CaseGetPayload<{
   include: {
     matches: {
-      where: {
-        case_id: null;
-      };
-      select: {
-        updated_at: true,
-        last_count: true;
-        children_count: true;
+      include: {
         resource: {
           select: {
             type: true;
@@ -23,10 +17,7 @@ export type GetCaseResponse = Prisma.CaseGetPayload<{
   };
 }>;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const archiveCode = req.query["archive-code"] as string;
   const fundCode = req.query["fund-code"] as string;
   const descriptionCode = req.query["description-code"] as string;
@@ -48,19 +39,13 @@ export default async function handler(
       },
       include: {
         matches: {
-          where: {
-            case_id: null,
-          },
-          select: {
-            updated_at: true,
-            last_count: true,
-            children_count: true,
+          include: {
             resource: {
               select: {
                 type: true,
               },
             },
-          }
+          },
         },
       },
     });
