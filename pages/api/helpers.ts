@@ -35,7 +35,7 @@ interface ScrappingOptions {
   responseKey?: string;
 }
 
-export const scrapping = async ({ api_headers, api_method, api_params, api_url }: Match | Fetch, { selector, responseKey = "" }: ScrappingOptions) => {
+export const scrapping = async ({ api_headers, api_method, api_params, api_url }: Match | Fetch, { selector, responseKey }: ScrappingOptions) => {
   const { data } = await axios.request({
     url: api_url,
     method: api_method || "GET",
@@ -43,7 +43,7 @@ export const scrapping = async ({ api_headers, api_method, api_params, api_url }
     params: parseDBParams(api_params),
   });
 
-  const content = get(data, responseKey);
+  const content = responseKey ? get(data, responseKey) : data;
   const dom = parse(content);
   return [...dom.querySelectorAll(selector)];
 };
