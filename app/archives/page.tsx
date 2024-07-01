@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Heading } from "@chakra-ui/react";
+import { HStack, Heading, Text, Tooltip } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
-import { IoRefresh } from "react-icons/io5";
 import { intlFormatDistance } from "date-fns/intlFormatDistance";
 import { ArchiumSyncArchiveResponse } from "../../pages/api/sync/archium/[archive_id]";
 import DuckTable from "../components/Table";
-import { Archive } from "@prisma/client";
+
+type TableItem = GetAllArchivesResponse[number];
 
 const ArchivesPage: NextPage = () => {
   const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
@@ -27,11 +27,7 @@ const ArchivesPage: NextPage = () => {
   const handleSyncArchiveClick = (archiveId: string) => async () => {
     const response = await fetch(`/api/sync/archium/${archiveId}`);
     const data: ArchiumSyncArchiveResponse = await response.json();
-    setArchives((prev) =>
-      prev.map((archive) =>
-        archive.id === archiveId ? { ...archive, ...data } : archive
-      )
-    );
+    setArchives((prev) => prev.map((archive) => (archive.id === archiveId ? { ...archive, ...data } : archive)));
   };
 
   return (
@@ -39,7 +35,7 @@ const ArchivesPage: NextPage = () => {
       <Heading as="h1" size="lg" mb="4">
         Архіви
       </Heading>
-      <DuckTable<GetAllArchivesResponse[0]>
+      <DuckTable<TableItem>
         columns={[
           {
             field: "code",
@@ -52,44 +48,37 @@ const ArchivesPage: NextPage = () => {
             headerName: "Назва",
             flex: 3,
             filter: true,
-            cellRenderer: (row: { value: number; data: Archive }) => (
+            cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`archives/${row.data.code}`} color="blue.600">
                 {row.value}
               </Link>
             ),
           },
           {
-            field: "count",
-            headerName: "Справ онлайн",
+            colId: "sync",
+            type: "numericColumn",
+            headerName: "Фонди",
             flex: 1,
             maxWidth: 120,
             resizable: false,
-            cellRenderer: (row: { value: number; data: Archive }) => (
-              <Button
-                size="sm"
-                variant="ghost"
-                rightIcon={<IoRefresh />}
-                fontSize="sm"
-                w="full"
-                onClick={handleSyncArchiveClick(row.data.id)}
-              >
-                {row.value}
-              </Button>
+            sortable: false,
+            cellRenderer: (row: { data: TableItem }) => (
+              <HStack>
+                {row.data.matches.map(({ updated_at, children_count, resource: { type } }) => (
+                  <Tooltip
+                    key={`${row.data.id}_match_${type}`}
+                    label={"Оновлено " + intlFormatDistance(new Date(updated_at || 0), new Date(), {
+                      locale: "uk",
+                    })}
+                    hasArrow
+                  >
+                    <Text>
+                      {children_count} {type}
+                    </Text>
+                  </Tooltip>
+                ))}
+              </HStack>
             ),
-          },
-          {
-            field: "updated_at",
-            headerName: "Оновлено",
-            maxWidth: 120,
-            resizable: false,
-            cellRenderer: (row: { value: number; data: Archive }) =>
-              intlFormatDistance(
-                new Date(row.data.updated_at || row.data.created_at),
-                new Date(),
-                {
-                  locale: "uk",
-                }
-              ),
           },
         ]}
         rows={archives}
