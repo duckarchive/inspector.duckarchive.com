@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
 import { scrapping } from "../../../../../helpers";
+import { getCaseFilesCount } from "./[case_id]";
+import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -55,12 +57,35 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
     });
 
     if (match.last_count !== count) {
+      const cases = await prisma.case.findMany({
+        where: {
+          description_id: descriptionId,
+        },
+      });
+
+      const casesChunks = chunk(cases, 10);
+
+      let caseCounter = 0;
+      let onlineCasesCount = 0;
+      for (const caseChunk of casesChunks) {
+        await Promise.all(
+          caseChunk.map(async (caseItem) => {
+            console.log(
+              `ARCHIUM: getDescriptionCasesCount: cases progress (${++caseCounter}/${cases.length})`
+            );
+            const filesCount = await getCaseFilesCount(archiveId, fundId, descriptionId, caseItem.id);
+            onlineCasesCount += filesCount > 0 ? 1 : 0;
+          })
+        );
+      }
+
       await prisma.match.update({
         where: {
           id: match.id,
         },
         data: {
           last_count: count,
+          children_count: onlineCasesCount,
         },
       });
     }

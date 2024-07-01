@@ -123,6 +123,7 @@ model Match {
   case_id        String?       @db.Uuid
   case           Case?         @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   last_count     Int?
+  children_count Int?
   results        MatchResult[]
 
   @@unique([resource_id, archive_id, fund_id, description_id, case_id])
@@ -160,6 +161,7 @@ model Fetch {
   case_id        String?       @db.Uuid
   case           Case?         @relation(fields: [case_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   last_count     Int?
+  children_count Int?
   results        FetchResult[]
 
   @@unique([resource_id, archive_id, fund_id, description_id, case_id])

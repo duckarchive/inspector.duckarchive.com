@@ -73,12 +73,30 @@ export const getFundCasesCount = async (archiveId: string, fundId: string) => {
         await getDescriptionCasesCount(archiveId, fundId, description.id);
       }
 
+      const onlineDescriptionsCount = await prisma.match.count({
+        where: {
+          resource: {
+            type: ResourceType.ARCHIUM,
+          },
+          archive_id: archiveId,
+          fund_id: fundId,
+          description_id: {
+            not: null,
+          },
+          case_id: null,
+          children_count: {
+            gt: 0,
+          }
+        },
+      });
+
       await prisma.match.update({
         where: {
           id: match.id,
         },
         data: {
           last_count: count,
+          children_count: onlineDescriptionsCount,
         },
       });
     }
