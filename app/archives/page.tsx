@@ -6,7 +6,7 @@ import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
 import DuckTable from "../components/Table";
-import { getSyncAtLabel } from "../utils/table";
+import { getSyncAtLabel, sortByMatches } from "../utils/table";
 import ResourceBadge from "../components/ResourceBadge";
 
 type TableItem = GetAllArchivesResponse[number];
@@ -52,10 +52,10 @@ const ArchivesPage: NextPage = () => {
             headerName: "Фонди",
             flex: 2,
             resizable: false,
-            sortable: false,
+            comparator: (_, __, { data: a }, { data: b }) => sortByMatches(a, b),
             cellRenderer: (row: { data: TableItem }) => (
               <VStack h="full" alignItems="flex-end" justifyContent="center">
-                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => children_count && (
                   <ResourceBadge resource={type} key={`${row.data.id}_match_${type}`}>
                     <Tooltip label={getSyncAtLabel(updated_at)} hasArrow>
                       <Text as="span">{children_count}</Text>
@@ -66,7 +66,7 @@ const ArchivesPage: NextPage = () => {
             ),
           },
         ]}
-        rows={archives.filter((archive) => archive.matches.some((match) => match.children_count))}
+        rows={archives}
       />
     </>
   );

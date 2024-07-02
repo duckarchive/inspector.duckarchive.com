@@ -6,7 +6,7 @@ import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
 import { GetArchiveResponse } from "../../../pages/api/archives/[archive-code]";
 import DuckTable from "../../components/Table";
-import { getSyncAtLabel, sortByCode, sortNumeric } from "../../utils/table";
+import { getSyncAtLabel, sortByCode, sortByMatches, sortNumeric } from "../../utils/table";
 import useIsMobile from "../../hooks/useIsMobile";
 import useCyrillicParams from "../../hooks/useCyrillicParams";
 import ResourceBadge from "../../components/ResourceBadge";
@@ -75,7 +75,7 @@ const ArchivePage: NextPage = () => {
             hide: isMobile,
             flex: 2,
             resizable: false,
-            sortable: false,
+            comparator: (_, __, { data: a }, { data: b }) => sortByMatches(a, b),
             cellRenderer: (row: { data: TableItem }) => (
               <VStack h="full" alignItems="flex-end" justifyContent="center">
                 {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => children_count && (

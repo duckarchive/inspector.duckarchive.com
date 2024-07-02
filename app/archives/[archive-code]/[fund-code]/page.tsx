@@ -6,7 +6,7 @@ import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
 import DuckTable from "../../../components/Table";
 import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[fund-code]";
-import { getSyncAtLabel, sortByCode, sortNumeric } from "../../../utils/table";
+import { getSyncAtLabel, sortByCode, sortByMatches, sortNumeric } from "../../../utils/table";
 import useIsMobile from "../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../hooks/useCyrillicParams";
 import ResourceBadge from "../../../components/ResourceBadge";
@@ -74,10 +74,10 @@ const FundPage: NextPage = () => {
             flex: 2,
             hide: isMobile,
             resizable: false,
-            sortable: false,
+            comparator: (_, __, { data: a }, { data: b }) => sortByMatches(a, b),
             cellRenderer: (row: { data: TableItem }) => (
               <VStack h="full" alignItems="flex-end" justifyContent="center">
-                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => children_count && (
                   <ResourceBadge resource={type} key={`${row.data.id}_match_${type}`}>
                     <Tooltip label={getSyncAtLabel(updated_at)} hasArrow>
                       <Text as="span">{children_count}</Text>

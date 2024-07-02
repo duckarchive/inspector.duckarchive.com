@@ -4,7 +4,7 @@ import { HStack, Heading, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
-import { getSyncAtLabel, sortByCode, sortNumeric } from "../../../../utils/table";
+import { getSyncAtLabel, sortByCode, sortByMatches, sortNumeric } from "../../../../utils/table";
 import DuckTable from "../../../../components/Table";
 import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
 import useIsMobile from "../../../../hooks/useIsMobile";
@@ -75,10 +75,10 @@ const DescriptionPage: NextPage = () => {
             flex: 2,
             hide: isMobile,
             resizable: false,
-            sortable: false,
+            comparator: (_, __, { data: a }, { data: b }) => sortByMatches(a, b),
             cellRenderer: (row: { data: TableItem }) => (
               <VStack h="full" alignItems="flex-end" justifyContent="center">
-                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => children_count && (
                   <ResourceBadge resource={type} key={`${row.data.id}_match_${type}`}>
                     <Tooltip label={getSyncAtLabel(updated_at)} hasArrow>
                       <Text as="span">{children_count}</Text>
