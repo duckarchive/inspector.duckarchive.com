@@ -35,8 +35,6 @@ const ArchivesLayout: React.FC<PropsWithChildren> = ({ children }) => {
     },
   ].filter(({ text }) => text);
 
-  console.log(breadcrumbItems);
-
   return (
     <Container maxW="container.xl" py={10}>
       <Breadcrumb separator={<IoChevronForward />} fontWeight='medium' fontSize='sm'>
