@@ -25,9 +25,6 @@ const ArchivesPage: NextPage = () => {
 
   return (
     <>
-      <Heading as="h1" size="lg" mb="4">
-        Архіви
-      </Heading>
       <DuckTable<TableItem>
         columns={[
           {
@@ -63,7 +60,7 @@ const ArchivesPage: NextPage = () => {
               )),
           },
         ]}
-        rows={archives}
+        rows={archives.filter((archive) => archive.matches.some((match) => match.children_count))}
       />
     </>
   );

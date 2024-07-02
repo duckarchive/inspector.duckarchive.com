@@ -1,24 +1,24 @@
 "use client";
 
-import { Heading, Text } from "@chakra-ui/react";
+import { HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GetCaseResponse } from "../../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]";
 import { Link } from "@chakra-ui/next-js";
 import DuckTable from "../../../../../components/Table";
 import { getSyncAtLabel } from "../../../../../utils/table";
 import useIsMobile from "../../../../../hooks/useIsMobile";
+import useCyrillicParams from "../../../../../hooks/useCyrillicParams";
 
 type TableItem = GetCaseResponse["matches"][number];
 
 const CasePage: NextPage = () => {
-  const params = useParams();
+  const params = useCyrillicParams();
   const isMobile = useIsMobile();
-  const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
-  const fundCode = decodeURIComponent(params?.["fund-code"].toString() || "");
-  const descriptionCode = decodeURIComponent(params?.["description-code"].toString() || "");
-  const code = decodeURIComponent(params?.["case-code"].toString() || "");
+  const archiveCode = params["archive-code"];
+  const fundCode = params["fund-code"];
+  const descriptionCode = params["description-code"];
+  const code = params["case-code"];
 
   const [caseItem, setCaseItem] = useState<GetCaseResponse>();
 
@@ -33,9 +33,21 @@ const CasePage: NextPage = () => {
 
   return (
     <>
-      <Heading as="h1" size="lg" mb="4">
-        {caseItem?.title}
-      </Heading>
+      <HStack
+        justifyContent="space-between"
+        alignItems="flex-start"
+        bg="white"
+        mb={2}
+        p={2}
+        borderRadius="lg"
+        minH="32"
+      >
+        <VStack>
+          <Heading as="h1" size="lg" mb="4">
+            {caseItem?.title}
+          </Heading>
+        </VStack>
+      </HStack>
       <DuckTable<TableItem>
         columns={[
           {
@@ -43,11 +55,7 @@ const CasePage: NextPage = () => {
             headerName: "Ресурс",
             maxWidth: 80,
             resizable: false,
-            cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Text color='green.500'>
-                {row.value}
-              </Text>
-            ),
+            cellRenderer: (row: { value: number; data: TableItem }) => <Text color="green.500">{row.value}</Text>,
           },
           {
             field: "api_url",

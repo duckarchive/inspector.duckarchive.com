@@ -1,21 +1,21 @@
 "use client";
 
-import { HStack, Heading, Image, Table, Tbody, Td, Text, Th, Tooltip, Tr, VStack } from "@chakra-ui/react";
+import { HStack, Heading, Image, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GetArchiveResponse } from "../../../pages/api/archives/[archive-code]";
 import DuckTable from "../../components/Table";
 import { getSyncAtLabel } from "../../utils/table";
 import useIsMobile from "../../hooks/useIsMobile";
+import useCyrillicParams from "../../hooks/useCyrillicParams";
 
 type TableItem = GetArchiveResponse["funds"][number];
 
 const ArchivePage: NextPage = () => {
-  const params = useParams();
+  const params = useCyrillicParams();
   const isMobile = useIsMobile();
-  const code = decodeURIComponent(params?.["archive-code"].toString() || "");
+  const code = params["archive-code"];
 
   const [archive, setArchive] = useState<GetArchiveResponse>();
 
@@ -39,10 +39,8 @@ const ArchivePage: NextPage = () => {
         borderRadius="lg"
         minH="32"
       >
-        <VStack>
-          <Heading as="h1" size="lg" mb="4">
-            {archive?.title}
-          </Heading>
+        <VStack alignItems="flex-start">
+          <Heading as="h1" size="lg" mb="4">{archive?.title}</Heading>
         </VStack>
         {archive?.logo_url && <Image src={`/${archive.logo_url}`} alt={`Прапор ${archive?.title}`} maxH="32" />}
       </HStack>

@@ -1,22 +1,22 @@
 "use client";
 
-import { Heading, Text, Tooltip } from "@chakra-ui/react";
+import { HStack, Heading, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DuckTable from "../../../components/Table";
 import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[fund-code]";
 import { getSyncAtLabel } from "../../../utils/table";
 import useIsMobile from "../../../hooks/useIsMobile";
+import useCyrillicParams from "../../../hooks/useCyrillicParams";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
 const FundPage: NextPage = () => {
-  const params = useParams();
   const isMobile = useIsMobile();
-  const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
-  const code = decodeURIComponent(params?.["fund-code"].toString() || "");
+  const params = useCyrillicParams();
+  const archiveCode = params["archive-code"];
+  const code = params["fund-code"];
 
   const [fund, setFund] = useState<GetFundResponse>();
 
@@ -31,9 +31,21 @@ const FundPage: NextPage = () => {
 
   return (
     <>
-      <Heading as="h1" size="lg" mb="4">
-        {fund?.title}
-      </Heading>
+      <HStack
+        justifyContent="space-between"
+        alignItems="flex-start"
+        bg="white"
+        mb={2}
+        p={2}
+        borderRadius="lg"
+        minH="32"
+      >
+        <VStack>
+          <Heading as="h1" size="lg" mb="4">
+            {fund?.title}
+          </Heading>
+        </VStack>
+      </HStack>
       <DuckTable<TableItem>
         columns={[
           {

@@ -1,31 +1,23 @@
 "use client";
 
-import {
-  Heading,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import { HStack, Heading, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getSyncAtLabel } from "../../../../utils/table";
 import DuckTable from "../../../../components/Table";
 import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
 import useIsMobile from "../../../../hooks/useIsMobile";
+import useCyrillicParams from "../../../../hooks/useCyrillicParams";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
 const DescriptionPage: NextPage = () => {
-  const params = useParams();
+  const params = useCyrillicParams();
   const isMobile = useIsMobile();
-  const archiveCode = decodeURIComponent(
-    params?.["archive-code"].toString() || ""
-  );
-  const fundCode = decodeURIComponent(params?.["fund-code"].toString() || "");
-  const code = decodeURIComponent(
-    params?.["description-code"].toString() || ""
-  );
+  const archiveCode = params["archive-code"];
+  const fundCode = params["fund-code"];
+  const code = params["description-code"];
 
   const [description, setDescription] = useState<GetDescriptionResponse>();
 
@@ -40,9 +32,21 @@ const DescriptionPage: NextPage = () => {
 
   return (
     <>
-      <Heading as="h1" size="lg" mb="4">
-        {description?.title}
-      </Heading>
+      <HStack
+        justifyContent="space-between"
+        alignItems="flex-start"
+        bg="white"
+        mb={2}
+        p={2}
+        borderRadius="lg"
+        minH="32"
+      >
+        <VStack>
+          <Heading as="h1" size="lg" mb="4">
+            {description?.title}
+          </Heading>
+        </VStack>
+      </HStack>
       <DuckTable<TableItem>
         columns={[
           {
