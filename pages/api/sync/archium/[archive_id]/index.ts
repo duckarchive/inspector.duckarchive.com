@@ -13,7 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (req.method === "GET") {
     try {
       const archiveId = req.query.archive_id as string;
-      const count = await getArchiveCasesCount(archiveId);
+      const isForced = req.query.force === "true";
+      const count = await getArchiveCasesCount(archiveId, isForced);
 
       res.json({ count });
     } catch (error) {
@@ -25,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 }
 
-export const getArchiveCasesCount = async (archiveId: string) => {
+export const getArchiveCasesCount = async (archiveId: string, isForced?: boolean) => {
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -57,7 +58,7 @@ export const getArchiveCasesCount = async (archiveId: string) => {
       },
     });
 
-    if (match.last_count !== count) {
+    if (match.last_count !== count || isForced) {
       const funds = await prisma.fund.findMany({
         where: {
           archive_id: archiveId,
@@ -67,7 +68,7 @@ export const getArchiveCasesCount = async (archiveId: string) => {
       let fundsCounter = 0;
       for (const fund of funds) {
         console.log(`ARCHIUM: getArchiveCasesCount: funds progress (${++fundsCounter}/${funds.length})`);
-        await getFundCasesCount(archiveId, fund.id);
+        await getFundCasesCount(archiveId, fund.id, isForced);
       }
 
       const onlineFundsCount = await prisma.match.count({

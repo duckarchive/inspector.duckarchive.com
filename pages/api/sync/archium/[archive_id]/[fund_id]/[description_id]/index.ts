@@ -16,8 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const archiveId = req.query.archive_id as string;
       const fundId = req.query.fund_id as string;
       const descriptionId = req.query.description_id as string;
+      const isForced = req.query.force === "true";
 
-      const count = await getDescriptionCasesCount(archiveId, fundId, descriptionId);
+      const count = await getDescriptionCasesCount(archiveId, fundId, descriptionId, isForced);
 
       res.status(200).json({ count });
     } catch (error) {
@@ -29,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 }
 
-export const getDescriptionCasesCount = async (archiveId: string, fundId: string, descriptionId: string) => {
+export const getDescriptionCasesCount = async (archiveId: string, fundId: string, descriptionId: string, isForced?: boolean) => {
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -56,14 +57,14 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
       },
     });
 
-    if (match.last_count !== count) {
+    if (match.last_count !== count || isForced) {
       const cases = await prisma.case.findMany({
         where: {
           description_id: descriptionId,
         },
       });
 
-      const casesChunks = chunk(cases, 10);
+      const casesChunks = chunk(cases, 15);
 
       let caseCounter = 0;
       let onlineCasesCount = 0;
