@@ -1,15 +1,14 @@
 "use client";
 
-import { HStack, Heading, Text, Tooltip, VStack } from "@chakra-ui/react";
+import { HStack, Heading, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
 import DuckTable from "../../../components/Table";
 import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[fund-code]";
-import { getSyncAtLabel, sortByCode, sortByMatches, sortNumeric } from "../../../utils/table";
+import { sortByCode } from "../../../utils/table";
 import useIsMobile from "../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../hooks/useCyrillicParams";
-import ResourceBadge from "../../../components/ResourceBadge";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
