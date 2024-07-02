@@ -1,6 +1,6 @@
 "use client";
 
-import { HStack, Heading, Image, Tooltip, VStack } from "@chakra-ui/react";
+import { HStack, Heading, Image, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
@@ -51,11 +51,6 @@ const ArchivePage: NextPage = () => {
         columns={[
           {
             field: "code",
-            headerName: "Індекс",
-            flex: 1,
-            comparator: sortNumeric,
-            resizable: false,
-            filter: true,
           },
           {
             field: "title",
@@ -70,23 +65,8 @@ const ArchivePage: NextPage = () => {
           },
           {
             colId: "sync",
-            type: "numericColumn",
             headerName: "Описи",
             hide: isMobile,
-            flex: 2,
-            resizable: false,
-            comparator: (_, __, { data: a }, { data: b }) => sortByMatches(a, b),
-            cellRenderer: (row: { data: TableItem }) => (
-              <VStack h="full" alignItems="flex-end" justifyContent="center">
-                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => children_count && (
-                  <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
-                    <ResourceBadge resource={type}>
-                      {children_count}
-                    </ResourceBadge>
-                  </Tooltip>
-                ))}
-              </VStack>
-            ),
           },
         ]}
         rows={archive?.funds.sort(sortByCode) || []}

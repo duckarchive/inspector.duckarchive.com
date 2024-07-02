@@ -30,10 +30,6 @@ const ArchivesPage: NextPage = () => {
         columns={[
           {
             field: "code",
-            headerName: "Індекс",
-            flex: 1,
-            resizable: false,
-            filter: true,
           },
           {
             field: "title",
@@ -48,22 +44,7 @@ const ArchivesPage: NextPage = () => {
           },
           {
             colId: "sync",
-            type: "numericColumn",
             headerName: "Фонди",
-            flex: 2,
-            resizable: false,
-            comparator: (_, __, { data: a }, { data: b }) => sortByMatches(a, b),
-            cellRenderer: (row: { data: TableItem }) => (
-              <VStack h="full" alignItems="flex-end" justifyContent="center">
-                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => children_count && (
-                  <ResourceBadge resource={type} key={`${row.data.id}_match_${type}`}>
-                    <Tooltip label={getSyncAtLabel(updated_at)} hasArrow>
-                      <Text as="span">{children_count}</Text>
-                    </Tooltip>
-                  </ResourceBadge>
-                ))}
-              </VStack>
-            ),
           },
         ]}
         rows={archives}

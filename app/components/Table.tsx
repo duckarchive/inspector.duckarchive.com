@@ -3,8 +3,10 @@ import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { useRef } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { AG_GRID_LOCALE_UK } from "../utils/i18n";
+import { getSyncAtLabel, sortByMatches, sortNumeric } from "../utils/table";
+import ResourceBadge from "./ResourceBadge";
 
 interface DuckTableProps<T> {
   columns: ColDef<T>[];
@@ -23,15 +25,12 @@ interface DuckTableProps<T> {
   setTakeAndRefetch?: (newTake: number) => void;
 }
 
-const DuckTable = <T extends { id: string }>({
-  columns,
-  rows,
-}: DuckTableProps<T>) => {
+const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T>) => {
   const gridRef = useRef<AgGridReact<T>>(null);
 
-  // useEffect(() => {
-  //   gridRef.current?.api?.autoSizeAllColumns();
-  // }, [rows]);
+  const firstColumn = columns[0];
+  const middleColumns = columns.slice(1, -1);
+  const lastColumn = columns[columns.length - 1];
 
   return (
     <Box className="ag-theme-alpine" w="100%">
@@ -39,7 +38,43 @@ const DuckTable = <T extends { id: string }>({
         ref={gridRef}
         domLayout="autoHeight"
         rowData={rows}
-        columnDefs={columns}
+        columnDefs={[
+          {
+            headerName: "Індекс",
+            flex: 1,
+            resizable: false,
+            filter: true,
+            comparator: sortNumeric,
+            ...firstColumn,
+          },
+          ...middleColumns,
+          {
+            type: "numericColumn",
+            flex: 2,
+            resizable: false,
+            comparator: (_, __, { data: a }: any, { data: b }: any) => sortByMatches(a, b),
+            cellRenderer: (row: { data: any }) => (
+              <VStack h="full" alignItems="flex-end" justifyContent="center">
+                {row.data.matches?.map(
+                  ({ updated_at, children_count, resource: { type } }: any) =>
+                    children_count && (
+                      <Tooltip
+                        label={getSyncAtLabel(updated_at)}
+                        hasArrow
+                        key={`${row.data.id}_match_${type}`}
+                        placement="left"
+                      >
+                        <Text as="p">
+                          <ResourceBadge resource={type}>{children_count}</ResourceBadge>
+                        </Text>
+                      </Tooltip>
+                    )
+                )}
+              </VStack>
+            ),
+            ...lastColumn,
+          },
+        ]}
         suppressHorizontalScroll
         colResizeDefault="shift"
         localeText={AG_GRID_LOCALE_UK}
