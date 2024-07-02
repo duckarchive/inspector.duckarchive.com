@@ -9,6 +9,7 @@ import DuckTable from "../../../../components/Table";
 import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
 import useIsMobile from "../../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../../hooks/useCyrillicParams";
+import ResourceBadge from "../../../../components/ResourceBadge";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
@@ -52,15 +53,14 @@ const DescriptionPage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
-            comparator: sortNumeric,
-            maxWidth: 80,
-            resizable: false,
             filter: true,
+            flex: 1,
+            comparator: sortNumeric,
           },
           {
             field: "title",
             headerName: "Назва",
-            flex: 3,
+            flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${archiveCode}/${fundCode}/${code}/${row.data.code}`} color="blue.600">
@@ -72,17 +72,21 @@ const DescriptionPage: NextPage = () => {
             colId: "sync",
             type: "numericColumn",
             headerName: "Файли",
+            flex: 2,
             hide: isMobile,
-            flex: 1,
-            maxWidth: 120,
             resizable: false,
             sortable: false,
-            cellRenderer: (row: { data: TableItem }) =>
-              row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
-                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
-                  <Text>{children_count}</Text>
-                </Tooltip>
-              )),
+            cellRenderer: (row: { data: TableItem }) => (
+              <VStack h="full" alignItems="flex-end" justifyContent="center">
+                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                  <ResourceBadge resource={type} key={`${row.data.id}_match_${type}`}>
+                    <Tooltip label={getSyncAtLabel(updated_at)} hasArrow>
+                      <Text as="span">{children_count}</Text>
+                    </Tooltip>
+                  </ResourceBadge>
+                ))}
+              </VStack>
+            ),
           },
         ]}
         rows={description?.cases.sort(sortByCode) || []}

@@ -9,6 +9,7 @@ import DuckTable from "../../../../../components/Table";
 import { getSyncAtLabel } from "../../../../../utils/table";
 import useIsMobile from "../../../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../../../hooks/useCyrillicParams";
+import ResourceBadge from "../../../../../components/ResourceBadge";
 
 type TableItem = GetCaseResponse["matches"][number];
 
@@ -53,14 +54,15 @@ const CasePage: NextPage = () => {
           {
             field: "resource.type",
             headerName: "Ресурс",
-            maxWidth: 80,
-            resizable: false,
-            cellRenderer: (row: { value: number; data: TableItem }) => <Text color="green.500">{row.value}</Text>,
+            flex: 1,
+            cellRenderer: (row: { value: TableItem["resource"]["type"]; data: TableItem }) => (
+              <ResourceBadge resource={row.value} />
+            ),
           },
           {
             field: "api_url",
             headerName: "Посилання",
-            flex: 3,
+            flex: 8,
             cellRenderer: (row: { value: string; data: TableItem }) => (
               <Link href={row.value} isExternal color="blue.600">
                 {row.value}
@@ -68,22 +70,19 @@ const CasePage: NextPage = () => {
             ),
           },
           {
-            field: "last_count",
-            headerName: "Файли",
+            field: "updated_at",
+            headerName: "Оновлено",
+            flex: 2,
             hide: isMobile,
-            flex: 1,
-            maxWidth: 80,
+            cellRenderer: (row: { value: string; data: TableItem }) => getSyncAtLabel(row.value, true),
           },
           {
-            field: "updated_at",
+            field: "last_count",
+            headerName: "Файли",
             type: "numericColumn",
-            headerName: "Оновлено",
-            hide: isMobile,
             flex: 1,
-            maxWidth: 120,
+            hide: isMobile,
             resizable: false,
-            sortable: false,
-            cellRenderer: (row: { value: string; data: TableItem }) => getSyncAtLabel(row.value, true),
           },
         ]}
         rows={caseItem?.matches || []}

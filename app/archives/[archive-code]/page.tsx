@@ -1,6 +1,6 @@
 "use client";
 
-import { HStack, Heading, Image, Text, Tooltip, VStack } from "@chakra-ui/react";
+import { HStack, Heading, Image, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import DuckTable from "../../components/Table";
 import { getSyncAtLabel, sortByCode, sortNumeric } from "../../utils/table";
 import useIsMobile from "../../hooks/useIsMobile";
 import useCyrillicParams from "../../hooks/useCyrillicParams";
+import ResourceBadge from "../../components/ResourceBadge";
 
 type TableItem = GetArchiveResponse["funds"][number];
 
@@ -40,7 +41,9 @@ const ArchivePage: NextPage = () => {
         minH="32"
       >
         <VStack alignItems="flex-start">
-          <Heading as="h1" size="lg" mb="4">{archive?.title}</Heading>
+          <Heading as="h1" size="lg" mb="4">
+            {archive?.title}
+          </Heading>
         </VStack>
         {archive?.logo_url && <Image src={`/${archive.logo_url}`} alt={`Прапор ${archive?.title}`} maxH="32" />}
       </HStack>
@@ -49,15 +52,15 @@ const ArchivePage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
+            flex: 1,
             comparator: sortNumeric,
-            maxWidth: 100,
             resizable: false,
             filter: true,
           },
           {
             field: "title",
             headerName: "Назва",
-            flex: 3,
+            flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${code}/${row.data.code}`} color="blue.600">
@@ -70,16 +73,20 @@ const ArchivePage: NextPage = () => {
             type: "numericColumn",
             headerName: "Описи",
             hide: isMobile,
-            flex: 1,
-            maxWidth: 120,
+            flex: 2,
             resizable: false,
             sortable: false,
-            cellRenderer: (row: { data: TableItem }) =>
-              row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
-                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
-                  <Text>{children_count}</Text>
-                </Tooltip>
-              )),
+            cellRenderer: (row: { data: TableItem }) => (
+              <VStack h="full" alignItems="flex-end" justifyContent="center">
+                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => children_count && (
+                  <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
+                    <ResourceBadge resource={type}>
+                      {children_count}
+                    </ResourceBadge>
+                  </Tooltip>
+                ))}
+              </VStack>
+            ),
           },
         ]}
         rows={archive?.funds.sort(sortByCode) || []}

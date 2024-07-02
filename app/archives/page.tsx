@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Heading, Text, Tooltip } from "@chakra-ui/react";
+import { Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
 import DuckTable from "../components/Table";
 import { getSyncAtLabel } from "../utils/table";
+import ResourceBadge from "../components/ResourceBadge";
 
 type TableItem = GetAllArchivesResponse[number];
 
@@ -30,14 +31,14 @@ const ArchivesPage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
-            maxWidth: 100,
+            flex: 1,
             resizable: false,
             filter: true,
           },
           {
             field: "title",
             headerName: "Назва",
-            flex: 3,
+            flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`archives/${row.data.code}`} color="blue.600">
@@ -49,16 +50,20 @@ const ArchivesPage: NextPage = () => {
             colId: "sync",
             type: "numericColumn",
             headerName: "Фонди",
-            flex: 1,
-            maxWidth: 120,
+            flex: 2,
             resizable: false,
             sortable: false,
-            cellRenderer: (row: { data: TableItem }) =>
-              row.data.matches.map(({ updated_at, children_count, resource: { type } }) => (
-                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
-                  <Text>{children_count}</Text>
-                </Tooltip>
-              )),
+            cellRenderer: (row: { data: TableItem }) => (
+              <VStack h="full" alignItems="flex-end" justifyContent="center">
+                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                  <ResourceBadge resource={type} key={`${row.data.id}_match_${type}`}>
+                    <Tooltip label={getSyncAtLabel(updated_at)} hasArrow>
+                      <Text as="span">{children_count}</Text>
+                    </Tooltip>
+                  </ResourceBadge>
+                ))}
+              </VStack>
+            ),
           },
         ]}
         rows={archives.filter((archive) => archive.matches.some((match) => match.children_count))}

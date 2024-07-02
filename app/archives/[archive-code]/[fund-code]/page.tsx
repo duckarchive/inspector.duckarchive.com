@@ -9,6 +9,7 @@ import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[
 import { getSyncAtLabel, sortByCode, sortNumeric } from "../../../utils/table";
 import useIsMobile from "../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../hooks/useCyrillicParams";
+import ResourceBadge from "../../../components/ResourceBadge";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
@@ -51,15 +52,14 @@ const FundPage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
+            flex: 1,
             comparator: sortNumeric,
-            maxWidth: 100,
-            resizable: false,
             filter: true,
           },
           {
             field: "title",
             headerName: "Назва",
-            flex: 3,
+            flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${archiveCode}/${code}/${row.data.code}`} color="blue.600">
@@ -71,17 +71,21 @@ const FundPage: NextPage = () => {
             colId: "sync",
             type: "numericColumn",
             headerName: "Справи",
+            flex: 2,
             hide: isMobile,
-            flex: 1,
-            maxWidth: 120,
             resizable: false,
             sortable: false,
-            cellRenderer: (row: { data: TableItem }) =>
-              row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
-                <Tooltip key={`${row.data.id}_match_${type}`} label={getSyncAtLabel(updated_at)} hasArrow>
-                  <Text>{children_count}</Text>
-                </Tooltip>
-              )),
+            cellRenderer: (row: { data: TableItem }) => (
+              <VStack h="full" alignItems="flex-end" justifyContent="center">
+                {row.data.matches?.map(({ updated_at, children_count, resource: { type } }) => (
+                  <ResourceBadge resource={type} key={`${row.data.id}_match_${type}`}>
+                    <Tooltip label={getSyncAtLabel(updated_at)} hasArrow>
+                      <Text as="span">{children_count}</Text>
+                    </Tooltip>
+                  </ResourceBadge>
+                ))}
+              </VStack>
+            ),
           },
         ]}
         rows={fund?.descriptions.sort(sortByCode) || []}
