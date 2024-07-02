@@ -30,7 +30,7 @@ const ArchivesLayout: React.FC<PropsWithChildren> = ({ children }) => {
       text: descriptionCode,
     },
     {
-      href: `/archives/${archiveCode}/${fundCode}/${caseCode}`,
+      href: `/archives/${archiveCode}/${fundCode}/${descriptionCode}/${caseCode}`,
       text: caseCode,
     },
   ].filter(({ text }) => text);
@@ -42,7 +42,7 @@ const ArchivesLayout: React.FC<PropsWithChildren> = ({ children }) => {
       <Breadcrumb separator={<IoChevronForward />} fontWeight='medium' fontSize='sm'>
       {
         breadcrumbItems.map(({ href, text }, i) => (
-          <BreadcrumbItem key={text} isCurrentPage={i === breadcrumbItems.length - 1}>
+          <BreadcrumbItem key={href} isCurrentPage={i === breadcrumbItems.length - 1}>
             <BreadcrumbLink href={href}>
               {text}
             </BreadcrumbLink>
