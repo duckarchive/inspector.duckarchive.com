@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 
 const ArchivesLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Container minW="container.xl" py={10}>
+    <Container maxW="container.xl" py={10}>
       {children}
     </Container>
   );

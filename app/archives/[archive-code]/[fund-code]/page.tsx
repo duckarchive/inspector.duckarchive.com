@@ -8,11 +8,13 @@ import { useEffect, useState } from "react";
 import DuckTable from "../../../components/Table";
 import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[fund-code]";
 import { getSyncAtLabel } from "../../../utils/table";
+import useIsMobile from "../../../hooks/useIsMobile";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
 const FundPage: NextPage = () => {
   const params = useParams();
+  const isMobile = useIsMobile();
   const archiveCode = decodeURIComponent(params?.["archive-code"].toString() || "");
   const code = decodeURIComponent(params?.["fund-code"].toString() || "");
 
@@ -55,6 +57,7 @@ const FundPage: NextPage = () => {
             colId: "sync",
             type: "numericColumn",
             headerName: "Справи",
+            hide: isMobile,
             flex: 1,
             maxWidth: 120,
             resizable: false,

@@ -5,19 +5,20 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getSyncAtLabel, sortByCode } from "../../../../utils/table";
+import { getSyncAtLabel } from "../../../../utils/table";
 import DuckTable from "../../../../components/Table";
 import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
+import useIsMobile from "../../../../hooks/useIsMobile";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
 const DescriptionPage: NextPage = () => {
   const params = useParams();
+  const isMobile = useIsMobile();
   const archiveCode = decodeURIComponent(
     params?.["archive-code"].toString() || ""
   );
@@ -47,7 +48,7 @@ const DescriptionPage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
-            maxWidth: 100,
+            maxWidth: 80,
             resizable: false,
           },
           {
@@ -65,6 +66,7 @@ const DescriptionPage: NextPage = () => {
             colId: "sync",
             type: "numericColumn",
             headerName: "Файли",
+            hide: isMobile,
             flex: 1,
             maxWidth: 120,
             resizable: false,

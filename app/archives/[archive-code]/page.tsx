@@ -8,11 +8,13 @@ import { useEffect, useState } from "react";
 import { GetArchiveResponse } from "../../../pages/api/archives/[archive-code]";
 import DuckTable from "../../components/Table";
 import { getSyncAtLabel } from "../../utils/table";
+import useIsMobile from "../../hooks/useIsMobile";
 
 type TableItem = GetArchiveResponse["funds"][number];
 
 const ArchivePage: NextPage = () => {
   const params = useParams();
+  const isMobile = useIsMobile();
   const code = decodeURIComponent(params?.["archive-code"].toString() || "");
 
   const [archive, setArchive] = useState<GetArchiveResponse>();
@@ -67,6 +69,7 @@ const ArchivePage: NextPage = () => {
             colId: "sync",
             type: "numericColumn",
             headerName: "Описи",
+            hide: isMobile,
             flex: 1,
             maxWidth: 120,
             resizable: false,
