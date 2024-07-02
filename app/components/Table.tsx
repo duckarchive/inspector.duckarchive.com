@@ -43,6 +43,8 @@ const DuckTable = <T extends { id: string }>({
         suppressHorizontalScroll
         colResizeDefault="shift"
         localeText={AG_GRID_LOCALE_UK}
+        pagination
+        paginationPageSize={20}
         defaultColDef={{
           resizable: true,
           minWidth: 100,

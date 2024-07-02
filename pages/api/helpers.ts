@@ -17,7 +17,7 @@ export const parseDBParams = (str: string | null): Record<string, string> => {
 export const parseCode = (str: string): string => {
   // input: "Р-34" "П-159" "Р34" "П159" "8дод." "2т.1" "10."
   // output: "Р34" "П159" "34" "159" "8дод" "2т1" "10"
-  const pure = unescape(str);
+  const pure = unescape(str).replace(/&#039;/g, "'");
   if (/\d+\./.test(pure)) {
     // temporary solution for "10." in https://e-resource.tsdavo.gov.ua/fonds/8/
     return pure.replace(/\./, "н");
@@ -27,7 +27,7 @@ export const parseCode = (str: string): string => {
 };
 
 export const parseTitle = (str: string): string => {
-  return unescape(str.trim().slice(0, 200));
+  return unescape(str.trim().replace(/&#039;/g, "'").slice(0, 200));
 };
 
 interface ScrappingOptions {
