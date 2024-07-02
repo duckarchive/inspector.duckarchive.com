@@ -4,7 +4,7 @@ import { HStack, Heading, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
-import { getSyncAtLabel } from "../../../../utils/table";
+import { getSyncAtLabel, sortByCode, sortNumeric } from "../../../../utils/table";
 import DuckTable from "../../../../components/Table";
 import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
 import useIsMobile from "../../../../hooks/useIsMobile";
@@ -52,6 +52,7 @@ const DescriptionPage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
+            comparator: sortNumeric,
             maxWidth: 80,
             resizable: false,
           },
@@ -83,7 +84,7 @@ const DescriptionPage: NextPage = () => {
               )),
           },
         ]}
-        rows={description?.cases || []}
+        rows={description?.cases.sort(sortByCode) || []}
       />
     </>
   );

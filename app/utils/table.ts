@@ -1,11 +1,11 @@
 import { intlFormatDistance } from "date-fns/intlFormatDistance";
 
+export const sortNumeric = (a: string, b: string) => parseInt(a) - parseInt(b);
+
 interface WithCode {
   code: string;
 }
-export const sortByCode = (a: WithCode, b: WithCode) => {
-  return parseInt(a.code) - parseInt(b.code);
-};
+export const sortByCode = (a: WithCode, b: WithCode) => sortNumeric(a.code, b.code);
 
 export const sortByTextCode = (a: WithCode, b: WithCode) => {
   return a.code.localeCompare(b.code);
@@ -20,7 +20,7 @@ export const sortByDate = (a: WithDates, b: WithDates) => {
 };
 
 export const getSyncAtLabel = (updatedAt?: Date | string | null, withoutPrefix?: boolean) => {
-  const prefix = withoutPrefix ? "" : "Оновлено "
+  const prefix = withoutPrefix ? "" : "Оновлено ";
   return updatedAt
     ? `${prefix}${intlFormatDistance(new Date(updatedAt), new Date(), {
         locale: "uk",

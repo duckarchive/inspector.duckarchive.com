@@ -6,7 +6,7 @@ import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
 import DuckTable from "../../../components/Table";
 import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[fund-code]";
-import { getSyncAtLabel } from "../../../utils/table";
+import { getSyncAtLabel, sortByCode, sortNumeric } from "../../../utils/table";
 import useIsMobile from "../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../hooks/useCyrillicParams";
 
@@ -51,6 +51,7 @@ const FundPage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
+            comparator: sortNumeric,
             maxWidth: 100,
             resizable: false,
           },
@@ -82,7 +83,7 @@ const FundPage: NextPage = () => {
               )),
           },
         ]}
-        rows={fund?.descriptions || []}
+        rows={fund?.descriptions.sort(sortByCode) || []}
       />
     </>
   );

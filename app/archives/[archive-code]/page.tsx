@@ -6,7 +6,7 @@ import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
 import { GetArchiveResponse } from "../../../pages/api/archives/[archive-code]";
 import DuckTable from "../../components/Table";
-import { getSyncAtLabel } from "../../utils/table";
+import { getSyncAtLabel, sortByCode, sortNumeric } from "../../utils/table";
 import useIsMobile from "../../hooks/useIsMobile";
 import useCyrillicParams from "../../hooks/useCyrillicParams";
 
@@ -49,6 +49,7 @@ const ArchivePage: NextPage = () => {
           {
             field: "code",
             headerName: "Індекс",
+            comparator: sortNumeric,
             maxWidth: 100,
             resizable: false,
           },
@@ -80,7 +81,7 @@ const ArchivePage: NextPage = () => {
               )),
           },
         ]}
-        rows={archive?.funds || []}
+        rows={archive?.funds.sort(sortByCode) || []}
       />
     </>
   );
