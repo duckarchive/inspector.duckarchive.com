@@ -32,6 +32,7 @@ const ArchivesPage: NextPage = () => {
             headerName: "Індекс",
             maxWidth: 100,
             resizable: false,
+            filter: true,
           },
           {
             field: "title",

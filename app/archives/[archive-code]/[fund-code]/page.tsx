@@ -54,6 +54,7 @@ const FundPage: NextPage = () => {
             comparator: sortNumeric,
             maxWidth: 100,
             resizable: false,
+            filter: true,
           },
           {
             field: "title",

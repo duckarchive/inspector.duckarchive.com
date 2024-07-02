@@ -55,6 +55,7 @@ const DescriptionPage: NextPage = () => {
             comparator: sortNumeric,
             maxWidth: 80,
             resizable: false,
+            filter: true,
           },
           {
             field: "title",
