@@ -67,7 +67,7 @@ const syncAllMatches = async () => {
     orderBy: {
       updated_at: "asc",
     },
-    take: 500,
+    take: 5000,
   });
 
   console.log("ARCHIUM: syncAllMatches: cases to sync", caseMatches.length);
