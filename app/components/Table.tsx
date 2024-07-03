@@ -5,7 +5,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { useRef } from "react";
 import { Box, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { AG_GRID_LOCALE_UK } from "../utils/i18n";
-import { getSyncAtLabel, sortByMatches, sortNumeric } from "../utils/table";
+import { getSyncAtLabel, sortByMatches, sortCode } from "../utils/table";
 import ResourceBadge from "./ResourceBadge";
 
 interface DuckTableProps<T> {
@@ -43,7 +43,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T
             flex: 1,
             resizable: false,
             filter: true,
-            comparator: sortNumeric,
+            comparator: sortCode,
             ...firstColumn,
           },
           ...middleColumns,

@@ -7,7 +7,21 @@ export const sortText = (a: string, b: string) => a.localeCompare(b);
 interface WithCode {
   code: string;
 }
-export const sortByCode = (a: WithCode, b: WithCode) => sortNumeric(a.code, b.code);
+export const sortByCode = (a: WithCode, b: WithCode) => sortCode(a.code, b.code);
+
+const groups = ["П", "Р", ""];
+export const sortCode = (a: string, b: string) => {
+  const upA = a.toUpperCase();
+  const upB = b.toUpperCase();
+  const idxA = groups.findIndex((group) => upA.startsWith(group));
+  const idxB = groups.findIndex((group) => upB.startsWith(group));
+  const qA = idxA + 1;
+  const qB = idxB + 1;
+  const pureA = upA.replace(/[^0-9]/g, "");
+  const pureB = upB.replace(/[^0-9]/g, "");
+  if (pureA === pureB) return qB - qA;
+  return sortNumeric(pureA, pureB);
+};
 
 export const sortByTextCode = (a: WithCode, b: WithCode) => {
   return sortText(a.code, b.code);
