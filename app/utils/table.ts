@@ -2,13 +2,15 @@ import { intlFormatDistance } from "date-fns/intlFormatDistance";
 
 export const sortNumeric = (a: string, b: string) => parseInt(a) - parseInt(b);
 
+export const sortText = (a: string, b: string) => a.localeCompare(b);
+
 interface WithCode {
   code: string;
 }
 export const sortByCode = (a: WithCode, b: WithCode) => sortNumeric(a.code, b.code);
 
 export const sortByTextCode = (a: WithCode, b: WithCode) => {
-  return a.code.localeCompare(b.code);
+  return sortText(a.code, b.code);
 };
 
 interface WithDates {

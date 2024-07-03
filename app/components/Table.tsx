@@ -79,6 +79,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T
         colResizeDefault="shift"
         localeText={AG_GRID_LOCALE_UK}
         pagination
+        enableCellTextSelection
         paginationPageSize={20}
         defaultColDef={{
           resizable: true,

@@ -30,6 +30,7 @@ const ArchivesPage: NextPage = () => {
         columns={[
           {
             field: "code",
+            comparator: undefined,
           },
           {
             field: "title",
