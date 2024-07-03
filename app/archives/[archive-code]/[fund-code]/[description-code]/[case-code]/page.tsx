@@ -1,6 +1,6 @@
 "use client";
 
-import { HStack, Heading, VStack } from "@chakra-ui/react";
+import { HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { GetCaseResponse } from "../../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]";
@@ -35,11 +35,14 @@ const CasePage: NextPage = () => {
   return (
     <>
       <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <VStack>
-          <Heading as="h1" size="lg" mb="4">
+        <HStack alignItems="center">
+          <Text fontSize="xl" color="gray.500">
+            Справа:
+          </Text>
+          <Heading as="h1" size="lg" lineHeight={1}>
             {caseItem?.title}
           </Heading>
-        </VStack>
+        </HStack>
       </HStack>
       <DuckTable<TableItem>
         columns={[

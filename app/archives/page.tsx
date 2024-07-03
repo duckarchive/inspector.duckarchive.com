@@ -27,11 +27,9 @@ const ArchivesPage: NextPage = () => {
   return (
     <>
       <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <VStack alignItems="flex-start">
-          <Heading as="h1" size="lg" mb="4">
-            Оберіть архів
-          </Heading>
-        </VStack>
+        <Heading as="h1" size="lg" lineHeight={1}>
+          Оберіть архів
+        </Heading>
       </HStack>
       <DuckTable<TableItem>
         columns={[

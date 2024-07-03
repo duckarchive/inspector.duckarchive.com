@@ -1,6 +1,6 @@
 "use client";
 
-import { HStack, Heading, VStack } from "@chakra-ui/react";
+import { HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
@@ -32,11 +32,14 @@ const FundPage: NextPage = () => {
   return (
     <>
       <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <VStack>
-          <Heading as="h1" size="lg" mb="4">
+        <HStack alignItems="center">
+          <Text fontSize="xl" color="gray.500">
+            Фонд:
+          </Text>
+          <Heading as="h1" size="lg" lineHeight={1}>
             {fund?.title}
           </Heading>
-        </VStack>
+        </HStack>
       </HStack>
       <DuckTable<TableItem>
         columns={[

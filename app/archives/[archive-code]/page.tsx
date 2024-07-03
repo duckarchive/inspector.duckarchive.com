@@ -1,6 +1,6 @@
 "use client";
 
-import { HStack, Heading, Image, VStack } from "@chakra-ui/react";
+import { Avatar, HStack, Heading, Image, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
@@ -31,12 +31,17 @@ const ArchivePage: NextPage = () => {
   return (
     <>
       <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <VStack alignItems="flex-start">
-          <Heading as="h1" size="lg" mb="4">
+        <HStack alignItems="center">
+          <Avatar
+            rounded="full"
+            src={`/${archive?.logo_url}`}
+            name={archive?.title || "Архів"}
+            size="xl"
+          />
+          <Heading as="h1" size="lg" lineHeight={1}>
             {archive?.title}
           </Heading>
-        </VStack>
-        {archive?.logo_url && <Image src={`/${archive.logo_url}`} alt={`Прапор ${archive?.title}`} maxH="32" />}
+        </HStack>
       </HStack>
       <DuckTable<TableItem>
         enabledFilters={{
