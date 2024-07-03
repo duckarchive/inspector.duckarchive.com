@@ -39,6 +39,11 @@ const ArchivePage: NextPage = () => {
         {archive?.logo_url && <Image src={`/${archive.logo_url}`} alt={`Прапор ${archive?.title}`} maxH="32" />}
       </HStack>
       <DuckTable<TableItem>
+        enabledFilters={{
+          partFunds: true,
+          preUssrFunds: true,
+          ussrFunds: true,
+        }}
         columns={[
           {
             field: "code",

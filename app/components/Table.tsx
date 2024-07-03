@@ -1,86 +1,110 @@
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { ColDef, ITextFilterParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { useRef } from "react";
-import { Box, Text, Tooltip, VStack } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
+import { Box, Button, HStack, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { AG_GRID_LOCALE_UK } from "../utils/i18n";
 import { getSyncAtLabel, sortByMatches, sortCode } from "../utils/table";
 import ResourceBadge from "./ResourceBadge";
 
+export enum QuickFilter {
+  PRE_USSR_FUNDS = "preUssrFunds",
+  USSR_FUNDS = "ussrFunds",
+  PART_FUNDS = "partFunds",
+}
+
+const FILTER_CONDITIONS = {
+  [QuickFilter.PRE_USSR_FUNDS]: {
+    conditions: [
+      {
+        type: "notContains",
+        filter: "Р",
+      },
+      {
+        type: "notContains",
+        filter: "П",
+      },
+    ],
+    operator: "AND",
+  },
+  [QuickFilter.USSR_FUNDS]: {
+    type: "startsWith",
+    filter: "Р",
+  },
+  [QuickFilter.PART_FUNDS]: {
+    type: "startsWith",
+    filter: "П",
+  },
+};
+
 interface DuckTableProps<T> {
   columns: ColDef<T>[];
   rows: T[];
-  pinnedBottomRowData?: T;
-  onCreateClick?: () => void;
-  onUploadClick?: () => void;
-  onEdit?: (row: T) => void;
-  onDelete?: (row: T) => void;
-  rightActionRenderer?: () => React.ReactNode;
-  onPageChange?: (direction: number) => void;
-  pagination?: { skip: number; totalCount: number; take: number };
-  showSettings?: boolean;
-  showActionColumn?: boolean;
-  showDownload?: boolean;
-  setTakeAndRefetch?: (newTake: number) => void;
+  enabledFilters?: Record<QuickFilter, boolean>;
 }
 
-const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T>) => {
+const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: DuckTableProps<T>) => {
   const gridRef = useRef<AgGridReact<T>>(null);
+  const [activeQuickFilter, setActiveQuickFilter] = useState<QuickFilter>();
 
   const firstColumn = columns[0];
   const middleColumns = columns.slice(1, -1);
   const lastColumn = columns[columns.length - 1];
 
-  // const preUssrFunds = useCallback(() => {
-  //   gridRef
-  //     .current!.api!.setColumnFilterModel("code", {
-  //       conditions: [
-  //         {
-  //           type: "notContains",
-  //           filter: "Р",
-  //         },
-  //         {
-  //           type: "notContains",
-  //           filter: "П",
-  //         },
-  //       ],
-  //       operator: "AND",
-  //     })
-  //     .then(() => {
-  //       gridRef.current!.api.onFilterChanged();
-  //     });
-  // }, []);
+  useEffect(() => {
+    if (!gridRef.current?.api) {
+      return;
+    }
+    if (activeQuickFilter) {
+      gridRef.current.api.setColumnFilterModel("code", FILTER_CONDITIONS[activeQuickFilter]).then(() => {
+        gridRef.current?.api.onFilterChanged();
+      });
+    } else {
+      gridRef.current.api.setColumnFilterModel("code", null).then(() => {
+        gridRef.current?.api.onFilterChanged();
+      });
+    }
+  }, [activeQuickFilter]);
 
-  // const ussrFunds = useCallback(() => {
-  //   gridRef
-  //     .current!.api!.setColumnFilterModel("code", {
-  //       type: "startsWith",
-  //       filter: "Р",
-  //     })
-  //     .then(() => {
-  //       gridRef.current!.api.onFilterChanged();
-  //     });
-  // }, []);
-
-  // const partFunds = useCallback(() => {
-  //   gridRef
-  //     .current!.api!.setColumnFilterModel("code", {
-  //       type: "startsWith",
-  //       filter: "П",
-  //     })
-  //     .then(() => {
-  //       gridRef.current!.api.onFilterChanged();
-  //     });
-  // }, []);
+  const handleFilterClick = (newFilter: QuickFilter) => () => {
+    setActiveQuickFilter((prev) => (prev === newFilter ? undefined : newFilter));
+  };
 
   return (
     <>
-      {/* <HStack alignItems="center">
-        <Button onClick={preUssrFunds} size="sm">Фонди до 1917</Button>
-        <Button onClick={ussrFunds} size="sm">Фонди після 1917</Button>
-        <Button onClick={partFunds} size="sm">Фонди ПРУ</Button>
-      </HStack> */}
+      <HStack alignItems="center">
+        {enabledFilters?.[QuickFilter.PRE_USSR_FUNDS] && (
+          <Button
+            onClick={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
+            size="sm"
+            colorScheme="blue"
+            variant={activeQuickFilter === QuickFilter.PRE_USSR_FUNDS ? "solid" : "outline"}
+          >
+            Фонди до 1917
+          </Button>
+        )}
+        {enabledFilters?.[QuickFilter.USSR_FUNDS] && (
+          <Button
+            onClick={handleFilterClick(QuickFilter.USSR_FUNDS)}
+            size="sm"
+            colorScheme="blue"
+            variant={activeQuickFilter === QuickFilter.USSR_FUNDS ? "solid" : "outline"}
+          >
+            Фонди після 1917
+          </Button>
+        )}
+        {enabledFilters?.[QuickFilter.PART_FUNDS] && (
+          <Button
+            onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
+            size="sm"
+            colorScheme="blue"
+            variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "outline"}
+          >
+            Фонди ПРУ
+          </Button>
+        )}
+      </HStack>
       <Box as="div" className="ag-theme-alpine" w="100%" h={300} flexGrow={1}>
         <AgGridReact
           ref={gridRef}
@@ -132,6 +156,9 @@ const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T
           defaultColDef={{
             resizable: true,
             minWidth: 100,
+            filterParams: {
+              buttons: ["clear"],
+            } as ITextFilterParams,
           }}
           autoSizeStrategy={{
             type: "fitGridWidth",
