@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Text, Tooltip, VStack } from "@chakra-ui/react";
+import { HStack, Heading, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
@@ -26,6 +26,13 @@ const ArchivesPage: NextPage = () => {
 
   return (
     <>
+      <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
+        <VStack alignItems="flex-start">
+          <Heading as="h1" size="lg" mb="4">
+            Оберіть архів
+          </Heading>
+        </VStack>
+      </HStack>
       <DuckTable<TableItem>
         columns={[
           {

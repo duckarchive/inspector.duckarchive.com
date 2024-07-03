@@ -33,10 +33,9 @@ const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T
   const lastColumn = columns[columns.length - 1];
 
   return (
-    <Box className="ag-theme-alpine" w="100%">
+    <Box as="div" className="ag-theme-alpine" w="100%" h={300} flexGrow={1}>
       <AgGridReact
         ref={gridRef}
-        domLayout="autoHeight"
         rowData={rows}
         columnDefs={[
           {
@@ -81,6 +80,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T
         pagination
         enableCellTextSelection
         paginationPageSize={20}
+        alwaysShowVerticalScroll
         defaultColDef={{
           resizable: true,
           minWidth: 100,

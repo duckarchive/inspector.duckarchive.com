@@ -30,15 +30,7 @@ const ArchivePage: NextPage = () => {
 
   return (
     <>
-      <HStack
-        justifyContent="space-between"
-        alignItems="flex-start"
-        bg="white"
-        mb={2}
-        p={2}
-        borderRadius="lg"
-        minH="32"
-      >
+      <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
         <VStack alignItems="flex-start">
           <Heading as="h1" size="lg" mb="4">
             {archive?.title}
