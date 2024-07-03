@@ -32,64 +32,113 @@ const DuckTable = <T extends { id: string }>({ columns, rows }: DuckTableProps<T
   const middleColumns = columns.slice(1, -1);
   const lastColumn = columns[columns.length - 1];
 
+  // const preUssrFunds = useCallback(() => {
+  //   gridRef
+  //     .current!.api!.setColumnFilterModel("code", {
+  //       conditions: [
+  //         {
+  //           type: "notContains",
+  //           filter: "Р",
+  //         },
+  //         {
+  //           type: "notContains",
+  //           filter: "П",
+  //         },
+  //       ],
+  //       operator: "AND",
+  //     })
+  //     .then(() => {
+  //       gridRef.current!.api.onFilterChanged();
+  //     });
+  // }, []);
+
+  // const ussrFunds = useCallback(() => {
+  //   gridRef
+  //     .current!.api!.setColumnFilterModel("code", {
+  //       type: "startsWith",
+  //       filter: "Р",
+  //     })
+  //     .then(() => {
+  //       gridRef.current!.api.onFilterChanged();
+  //     });
+  // }, []);
+
+  // const partFunds = useCallback(() => {
+  //   gridRef
+  //     .current!.api!.setColumnFilterModel("code", {
+  //       type: "startsWith",
+  //       filter: "П",
+  //     })
+  //     .then(() => {
+  //       gridRef.current!.api.onFilterChanged();
+  //     });
+  // }, []);
+
   return (
-    <Box as="div" className="ag-theme-alpine" w="100%" h={300} flexGrow={1}>
-      <AgGridReact
-        ref={gridRef}
-        rowData={rows}
-        columnDefs={[
-          {
-            headerName: "Індекс",
-            flex: 1,
-            resizable: false,
-            filter: true,
-            comparator: sortCode,
-            ...firstColumn,
-          },
-          ...middleColumns,
-          {
-            type: "numericColumn",
-            flex: 2,
-            resizable: false,
-            comparator: (_, __, { data: a }: any, { data: b }: any) => sortByMatches(a, b),
-            cellRenderer: (row: { data: any }) => (
-              <VStack h="full" alignItems="flex-end" justifyContent="center">
-                {row.data.matches?.map(
-                  ({ updated_at, children_count, resource: { type } }: any) =>
-                    children_count && (
-                      <Tooltip
-                        label={getSyncAtLabel(updated_at)}
-                        hasArrow
-                        key={`${row.data.id}_match_${type}`}
-                        placement="left"
-                      >
-                        <Text as="p">
-                          <ResourceBadge resource={type}>{children_count}</ResourceBadge>
-                        </Text>
-                      </Tooltip>
-                    )
-                )}
-              </VStack>
-            ),
-            ...lastColumn,
-          },
-        ]}
-        suppressHorizontalScroll
-        colResizeDefault="shift"
-        localeText={AG_GRID_LOCALE_UK}
-        pagination
-        enableCellTextSelection
-        paginationPageSize={20}
-        alwaysShowVerticalScroll
-        defaultColDef={{
-          resizable: true,
-          minWidth: 100,
-        }}
-        autoSizeStrategy={{
-          type: "fitGridWidth",
-        }}
-      />
-    </Box>
+    <>
+      {/* <HStack alignItems="center">
+        <Button onClick={preUssrFunds} size="sm">Фонди до 1917</Button>
+        <Button onClick={ussrFunds} size="sm">Фонди після 1917</Button>
+        <Button onClick={partFunds} size="sm">Фонди ПРУ</Button>
+      </HStack> */}
+      <Box as="div" className="ag-theme-alpine" w="100%" h={300} flexGrow={1}>
+        <AgGridReact
+          ref={gridRef}
+          rowData={rows}
+          columnDefs={[
+            {
+              headerName: "Індекс",
+              flex: 1,
+              resizable: false,
+              filter: true,
+              comparator: sortCode,
+              ...firstColumn,
+            },
+            ...middleColumns,
+            {
+              type: "numericColumn",
+              flex: 2,
+              resizable: false,
+              comparator: (_, __, { data: a }: any, { data: b }: any) => sortByMatches(a, b),
+              cellRenderer: (row: { data: any }) => (
+                <VStack h="full" alignItems="flex-end" justifyContent="center">
+                  {row.data.matches?.map(
+                    ({ updated_at, children_count, resource: { type } }: any) =>
+                      children_count && (
+                        <Tooltip
+                          label={getSyncAtLabel(updated_at)}
+                          hasArrow
+                          key={`${row.data.id}_match_${type}`}
+                          placement="left"
+                        >
+                          <Text as="p">
+                            <ResourceBadge resource={type}>{children_count}</ResourceBadge>
+                          </Text>
+                        </Tooltip>
+                      )
+                  )}
+                </VStack>
+              ),
+              ...lastColumn,
+            },
+          ]}
+          suppressHorizontalScroll
+          colResizeDefault="shift"
+          localeText={AG_GRID_LOCALE_UK}
+          pagination
+          enableCellTextSelection
+          paginationPageSize={20}
+          alwaysShowVerticalScroll
+          defaultColDef={{
+            resizable: true,
+            minWidth: 100,
+          }}
+          autoSizeStrategy={{
+            type: "fitGridWidth",
+          }}
+        />
+      </Box>
+    </>
   );
 };
 
