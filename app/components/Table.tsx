@@ -77,7 +77,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
         {enabledFilters?.[QuickFilter.PRE_USSR_FUNDS] && (
           <Button
             onClick={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
-            size="sm"
+            size="xs"
             colorScheme="blue"
             variant={activeQuickFilter === QuickFilter.PRE_USSR_FUNDS ? "solid" : "outline"}
           >
@@ -87,7 +87,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
         {enabledFilters?.[QuickFilter.USSR_FUNDS] && (
           <Button
             onClick={handleFilterClick(QuickFilter.USSR_FUNDS)}
-            size="sm"
+            size="xs"
             colorScheme="blue"
             variant={activeQuickFilter === QuickFilter.USSR_FUNDS ? "solid" : "outline"}
           >
@@ -97,7 +97,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
         {enabledFilters?.[QuickFilter.PART_FUNDS] && (
           <Button
             onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
-            size="sm"
+            size="xs"
             colorScheme="blue"
             variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "outline"}
           >
