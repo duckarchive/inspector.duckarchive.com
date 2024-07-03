@@ -120,7 +120,7 @@ export const fetchArchiveFunds = async (archiveId: string) => {
           );
         }
       } catch (error) {
-        console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { chunk });
+        console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { newFundsChunk });
       }
     }
 
@@ -129,9 +129,9 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     let removedFundsCounter = 0;
     const removedFundsChunks = chunk(removedFunds, 10);
 
-    for (const chunk of removedFundsChunks) {
+    for (const removedFundsChunk of removedFundsChunks) {
       await Promise.all(
-        chunk.map(async (f) => {
+        removedFundsChunk.map(async (f) => {
           console.log(
             `ARCHIUM: fetchArchiveFunds: removedFunds progress (${++removedFundsCounter}/${removedFunds.length})`
           );

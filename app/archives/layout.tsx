@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container } from "@chakra-ui/react";
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, HStack, Text } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 import useCyrillicParams from "../hooks/useCyrillicParams";
 import { IoChevronForward } from "react-icons/io5";
@@ -36,19 +36,24 @@ const ArchivesLayout: React.FC<PropsWithChildren> = ({ children }) => {
   ].filter(({ text }) => text);
 
   return (
-    <Container maxW="container.xl" py={10}>
-      <Breadcrumb separator={<IoChevronForward />} fontWeight='medium' fontSize='sm'>
-      {
-        breadcrumbItems.map(({ href, text }, i) => (
-          <BreadcrumbItem key={href} isCurrentPage={i === breadcrumbItems.length - 1}>
-            <BreadcrumbLink href={href}>
-              {text}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        ))
-      }
-      </Breadcrumb>
-      {children}
+    <Container maxW="container.xl">
+      <HStack justifyContent="space-between" bg="white" p={2} borderRadius="lg" fontWeight="medium" fontSize="sm">
+        <Breadcrumb>
+          {breadcrumbItems.map(({ href, text }, i) => (
+            <BreadcrumbItem key={href} isCurrentPage={i === breadcrumbItems.length - 1}>
+              <BreadcrumbLink href={href}>{text}</BreadcrumbLink>
+            </BreadcrumbItem>
+          ))}
+        </Breadcrumb>
+        <HStack>
+          <Text>Навігація</Text>
+          <Text>Буде</Text>
+          <Text>Тут</Text>
+        </HStack>
+      </HStack>
+      <Box as="main" justifyContent="space-between" bg="white" p={2} my={2} borderRadius="lg" minH="calc(100vh - )">
+        {children}
+      </Box>
     </Container>
   );
 };

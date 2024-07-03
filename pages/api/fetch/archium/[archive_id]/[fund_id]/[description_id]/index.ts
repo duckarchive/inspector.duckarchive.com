@@ -87,11 +87,11 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
     let newCasesCounter = 0;
     const newCasesChunks = chunk(newCases, 100);
 
-    for (const chunk of newCasesChunks) {
+    for (const newCasesChunk of newCasesChunks) {
       console.log(`ARCHIUM: fetchDescriptionCases: newCases progress (${++newCasesCounter}/${newCasesChunks.length})`);
       try {
         const newCases = await prisma.case.createManyAndReturn({
-          data: chunk.map((f) => ({
+          data: newCasesChunk.map((f) => ({
             code: f.code,
             title: f.title,
             description_id: descriptionId,
@@ -101,27 +101,27 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
 
         await prisma.match.createMany({
           data: newCases.map((newCase, i) => ({
-            resource_id: chunk[i].resourceId,
+            resource_id: newCasesChunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
             description_id: descriptionId,
             case_id: newCase.id,
-            api_url: chunk[i].matchApiUrl,
+            api_url: newCasesChunk[i].matchApiUrl,
           })),
         });
 
         await prisma.fetch.createMany({
           data: newCases.map((newCase, i) => ({
-            resource_id: chunk[i].resourceId,
+            resource_id: newCasesChunk[i].resourceId,
             archive_id: archiveId,
             fund_id: fundId,
             description_id: descriptionId,
             case_id: newCase.id,
-            api_url: chunk[i].fetchApiUrl,
+            api_url: newCasesChunk[i].fetchApiUrl,
           })),
         });
       } catch (error) {
-        console.error("ARCHIUM: fetchDescriptionCases: newCases", error, { chunk });
+        console.error("ARCHIUM: fetchDescriptionCases: newCases", error, { newCasesChunk });
       }
     }
 
@@ -130,9 +130,9 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
     let removedCasesCounter = 0;
     const removedCasesChunks = chunk(removedCases, 10);
 
-    for (const chunk of removedCasesChunks) {
+    for (const removedCasesChunk of removedCasesChunks) {
       await Promise.all(
-        chunk.map(async (d) => {
+        removedCasesChunk.map(async (d) => {
           console.log(
             `ARCHIUM: fetchDescriptionCases: removedCases progress (${++removedCasesCounter}/${removedCases.length})`
           );
