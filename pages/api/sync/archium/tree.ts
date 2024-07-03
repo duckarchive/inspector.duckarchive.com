@@ -1,21 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, ResourceType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { chunk } from "lodash";
-import { scrapping } from "../../helpers";
 
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
-    await recalculateTree();
+    const success = await recalculateTree();
 
-    res.status(200);
+    res.status(200).json({ success });
   } else {
     res.status(405);
   }
 }
-
-
 
 export const recalculateDescriptionChildrenCount = async () => {
   console.log(`ARCHIUM: recalculateDescriptionChildrenCount`);
@@ -38,7 +35,7 @@ export const recalculateDescriptionChildrenCount = async () => {
             case_id: null,
           },
         });
-        if (match) {
+        if (match && count !== match.children_count) {
           await prisma.match.update({
             where: {
               id: match.id,
@@ -76,7 +73,7 @@ export const recalculateFundChildrenCount = async () => {
             case_id: null,
           },
         });
-        if (match) {
+        if (match && count !== match.children_count) {
           await prisma.match.update({
             where: {
               id: match.id,
@@ -116,7 +113,7 @@ export const recalculateArchiveChildrenCount = async () => {
             case_id: null,
           },
         });
-        if (match) {
+        if (match && count !== match.children_count) {
           await prisma.match.update({
             where: {
               id: match.id,
@@ -132,7 +129,13 @@ export const recalculateArchiveChildrenCount = async () => {
 };
 
 export const recalculateTree = async () => {
-  await recalculateDescriptionChildrenCount();
-  await recalculateFundChildrenCount();
-  await recalculateArchiveChildrenCount();
+  try {
+    await recalculateDescriptionChildrenCount();
+    await recalculateFundChildrenCount();
+    await recalculateArchiveChildrenCount();
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 };
