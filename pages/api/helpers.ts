@@ -30,6 +30,11 @@ export const parseTitle = (str: string): string => {
   return unescape(str.trim().replace(/&#039;/g, "'").slice(0, 200));
 };
 
+export const parseWikiPageTitle = (str: string, level: "archive" | "fund" | "description" | "case"): string => {
+  const depth = ["archive", "fund", "description", "case"].indexOf(level) + 1;
+  return parseCode(str.split("/")[depth]);
+};
+
 interface ScrappingOptions {
   selector: string;
   responseKey?: string;

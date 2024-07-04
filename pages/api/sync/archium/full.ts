@@ -60,13 +60,14 @@ const syncAllMatches = async () => {
       resource: {
         type: ResourceType.ARCHIUM,
       },
+      archive_id: 'a2c6add8-0a57-4b1e-9442-fa816331e0dc',
       case_id: {
         not: null,
       },
       children_count: null,
     },
     orderBy: {
-      updated_at: "asc",
+      created_at: "asc",
     },
     take: 5000,
   });
