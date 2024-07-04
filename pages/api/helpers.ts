@@ -1,7 +1,7 @@
 import { Fetch, Match } from "@prisma/client";
 import axios from "axios";
 import { get, unescape } from "lodash";
-import parse, { HTMLElement } from "node-html-parser";
+import parse from "node-html-parser";
 
 export const parseDBParams = (str: string | null): Record<string, string> => {
   const result: Record<string, string> = {};
