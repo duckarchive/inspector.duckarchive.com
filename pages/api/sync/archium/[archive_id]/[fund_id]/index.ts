@@ -14,9 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
       const archiveId = req.query.archive_id as string;
       const fundId = req.query.fund_id as string;
-      const isForced = req.query.force === "true";
 
-      const count = await getFundCasesCount(archiveId, fundId, isForced);
+      const count = await getFundCasesCount(archiveId, fundId);
 
       res.json({ count });
     } catch (error) {
@@ -28,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 }
 
-export const getFundCasesCount = async (archiveId: string, fundId: string, isForced?: boolean) => {
+export const getFundCasesCount = async (archiveId: string, fundId: string) => {
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -59,48 +58,44 @@ export const getFundCasesCount = async (archiveId: string, fundId: string, isFor
       },
     });
 
-    if (match.last_count !== count || isForced) {
-      const descriptions = await prisma.description.findMany({
-        where: {
-          fund_id: fundId,
-        },
-      });
+    const descriptions = await prisma.description.findMany({
+      where: {
+        fund_id: fundId,
+      },
+    });
 
-      let descriptionCounter = 0;
-      for (const description of descriptions) {
-        console.log(
-          `ARCHIUM: getFundCasesCount: descriptions progress (${++descriptionCounter}/${descriptions.length})`
-        );
-        await getDescriptionCasesCount(archiveId, fundId, description.id, isForced);
-      }
-
-      const onlineDescriptionsCount = await prisma.match.count({
-        where: {
-          resource: {
-            type: ResourceType.ARCHIUM,
-          },
-          archive_id: archiveId,
-          fund_id: fundId,
-          description_id: {
-            not: null,
-          },
-          case_id: null,
-          children_count: {
-            gt: 0,
-          }
-        },
-      });
-
-      await prisma.match.update({
-        where: {
-          id: match.id,
-        },
-        data: {
-          last_count: count,
-          children_count: onlineDescriptionsCount,
-        },
-      });
+    let descriptionCounter = 0;
+    for (const description of descriptions) {
+      console.log(`ARCHIUM: getFundCasesCount: descriptions progress (${++descriptionCounter}/${descriptions.length})`);
+      await getDescriptionCasesCount(archiveId, fundId, description.id);
     }
+
+    const onlineDescriptionsCount = await prisma.match.count({
+      where: {
+        resource: {
+          type: ResourceType.ARCHIUM,
+        },
+        archive_id: archiveId,
+        fund_id: fundId,
+        description_id: {
+          not: null,
+        },
+        case_id: null,
+        children_count: {
+          gt: 0,
+        },
+      },
+    });
+
+    await prisma.match.update({
+      where: {
+        id: match.id,
+      },
+      data: {
+        last_count: count,
+        children_count: onlineDescriptionsCount,
+      },
+    });
 
     return count;
   } catch (error) {

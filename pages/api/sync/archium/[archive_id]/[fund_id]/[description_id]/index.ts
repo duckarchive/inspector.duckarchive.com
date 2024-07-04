@@ -16,9 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const archiveId = req.query.archive_id as string;
       const fundId = req.query.fund_id as string;
       const descriptionId = req.query.description_id as string;
-      const isForced = req.query.force === "true";
 
-      const count = await getDescriptionCasesCount(archiveId, fundId, descriptionId, isForced);
+      const count = await getDescriptionCasesCount(archiveId, fundId, descriptionId);
 
       res.status(200).json({ count });
     } catch (error) {
@@ -30,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 }
 
-export const getDescriptionCasesCount = async (archiveId: string, fundId: string, descriptionId: string, isForced?: boolean) => {
+export const getDescriptionCasesCount = async (archiveId: string, fundId: string, descriptionId: string) => {
   const match = await prisma.match.findFirst({
     where: {
       resource: {
@@ -47,7 +46,10 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
     throw new Error("No match found");
   }
   try {
-    const parsed = await scrapping(match, { selector: "div.row.with-border-bottom > div.left > a", responseKey: "View" });
+    const parsed = await scrapping(match, {
+      selector: "div.row.with-border-bottom > div.left > a",
+      responseKey: "View",
+    });
     const count = parsed.length;
 
     await prisma.matchResult.create({
@@ -57,39 +59,35 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
       },
     });
 
-    if (match.last_count !== count || isForced) {
-      const cases = await prisma.case.findMany({
-        where: {
-          description_id: descriptionId,
-        },
-      });
+    const cases = await prisma.case.findMany({
+      where: {
+        description_id: descriptionId,
+      },
+    });
 
-      const casesChunks = chunk(cases, 15);
+    const casesChunks = chunk(cases, 15);
 
-      let caseCounter = 0;
-      let onlineCasesCount = 0;
-      for (const caseChunk of casesChunks) {
-        await Promise.all(
-          caseChunk.map(async (caseItem) => {
-            console.log(
-              `ARCHIUM: getDescriptionCasesCount: cases progress (${++caseCounter}/${cases.length})`
-            );
-            const filesCount = await getCaseFilesCount(archiveId, fundId, descriptionId, caseItem.id);
-            onlineCasesCount += filesCount > 0 ? 1 : 0;
-          })
-        );
-      }
-
-      await prisma.match.update({
-        where: {
-          id: match.id,
-        },
-        data: {
-          last_count: count,
-          children_count: onlineCasesCount,
-        },
-      });
+    let caseCounter = 0;
+    let onlineCasesCount = 0;
+    for (const caseChunk of casesChunks) {
+      await Promise.all(
+        caseChunk.map(async (caseItem) => {
+          console.log(`ARCHIUM: getDescriptionCasesCount: cases progress (${++caseCounter}/${cases.length})`);
+          const filesCount = await getCaseFilesCount(archiveId, fundId, descriptionId, caseItem.id);
+          onlineCasesCount += filesCount > 0 ? 1 : 0;
+        })
+      );
     }
+
+    await prisma.match.update({
+      where: {
+        id: match.id,
+      },
+      data: {
+        last_count: count,
+        children_count: onlineCasesCount,
+      },
+    });
 
     return count;
   } catch (error) {

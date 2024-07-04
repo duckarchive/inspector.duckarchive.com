@@ -55,7 +55,7 @@ export const getCaseFilesCount = async (archiveId: string, fundId: string, descr
       },
     });
 
-    if (match.last_count !== count) {
+    if (match.children_count !== count) {
       await prisma.match.update({
         where: {
           id: match.id,
