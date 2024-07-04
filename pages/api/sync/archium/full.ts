@@ -63,6 +63,7 @@ const syncAllMatches = async () => {
       case_id: {
         not: null,
       },
+      children_count: null,
     },
     orderBy: {
       updated_at: "asc",
