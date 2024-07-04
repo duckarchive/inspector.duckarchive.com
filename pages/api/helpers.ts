@@ -7,8 +7,10 @@ export const parseDBParams = (str: string | null): Record<string, string> => {
   const result: Record<string, string> = {};
 
   str?.split(",").map((param) => {
-    const [key, value] = param.split(":");
-    result[key.trim()] = value.trim();
+    const [_key, _value] = param.split(":");
+    const key = decodeURIComponent(_key.trim());
+    const value = decodeURIComponent(_value.trim());
+    result[key] = value;
   });
 
   return result;
@@ -27,11 +29,16 @@ export const parseCode = (str: string): string => {
 };
 
 export const parseTitle = (str: string): string => {
-  return unescape(str.trim().replace(/&#039;/g, "'").slice(0, 200));
+  return unescape(
+    str
+      .trim()
+      .replace(/&#039;/g, "'")
+      .slice(0, 200)
+  );
 };
 
-export const parseWikiPageTitle = (str: string, level: "archive" | "fund" | "description" | "case"): string => {
-  const depth = ["archive", "fund", "description", "case"].indexOf(level) + 1;
+export const parseWikiPageTitle = (str: string, level: "archive" | "fund" | "description" | "case") => {
+  const depth = ["archive", "fund", "description", "case"].indexOf(level);
   return parseCode(str.split("/")[depth]);
 };
 
@@ -40,7 +47,10 @@ interface ScrappingOptions {
   responseKey?: string;
 }
 
-export const scrapping = async ({ api_headers, api_method, api_params, api_url }: Match | Fetch, { selector, responseKey }: ScrappingOptions) => {
+export const scrapping = async (
+  { api_headers, api_method, api_params, api_url }: Match | Fetch,
+  { selector, responseKey }: ScrappingOptions
+) => {
   const { data } = await axios.request({
     url: api_url,
     method: api_method || "GET",

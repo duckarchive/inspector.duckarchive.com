@@ -1,7 +1,9 @@
 import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import { parseDBParams, parseWikiPageTitle } from "../../../helpers";
+import { parseCode, parseDBParams, parseWikiPageTitle } from "../../../helpers";
+import { fetchAllWikiPagesByPrefix } from "..";
+import { set } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -34,88 +36,47 @@ const fetchArchive = async (archiveId: string) => {
     throw new Error("Fetch not found");
   }
 
-  const archivePages = await fetchAllPages(fetch);
+  const archivePages = await fetchAllWikiPagesByPrefix(fetch);
 
-  const archivePagesHash: Record<string, string[]> = {
-    funds: [],
-    descriptions: [],
-    cases: [],
-    other: [],
-  };
+  const archivePagesHash = {};
 
-  archivePages.map((page) => {
-    const parts = page.split("/").length;
-    if (parts === 2) {
-      archivePagesHash.funds.push(page);
-    } else if (parts === 3) {
-      archivePagesHash.descriptions.push(page);
-    } else if (parts === 4) {
-      archivePagesHash.cases.push(page);
-    } else {
-      archivePagesHash.other.push(page);
-    }
-  });
+  archivePages
+    .forEach((page) => {
+      const parts = page.split("/").map((p) => parseCode(p));
+      set(archivePagesHash, [...parts, "code"], {});
+      // if (parts === 2) {
+      //   archivePagesHash.funds.push(parseWikiPageTitle(page, "fund"));
+      // } else if (parts === 3) {
+      //   archivePagesHash.descriptions.push(parseWikiPageTitle(page, "description"));
+      // } else if (parts === 4) {
+      //   archivePagesHash.cases.push(parseWikiPageTitle(page, "case"));
+      // } else {
+      //   archivePagesHash.other.push(page);
+      // }
+    });
 
-  await prisma.fetchResult.create({
-    data: {
-      fetch_id: fetch.id,
-      count: archivePagesHash.funds.length,
-    },
-  });
+  // await prisma.fetchResult.create({
+  //   data: {
+  //     fetch_id: fetch.id,
+  //     count: archivePagesHash.funds.length,
+  //   },
+  // });
 
-  const prevFunds = await prisma.fund.findMany({
-    where: {
-      archive_id: archiveId,
-    },
-  });
+  // const prevFunds = await prisma.fund.findMany({
+  //   where: {
+  //     archive_id: archiveId,
+  //   },
+  // });
 
-  const newFunds = archivePagesHash.funds.filter(
-    (f) => !prevFunds.some((pf) => pf.code === parseWikiPageTitle(f, "fund"))
-  );
+  // const newFunds = archivePagesHash.funds.filter(
+  //   (f) => !prevFunds.some((pf) => pf.code === f)
+  // );
 
   return archivePagesHash;
 };
 
-const fetchAllPages = async ({ api_url, api_headers, api_method, api_params }: Fetch) => {
-  const allPages: string[] = [];
-  const fetchPages = async (offset: number = 0): Promise<void> => {
-    try {
-      const response = await axios.request<PrefixSearchResponse>({
-        url: api_url,
-        method: api_method || "GET",
-        headers: parseDBParams(api_headers),
-        params: {
-          ...parseDBParams(api_params),
-          psoffset: offset || undefined,
-        },
-      });
-      const pages = response.data.query.prefixsearch.map((page) => page.title);
-      allPages.push(...pages);
-
-      if (response.data.continue) {
-        await fetchPages(response.data.continue.psoffset);
-      }
-    } catch (error) {
-      console.error(`Error fetching pages: ${error}`);
-    }
-  };
-
-  await fetchPages();
-  return allPages;
-};
-
 const BASE_URL = "https://uk.wikisource.org/w/api.php";
 const START_CATEGORY = "Архів:ДАКрО";
-
-interface PrefixSearchResponse {
-  continue?: {
-    psoffset: number;
-    continue: string;
-  };
-  query: {
-    prefixsearch: { title: string }[];
-  };
-}
 
 interface EmbeddedInResponse {
   continue?: {
