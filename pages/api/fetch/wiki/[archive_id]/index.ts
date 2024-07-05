@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-const fetchArchiveFunds = async (archiveId: string) => {
+export const fetchArchiveFunds = async (archiveId: string) => {
   const fetch = await prisma.fetch.findFirst({
     where: {
       resource: {
@@ -103,29 +103,36 @@ export const saveArchiveFunds = async (archiveId: string, fundCodes: string[], f
   const newFundCodes = fundCodes.filter((code) => !existedFunds.some((prevFund) => prevFund.code === parseCode(code)));
 
   // extend with title from wiki
-  const newFunds = await Promise.all(
-    newFundCodes.map(async (fc) => {
-      const parsed = await scrapping(
-        {
-          ...fetch,
-          api_params: stringifyDBParams({
-            action: "parse",
-            page: `${q}/${fc}`,
-            props: "text",
-            format: "json",
-          }),
-        },
-        { selector: "#header_section_text", responseKey: "parse.text.*" }
-      );
-      const code = parseCode(fc);
-      const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
-      return {
-        code,
-        title,
-        archive_id: fetch.archive_id as string,
-      };
-    })
-  );
+  const newFunds: Pick<Fund, 'code' | 'title' | 'archive_id'>[] = [];
+
+  const newFundCodesChunks = chunk(newFundCodes, 50);
+
+  for (const newFundCodesChunk of newFundCodesChunks) {
+    console.log(`Fetching titles`);
+    await Promise.all(
+      newFundCodesChunk.map(async (fc) => {
+        const parsed = await scrapping(
+          {
+            ...fetch,
+            api_params: stringifyDBParams({
+              action: "parse",
+              page: `${q}/${fc}`,
+              props: "text",
+              format: "json",
+            }),
+          },
+          { selector: "#header_section_text", responseKey: "parse.text.*" }
+        );
+        const code = parseCode(fc);
+        const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
+        newFunds.push({
+          code,
+          title,
+          archive_id: fetch.archive_id as string,
+        });
+      })
+    );
+  }
 
   // save new funds to the database
   const createdFunds = await prisma.fund.createManyAndReturn({
