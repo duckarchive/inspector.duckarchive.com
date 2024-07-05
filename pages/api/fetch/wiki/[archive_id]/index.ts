@@ -35,7 +35,7 @@ const fetchArchiveFunds = async (archiveId: string) => {
   if (!fetch) {
     throw new Error("Fetch not found");
   }
-
+  const { q } = parseDBParams(fetch.api_params);
   const archivePages = await fetchAllWikiPagesByPrefix(fetch);
 
   const archiveTree: Record<string, Record<string, Record<string, {}>>> = {};
@@ -104,7 +104,6 @@ const fetchArchiveFunds = async (archiveId: string) => {
         })),
       });
 
-      const { q } = parseDBParams(fetch.api_params);
       await prisma.fetch.createMany({
         data: newFundsCreated.map((newFundCreated, i) => ({
           resource_id: fetch.resource_id,
