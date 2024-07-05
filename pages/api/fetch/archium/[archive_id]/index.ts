@@ -92,22 +92,28 @@ export const fetchArchiveFunds = async (archiveId: string) => {
         });
 
         await prisma.match.createMany({
-          data: newFundsCreated.map((newFundCreated, i) => ({
-            resource_id: newFundsChunk[i].resourceId,
-            archive_id: archiveId,
-            fund_id: newFundCreated.id,
-            api_url: newFundsChunk[i].matchApiUrl,
-          })),
+          data: newFundsCreated.map((newFundCreated) => {
+            const item = newFundsChunk.find((f) => f.code === newFundCreated.code);
+            return {
+              resource_id: item?.resourceId || "",
+              archive_id: archiveId,
+              fund_id: newFundCreated.id,
+              api_url: item?.matchApiUrl || "",
+            };
+          }),
         });
 
         await prisma.fetch.createMany({
-          data: newFundsCreated.map((newFundCreated, i) => ({
-            resource_id: newFundsChunk[i].resourceId,
-            archive_id: archiveId,
-            fund_id: newFundCreated.id,
-            api_url: newFundsChunk[i].fetchApiUrl,
-            api_params: stringifyDBParams({ Limit: 9999, Page: 1 }),
-          })),
+          data: newFundsCreated.map((newFundCreated) => {
+            const item = newFundsChunk.find((f) => f.code === newFundCreated.code);
+            return {
+              resource_id: item?.resourceId || "",
+              archive_id: archiveId,
+              fund_id: newFundCreated.id,
+              api_url: item?.fetchApiUrl || "",
+              api_params: stringifyDBParams({ Limit: 9999, Page: 1 }),
+            };
+          }),
         });
 
         const newFundsCreatedChunks = chunk(newFundsCreated, 10);

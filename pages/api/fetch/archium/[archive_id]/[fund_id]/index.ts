@@ -99,24 +99,30 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
         });
 
         await prisma.match.createMany({
-          data: newDescriptionsCreated.map((newDescription, i) => ({
-            resource_id: newDescriptionsChunk[i].resourceId,
-            archive_id: archiveId,
-            fund_id: fundId,
-            description_id: newDescription.id,
-            api_url: newDescriptionsChunk[i].matchApiUrl,
-          })),
+          data: newDescriptionsCreated.map((newDescription) => {
+            const item = newDescriptionsChunk.find((d) => d.code === newDescription.code);
+            return {
+              resource_id: item?.resourceId || "",
+              archive_id: archiveId,
+              fund_id: fundId,
+              description_id: newDescription.id,
+              api_url: item?.matchApiUrl || "",
+            };
+          }),
         });
 
         await prisma.fetch.createMany({
-          data: newDescriptionsCreated.map((newDescription, i) => ({
-            resource_id: newDescriptionsChunk[i].resourceId,
-            archive_id: archiveId,
-            fund_id: fundId,
-            description_id: newDescription.id,
-            api_url: newDescriptionsChunk[i].fetchApiUrl,
-            api_params: stringifyDBParams({ Limit: 9999, Page: 1 }),
-          })),
+          data: newDescriptionsCreated.map((newDescription) => {
+            const item = newDescriptionsChunk.find((d) => d.code === newDescription.code);
+            return {
+              resource_id: item?.resourceId || "",
+              archive_id: archiveId,
+              fund_id: fundId,
+              description_id: newDescription.id,
+              api_url: item?.matchApiUrl || "",
+              api_params: stringifyDBParams({ Limit: 9999, Page: 1 }),
+            };
+          }),
         });
 
         const newDescriptionsCreatedChunks = chunk(newDescriptionsCreated, 10);

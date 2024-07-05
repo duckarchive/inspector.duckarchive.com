@@ -4,6 +4,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parseCode, parseDBParams, scrapping, stringifyDBParams } from "../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "..";
 import { chunk, set, setWith } from "lodash";
+import { saveFundDescriptionsByCodes } from "./[fund_id]";
+import { saveDescriptionCasesByCodes } from "./[fund_id]/[description_id]";
 
 const prisma = new PrismaClient();
 
@@ -35,16 +37,12 @@ const fetchArchiveFunds = async (archiveId: string) => {
   if (!fetch) {
     throw new Error("Fetch not found");
   }
-  const { q } = parseDBParams(fetch.api_params);
   const archivePages = await fetchAllWikiPagesByPrefix(fetch);
 
   const archiveTree: Record<string, Record<string, Record<string, {}>>> = {};
 
   archivePages.forEach((page) => {
-    const parts = page
-      .split("/")
-      .slice(1)
-      .map((p) => parseCode(p));
+    const parts = page.split("/").slice(1);
     if (parts.length && !["Д", "Р", "П"].includes(parts[0])) {
       setWith(archiveTree, parts, {}, Object);
     } else {
@@ -52,40 +50,67 @@ const fetchArchiveFunds = async (archiveId: string) => {
     }
   });
 
-  // await prisma.fetchResult.create({
-  //   data: {
-  //     fetch_id: fetch.id,
-  //     count: archivePagesHash.funds.length,
+  const fundsCodes = Object.keys(archiveTree);
+
+  // const prevFunds = await prisma.fund.findMany({
+  //   where: {
+  //     archive_id: archiveId,
   //   },
   // });
 
-  const fundsCodes = Object.keys(archiveTree);
+  // const newFundsCodes = fundsCodes.filter((fc) => !prevFunds.some((pf) => pf.code === fc));
 
-  const prevFunds = await prisma.fund.findMany({
-    where: {
-      archive_id: archiveId,
+  const savedFunds = await saveArchiveFundsByCodes(fundsCodes, fetch);
+
+  for (const [fundCode, fundFetch] of Object.entries(savedFunds)) {
+    const descriptionsCodes = Object.keys(archiveTree[fundCode]);
+    const savedDescriptions = await saveFundDescriptionsByCodes(descriptionsCodes, fundFetch);
+
+    for (const [descriptionCode, descriptionFetch] of Object.entries(savedDescriptions)) {
+      const casesCodes = Object.keys(archiveTree[fundCode][descriptionCode]);
+      await saveDescriptionCasesByCodes(casesCodes, descriptionFetch);
+    }
+  }
+
+  await prisma.fetchResult.create({
+    data: {
+      fetch_id: fetch.id,
+      count: fundsCodes.length,
     },
   });
 
-  const newFunds = fundsCodes.filter((fc) => !prevFunds.some((pf) => pf.code === fc));
+  return archiveTree;
+};
 
+export const saveArchiveFundsByCodes = async (newFundsCodes: string[], fetch: Fetch) => {
+  const result: Record<string, Fetch> = {};
+  const { q } = parseDBParams(fetch.api_params);
   let newFundsCounter = 0;
-  const newFundsChunks = chunk(newFunds, 100);
-
-  for (const newFundsChunk of newFundsChunks) {
-    console.log(`WIKI: fetchArchiveFunds: newFunds progress (${++newFundsCounter}/${newFundsChunks.length})`);
+  const newFundsCodesChunks = chunk(newFundsCodes, 25);
+  for (const newFundsCodesChunk of newFundsCodesChunks) {
     try {
       const newFundsChunkWithTitle = await Promise.all(
-        newFundsChunk.map(async (fc) => {
-          const parsed = await scrapping(
-            { ...fetch, api_params: `action:parse,page:${fc},props:text,format:json` },
-            { selector: "#header_section_text" }
+        newFundsCodesChunk.map(async (fc) => {
+          console.log(
+            `WIKI: saveArchiveFundsByCodes: newFunds progress (${++newFundsCounter}/${newFundsCodes.length})`
           );
-          const title = parsed[0].innerText;
+          const parsed = await scrapping(
+            {
+              ...fetch,
+              api_params: stringifyDBParams({
+                action: "parse",
+                page: `${q}/${fc}`,
+                props: "text",
+                format: "json",
+              }),
+            },
+            { selector: "#header_section_text", responseKey: "parse.text.*" }
+          );
+          const title = parsed[0].innerText.split(". ").slice(1).join(". ");
           return {
-            code: fc,
+            code: parseCode(fc),
             title,
-            archive_id: archiveId,
+            archive_id: fetch.archive_id as string,
           };
         }, {})
       );
@@ -98,35 +123,32 @@ const fetchArchiveFunds = async (archiveId: string) => {
       await prisma.match.createMany({
         data: newFundsCreated.map((newFundCreated) => ({
           resource_id: fetch.resource_id,
-          archive_id: archiveId,
+          archive_id: fetch.archive_id,
           fund_id: newFundCreated.id,
           api_url: fetch.api_url,
         })),
       });
 
-      await prisma.fetch.createMany({
-        data: newFundsCreated.map((newFundCreated, i) => ({
+      const newFundsCreatedFetches = await prisma.fetch.createManyAndReturn({
+        data: newFundsCreated.map((newFundCreated) => ({
           resource_id: fetch.resource_id,
-          archive_id: archiveId,
+          archive_id: fetch.archive_id,
           fund_id: newFundCreated.id,
           api_url: fetch.api_url,
           api_params: stringifyDBParams({ q: `${q}/${newFundCreated.code}` }),
         })),
       });
 
-      // const newFundsCreatedChunks = chunk(newFundsCreated, 10);
-
-      // for (const newFundCreatedChunk of newFundsCreatedChunks) {
-      //   await Promise.all(
-      //     newFundCreatedChunk.map(async (newFundCreated) => fetchFundDescriptions(archiveId, newFundCreated.id))
-      //   );
-      // }
+      newFundsCreatedFetches.forEach((newFundsCreatedFetch, i) => {
+        const code = newFundsCodesChunk.find((f) => parseCode(f) === newFundsCreated[i].code) || "";
+        result[code] = newFundsCreatedFetch;
+      });
     } catch (error) {
-      console.error("WIKI: fetchArchiveFunds: newFunds", error, { newFundsChunk });
+      console.error("WIKI: saveArchiveFundsByCodes: newFunds", error, { newFundsCodesChunk });
     }
   }
 
-  return archiveTree;
+  return result;
 };
 
 // const visited = new Set<string>();

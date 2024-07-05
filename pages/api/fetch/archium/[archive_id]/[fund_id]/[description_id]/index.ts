@@ -98,16 +98,18 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
         });
 
         await prisma.match.createMany({
-          data: newCases.map((newCase, i) => ({
-            resource_id: newCasesChunk[i].resourceId,
-            archive_id: archiveId,
-            fund_id: fundId,
-            description_id: descriptionId,
-            case_id: newCase.id,
-            api_url: newCasesChunk[i].matchApiUrl,
-          })),
+          data: newCases.map((newCase) => {
+            const item = newCasesChunk.find((d) => d.code === newCase.code);
+            return {
+              resource_id: item?.resourceId || "",
+              archive_id: archiveId,
+              fund_id: fundId,
+              description_id: descriptionId,
+              case_id: newCase.id,
+              api_url: item?.matchApiUrl || "",
+            };
+          }),
         });
-
       } catch (error) {
         console.error("ARCHIUM: fetchDescriptionCases: newCases", error, { newCasesChunk });
       }

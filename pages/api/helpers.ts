@@ -57,14 +57,25 @@ export const scrapping = async (
   { api_headers, api_method, api_params, api_url }: Match | Fetch,
   { selector, responseKey }: ScrappingOptions
 ) => {
+  const headers = parseDBParams(api_headers);
+  const params = parseDBParams(api_params);
   const { data } = await axios.request({
     url: api_url,
     method: api_method || "GET",
-    headers: parseDBParams(api_headers),
-    params: parseDBParams(api_params),
+    headers,
+    params,
   });
 
   const content = responseKey ? get(data, responseKey) : data;
+
+  if (!content) {
+    console.log("oops")
+  }
   const dom = parse(content);
-  return [...dom.querySelectorAll(selector)];
+  const result = [...dom.querySelectorAll(selector)];
+  if (!result.length) {
+    console.log("oops 222")
+  }
+
+  return result;
 };
