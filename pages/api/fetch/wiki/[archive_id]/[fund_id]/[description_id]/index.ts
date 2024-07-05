@@ -48,7 +48,7 @@ const fetchDescriptionCases = async (archiveId: string, fundId: string, descript
     if (parts.length && !["Д", "Р", "П"].includes(parts[0])) {
       setWith(caseTree, parts, {}, Object);
     } else {
-      console.log(`Skipping page: ${page}`);
+      console.log(`WIKI: fetchDescriptionCases: skipping page: ${page}`);
     }
   });
 
@@ -102,7 +102,7 @@ export const saveDescriptionCases = async (
         { selector: "#header_section_text", responseKey: "parse.text.*" }
       );
       const code = parseCode(fc);
-      const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
+      const title = parseTitle(parsed[0]?.innerText.split(". ").slice(1).join(". "));
       return {
         code,
         title,

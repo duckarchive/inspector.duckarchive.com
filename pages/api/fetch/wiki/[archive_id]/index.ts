@@ -45,35 +45,39 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     if (parts.length && !["Д", "Р", "П"].includes(parts[0])) {
       setWith(archiveTree, parts, {}, Object);
     } else {
-      console.log(`Skipping page: ${page}`);
+      console.log(`WIKI: fetchArchiveFunds: skipping page: ${page}`);
     }
   });
 
   const fundCodes = Object.keys(archiveTree);
 
-  console.log(`saveArchiveFunds: ${archiveId}`);
+  console.log(`WIKI: fetchArchiveFunds: saveArchiveFunds: ${archivePages[0]}`);
   const savedFunds = await saveArchiveFunds(archiveId, fundCodes, fetch);
 
   for (const [fundCode, fundFetch] of Object.entries(savedFunds)) {
-    console.log(`saveFundDescriptions: ${fundCode}`);
+    console.log(`WIKI: fetchArchiveFunds: saveFundDescriptions: ${fundCode}`);
     const descriptionsCodes = Object.keys(archiveTree[fundCode]);
-    const savedDescriptions = await saveFundDescriptions(
-      archiveId,
-      fundFetch.fund_id as string,
-      descriptionsCodes,
-      fundFetch
-    );
-
-    for (const [descriptionCode, descriptionFetch] of Object.entries(savedDescriptions)) {
-      console.log(`saveDescriptionCases: ${descriptionCode}`);
-      const casesCodes = Object.keys(archiveTree[fundCode][descriptionCode]);
-      await saveDescriptionCases(
+    if (descriptionsCodes.length) {
+      const savedDescriptions = await saveFundDescriptions(
         archiveId,
         fundFetch.fund_id as string,
-        descriptionFetch.description_id as string,
-        casesCodes,
-        descriptionFetch
+        descriptionsCodes,
+        fundFetch
       );
+
+      for (const [descriptionCode, descriptionFetch] of Object.entries(savedDescriptions)) {
+        console.log(`WIKI: fetchArchiveFunds: saveDescriptionCases: ${descriptionCode}`);
+        const casesCodes = Object.keys(archiveTree[fundCode][descriptionCode]);
+        if (casesCodes.length) {
+          await saveDescriptionCases(
+            archiveId,
+            fundFetch.fund_id as string,
+            descriptionFetch.description_id as string,
+            casesCodes,
+            descriptionFetch
+          );
+        }
+      }
     }
   }
 
@@ -103,12 +107,12 @@ export const saveArchiveFunds = async (archiveId: string, fundCodes: string[], f
   const newFundCodes = fundCodes.filter((code) => !existedFunds.some((prevFund) => prevFund.code === parseCode(code)));
 
   // extend with title from wiki
-  const newFunds: Pick<Fund, 'code' | 'title' | 'archive_id'>[] = [];
+  const newFunds: Pick<Fund, "code" | "title" | "archive_id">[] = [];
 
   const newFundCodesChunks = chunk(newFundCodes, 50);
-
+  let newFundCodesCounter = 0;
   for (const newFundCodesChunk of newFundCodesChunks) {
-    console.log(`Fetching titles`);
+    console.log(`saveArchiveFunds: fetching titles: ${++newFundCodesCounter}/${newFundCodesChunks.length}`);
     await Promise.all(
       newFundCodesChunk.map(async (fc) => {
         const parsed = await scrapping(
@@ -124,7 +128,7 @@ export const saveArchiveFunds = async (archiveId: string, fundCodes: string[], f
           { selector: "#header_section_text", responseKey: "parse.text.*" }
         );
         const code = parseCode(fc);
-        const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
+        const title = parseTitle(parsed[0]?.innerText.split(". ").slice(1).join(". "));
         newFunds.push({
           code,
           title,

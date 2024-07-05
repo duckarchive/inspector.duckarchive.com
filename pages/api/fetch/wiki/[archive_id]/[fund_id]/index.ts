@@ -48,7 +48,7 @@ const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
     if (parts.length && !["Д", "Р", "П"].includes(parts[0])) {
       setWith(descriptionTree, parts, {}, Object);
     } else {
-      console.log(`Skipping page: ${page}`);
+      console.log(`WIKI: fetchFundDescriptions: skipping page: ${page}`);
     }
   });
 
@@ -57,8 +57,11 @@ const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
   const savedDescriptions = await saveFundDescriptions(archiveId, fundId, descriptionsCodes, fetch);
 
   for (const [descriptionCode, descriptionFetch] of Object.entries(savedDescriptions)) {
-    const cases = Object.keys(descriptionTree[descriptionCode]);
-    await saveDescriptionCases(archiveId, fundId, descriptionFetch.description_id as string, cases, descriptionFetch);
+    console.log(`WIKI: fetchFundDescriptions: saveDescriptionCases: ${descriptionCode}`);
+    const caseCodes = Object.keys(descriptionTree[descriptionCode]);
+    if (caseCodes.length) {
+      await saveDescriptionCases(archiveId, fundId, descriptionFetch.description_id as string, caseCodes, descriptionFetch);
+    }
   }
 
   await prisma.fetchResult.create({
@@ -103,7 +106,7 @@ export const saveFundDescriptions = async (archiveId: string, fundId: string, de
         { selector: "#header_section_text", responseKey: "parse.text.*" }
       );
       const code = parseCode(fc);
-      const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
+      const title = parseTitle(parsed[0]?.innerText.split(". ").slice(1).join(". "));
       return {
         code,
         title,

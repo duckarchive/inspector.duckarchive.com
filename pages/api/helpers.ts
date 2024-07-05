@@ -36,7 +36,7 @@ export const parseCode = (str: string): string => {
 
 export const parseTitle = (str: string): string => {
   return unescape(
-    str
+    (str || "")
       .trim()
       .replace(/&#039;/g, "'")
       .slice(0, 200)
@@ -69,12 +69,13 @@ export const scrapping = async (
   const content = responseKey ? get(data, responseKey) : data;
 
   if (!content) {
-    console.log("oops")
+    console.log("oops");
+    return [];
   }
   const dom = parse(content);
   const result = [...dom.querySelectorAll(selector)];
   if (!result.length) {
-    console.log("oops 222")
+    console.log("oops 222");
   }
 
   return result;
