@@ -46,19 +46,6 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
     throw new Error("No match found");
   }
   try {
-    const parsed = await scrapping(match, {
-      selector: "div.row.with-border-bottom > div.left > a",
-      responseKey: "View",
-    });
-    const count = parsed.length;
-
-    await prisma.matchResult.create({
-      data: {
-        match_id: match.id,
-        count,
-      },
-    });
-
     const cases = await prisma.case.findMany({
       where: {
         description_id: descriptionId,
@@ -79,17 +66,26 @@ export const getDescriptionCasesCount = async (archiveId: string, fundId: string
       );
     }
 
-    await prisma.match.update({
-      where: {
-        id: match.id,
-      },
+    await prisma.matchResult.create({
       data: {
-        last_count: count,
-        children_count: onlineCasesCount,
+        match_id: match.id,
+        count: onlineCasesCount,
       },
     });
 
-    return count;
+    if (match.children_count !== onlineCasesCount) {
+      await prisma.match.update({
+        where: {
+          id: match.id,
+        },
+        data: {
+          last_count: onlineCasesCount,
+          children_count: onlineCasesCount,
+        },
+      });
+    }
+
+    return onlineCasesCount;
   } catch (error) {
     console.error("ARCHIUM: getDescriptionCasesCount", error, { archiveId, fundId, descriptionId });
 

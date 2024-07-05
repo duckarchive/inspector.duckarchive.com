@@ -42,21 +42,6 @@ export const getArchiveCasesCount = async (archiveId: string) => {
     throw new Error("Match not found");
   }
   try {
-    const parsed = await scrapping(match, {
-      selector: "div.single-data > p > a > span",
-      responseKey: "View",
-    });
-    const count = parsed
-      .map((el) => +el.innerText.split(" справ")[0].split(", ")[1])
-      .reduce((prev, el) => (prev += el), 0);
-
-    await prisma.matchResult.create({
-      data: {
-        match_id: match.id,
-        count,
-      },
-    });
-
     const funds = await prisma.fund.findMany({
       where: {
         archive_id: archiveId,
@@ -82,21 +67,30 @@ export const getArchiveCasesCount = async (archiveId: string) => {
         case_id: null,
         children_count: {
           gt: 0,
-        }
+        },
       },
     });
 
-    await prisma.match.update({
-      where: {
-        id: match.id,
-      },
+    await prisma.matchResult.create({
       data: {
-        last_count: count,
-        children_count: onlineFundsCount,
+        match_id: match.id,
+        count: onlineFundsCount,
       },
     });
 
-    return count;
+    if (match.children_count !== onlineFundsCount) {
+      await prisma.match.update({
+        where: {
+          id: match.id,
+        },
+        data: {
+          last_count: onlineFundsCount,
+          children_count: onlineFundsCount,
+        },
+      });
+    }
+
+    return onlineFundsCount;
   } catch (error) {
     console.error("ARCHIUM: getArchiveCasesCount", error, { archiveId });
 
