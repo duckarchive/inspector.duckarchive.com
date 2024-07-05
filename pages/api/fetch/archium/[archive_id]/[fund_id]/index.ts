@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, ResourceType } from "@prisma/client";
-import { parseCode, parseTitle, scrapping } from "../../../../helpers";
+import { parseCode, parseTitle, scrapping, stringifyDBParams } from "../../../../helpers";
 import { chunk } from "lodash";
 import { fetchDescriptionCases } from "./[description_id]";
 
@@ -116,7 +116,7 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
             fund_id: fundId,
             description_id: newDescription.id,
             api_url: newDescriptionsChunk[i].fetchApiUrl,
-            api_params: "Limit:9999,Page:1",
+            api_params: stringifyDBParams({ Limit: 9999, Page: 1 }),
           })),
         });
 

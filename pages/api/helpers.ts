@@ -16,6 +16,12 @@ export const parseDBParams = (str: string | null): Record<string, string> => {
   return result;
 };
 
+export const stringifyDBParams = (data: Record<string, string | number | boolean>): string => {
+  return Object.entries(data)
+    .map(([key, value]) => `${encodeURIComponent(key)}:${encodeURIComponent(value)}`)
+    .join(",");
+};
+
 export const parseCode = (str: string): string => {
   // input: "Р-34" "П-159" "Р34" "П159" "8дод." "2т.1" "10."
   // output: "Р34" "П159" "34" "159" "8дод" "2т1" "10"

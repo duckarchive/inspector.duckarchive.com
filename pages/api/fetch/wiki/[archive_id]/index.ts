@@ -1,7 +1,7 @@
 import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import { parseCode, parseDBParams, parseWikiPageTitle, scrapping } from "../../../helpers";
+import { parseCode, parseDBParams, scrapping, stringifyDBParams } from "../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "..";
 import { chunk, set, setWith } from "lodash";
 
@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "GET") {
     const archiveId = req.query.archive_id as string;
 
-    const data = await fetchArchive(archiveId);
+    const data = await fetchArchiveFunds(archiveId);
 
     res.status(200).json({ data });
   } else {
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-const fetchArchive = async (archiveId: string) => {
+const fetchArchiveFunds = async (archiveId: string) => {
   const fetch = await prisma.fetch.findFirst({
     where: {
       resource: {
@@ -96,24 +96,24 @@ const fetchArchive = async (archiveId: string) => {
       });
 
       await prisma.match.createMany({
+        data: newFundsCreated.map((newFundCreated) => ({
+          resource_id: fetch.resource_id,
+          archive_id: archiveId,
+          fund_id: newFundCreated.id,
+          api_url: fetch.api_url,
+        })),
+      });
+
+      const { q } = parseDBParams(fetch.api_params);
+      await prisma.fetch.createMany({
         data: newFundsCreated.map((newFundCreated, i) => ({
           resource_id: fetch.resource_id,
           archive_id: archiveId,
           fund_id: newFundCreated.id,
           api_url: fetch.api_url,
-          api_params: "Limit:9999,Page:1",
+          api_params: stringifyDBParams({ q: `${q}/${newFundCreated.code}` }),
         })),
       });
-
-      // await prisma.fetch.createMany({
-      //   data: newFundsCreated.map((newFundCreated, i) => ({
-      //     resource_id: newFundsChunk[i].resourceId,
-      //     archive_id: archiveId,
-      //     fund_id: newFundCreated.id,
-      //     api_url: newFundsChunk[i].fetchApiUrl,
-      //     api_params: "Limit:9999,Page:1",
-      //   })),
-      // });
 
       // const newFundsCreatedChunks = chunk(newFundsCreated, 10);
 
@@ -123,7 +123,7 @@ const fetchArchive = async (archiveId: string) => {
       //   );
       // }
     } catch (error) {
-      console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { newFundsChunk });
+      console.error("WIKI: fetchArchiveFunds: newFunds", error, { newFundsChunk });
     }
   }
 
