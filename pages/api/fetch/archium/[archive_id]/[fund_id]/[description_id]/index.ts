@@ -65,7 +65,6 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
           code,
           title,
           matchApiUrl: href,
-          fetchApiUrl: href,
         };
       });
 

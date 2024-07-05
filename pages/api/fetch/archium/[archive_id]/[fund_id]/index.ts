@@ -106,7 +106,6 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
             fund_id: fundId,
             description_id: newDescription.id,
             api_url: newDescriptionsChunk[i].matchApiUrl,
-            api_params: "Limit:9999,Page:1",
           })),
         });
 

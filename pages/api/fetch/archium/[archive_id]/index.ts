@@ -98,7 +98,6 @@ export const fetchArchiveFunds = async (archiveId: string) => {
             archive_id: archiveId,
             fund_id: newFundCreated.id,
             api_url: newFundsChunk[i].matchApiUrl,
-            api_params: "Limit:9999,Page:1",
           })),
         });
 
