@@ -55,7 +55,7 @@ const CasePage: NextPage = () => {
             ),
           },
           {
-            field: "api_url",
+            field: "url",
             headerName: "Посилання",
             flex: 8,
             cellRenderer: (row: { value: string; data: TableItem }) => (
@@ -72,12 +72,12 @@ const CasePage: NextPage = () => {
             cellRenderer: (row: { value: string; data: TableItem }) => getSyncAtLabel(row.value, true),
           },
           {
-            field: "last_count",
+            field: "children_count",
             headerName: "Файли",
-            type: "numericColumn",
             flex: 1,
             hide: isMobile,
-            resizable: false,
+            comparator: undefined,
+            cellRenderer: undefined,
           },
         ]}
         rows={caseItem?.matches || []}
