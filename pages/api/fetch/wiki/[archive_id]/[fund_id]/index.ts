@@ -1,9 +1,9 @@
 import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { parseCode, parseDBParams, scrapping, stringifyDBParams } from "../../../../helpers";
+import { parseCode, parseDBParams, parseTitle, scrapping, stringifyDBParams } from "../../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "../..";
-import { chunk, setWith } from "lodash";
-import { saveDescriptionCasesByCodes } from "./[description_id]";
+import { setWith } from "lodash";
+import { saveDescriptionCases } from "./[description_id]";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const data = await fetchFundDescriptions(archiveId, fundId);
 
-    res.status(200).json({ data });
+    res.status(200).json(data);
   } else {
     res.status(405);
   }
@@ -36,36 +36,29 @@ const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
   if (!fetch) {
     throw new Error("Fetch not found");
   }
-  const fundPages = await fetchAllWikiPagesByPrefix(fetch);
+  const descriptionPages = await fetchAllWikiPagesByPrefix(fetch);
 
-  const fundTree: Record<string, Record<string, Record<string, {}>>> = {};
+  const descriptionTree: Record<string, Record<string, Record<string, {}>>> = {};
 
-  fundPages.forEach((page) => {
+  descriptionPages.forEach((page) => {
     const parts = page
       .split("/")
       .slice(1)
       .map((p) => parseCode(p));
     if (parts.length && !["Д", "Р", "П"].includes(parts[0])) {
-      setWith(fundTree, parts, {}, Object);
+      setWith(descriptionTree, parts, {}, Object);
     } else {
       console.log(`Skipping page: ${page}`);
     }
   });
 
-  const descriptionsCodes = Object.keys(fundTree);
-  // const prevDescriptions = await prisma.description.findMany({
-  //   where: {
-  //     fund_id: fundId,
-  //   },
-  // });
+  const descriptionsCodes = Object.keys(descriptionTree);
 
-  // const newDescriptionsCodes = descriptionsCodes.filter((dc) => !prevDescriptions.some((pd) => pd.code === dc));
-
-  const savedDescriptions = await saveFundDescriptionsByCodes(descriptionsCodes, fetch);
+  const savedDescriptions = await saveFundDescriptions(archiveId, fundId, descriptionsCodes, fetch);
 
   for (const [descriptionCode, descriptionFetch] of Object.entries(savedDescriptions)) {
-    const cases = Object.keys(fundTree[descriptionCode]);
-    await saveDescriptionCasesByCodes(cases, descriptionFetch);
+    const cases = Object.keys(descriptionTree[descriptionCode]);
+    await saveDescriptionCases(archiveId, fundId, descriptionFetch.description_id as string, cases, descriptionFetch);
   }
 
   await prisma.fetchResult.create({
@@ -75,78 +68,94 @@ const fetchFundDescriptions = async (archiveId: string, fundId: string) => {
     },
   });
 
-  return fundTree;
+  return descriptionTree;
 };
 
-export const saveFundDescriptionsByCodes = async (newDescriptionsCodes: string[], fetch: Fetch) => {
+
+export const saveFundDescriptions = async (archiveId: string, fundId: string, descriptionCodes: string[], fetch: Fetch) => {
   const result: Record<string, Fetch> = {};
   const { q } = parseDBParams(fetch.api_params);
-  let newDescriptionsCounter = 0;
-  const newDescriptionsCodesChunks = chunk(newDescriptionsCodes, 25);
+  const prevDescriptions = await prisma.description.findMany({
+    where: {
+      fund_id: fundId,
+    },
+  });
 
-  for (const newDescriptionsCodesChunk of newDescriptionsCodesChunks) {
-    try {
-      const newDescriptionsChunkWithTitle = await Promise.all(
-        newDescriptionsCodesChunk.map(async (fc) => {
-          console.log(
-            `WIKI: saveFundDescriptionsByCodes: newDescriptions progress (${++newDescriptionsCounter}/${
-              newDescriptionsCodes.length
-            })`
-          );
-          const parsed = await scrapping(
-            {
-              ...fetch,
-              api_params: stringifyDBParams({
-                action: "parse",
-                page: `${q}/${fc}`,
-                props: "text",
-                format: "json",
-              }),
-            },
-            { selector: "#header_section_text", responseKey: "parse.text.*" }
-          );
-          const title = parsed[0].innerText.split(". ").slice(1).join(". ");
-          return {
-            code: fc,
-            title,
-            fund_id: fetch.fund_id as string,
-          };
-        }, {})
+  // list of synced descriptions that already exist in the database
+  const existedDescriptions = prevDescriptions.filter((description) => descriptionCodes.some((code) => parseCode(code) === description.code));
+
+  // list of new description codes
+  const newDescriptionCodes = descriptionCodes.filter((code) => !existedDescriptions.some((prevDescription) => prevDescription.code === parseCode(code)));
+
+  // extend with title from wiki
+  const newDescriptions = await Promise.all(
+    newDescriptionCodes.map(async (fc) => {
+      const parsed = await scrapping(
+        {
+          ...fetch,
+          api_params: stringifyDBParams({
+            action: "parse",
+            page: `${q}/${fc}`,
+            props: "text",
+            format: "json",
+          }),
+        },
+        { selector: "#header_section_text", responseKey: "parse.text.*" }
       );
+      const code = parseCode(fc);
+      const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
+      return {
+        code,
+        title,
+        fund_id: fetch.fund_id as string,
+      };
+    })
+  );
 
-      const newDescriptionsCreated = await prisma.description.createManyAndReturn({
-        data: newDescriptionsChunkWithTitle,
-        skipDuplicates: true,
-      });
+  // save new descriptions to the database
+  const createdDescriptions = await prisma.description.createManyAndReturn({
+    data: newDescriptions,
+    skipDuplicates: true,
+  });
 
-      await prisma.match.createMany({
-        data: newDescriptionsCreated.map((newDescriptionCreated) => ({
-          resource_id: fetch.resource_id,
-          archive_id: fetch.archive_id,
-          fund_id: fetch.fund_id,
-          description_id: newDescriptionCreated.id,
-          api_url: fetch.api_url,
-        })),
-      });
+  const descriptions = [...existedDescriptions, ...createdDescriptions];
 
-      const newDescriptionsCreatedFetches = await prisma.fetch.createManyAndReturn({
-        data: newDescriptionsCreated.map((newDescriptionCreated) => ({
-          resource_id: fetch.resource_id,
-          archive_id: fetch.archive_id,
-          fund_id: fetch.fund_id,
-          description_id: newDescriptionCreated.id,
-          api_url: fetch.api_url,
-          api_params: stringifyDBParams({ q: `${q}/${newDescriptionCreated.code}` }),
-        })),
-      });
+  // list of matches to create
+  const matchesToCreate = descriptions.map((description) => ({
+    resource_id: fetch.resource_id,
+    archive_id: archiveId,
+    fund_id: fundId,
+    description_id: description.id,
+    api_url: fetch.api_url,
+  }));
 
-      newDescriptionsCreatedFetches.forEach((newDescriptionsCreatedFetch, i) => {
-        result[newDescriptionsCreated[i].code] = newDescriptionsCreatedFetch;
-      });
-    } catch (error) {
-      console.error("WIKI: saveFundDescriptionsByCodes: newDescriptions", error, { newDescriptionsCodesChunk });
-    }
-  }
+  // save matches for synced descriptions
+  await prisma.match.createMany({
+    data: matchesToCreate,
+  });
+
+  // list of fetches to create
+  const fetchesToCreate = descriptions.map((description) => {
+    const code = descriptionCodes.find((f) => parseCode(f) === description.code) || "";
+    return {
+      resource_id: fetch.resource_id,
+      archive_id: archiveId,
+      fund_id: fundId,
+      description_id: description.id,
+      api_url: fetch.api_url,
+      api_params: stringifyDBParams({ q: `${q}/${code}` }),
+    };
+  });
+
+  // save fetches for synced descriptions
+  const createdFetches = await prisma.fetch.createManyAndReturn({
+    data: fetchesToCreate,
+  });
+
+  createdFetches.forEach((createdFetch, i) => {
+    const code = descriptionCodes.find((f) => parseCode(f) === descriptions[i].code) || "";
+    result[code] = createdFetch;
+  });
 
   return result;
 };

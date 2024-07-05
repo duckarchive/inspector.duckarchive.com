@@ -1,6 +1,6 @@
 import { Fetch, Match } from "@prisma/client";
 import axios from "axios";
-import { get, unescape } from "lodash";
+import { chunk, get, unescape } from "lodash";
 import parse from "node-html-parser";
 
 export const parseDBParams = (str: string | null): Record<string, string> => {
@@ -79,3 +79,13 @@ export const scrapping = async (
 
   return result;
 };
+
+
+export const promiseChunk = async <T, R>(
+  array: T[],
+  chunkSize: number,
+  callback: (chunk: T[]) => Promise<R>
+): Promise<R[]> => {
+  const chunks = chunk(array, chunkSize);
+  return Promise.all(chunks.map(async (chunk) => await callback(chunk)));
+}

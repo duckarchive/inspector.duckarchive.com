@@ -1,10 +1,10 @@
-import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
+import { Fetch, Fund, PrismaClient, ResourceType } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { parseCode, parseDBParams, scrapping, stringifyDBParams } from "../../../helpers";
+import { parseCode, parseDBParams, parseTitle, promiseChunk, scrapping, stringifyDBParams } from "../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "..";
 import { chunk, setWith } from "lodash";
-import { saveFundDescriptionsByCodes } from "./[fund_id]";
-import { saveDescriptionCasesByCodes } from "./[fund_id]/[description_id]";
+import { saveFundDescriptions } from "./[fund_id]";
+import { saveDescriptionCases } from "./[fund_id]/[description_id]";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const data = await fetchArchiveFunds(archiveId);
 
-    res.status(200).json({ data });
+    res.status(200).json(data);
   } else {
     res.status(405);
   }
@@ -49,103 +49,126 @@ const fetchArchiveFunds = async (archiveId: string) => {
     }
   });
 
-  const fundsCodes = Object.keys(archiveTree);
+  const fundCodes = Object.keys(archiveTree);
 
-  // const prevFunds = await prisma.fund.findMany({
-  //   where: {
-  //     archive_id: archiveId,
-  //   },
-  // });
-
-  // const newFundsCodes = fundsCodes.filter((fc) => !prevFunds.some((pf) => pf.code === fc));
-
-  const savedFunds = await saveArchiveFundsByCodes(fundsCodes, fetch);
+  console.log(`saveArchiveFunds: ${archiveId}`);
+  const savedFunds = await saveArchiveFunds(archiveId, fundCodes, fetch);
 
   for (const [fundCode, fundFetch] of Object.entries(savedFunds)) {
+    console.log(`saveFundDescriptions: ${fundCode}`);
     const descriptionsCodes = Object.keys(archiveTree[fundCode]);
-    const savedDescriptions = await saveFundDescriptionsByCodes(descriptionsCodes, fundFetch);
+    const savedDescriptions = await saveFundDescriptions(
+      archiveId,
+      fundFetch.fund_id as string,
+      descriptionsCodes,
+      fundFetch
+    );
 
     for (const [descriptionCode, descriptionFetch] of Object.entries(savedDescriptions)) {
+      console.log(`saveDescriptionCases: ${descriptionCode}`);
       const casesCodes = Object.keys(archiveTree[fundCode][descriptionCode]);
-      await saveDescriptionCasesByCodes(casesCodes, descriptionFetch);
+      await saveDescriptionCases(
+        archiveId,
+        fundFetch.fund_id as string,
+        descriptionFetch.description_id as string,
+        casesCodes,
+        descriptionFetch
+      );
     }
   }
 
   await prisma.fetchResult.create({
     data: {
       fetch_id: fetch.id,
-      count: fundsCodes.length,
+      count: fundCodes.length,
     },
   });
 
   return archiveTree;
 };
 
-export const saveArchiveFundsByCodes = async (newFundsCodes: string[], fetch: Fetch) => {
+export const saveArchiveFunds = async (archiveId: string, fundCodes: string[], fetch: Fetch) => {
   const result: Record<string, Fetch> = {};
   const { q } = parseDBParams(fetch.api_params);
-  let newFundsCounter = 0;
-  const newFundsCodesChunks = chunk(newFundsCodes, 25);
-  for (const newFundsCodesChunk of newFundsCodesChunks) {
-    try {
-      const newFundsChunkWithTitle = await Promise.all(
-        newFundsCodesChunk.map(async (fc) => {
-          console.log(
-            `WIKI: saveArchiveFundsByCodes: newFunds progress (${++newFundsCounter}/${newFundsCodes.length})`
-          );
-          const parsed = await scrapping(
-            {
-              ...fetch,
-              api_params: stringifyDBParams({
-                action: "parse",
-                page: `${q}/${fc}`,
-                props: "text",
-                format: "json",
-              }),
-            },
-            { selector: "#header_section_text", responseKey: "parse.text.*" }
-          );
-          const title = parsed[0].innerText.split(". ").slice(1).join(". ");
-          return {
-            code: parseCode(fc),
-            title,
-            archive_id: fetch.archive_id as string,
-          };
-        }, {})
+  const prevFunds = await prisma.fund.findMany({
+    where: {
+      archive_id: archiveId,
+    },
+  });
+
+  // list of synced funds that already exist in the database
+  const existedFunds = prevFunds.filter((fund) => fundCodes.some((code) => parseCode(code) === fund.code));
+
+  // list of new fund codes
+  const newFundCodes = fundCodes.filter((code) => !existedFunds.some((prevFund) => prevFund.code === parseCode(code)));
+
+  // extend with title from wiki
+  const newFunds = await Promise.all(
+    newFundCodes.map(async (fc) => {
+      const parsed = await scrapping(
+        {
+          ...fetch,
+          api_params: stringifyDBParams({
+            action: "parse",
+            page: `${q}/${fc}`,
+            props: "text",
+            format: "json",
+          }),
+        },
+        { selector: "#header_section_text", responseKey: "parse.text.*" }
       );
+      const code = parseCode(fc);
+      const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
+      return {
+        code,
+        title,
+        archive_id: fetch.archive_id as string,
+      };
+    })
+  );
 
-      const newFundsCreated = await prisma.fund.createManyAndReturn({
-        data: newFundsChunkWithTitle,
-        skipDuplicates: true,
-      });
+  // save new funds to the database
+  const createdFunds = await prisma.fund.createManyAndReturn({
+    data: newFunds,
+    skipDuplicates: true,
+  });
 
-      await prisma.match.createMany({
-        data: newFundsCreated.map((newFundCreated) => ({
-          resource_id: fetch.resource_id,
-          archive_id: fetch.archive_id,
-          fund_id: newFundCreated.id,
-          api_url: fetch.api_url,
-        })),
-      });
+  const funds = [...existedFunds, ...createdFunds];
 
-      const newFundsCreatedFetches = await prisma.fetch.createManyAndReturn({
-        data: newFundsCreated.map((newFundCreated) => ({
-          resource_id: fetch.resource_id,
-          archive_id: fetch.archive_id,
-          fund_id: newFundCreated.id,
-          api_url: fetch.api_url,
-          api_params: stringifyDBParams({ q: `${q}/${newFundCreated.code}` }),
-        })),
-      });
+  // list of matches to create
+  const matchesToCreate = funds.map((fund) => ({
+    resource_id: fetch.resource_id,
+    archive_id: archiveId,
+    fund_id: fund.id,
+    api_url: fetch.api_url,
+  }));
 
-      newFundsCreatedFetches.forEach((newFundsCreatedFetch, i) => {
-        const code = newFundsCodesChunk.find((f) => parseCode(f) === newFundsCreated[i].code) || "";
-        result[code] = newFundsCreatedFetch;
-      });
-    } catch (error) {
-      console.error("WIKI: saveArchiveFundsByCodes: newFunds", error, { newFundsCodesChunk });
-    }
-  }
+  // save matches for synced funds
+  await prisma.match.createMany({
+    data: matchesToCreate,
+  });
+
+  // list of fetches to create
+  const fetchesToCreate = funds.map((fund) => {
+    const code = fundCodes.find((f) => parseCode(f) === fund.code) || "";
+    return {
+      resource_id: fetch.resource_id,
+      archive_id: archiveId,
+      fund_id: fund.id,
+      api_url: fetch.api_url,
+      api_params: stringifyDBParams({ q: `${q}/${code}` }),
+    };
+  });
+
+  // save fetches for synced funds
+  const createdFetches = await prisma.fetch.createManyAndReturn({
+    data: fetchesToCreate,
+  });
+
+  createdFetches.forEach((createdFetch, i) => {
+    const code = fundCodes.find((f) => parseCode(f) === funds[i].code) || "";
+    result[code] = createdFetch;
+  });
 
   return result;
 };

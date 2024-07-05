@@ -1,6 +1,6 @@
 import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { parseCode, parseDBParams, scrapping, stringifyDBParams } from "../../../../../helpers";
+import { parseCode, parseDBParams, parseTitle, scrapping, stringifyDBParams } from "../../../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "../../..";
 import { chunk, setWith } from "lodash";
 
@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const data = await fetchDescriptionCases(archiveId, fundId, descriptionId);
 
-    res.status(200).json({ data });
+    res.status(200).json(data);
   } else {
     res.status(405);
   }
@@ -36,32 +36,25 @@ const fetchDescriptionCases = async (archiveId: string, fundId: string, descript
   if (!fetch) {
     throw new Error("Fetch not found");
   }
-  const descriptionPages = await fetchAllWikiPagesByPrefix(fetch);
+  const casePages = await fetchAllWikiPagesByPrefix(fetch);
 
-  const descriptionTree: Record<string, Record<string, Record<string, {}>>> = {};
+  const caseTree: Record<string, Record<string, Record<string, {}>>> = {};
 
-  descriptionPages.forEach((page) => {
+  casePages.forEach((page) => {
     const parts = page
       .split("/")
       .slice(1)
       .map((p) => parseCode(p));
     if (parts.length && !["Д", "Р", "П"].includes(parts[0])) {
-      setWith(descriptionTree, parts, {}, Object);
+      setWith(caseTree, parts, {}, Object);
     } else {
       console.log(`Skipping page: ${page}`);
     }
   });
 
-  const casesCodes = Object.keys(descriptionTree);
-  // const prevCases = await prisma.case.findMany({
-  //   where: {
-  //     description_id: descriptionId,
-  //   },
-  // });
+  const casesCodes = Object.keys(caseTree);
 
-  // const newCasesCodes = descriptionsCodes.filter((dc) => !prevCases.some((pd) => pd.code === dc));
-
-  await saveDescriptionCasesByCodes(casesCodes, fetch);
+  await saveDescriptionCases(archiveId, fundId, descriptionId, casesCodes, fetch);
 
   await prisma.fetchResult.create({
     data: {
@@ -70,59 +63,70 @@ const fetchDescriptionCases = async (archiveId: string, fundId: string, descript
     },
   });
 
-  return descriptionTree;
+  return caseTree;
 };
 
-export const saveDescriptionCasesByCodes = async (newCasesCodes: string[], fetch: Fetch) => {
+export const saveDescriptionCases = async (archiveId: string, fundId: string, descriptionId: string, caseCodes: string[], fetch: Fetch) => {
   const { q } = parseDBParams(fetch.api_params);
-  let newCasesCounter = 0;
-  const newCasesCodesChunks = chunk(newCasesCodes, 25);
+  const prevCases = await prisma.case.findMany({
+    where: {
+      description_id: descriptionId,
+    },
+  });
 
-  for (const newCasesCodesChunk of newCasesCodesChunks) {
-    try {
-      const newCasesChunkWithTitle = await Promise.all(
-        newCasesCodesChunk.map(async (fc) => {
-          console.log(`WIKI: saveDescriptionCasesByCodes: newCases progress (${++newCasesCounter}/${newCasesCodes.length})`);
-          const parsed = await scrapping(
-            {
-              ...fetch,
-              api_params: stringifyDBParams({
-                action: "parse",
-                page: `${q}/${fc}`,
-                props: "text",
-                format: "json",
-              }),
-            },
-            { selector: "#header_section_text", responseKey: "parse.text.*" }
-          );
-          const title = parsed[0].innerText.split(". ").slice(1).join(". ");
-          return {
-            code: fc,
-            title,
-            description_id: fetch.description_id as string,
-          };
-        }, {})
+  // list of synced cases that already exist in the database
+  const existedCases = prevCases.filter((caseItem) => caseCodes.some((code) => parseCode(code) === caseItem.code));
+
+  // list of new case codes
+  const newCaseCodes = caseCodes.filter((code) => !existedCases.some((prevCase) => prevCase.code === parseCode(code)));
+
+  // extend with title from wiki
+  const newCases = await Promise.all(
+    newCaseCodes.map(async (fc) => {
+      const parsed = await scrapping(
+        {
+          ...fetch,
+          api_params: stringifyDBParams({
+            action: "parse",
+            page: `${q}/${fc}`,
+            props: "text",
+            format: "json",
+          }),
+        },
+        { selector: "#header_section_text", responseKey: "parse.text.*" }
       );
+      const code = parseCode(fc);
+      const title = parseTitle(parsed[0].innerText.split(". ").slice(1).join(". "));
+      return {
+        code,
+        title,
+        description_id: fetch.description_id as string,
+      };
+    })
+  );
 
-      const newCasesCreated = await prisma.case.createManyAndReturn({
-        data: newCasesChunkWithTitle,
-        skipDuplicates: true,
-      });
+  // save new cases to the database
+  const createdCases = await prisma.case.createManyAndReturn({
+    data: newCases,
+    skipDuplicates: true,
+  });
 
-      await prisma.match.createMany({
-        data: newCasesCreated.map((newCaseCreated) => ({
-          resource_id: fetch.resource_id,
-          archive_id: fetch.archive_id,
-          fund_id: fetch.fund_id,
-          description_id: fetch.description_id,
-          case_id: newCaseCreated.id,
-          api_url: fetch.api_url,
-        })),
-      });
-    } catch (error) {
-      console.error("WIKI: saveDescriptionCasesByCodes: newCases", error, { newCasesCodesChunk });
-    }
-  }
+  const cases = [...existedCases, ...createdCases];
+
+  // list of matches to create
+  const matchesToCreate = cases.map((caseItem) => ({
+    resource_id: fetch.resource_id,
+    archive_id: archiveId,
+    fund_id: fundId,
+    description_id: descriptionId,
+    case_id: caseItem.id,
+    api_url: fetch.api_url,
+  }));
+
+  // save matches for synced cases
+  await prisma.match.createMany({
+    data: matchesToCreate,
+  });
 
   return true;
 };
