@@ -60,7 +60,7 @@ const CasePage: NextPage = () => {
             flex: 8,
             cellRenderer: (row: { value: string; data: TableItem }) => (
               <Link href={row.value} isExternal color="blue.600">
-                {row.value}
+                {row.value || "Без назви"}
               </Link>
             ),
           },

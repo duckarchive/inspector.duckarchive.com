@@ -60,7 +60,7 @@ const ArchivePage: NextPage = () => {
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${code}/${row.data.code}`} color="blue.600">
-                {row.value}
+                {row.value || "Без назви"}
               </Link>
             ),
           },
