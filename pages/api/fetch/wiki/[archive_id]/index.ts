@@ -1,9 +1,8 @@
 import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
-import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { parseCode, parseDBParams, scrapping, stringifyDBParams } from "../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "..";
-import { chunk, set, setWith } from "lodash";
+import { chunk, setWith } from "lodash";
 import { saveFundDescriptionsByCodes } from "./[fund_id]";
 import { saveDescriptionCasesByCodes } from "./[fund_id]/[description_id]";
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { parseDBParams, scrapping } from "../../helpers";
+import { parseDBParams } from "../../helpers";
 import { Fetch } from "@prisma/client";
 import { uniq } from "lodash";
 
