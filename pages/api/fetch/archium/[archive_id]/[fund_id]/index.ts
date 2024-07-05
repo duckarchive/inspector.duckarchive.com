@@ -9,7 +9,6 @@ const prisma = new PrismaClient();
 export type ArchiumFetchFundResponse = {
   total: number;
   added: number;
-  removed: number;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumFetchFundResponse>) {
@@ -134,50 +133,6 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
       }
     }
 
-    const removedDescriptions = prevDescriptions.filter((pd) => !descriptions.some((d) => d.code === pd.code));
-
-    let removedDescriptionsCounter = 0;
-    const removedDescriptionsChunks = chunk(removedDescriptions, 10);
-
-    for (const removedDescriptionsChunk of removedDescriptionsChunks) {
-      await Promise.all(
-        removedDescriptionsChunk.map(async (d) => {
-          console.log(
-            `ARCHIUM: fetchFundDescriptions: removedDescriptions progress (${++removedDescriptionsCounter}/${
-              removedDescriptions.length
-            })`
-          );
-          try {
-            await prisma.case.deleteMany({
-              where: {
-                description_id: d.id,
-              },
-            });
-
-            await prisma.match.deleteMany({
-              where: {
-                description_id: d.id,
-              },
-            });
-
-            await prisma.fetch.deleteMany({
-              where: {
-                description_id: d.id,
-              },
-            });
-
-            await prisma.description.delete({
-              where: {
-                id: d.id,
-              },
-            });
-          } catch (error) {
-            console.error("ARCHIUM: fetchFundDescriptions: removedDescriptions", error, { d });
-          }
-        })
-      );
-    }
-
     if (fetch.last_count !== descriptions.length) {
       await prisma.fetch.update({
         where: {
@@ -192,7 +147,6 @@ export const fetchFundDescriptions = async (archiveId: string, fundId: string) =
     return {
       total: descriptions.length,
       added: newDescriptions.length,
-      removed: removedDescriptions.length,
     };
   } catch (error) {
     console.error("ARCHIUM: fetchFundDescriptions", error, { archiveId, fundId });

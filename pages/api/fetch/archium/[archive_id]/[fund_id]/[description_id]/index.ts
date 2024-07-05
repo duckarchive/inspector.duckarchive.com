@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 export type ArchiumFetchDescriptionResponse = {
   total: number;
   added: number;
-  removed: number;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ArchiumFetchDescriptionResponse>) {
@@ -114,42 +113,6 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
       }
     }
 
-    const removedCases = prevCases.filter((pd) => !cases.some((d) => d.code === pd.code));
-
-    let removedCasesCounter = 0;
-    const removedCasesChunks = chunk(removedCases, 10);
-
-    for (const removedCasesChunk of removedCasesChunks) {
-      await Promise.all(
-        removedCasesChunk.map(async (d) => {
-          console.log(
-            `ARCHIUM: fetchDescriptionCases: removedCases progress (${++removedCasesCounter}/${removedCases.length})`
-          );
-          try {
-            await prisma.match.deleteMany({
-              where: {
-                case_id: d.id,
-              },
-            });
-
-            await prisma.fetch.deleteMany({
-              where: {
-                case_id: d.id,
-              },
-            });
-
-            await prisma.case.delete({
-              where: {
-                id: d.id,
-              },
-            });
-          } catch (error) {
-            console.error("ARCHIUM: fetchDescriptionCases: removedCases", error, { d });
-          }
-        })
-      );
-    }
-
     if (fetch.last_count !== cases.length) {
       await prisma.fetch.update({
         where: {
@@ -164,7 +127,6 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
     return {
       total: cases.length,
       added: newCases.length,
-      removed: removedCases.length,
     };
   } catch (error) {
     console.error("ARCHIUM: fetchDescriptionCases", error, { archiveId, fundId, descriptionId });
