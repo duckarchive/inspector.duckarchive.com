@@ -107,6 +107,7 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
               description_id: descriptionId,
               case_id: newCase.id,
               api_url: item?.matchApiUrl || "",
+              url: item?.matchApiUrl || "",
             };
           }),
         });
