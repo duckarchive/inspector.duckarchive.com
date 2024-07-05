@@ -1,9 +1,9 @@
 import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import { parseCode, parseDBParams, parseWikiPageTitle } from "../../../helpers";
+import { parseCode, parseDBParams, parseWikiPageTitle, scrapping } from "../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "..";
-import { set } from "lodash";
+import { chunk, set, setWith } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -38,22 +38,19 @@ const fetchArchive = async (archiveId: string) => {
 
   const archivePages = await fetchAllWikiPagesByPrefix(fetch);
 
-  const archivePagesHash = {};
+  const archiveTree: Record<string, Record<string, Record<string, {}>>> = {};
 
-  archivePages
-    .forEach((page) => {
-      const parts = page.split("/").map((p) => parseCode(p));
-      set(archivePagesHash, [...parts, "code"], {});
-      // if (parts === 2) {
-      //   archivePagesHash.funds.push(parseWikiPageTitle(page, "fund"));
-      // } else if (parts === 3) {
-      //   archivePagesHash.descriptions.push(parseWikiPageTitle(page, "description"));
-      // } else if (parts === 4) {
-      //   archivePagesHash.cases.push(parseWikiPageTitle(page, "case"));
-      // } else {
-      //   archivePagesHash.other.push(page);
-      // }
-    });
+  archivePages.forEach((page) => {
+    const parts = page
+      .split("/")
+      .slice(1)
+      .map((p) => parseCode(p));
+    if (parts.length && !["Д", "Р", "П"].includes(parts[0])) {
+      setWith(archiveTree, parts, {}, Object);
+    } else {
+      console.log(`Skipping page: ${page}`);
+    }
+  });
 
   // await prisma.fetchResult.create({
   //   data: {
@@ -62,87 +59,94 @@ const fetchArchive = async (archiveId: string) => {
   //   },
   // });
 
-  // const prevFunds = await prisma.fund.findMany({
-  //   where: {
-  //     archive_id: archiveId,
-  //   },
-  // });
+  const fundsCodes = Object.keys(archiveTree);
 
-  // const newFunds = archivePagesHash.funds.filter(
-  //   (f) => !prevFunds.some((pf) => pf.code === f)
-  // );
+  const prevFunds = await prisma.fund.findMany({
+    where: {
+      archive_id: archiveId,
+    },
+  });
 
-  return archivePagesHash;
-};
+  const newFunds = fundsCodes.filter((fc) => !prevFunds.some((pf) => pf.code === fc));
 
-const BASE_URL = "https://uk.wikisource.org/w/api.php";
-const START_CATEGORY = "Архів:ДАКрО";
+  let newFundsCounter = 0;
+  const newFundsChunks = chunk(newFunds, 100);
 
-interface EmbeddedInResponse {
-  continue?: {
-    eicontinue: string;
-    continue: string;
-  };
-  query: {
-    embeddedin: { title: string }[];
-  };
-}
-
-const fetchAllPagesByTemplate = async (templateName: string): Promise<string[]> => {
-  const allPages: string[] = [];
-
-  const fetchPages = async (eicontinue: string = ""): Promise<void> => {
-    const url = `${BASE_URL}?action=query&list=embeddedin&eititle=Template:${encodeURIComponent(
-      templateName
-    )}&eilimit=500&format=json&formatversion=2${eicontinue ? `&eicontinue=${eicontinue}` : ""}`;
+  for (const newFundsChunk of newFundsChunks) {
+    console.log(`WIKI: fetchArchiveFunds: newFunds progress (${++newFundsCounter}/${newFundsChunks.length})`);
     try {
-      const response = await axios.get<EmbeddedInResponse>(url);
-      const pages = response.data.query.embeddedin.map((page) => page.title);
-      allPages.push(...pages);
+      const newFundsChunkWithTitle = await Promise.all(
+        newFundsChunk.map(async (fc) => {
+          const parsed = await scrapping(
+            { ...fetch, api_params: `action:parse,page:${fc},props:text,format:json` },
+            { selector: "#header_section_text" }
+          );
+          const title = parsed[0].innerText;
+          return {
+            code: fc,
+            title,
+            archive_id: archiveId,
+          };
+        }, {})
+      );
 
-      if (response.data.continue) {
-        await fetchPages(response.data.continue.eicontinue);
-      }
+      const newFundsCreated = await prisma.fund.createManyAndReturn({
+        data: newFundsChunkWithTitle,
+        skipDuplicates: true,
+      });
+
+      await prisma.match.createMany({
+        data: newFundsCreated.map((newFundCreated, i) => ({
+          resource_id: fetch.resource_id,
+          archive_id: archiveId,
+          fund_id: newFundCreated.id,
+          api_url: fetch.api_url,
+          api_params: "Limit:9999,Page:1",
+        })),
+      });
+
+      // await prisma.fetch.createMany({
+      //   data: newFundsCreated.map((newFundCreated, i) => ({
+      //     resource_id: newFundsChunk[i].resourceId,
+      //     archive_id: archiveId,
+      //     fund_id: newFundCreated.id,
+      //     api_url: newFundsChunk[i].fetchApiUrl,
+      //     api_params: "Limit:9999,Page:1",
+      //   })),
+      // });
+
+      // const newFundsCreatedChunks = chunk(newFundsCreated, 10);
+
+      // for (const newFundCreatedChunk of newFundsCreatedChunks) {
+      //   await Promise.all(
+      //     newFundCreatedChunk.map(async (newFundCreated) => fetchFundDescriptions(archiveId, newFundCreated.id))
+      //   );
+      // }
     } catch (error) {
-      console.error(`Error fetching pages: ${error}`);
+      console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { newFundsChunk });
     }
-  };
-
-  await fetchPages();
-  return allPages;
-};
-
-interface ParseResponse {
-  parse: {
-    text: {
-      "*": string;
-    };
-  };
-}
-
-const fetchPageContent = async (page: string): Promise<string | null> => {
-  const url = `${BASE_URL}?action=parse&page=${encodeURIComponent(page)}&format=json`;
-  const response = await axios.get<ParseResponse>(url);
-  return response.data.parse.text["*"];
-};
-
-const visited = new Set<string>();
-const crawl = async (page: string): Promise<void> => {
-  if (visited.has(page)) {
-    return;
   }
 
-  visited.add(page);
-  console.log(`Visiting: ${page}`);
-
-  const content = await fetchPageContent(page);
-  if (content) {
-    console.log(`Content of ${page}:\n${content}\n`);
-  }
-
-  // Recursively fetch linked pages if needed
-  // const linkedPages = extractLinkedPages(content);
-  // for (const linkedPage of linkedPages) {
-  //     await crawl(linkedPage);
-  // }
+  return archiveTree;
 };
+
+// const visited = new Set<string>();
+// const crawl = async (page: string): Promise<void> => {
+//   if (visited.has(page)) {
+//     return;
+//   }
+
+//   visited.add(page);
+//   console.log(`Visiting: ${page}`);
+
+//   const content = await fetchPageContent(page);
+//   if (content) {
+//     console.log(`Content of ${page}:\n${content}\n`);
+//   }
+
+//   // Recursively fetch linked pages if needed
+//   // const linkedPages = extractLinkedPages(content);
+//   // for (const linkedPage of linkedPages) {
+//   //     await crawl(linkedPage);
+//   // }
+// };
