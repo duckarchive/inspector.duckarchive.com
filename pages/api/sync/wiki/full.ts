@@ -38,7 +38,7 @@ const syncAllMatches = async () => {
 
   console.log("WIKI: syncAllMatches: cases to sync", caseMatches.length);
 
-  const caseMatchesChunks = chunk(caseMatches, 25);
+  const caseMatchesChunks = chunk(caseMatches, 100);
 
   let scrappingCounter = 0;
   let chunkCounter = 0;
