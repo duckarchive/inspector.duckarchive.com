@@ -6,8 +6,6 @@ import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
 import DuckTable from "../components/Table";
-import { getSyncAtLabel, sortByMatches } from "../utils/table";
-import ResourceBadge from "../components/ResourceBadge";
 
 type TableItem = GetAllArchivesResponse[number];
 

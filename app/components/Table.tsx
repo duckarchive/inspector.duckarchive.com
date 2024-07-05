@@ -3,7 +3,7 @@ import { ColDef, ITextFilterParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { useEffect, useRef, useState } from "react";
-import { Box, Button, HStack, Text, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Text, Tooltip } from "@chakra-ui/react";
 import { AG_GRID_LOCALE_UK } from "../utils/i18n";
 import { getSyncAtLabel, sortByMatches, sortCode } from "../utils/table";
 import ResourceBadge from "./ResourceBadge";
@@ -125,7 +125,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
               resizable: false,
               comparator: (_, __, { data: a }: any, { data: b }: any) => sortByMatches(a, b),
               cellRenderer: (row: { data: any }) => (
-                <VStack h="full" alignItems="flex-end" justifyContent="center">
+                <HStack h="calc(var(--ag-row-height) - 4px)" alignItems="center" justifyContent="flex-end" gap={1} flexWrap="wrap">
                   {row.data.matches?.map(
                     ({ updated_at, children_count, resource: { type } }: any) =>
                       children_count && (
@@ -135,13 +135,13 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
                           key={`${row.data.id}_match_${type}`}
                           placement="left"
                         >
-                          <Text as="p">
+                          <Text as="p" lineHeight={1}>
                             <ResourceBadge resource={type}>{children_count}</ResourceBadge>
                           </Text>
                         </Tooltip>
                       )
                   )}
-                </VStack>
+                </HStack>
               ),
               ...lastColumn,
             },

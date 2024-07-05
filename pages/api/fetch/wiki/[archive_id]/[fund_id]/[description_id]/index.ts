@@ -2,7 +2,7 @@ import { Fetch, PrismaClient, ResourceType } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { parseCode, parseDBParams, parseTitle, scrapping, stringifyDBParams } from "../../../../../helpers";
 import { fetchAllWikiPagesByPrefix } from "../../..";
-import { chunk, setWith } from "lodash";
+import { setWith } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -122,6 +122,7 @@ export const saveDescriptionCases = async (
   // list of matches to create
   const matchesToCreate = cases.map((caseItem) => {
     const rawCode = caseCodes.find((code) => parseCode(code) === caseItem.code);
+    const caseQ = `${q}/${rawCode}`;
     return {
       resource_id: fetch.resource_id,
       archive_id: archiveId,
@@ -129,7 +130,10 @@ export const saveDescriptionCases = async (
       description_id: descriptionId,
       case_id: caseItem.id,
       api_url: fetch.api_url,
-      url: `https://uk.wikisource.org/wiki/${q}${rawCode ? `/${rawCode}` : ""}`,
+      api_params: stringifyDBParams({
+        q: caseQ,
+      }),
+      url: `https://uk.wikisource.org/wiki/${caseQ}`,
     };
   });
 

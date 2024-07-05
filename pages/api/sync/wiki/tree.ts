@@ -15,10 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 export const recalculateDescriptionChildrenCount = async () => {
-  console.log(`ARCHIUM: recalculateDescriptionChildrenCount`);
+  console.log(`WIKI: recalculateDescriptionChildrenCount`);
   const resource = await prisma.resource.findFirst({
     where: {
-      type: ResourceType.ARCHIUM,
+      type: ResourceType.WIKIPEDIA,
     },
   });
 
@@ -58,10 +58,10 @@ export const recalculateDescriptionChildrenCount = async () => {
 };
 
 export const recalculateFundChildrenCount = async () => {
-  console.log(`ARCHIUM: recalculateFundChildrenCount`);
+  console.log(`WIKI: recalculateFundChildrenCount`);
   const resource = await prisma.resource.findFirst({
     where: {
-      type: ResourceType.ARCHIUM,
+      type: ResourceType.WIKIPEDIA,
     },
   });
 
@@ -103,10 +103,10 @@ export const recalculateFundChildrenCount = async () => {
 };
 
 export const recalculateArchiveChildrenCount = async () => {
-  console.log(`ARCHIUM: recalculateArchiveChildrenCount`);
+  console.log(`WIKI: recalculateArchiveChildrenCount`);
   const resource = await prisma.resource.findFirst({
     where: {
-      type: ResourceType.ARCHIUM,
+      type: ResourceType.WIKIPEDIA,
     },
   });
 
