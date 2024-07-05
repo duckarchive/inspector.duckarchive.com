@@ -110,6 +110,7 @@ model Match {
   updated_at     DateTime?     @updatedAt @db.Timestamp(6)
   resource_id    String        @db.Uuid
   resource       Resource      @relation(fields: [resource_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  url            String?       @db.VarChar(255)
   api_url        String        @db.VarChar(255)
   api_method     String?       @db.VarChar(10)
   api_headers    String?       @db.VarChar(255)

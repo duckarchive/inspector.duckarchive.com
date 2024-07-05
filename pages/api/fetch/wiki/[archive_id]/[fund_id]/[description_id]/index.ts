@@ -66,7 +66,13 @@ const fetchDescriptionCases = async (archiveId: string, fundId: string, descript
   return caseTree;
 };
 
-export const saveDescriptionCases = async (archiveId: string, fundId: string, descriptionId: string, caseCodes: string[], fetch: Fetch) => {
+export const saveDescriptionCases = async (
+  archiveId: string,
+  fundId: string,
+  descriptionId: string,
+  caseCodes: string[],
+  fetch: Fetch
+) => {
   const { q } = parseDBParams(fetch.api_params);
   const prevCases = await prisma.case.findMany({
     where: {
@@ -114,14 +120,18 @@ export const saveDescriptionCases = async (archiveId: string, fundId: string, de
   const cases = [...existedCases, ...createdCases];
 
   // list of matches to create
-  const matchesToCreate = cases.map((caseItem) => ({
-    resource_id: fetch.resource_id,
-    archive_id: archiveId,
-    fund_id: fundId,
-    description_id: descriptionId,
-    case_id: caseItem.id,
-    api_url: fetch.api_url,
-  }));
+  const matchesToCreate = cases.map((caseItem) => {
+    const rawCode = caseCodes.find((code) => parseCode(code) === caseItem.code);
+    return {
+      resource_id: fetch.resource_id,
+      archive_id: archiveId,
+      fund_id: fundId,
+      description_id: descriptionId,
+      case_id: caseItem.id,
+      api_url: fetch.api_url,
+      url: `https://uk.wikisource.org/wiki/${q}${rawCode ? `/${rawCode}` : ""}`,
+    };
+  });
 
   // save matches for synced cases
   await prisma.match.createMany({
