@@ -3,6 +3,7 @@ import { parseCode, parseDBParams, parseTitle, scrapping, stringifyDBParams } fr
 import { HTMLElement } from "node-html-parser";
 import { fetchAllWikiPagesByPrefix } from ".";
 import { chunk, setWith } from "lodash";
+import { logger } from "../../logger";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,7 @@ interface Ids {
 }
 
 const resource = ResourceType.WIKIPEDIA;
-const log = (...message: any[]) => console.log(`${resource}|FETCH:`, ...message);
+const log = (message: any) => logger.log({ level: "info", label: `${resource}|FETCH`, message });
 
 export const fetchWiki = async (ids: Ids) => {
   // step 1: find fetch
@@ -31,13 +32,13 @@ export const fetchWiki = async (ids: Ids) => {
   });
 
   if (!fetch) {
-    log("Step 1: Failed", "Fetch not found");
+    log("Step 1: Failed: Fetch not found");
     throw new Error("Fetch not found");
   }
 
   try {
     // step 2: scrapping by fetch
-    log("Step 2: Scrapping", fetch.id);
+    log(`Step 2: Scrapping ${fetch.id}`);
     const pages = await fetchAllWikiPagesByPrefix(fetch);
 
     const tree: Record<string, any> = {};
@@ -113,7 +114,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
   // list of new items codes
   const newCodes = codes.filter((code) => !existedItems.some((ei) => ei.code === parseCode(code)));
 
-  log(`Step 4: ${instanceType}s count`, { existedItems: existedItems.length, newCodes: newCodes.length });
+  log(`Step 4: ${instanceType}s count: ${newCodes.length}/${existedItems.length}`);
 
   // extend with title from wiki
   const newItems: Item[] = [];
@@ -171,7 +172,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
   const items = [...existedItems, ...createdItems];
   const itemIdToCodeMap: Record<string, string> = {};
 
-  log(`Step 6: ${instanceType}s total`, items.length);
+  log(`Step 6: ${instanceType}s total: ${items.length}`);
 
   codes.forEach((code) => {
     const parsed = parseCode(code);
@@ -259,7 +260,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
       }),
   }));
 
-  log(`Step 7: Saving ${instanceType}s matches`, matchesToCreate.length);
+  log(`Step 7: Saving ${instanceType}s matches: ${matchesToCreate.length}`);
   // save matches for synced funds
   await prisma.match.createMany({
     data: matchesToCreate,
@@ -317,7 +318,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
       };
     });
 
-    log(`Step 8: Saving ${instanceType}s fetches`, fetchesToCreate.length);
+    log(`Step 8: Saving ${instanceType}s fetches: ${fetchesToCreate.length}`);
     // save fetches for synced funds
     await prisma.fetch.createMany({
       data: fetchesToCreate,
@@ -333,7 +334,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
     },
   });
 
-  log(`Step 9: ${instanceType}s fetches from db`, itemFetches.length);
+  log(`Step 9: ${instanceType}s fetches from db: ${itemFetches.length}`);
 
   for (const itemFetch of itemFetches) {
     const parent_id = itemFetch.case_id || itemFetch.description_id || itemFetch.fund_id;
@@ -362,7 +363,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
     }
   }
 
-  log(`Step 11: Saving fetch result of`, fetch.id);
+  log(`Step 11: Saving fetch result of ${fetch.id}`);
   await prisma.fetchResult.create({
     data: {
       fetch_id: fetch.id,
