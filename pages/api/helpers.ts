@@ -69,13 +69,13 @@ export const scrapping = async (
   const content = responseKey ? get(data, responseKey) : data;
 
   if (!content) {
-    console.log("oops");
+    console.log("No content in response", api_url, params);
     return [];
   }
   const dom = parse(content);
   const result = [...dom.querySelectorAll(selector)];
   if (!result.length) {
-    console.log("oops 222");
+    console.log("No content found for", api_url, params, "with selector", selector);
   }
 
   return result;
