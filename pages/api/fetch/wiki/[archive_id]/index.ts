@@ -5,16 +5,25 @@ import { fetchAllWikiPagesByPrefix } from "..";
 import { chunk, setWith } from "lodash";
 import { saveFundDescriptions } from "./[fund_id]";
 import { saveDescriptionCases } from "./[fund_id]/[description_id]";
+import { fetchWiki } from "../general";
 
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
-    const archiveId = req.query.archive_id as string;
-
-    const data = await fetchArchiveFunds(archiveId);
-
-    res.status(200).json(data);
+    try {
+      const archiveId = req.query.archive_id as string;
+  
+      const data = await fetchWiki({
+        archive_id: archiveId,
+        fund_id: null,
+        description_id: null,
+      });
+  
+      res.status(200).json(data);
+    } catch (error: Error | any) {
+      res.status(500).json({ error: error?.message });
+    }
   } else {
     res.status(405);
   }
@@ -223,7 +232,7 @@ export const saveArchiveFunds = async (archiveId: string, fundCodes: string[], f
   fundCodes.forEach((code) => {
     const parsed = parseCode(code);
     const fundId = funds.find((f) => f.code === parsed)?.id;
-    fundCodesMap[fundId || ''] = code;
+    fundCodesMap[fundId || ""] = code;
   });
 
   return fundCodesMap;
