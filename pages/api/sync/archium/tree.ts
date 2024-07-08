@@ -38,6 +38,7 @@ export const recalculateDescriptionChildrenCount = async () => {
       descriptionsToUpdateChunk.map(async ({ description_id, count }) => {
         const match = await prisma.match.findFirst({
           where: {
+            resource_id: resource?.id,
             description_id,
             case_id: null,
           },
@@ -46,6 +47,7 @@ export const recalculateDescriptionChildrenCount = async () => {
           await prisma.match.update({
             where: {
               id: match.id,
+              resource_id: resource?.id,
             },
             data: {
               children_count: count,
@@ -82,6 +84,7 @@ export const recalculateFundChildrenCount = async () => {
       fundsToUpdateChunk.map(async ({ fund_id, count }) => {
         const match = await prisma.match.findFirst({
           where: {
+            resource_id: resource?.id,
             fund_id,
             description_id: null,
             case_id: null,
@@ -91,6 +94,7 @@ export const recalculateFundChildrenCount = async () => {
           await prisma.match.update({
             where: {
               id: match.id,
+              resource_id: resource?.id,
             },
             data: {
               children_count: count,
@@ -128,6 +132,7 @@ export const recalculateArchiveChildrenCount = async () => {
       archivesToUpdateChunk.map(async ({ archive_id, count }) => {
         const match = await prisma.match.findFirst({
           where: {
+            resource_id: resource?.id,
             archive_id,
             fund_id: null,
             description_id: null,
@@ -138,6 +143,7 @@ export const recalculateArchiveChildrenCount = async () => {
           await prisma.match.update({
             where: {
               id: match.id,
+              resource_id: resource?.id,
             },
             data: {
               children_count: count,
