@@ -1,11 +1,13 @@
-const ARCH_REGEXP = /^[а-яїє]{3,8}/;
-
+const ARCH_REGEXP = /^([а-яїєі]{3,8})\s+(.+)-(\d+)/i;
 
 export const parseSearchQuery = (input: string) => {
   const trimmed = input.trim();
-  const [archive] = trimmed.match(ARCH_REGEXP) || [];
+  const [_, archiveCode, fundCode, descriptionCode, caseCode] = trimmed.match(ARCH_REGEXP) || [];
 
   return {
-    archive
-  }
-}
+    archiveCode,
+    fundCode,
+    descriptionCode,
+    caseCode,
+  };
+};
