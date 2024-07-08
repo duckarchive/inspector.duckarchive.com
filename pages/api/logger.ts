@@ -9,6 +9,6 @@ export const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: '../sync.log' })
+    new winston.transports.File({ filename: 'sync.log' })
   ]
 }); 

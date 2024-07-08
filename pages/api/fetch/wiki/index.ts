@@ -4,10 +4,11 @@ import { chunk, setWith, uniq } from "lodash";
 import { logger } from "../../logger";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
+import winston from "winston";
 
 const prisma = new PrismaClient();
 const resource = ResourceType.WIKIPEDIA;
-const log = (message: any) => logger.log({ level: "info", label: `${resource}|FETCH`, message });
+const log = (message: any, level?: winston.LogEntry['level'] ) => logger.log({ level: "info", label: `${resource}|FETCH`, message });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
@@ -79,7 +80,7 @@ export const fetchAllWikiPagesByPrefix = async ({ api_url, api_params }: Fetch) 
         await fetchPages(response.data.continue.psoffset);
       }
     } catch (error) {
-      console.error(`Error fetching pages: ${error}`);
+      log(`Error fetching pages: ${error}`, "error");
     }
   };
 
@@ -137,7 +138,7 @@ export const fetchWiki = async (ids: Ids) => {
 
     return tree;
   } catch (error) {
-    console.error(resource, "Fetch failed", error);
+    logger.error({ label: `${resource}|FETCH`, message: error });
 
     await prisma.fetchResult.create({
       data: {
@@ -417,7 +418,12 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
   for (const itemFetch of itemFetches) {
     const parent_id = itemFetch.case_id || itemFetch.description_id || itemFetch.fund_id;
     const code = itemIdToCodeMap[parent_id as string];
-    const itemCodes = Object.keys(tree[code]);
+    const childTree = tree[code];
+    if (!childTree) {
+      log(`Step 9*: Ignored ${code}`);
+      continue;
+    }
+    const itemCodes = Object.keys(childTree);
 
     if (itemCodes.length) {
       log(`Step 10*: Saving items of: ${code}`);
@@ -436,7 +442,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
         },
         itemCodes,
         itemFetch,
-        tree[code]
+        childTree
       );
     }
   }
