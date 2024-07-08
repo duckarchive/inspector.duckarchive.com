@@ -157,7 +157,6 @@ export const fetchArchiveFunds = async (archiveId: string) => {
     return {
       total: 0,
       added: 0,
-      removed: 0,
     };
   }
 };

@@ -144,7 +144,6 @@ export const fetchDescriptionCases = async (archiveId: string, fundId: string, d
     return {
       total: 0,
       added: 0,
-      removed: 0,
     };
   }
 };
