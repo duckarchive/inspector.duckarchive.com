@@ -1,6 +1,5 @@
-import { PrismaClient, ResourceType, Prisma, Fetch, Fund } from "@prisma/client";
+import { PrismaClient, ResourceType, Fetch } from "@prisma/client";
 import { parseCode, parseDBParams, parseTitle, scrapping, stringifyDBParams } from "../../helpers";
-import { HTMLElement } from "node-html-parser";
 import { fetchAllWikiPagesByPrefix } from ".";
 import { chunk, setWith } from "lodash";
 import { logger } from "../../logger";
