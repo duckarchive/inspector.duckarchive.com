@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, ResourceType } from "@prisma/client";
+import { Prisma, PrismaClient, ResourceType } from "@prisma/client";
 import { parseCode, parseTitle, scrapping, stringifyDBParams } from "../../../helpers";
 import { chunk } from "lodash";
 import { fetchFundDescriptions } from "./[fund_id]";
+import { fetchStrategy } from "../../strategy";
 
 const prisma = new PrismaClient();
 
@@ -29,134 +30,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 }
 
 export const fetchArchiveFunds = async (archiveId: string) => {
-  const fetch = await prisma.fetch.findFirst({
-    where: {
-      resource: {
-        type: ResourceType.ARCHIUM,
-      },
-      archive_id: archiveId,
-      fund_id: null,
-      description_id: null,
-      case_id: null,
+  const result = await fetchStrategy({
+    instance: Prisma.ModelName.Fund,
+    resource: ResourceType.ARCHIUM,
+    archive_id: archiveId,
+    fund_id: null,
+    description_id: null,
+    case_id: null,
+    selector: "table.fond-groups > tbody > tr",
+    responseKey: "View",
+    api_params: stringifyDBParams({
+      Limit: 9999,
+      Page: 1,
+    }),
+    processScrappedData: (data) =>
+      data
+        .map((el) => el.querySelectorAll("td"))
+        .map(([code, title]) => ({
+          code: parseCode(code.innerText),
+          title: parseTitle(title.innerText),
+          api_url: title.querySelector("a")?.getAttribute("href")?.trim(),
+        })),
+    getPrevItems: async () => {
+      return prisma.fund.findMany({
+        where: {
+          archive_id: archiveId,
+        },
+      });
+    },
+    saveNewItems: async (items) => {
+      return prisma.fund.createManyAndReturn({
+        data: items.map((f) => ({
+          code: f.code,
+          title: f.title,
+          archive_id: archiveId,
+        })),
+        skipDuplicates: true,
+      });
     },
   });
 
-  if (!fetch) {
-    throw new Error("Fetch not found");
-  }
-
-  try {
-    const parsed = await scrapping(fetch, {
-      selector: "table.fond-groups > tbody > tr",
-      responseKey: "View",
-    });
-    const BASE_URL = new URL(fetch.api_url).origin;
-    const funds = parsed
-      .map((el) => el.querySelectorAll("td"))
-      .map(([code, title]) => ({
-        resourceId: fetch.resource_id,
-        code: parseCode(code.innerText),
-        title: parseTitle(title.innerText),
-        matchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
-        fetchApiUrl: BASE_URL + title.querySelector("a")?.getAttribute("href")?.trim(),
-      }));
-
-    await prisma.fetchResult.create({
-      data: {
-        fetch_id: fetch.id,
-        count: funds.length,
-      },
-    });
-
-    const prevFunds = await prisma.fund.findMany({
-      where: {
-        archive_id: archiveId,
-      },
-    });
-
-    const newFunds = funds.filter((f) => !prevFunds.some((pf) => pf.code === f.code));
-
-    let newFundsCounter = 0;
-    const newFundsChunks = chunk(newFunds, 100);
-
-    for (const newFundsChunk of newFundsChunks) {
-      console.log(`ARCHIUM: fetchArchiveFunds: newFunds progress (${++newFundsCounter}/${newFundsChunks.length})`);
-      try {
-        const newFundsCreated = await prisma.fund.createManyAndReturn({
-          data: newFundsChunk.map((f) => ({
-            code: f.code,
-            title: f.title,
-            archive_id: archiveId,
-          })),
-          skipDuplicates: true,
-        });
-
-        await prisma.match.createMany({
-          data: newFundsCreated.map((newFundCreated) => {
-            const item = newFundsChunk.find((f) => f.code === newFundCreated.code);
-            return {
-              resource_id: item?.resourceId || "",
-              archive_id: archiveId,
-              fund_id: newFundCreated.id,
-              api_url: item?.matchApiUrl || "",
-            };
-          }),
-        });
-
-        await prisma.fetch.createMany({
-          data: newFundsCreated.map((newFundCreated) => {
-            const item = newFundsChunk.find((f) => f.code === newFundCreated.code);
-            return {
-              resource_id: item?.resourceId || "",
-              archive_id: archiveId,
-              fund_id: newFundCreated.id,
-              api_url: item?.fetchApiUrl || "",
-              api_params: stringifyDBParams({ Limit: 9999, Page: 1 }),
-            };
-          }),
-        });
-
-        const newFundsCreatedChunks = chunk(newFundsCreated, 10);
-
-        for (const newFundCreatedChunk of newFundsCreatedChunks) {
-          await Promise.all(
-            newFundCreatedChunk.map(async (newFundCreated) => fetchFundDescriptions(archiveId, newFundCreated.id))
-          );
-        }
-      } catch (error) {
-        console.error("ARCHIUM: fetchArchiveFunds: newFunds", error, { newFundsChunk });
-      }
-    }
-
-    if (fetch.last_count !== funds.length) {
-      await prisma.fetch.update({
-        where: {
-          id: fetch.id,
-        },
-        data: {
-          last_count: funds.length,
-        },
-      });
-    }
-
-    return {
-      total: funds.length,
-      added: newFunds.length,
-    };
-  } catch (error) {
-    console.error("ARCHIUM: fetchArchiveFunds", error, { archiveId });
-
-    await prisma.fetchResult.create({
-      data: {
-        fetch_id: fetch.id,
-        count: 0,
-        error: error?.toString().slice(0, 200) || "Unknown error",
-      },
-    });
-
-    return {
-      total: 0,
-      added: 0,
-    };
-  }
+  return {
+    total: 0,
+    added: 0
+  };
 };
