@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = [];
 
       for (const fetch of archiveFetches) {
-        logger.info(`Step 0*: Fetching ${fetch.id}`);
+        logger.info(`Step 0*: Fetching ${fetch.archive_id}`);
         const tree = await fetchWiki({
           archive_id: fetch.archive_id as string,
           fund_id: null,
