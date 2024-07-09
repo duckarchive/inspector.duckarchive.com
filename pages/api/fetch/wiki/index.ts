@@ -25,20 +25,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           case_id: null,
         },
       });
+      const result = [];
 
       for (const fetch of archiveFetches) {
-        logger.info(`Step 0*: Fetching ${fetch.archive_id}`);
-        logger.info({ label: `${resource}|FETCH`, message: `TESTStep 0*: Fetching ${fetch.archive_id}`, custom: { test: "test" } });
-        logger.error({ label: `${resource}|FETCH`, message: `TESTStep 0*: Fetching ${fetch.archive_id}`, custom: { test: "test" } });
-        await fetchWiki({
+        logger.info(`Step 0*: Fetching ${fetch.id}`);
+        const tree = await fetchWiki({
           archive_id: fetch.archive_id as string,
           fund_id: null,
           description_id: null,
         });
+
+        result.push(tree);
       }
-  
-      res.status(200);
+
+      res.status(200).json(result);
     } catch (error: Error | any) {
+      logger.error("Failed request", error);
       res.status(500).json({ error: error?.message });
     }
   } else {
@@ -81,7 +83,7 @@ export const fetchAllWikiPagesByPrefix = async ({ api_url, api_params }: Fetch) 
         await fetchPages(response.data.continue.psoffset);
       }
     } catch (error) {
-      logger.info(`Error fetching pages: ${error}`, "error");
+      logger.error("Failed fetching pages", error);
     }
   };
 
@@ -112,7 +114,6 @@ export const fetchWiki = async (ids: Ids) => {
   });
 
   if (!fetch) {
-    logger.info("Step 1: Failed: Fetch not found");
     throw new Error("Fetch not found");
   }
 
@@ -139,7 +140,7 @@ export const fetchWiki = async (ids: Ids) => {
 
     return tree;
   } catch (error) {
-    logger.error({ label: `${resource}|FETCH`, message: error });
+    logger.error("Failed to fetch", error);
 
     await prisma.fetchResult.create({
       data: {
@@ -154,9 +155,9 @@ export const fetchWiki = async (ids: Ids) => {
 };
 
 export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Record<string, any>) => {
-  const instanceType = ids.fund_id ? "Fund" : ids.description_id ? "Description" : "Case";
   const { q } = parseDBParams(fetch.api_params);
   const { archive_id, fund_id, description_id } = ids;
+  let instanceType = "";
 
   interface Item {
     id?: string;
@@ -167,6 +168,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
   let prevItems: Item[] = [];
   if (fund_id && description_id) {
     // cases
+    instanceType = "case";
     prevItems = await prisma.case.findMany({
       where: {
         description_id,
@@ -174,6 +176,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
     });
   } else if (fund_id) {
     // descriptions
+    instanceType = "description";
     prevItems = await prisma.description.findMany({
       where: {
         fund_id,
@@ -181,6 +184,7 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
     });
   } else if (archive_id) {
     // funds
+    instanceType = "fund";
     prevItems = await prisma.fund.findMany({
       where: {
         archive_id,
