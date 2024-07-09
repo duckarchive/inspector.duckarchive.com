@@ -77,7 +77,7 @@ export const fetchArchium = async (ids: Ids) => {
 
     return result;
   } catch (error) {
-    logger.error("Failed to fetch", { error });
+    logger.error("Failed to fetch", error);
 
     await prisma.fetchResult.create({
       data: {
@@ -216,36 +216,34 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
 
   // save new funds to the database
   let createdItems: Item[] = [];
-  if (fund_id && description_id) {
-    // cases
-    createdItems = await prisma.case.createManyAndReturn({
-      data: newItems.map(({ api_url, ...item }) => ({ ...item, description_id })),
-      skipDuplicates: true,
-    });
-  } else if (fund_id) {
-    // descriptions
-    createdItems = await prisma.description.createManyAndReturn({
-      data: newItems.map(({ api_url, ...item }) => ({ ...item, fund_id })),
-      skipDuplicates: true,
-    });
-  } else if (archive_id) {
-    // funds
-    createdItems = await prisma.fund.createManyAndReturn({
-      data: newItems.map(({ api_url, ...item }) => ({ ...item, archive_id })),
-      skipDuplicates: true,
-    });
+  if (newItems.length) {
+    logger.info(`Step 5: Saving new ${instanceType}s: ${newItems.length}`);
+    if (fund_id && description_id) {
+      // cases
+      createdItems = await prisma.case.createManyAndReturn({
+        data: newItems.map(({ api_url, ...item }) => ({ ...item, description_id })),
+        skipDuplicates: true,
+      });
+    } else if (fund_id) {
+      // descriptions
+      createdItems = await prisma.description.createManyAndReturn({
+        data: newItems.map(({ api_url, ...item }) => ({ ...item, fund_id })),
+        skipDuplicates: true,
+      });
+    } else if (archive_id) {
+      // funds
+      createdItems = await prisma.fund.createManyAndReturn({
+        data: newItems.map(({ api_url, ...item }) => ({ ...item, archive_id })),
+        skipDuplicates: true,
+      });
+    }
+  } else {
+    logger.info(`Step 5: No new ${instanceType}s to save`);
   }
 
   const items = [...existedItems, ...createdItems];
-  // const itemIdToCodeMap: Record<string, string> = {};
 
   logger.info(`Step 6: ${instanceType}s total: ${items.length}`);
-
-  // codes.forEach((code) => {
-  //   const parsed = parseCode(code);
-  //   const itemId = items.find((f) => f.code === parsed)?.id;
-  //   itemIdToCodeMap[itemId || ""] = code;
-  // });
 
   // list of matches that already exist in the database
   const prevMatches = await prisma.match.findMany({
@@ -260,21 +258,19 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
 
   if (fund_id && description_id) {
     // cases
-    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((prevMatch) => prevMatch.case_id === item.id));
+    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((pm) => pm.case_id === item.id));
   } else if (fund_id) {
     // descriptions
-    itemsWithExistedMatches = items.filter(
-      (item) => !prevMatches.some((prevMatch) => prevMatch.description_id === item.id)
-    );
+    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((pm) => pm.description_id === item.id));
   } else {
     // funds
-    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((prevMatch) => prevMatch.fund_id === item.id));
+    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((pm) => pm.fund_id === item.id));
   }
 
   // list of matches to create
   const matchesToCreate = itemsWithExistedMatches.map((item) => ({
     resource_id: fetch.resource_id,
-    api_url: item.api_url || '',
+    api_url: item.api_url || "",
     api_params: stringifyDBParams(DEFAULT_API_PARAMS),
     archive_id,
     // funds
@@ -294,11 +290,15 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
       }),
   }));
 
-  logger.info(`Step 7: Saving ${instanceType}s matches: ${matchesToCreate.length}`);
   // save matches for synced funds
-  await prisma.match.createMany({
-    data: matchesToCreate,
-  });
+  if (matchesToCreate.length) {
+    logger.info(`Step 7: Saving ${instanceType}s matches: ${matchesToCreate.length}`);
+    await prisma.match.createMany({
+      data: matchesToCreate,
+    });
+  } else {
+    logger.info(`Step 7: No ${instanceType}s matches to save`);
+  }
 
   const prevFetchesWhereConfig = { ...prevMatchesWhereConfig };
   // not create fetches for cases
@@ -316,22 +316,20 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
 
     if (fund_id && description_id) {
       // cases
-      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((prevMatch) => prevMatch.case_id === item.id));
+      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((pf) => pf.case_id === item.id));
     } else if (fund_id) {
       // descriptions
-      itemsWithExistedFetches = items.filter(
-        (item) => !prevFetches.some((prevMatch) => prevMatch.description_id === item.id)
-      );
+      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((pf) => pf.description_id === item.id));
     } else {
       // funds
-      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((prevMatch) => prevMatch.fund_id === item.id));
+      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((pf) => pf.fund_id === item.id));
     }
 
     // list of fetches to create
     const fetchesToCreate = itemsWithExistedFetches.map((item) => {
       return {
         resource_id: fetch.resource_id,
-        api_url: item.api_url || '',
+        api_url: item.api_url || "",
         api_params: stringifyDBParams(DEFAULT_API_PARAMS),
         archive_id,
         // funds
@@ -351,11 +349,15 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
       };
     });
 
-    logger.info(`Step 8: Saving ${instanceType}s fetches: ${fetchesToCreate.length}`);
     // save fetches for synced funds
-    await prisma.fetch.createMany({
-      data: fetchesToCreate,
-    });
+    if (fetchesToCreate.length) {
+      logger.info(`Step 8: Saving ${instanceType}s fetches: ${fetchesToCreate.length}`);
+      await prisma.fetch.createMany({
+        data: fetchesToCreate,
+      });
+    } else {
+      logger.info(`Step 8: No ${instanceType}s fetches to save`);
+    }
   }
 
   // list of updated fetches
@@ -386,7 +388,7 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
             case_id: null,
           }),
         },
-        itemFetch,
+        itemFetch
       );
     }
   }

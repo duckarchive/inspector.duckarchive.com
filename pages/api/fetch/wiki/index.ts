@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(200).json(result);
     } catch (error: Error | any) {
-      logger.error("Failed request", { error });
+      logger.error("Failed request", error);
       res.status(500).json({ error: error?.message });
     }
   } else {
@@ -83,7 +83,7 @@ export const fetchAllWikiPagesByPrefix = async ({ api_url, api_params }: Fetch) 
         await fetchPages(response.data.continue.psoffset);
       }
     } catch (error) {
-      logger.error("Failed fetching pages", { error });
+      logger.error("Failed fetching pages", error);
     }
   };
 
@@ -140,7 +140,7 @@ export const fetchWiki = async (ids: Ids) => {
 
     return tree;
   } catch (error) {
-    logger.error("Failed to fetch", { error });
+    logger.error("Failed to fetch", error);
 
     await prisma.fetchResult.create({
       data: {
