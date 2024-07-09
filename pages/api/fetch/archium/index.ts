@@ -2,50 +2,50 @@ import { PrismaClient, ResourceType, Fetch } from "@prisma/client";
 import { parseCode, parseTitle, scrapping, stringifyDBParams } from "../../helpers";
 import { initLog } from "../../logger";
 import { HTMLElement } from "node-html-parser";
-// import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 const resource = ResourceType.ARCHIUM;
 const logger = initLog("FETCH|ARCHIUM");
 
-// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-//   if (req.method === "GET") {
-//     try {
-//       const archiveFetches = await prisma.fetch.findMany({
-//         where: {
-//           resource: {
-//             type: resource,
-//           },
-//           archive_id: {
-//             not: null,
-//           },
-//           fund_id: null,
-//           description_id: null,
-//           case_id: null,
-//         },
-//       });
-//       const result = [];
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === "GET") {
+    try {
+      const archiveFetches = await prisma.fetch.findMany({
+        where: {
+          resource: {
+            type: resource,
+          },
+          archive_id: {
+            not: null,
+          },
+          fund_id: null,
+          description_id: null,
+          case_id: null,
+        },
+      });
+      const result = [];
 
-//       for (const fetch of archiveFetches) {
-//         logger.info(`Step 0*: Fetching ${fetch.id}`);
-//         const tree = await fetchWiki({
-//           archive_id: fetch.archive_id as string,
-//           fund_id: null,
-//           description_id: null,
-//         });
+      for (const fetch of archiveFetches) {
+        logger.info(`Step 0*: Fetching ${fetch.archive_id}`);
+        const tree = await fetchArchium({
+          archive_id: fetch.archive_id as string,
+          fund_id: null,
+          description_id: null,
+        });
 
-//         result.push(tree);
-//       }
+        result.push(tree);
+      }
 
-//       res.status(200).json(result);
-//     } catch (error: Error | any) {
-//       logger.error("Failed request", error);
-//       res.status(500).json({ error: error?.message });
-//     }
-//   } else {
-//     res.status(405);
-//   }
-// }
+      res.status(200).json(result);
+    } catch (error: Error | any) {
+      logger.error("Failed request", error);
+      res.status(500).json({ error: error?.message });
+    }
+  } else {
+    res.status(405);
+  }
+}
 
 interface Ids {
   archive_id: string;
