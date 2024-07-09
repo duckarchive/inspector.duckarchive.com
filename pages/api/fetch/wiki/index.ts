@@ -308,15 +308,13 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
 
   if (fund_id && description_id) {
     // cases
-    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((prevMatch) => prevMatch.case_id === item.id));
+    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((pm) => pm.case_id === item.id));
   } else if (fund_id) {
     // descriptions
-    itemsWithExistedMatches = items.filter(
-      (item) => !prevMatches.some((prevMatch) => prevMatch.description_id === item.id)
-    );
+    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((pm) => pm.description_id === item.id));
   } else {
     // funds
-    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((prevMatch) => prevMatch.fund_id === item.id));
+    itemsWithExistedMatches = items.filter((item) => !prevMatches.some((pm) => pm.fund_id === item.id));
   }
 
   // list of matches to create
@@ -366,15 +364,13 @@ export const saveWiki = async (ids: Ids, codes: string[], fetch: Fetch, tree: Re
 
     if (fund_id && description_id) {
       // cases
-      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((prevMatch) => prevMatch.case_id === item.id));
+      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((pf) => pf.case_id === item.id));
     } else if (fund_id) {
       // descriptions
-      itemsWithExistedFetches = items.filter(
-        (item) => !prevFetches.some((prevMatch) => prevMatch.description_id === item.id)
-      );
+      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((pf) => pf.description_id === item.id));
     } else {
       // funds
-      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((prevMatch) => prevMatch.fund_id === item.id));
+      itemsWithExistedFetches = items.filter((item) => !prevFetches.some((pf) => pf.fund_id === item.id));
     }
 
     // list of fetches to create
