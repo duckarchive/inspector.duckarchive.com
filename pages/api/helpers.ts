@@ -2,6 +2,9 @@ import { Fetch, Match } from "@prisma/client";
 import axios from "axios";
 import { chunk, get, unescape } from "lodash";
 import parse from "node-html-parser";
+import { initLog } from "./logger";
+
+const logger = initLog("HELPERS");
 
 export const parseDBParams = (str: string | null): Record<string, string> => {
   const result: Record<string, string> = {};
@@ -69,18 +72,17 @@ export const scrapping = async (
   const content = responseKey ? get(data, responseKey) : data;
 
   if (!content) {
-    console.log("No content in response", api_url, params);
+    logger.error("scrapping: No content in response", { api_url, params });
     return [];
   }
   const dom = parse(content);
   const result = [...dom.querySelectorAll(selector)];
   if (!result.length) {
-    console.log("No content found for", api_url, params, "with selector", selector);
+    logger.error("scrapping: No content after DOM parse", { api_url, params, selector });
   }
 
   return result;
 };
-
 
 export const promiseChunk = async <T, R>(
   array: T[],
@@ -89,4 +91,4 @@ export const promiseChunk = async <T, R>(
 ): Promise<R[]> => {
   const chunks = chunk(array, chunkSize);
   return Promise.all(chunks.map(async (chunk) => await callback(chunk)));
-}
+};
