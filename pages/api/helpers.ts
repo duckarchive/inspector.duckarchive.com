@@ -28,16 +28,20 @@ export const stringifyDBParams = (data: Record<string, string | number | boolean
 export const parseCode = (str: string): string => {
   // input: "Р-34" "П-159" "Р34" "П159" "8дод." "2т.1" "10."
   // output: "Р34" "П159" "34" "159" "8дод" "2т1" "10"
-  const pure = unescape(str).replace(/&#039;/g, "'");
-  if (/\d+\./.test(pure)) {
+  const pure = unescape(str).replace(/&#039;/g, "'").trim();
+  if (/\d+\.$/.test(pure)) {
     // temporary solution for "10." in https://e-resource.tsdavo.gov.ua/fonds/8/
     return pure.replace(/\./, "н");
   }
 
-  return pure
-    .replace(/[^А-ЯҐЄІЇ0-9]/gi, "")
-    .slice(0, 10)
-    .toUpperCase();
+  if (pure.length > 10) {
+      const [extracted] = pure.match(/([^А-ЯҐЄІЇ]{0,1}\d+)/gi) || [];
+      return extracted || pure.slice(0, 10);
+  } else {
+      return pure
+        .replace(/[^А-ЯҐЄІЇ0-9]/gi, "")
+        .toUpperCase();
+  }
 };
 
 export const parseTitle = (str: string): string => {
