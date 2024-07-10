@@ -183,7 +183,7 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
       const [codeEl, titleEl] = el.querySelectorAll("td");
       const title = parseTitle(titleEl.innerText);
       const code = parseCode(codeEl.innerText);
-      const href = `${BASE_URL}${titleEl.getAttribute("href")?.trim()}`;
+      const href = `${BASE_URL}${titleEl.querySelector("a")?.getAttribute("href")}`;
       return {
         code,
         title,
@@ -208,7 +208,12 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
   const scrappedItems = parsed.map(html2item);
 
   // list of synced items that already exist in the database
-  const existedItems = prevItems.filter((pi) => scrappedItems.some((si) => si.code === pi.code));
+  const existedItems = prevItems
+    .map((pi) => {
+      const siMatch = scrappedItems.find((si) => si.code === pi.code);
+      return siMatch && { ...pi, ...siMatch };
+    })
+    .filter(Boolean) as Item[];
 
   // list of new items codes
   const newItems = scrappedItems.filter((si) => !existedItems.some((ei) => ei.code === si.code));
@@ -242,7 +247,13 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
     logger.info(`Step 5: No new ${instanceType}s to save`);
   }
 
-  const items = [...existedItems, ...createdItems];
+  // adding fetch&match required fields to created items
+  const extendedCreatedItems = createdItems.map((ci) => {
+    const niMatch = newItems.find((ni) => ni.code === ci.code);
+    return { ...ci, ...niMatch };
+  });
+
+  const items = [...existedItems, ...extendedCreatedItems];
 
   logger.info(`Step 6: ${instanceType}s total: ${items.length}`);
 
@@ -332,28 +343,26 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
     }
 
     // list of fetches to create
-    const fetchesToCreate = itemsWithExistedFetches.map((item) => {
-      return {
-        resource_id: fetch.resource_id,
-        api_url: item.api_url || "",
-        api_params: stringifyDBParams(DEFAULT_API_PARAMS),
-        archive_id,
-        // funds
-        fund_id: item.id,
-        // descriptions
-        ...(fund_id && {
+    const fetchesToCreate = itemsWithExistedFetches.map((item) => ({
+      resource_id: fetch.resource_id,
+      api_url: item.api_url || "",
+      api_params: stringifyDBParams(DEFAULT_API_PARAMS),
+      archive_id,
+      // funds
+      fund_id: item.id,
+      // descriptions
+      ...(fund_id && {
+        fund_id: fund_id,
+        description_id: item.id,
+      }),
+      // cases
+      ...(fund_id &&
+        description_id && {
           fund_id: fund_id,
-          description_id: item.id,
+          description_id: description_id,
+          case_id: item.id,
         }),
-        // cases
-        ...(fund_id &&
-          description_id && {
-            fund_id: fund_id,
-            description_id: description_id,
-            case_id: item.id,
-          }),
-      };
-    });
+    }));
 
     // save fetches for synced funds
     if (fetchesToCreate.length) {
