@@ -34,7 +34,10 @@ export const parseCode = (str: string): string => {
     return pure.replace(/\./, "н");
   }
 
-  return pure.replace(/[^А-ЯҐЄІЇ0-9]/gi, "").toUpperCase();
+  return pure
+    .replace(/[^А-ЯҐЄІЇ0-9]/gi, "")
+    .slice(0, 10)
+    .toUpperCase();
 };
 
 export const parseTitle = (str: string): string => {
