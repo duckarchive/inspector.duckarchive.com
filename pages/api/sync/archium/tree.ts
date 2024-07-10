@@ -16,18 +16,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 export const recalculateDescriptionChildrenCount = async () => {
   console.log(`ARCHIUM: recalculateDescriptionChildrenCount`);
-  const resource = await prisma.resource.findFirst({
-    where: {
-      type: ResourceType.ARCHIUM,
-    },
-  });
-
   const descriptionsToUpdate: { description_id: string; count: number }[] = await prisma.$queryRaw`
     select description_id, count(*)::integer
-    from matches
+    from matches m
+    left join resources r
+    on m.resource_id = r.id
     where case_id is not null
     and children_count > 0
-    and resource_id = ${resource?.id}::uuid
+    and r.type::text = ${ResourceType.ARCHIUM}
     group by description_id;
   `;
 
@@ -38,7 +34,9 @@ export const recalculateDescriptionChildrenCount = async () => {
       descriptionsToUpdateChunk.map(async ({ description_id, count }) => {
         const match = await prisma.match.findFirst({
           where: {
-            resource_id: resource?.id,
+            resource: {
+              type: ResourceType.ARCHIUM,
+            },
             description_id,
             case_id: null,
           },
@@ -46,8 +44,10 @@ export const recalculateDescriptionChildrenCount = async () => {
         if (match && count !== match.children_count) {
           await prisma.match.update({
             where: {
+              resource: {
+                type: ResourceType.ARCHIUM,
+              },
               id: match.id,
-              resource_id: resource?.id,
             },
             data: {
               children_count: count,
@@ -61,19 +61,15 @@ export const recalculateDescriptionChildrenCount = async () => {
 
 export const recalculateFundChildrenCount = async () => {
   console.log(`ARCHIUM: recalculateFundChildrenCount`);
-  const resource = await prisma.resource.findFirst({
-    where: {
-      type: ResourceType.ARCHIUM,
-    },
-  });
-
   const fundsToUpdate: { fund_id: string; count: number }[] = await prisma.$queryRaw`
     select fund_id, count(*)::integer
-    from matches
+    from matches m
+    left join resources r
+    on m.resource_id = r.id
     where description_id is not null
     and case_id is null
     and children_count > 0
-    and resource_id = ${resource?.id}::uuid
+    and r.type::text = ${ResourceType.ARCHIUM}
     group by fund_id;
   `;
 
@@ -84,7 +80,9 @@ export const recalculateFundChildrenCount = async () => {
       fundsToUpdateChunk.map(async ({ fund_id, count }) => {
         const match = await prisma.match.findFirst({
           where: {
-            resource_id: resource?.id,
+            resource: {
+              type: ResourceType.ARCHIUM,
+            },
             fund_id,
             description_id: null,
             case_id: null,
@@ -93,8 +91,10 @@ export const recalculateFundChildrenCount = async () => {
         if (match && count !== match.children_count) {
           await prisma.match.update({
             where: {
+              resource: {
+                type: ResourceType.ARCHIUM,
+              },
               id: match.id,
-              resource_id: resource?.id,
             },
             data: {
               children_count: count,
@@ -108,20 +108,16 @@ export const recalculateFundChildrenCount = async () => {
 
 export const recalculateArchiveChildrenCount = async () => {
   console.log(`ARCHIUM: recalculateArchiveChildrenCount`);
-  const resource = await prisma.resource.findFirst({
-    where: {
-      type: ResourceType.ARCHIUM,
-    },
-  });
-
   const archivesToUpdate: { archive_id: string; count: number }[] = await prisma.$queryRaw`
     select archive_id, count(*)::integer
-    from matches
+    from matches m
+    left join resources r
+    on m.resource_id = r.id
     where fund_id is not null
     and description_id is null
     and case_id is null
     and children_count > 0
-    and resource_id = ${resource?.id}::uuid
+    and r.type::text = ${ResourceType.ARCHIUM}
     group by archive_id;
   `;
 
@@ -132,7 +128,9 @@ export const recalculateArchiveChildrenCount = async () => {
       archivesToUpdateChunk.map(async ({ archive_id, count }) => {
         const match = await prisma.match.findFirst({
           where: {
-            resource_id: resource?.id,
+            resource: {
+              type: ResourceType.ARCHIUM,
+            },
             archive_id,
             fund_id: null,
             description_id: null,
@@ -142,8 +140,10 @@ export const recalculateArchiveChildrenCount = async () => {
         if (match && count !== match.children_count) {
           await prisma.match.update({
             where: {
+              resource: {
+                type: ResourceType.ARCHIUM,
+              },
               id: match.id,
-              resource_id: resource?.id,
             },
             data: {
               children_count: count,
