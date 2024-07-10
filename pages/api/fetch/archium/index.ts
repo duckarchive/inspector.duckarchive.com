@@ -377,7 +377,7 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
 
   logger.info(`Step 9: ${instanceType}s fetches from db: ${itemFetches.length}`);
 
-  const itemFetchesChunks = chunk(itemFetches, 20);
+  const itemFetchesChunks = chunk(itemFetches, 25);
 
   for (const itemFetchesChunk of itemFetchesChunks) {
     await Promise.all(
