@@ -29,6 +29,7 @@ const syncAllMatches = async () => {
       resource: {
         type: ResourceType.ARCHIUM,
       },
+      archive_id: '89ef6011-a152-4296-a1e9-9bda6b0e49c5',
       case_id: {
         not: null,
       },

@@ -1,18 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Archive } from "@prisma/client";
 import {
-  Box,
   Button,
-  Container,
-  Heading,
-  HStack,
-  List,
   ListItem,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -21,23 +15,9 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import SearchPanel from "./components/SearchPanel";
-import { IoWarning } from "react-icons/io5";
 import { Link } from "@chakra-ui/next-js";
 
 export default function Home() {
-  const [archives, setArchives] = useState<Archive[]>([]);
-
-  // useEffect(() => {
-  //   const fetchArchives = async () => {
-  //     const response = await fetch("/api/archives");
-  //     const data = await response.json();
-  //     setArchives(data);
-  //   };
-
-  //   fetchArchives();
-  // }, []);
-
   return (
     <Modal isOpen={true} onClose={() => {}} size="xl">
       <ModalOverlay />
@@ -67,6 +47,9 @@ export default function Home() {
               </UnorderedList>
             </ListItem>
           </OrderedList>
+          <Text fontFamily="monospace">
+            
+          </Text>
         </ModalBody>
 
         <ModalFooter>
