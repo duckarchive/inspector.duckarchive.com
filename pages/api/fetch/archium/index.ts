@@ -3,6 +3,7 @@ import { parseCode, parseTitle, scrapping, stringifyDBParams } from "../../helpe
 import { initLog } from "../../logger";
 import { HTMLElement } from "node-html-parser";
 import { NextApiRequest, NextApiResponse } from "next";
+import { chunk } from "lodash";
 
 const prisma = new PrismaClient();
 const resource = ResourceType.ARCHIUM;
@@ -245,6 +246,11 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
 
   logger.info(`Step 6: ${instanceType}s total: ${items.length}`);
 
+  if (!items.length) {
+    logger.info(`Step 6: No ${instanceType}s to save matches and fetches`);
+    return 0;
+  }
+
   // list of matches that already exist in the database
   const prevMatches = await prisma.match.findMany({
     where: {
@@ -371,26 +377,32 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
 
   logger.info(`Step 9: ${instanceType}s fetches from db: ${itemFetches.length}`);
 
-  for (const itemFetch of itemFetches) {
-    const parent_id = itemFetch.description_id || itemFetch.fund_id;
-    if (parent_id) {
-      logger.info(`Step 10*: Saving items of: ${parent_id}`);
-      await saveArchium(
-        {
-          archive_id: archive_id,
-          // funds
-          fund_id: itemFetch.fund_id as string,
-          description_id: null,
-          // descriptions
-          ...(fund_id && {
-            fund_id: fund_id,
-            description_id: itemFetch.description_id as string,
-            case_id: null,
-          }),
-        },
-        itemFetch
-      );
-    }
+  const itemFetchesChunks = chunk(itemFetches, 20);
+
+  for (const itemFetchesChunk of itemFetchesChunks) {
+    await Promise.all(
+      itemFetchesChunk.map(async (itemFetch) => {
+        const parent_id = itemFetch.description_id || itemFetch.fund_id;
+        if (parent_id) {
+          logger.info(`Step 10*: Saving items of: ${parent_id}`);
+          await saveArchium(
+            {
+              archive_id: archive_id,
+              // funds
+              fund_id: itemFetch.fund_id as string,
+              description_id: null,
+              // descriptions
+              ...(fund_id && {
+                fund_id: fund_id,
+                description_id: itemFetch.description_id as string,
+                case_id: null,
+              }),
+            },
+            itemFetch
+          );
+        }
+      })
+    );
   }
 
   logger.info(`Step 11: Saving fetch result of ${fetch.id}`);
