@@ -3,6 +3,8 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, HStack, Text } from "@chakra-ui/react";
 import useCyrillicParams from "../hooks/useCyrillicParams";
 import { usePathname } from "next/navigation";
+import { Link } from "@chakra-ui/next-js";
+import { IoHome } from "react-icons/io5";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
@@ -15,7 +17,7 @@ const Header: React.FC = () => {
   const breadcrumbItems = [
     {
       href: "/archives",
-      text: "Архіви",
+      text: <IoHome />,
     },
     {
       href: `/archives/${archiveCode}`,
@@ -38,18 +40,25 @@ const Header: React.FC = () => {
   return (
     <HStack justifyContent="space-between" bg="white" p={2} borderRadius="lg" fontWeight="medium" fontSize="sm">
       <Breadcrumb>
-        {pathname === '/archives' && breadcrumbItems.map(({ href, text }, i) => (
-          <BreadcrumbItem key={href} isCurrentPage={i === breadcrumbItems.length - 1}>
-            <BreadcrumbLink href={href} color={i === breadcrumbItems.length - 1 ? undefined : "blue.500"}>
-              {text}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        ))}
+        {pathname?.startsWith("/archives") &&
+          breadcrumbItems.map(({ href, text }, i) => (
+            <BreadcrumbItem key={href} isCurrentPage={i === breadcrumbItems.length - 1}>
+              <BreadcrumbLink href={href} color={i === breadcrumbItems.length - 1 ? undefined : "blue.500"}>
+                {text}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          ))}
       </Breadcrumb>
       <HStack>
-        <Text>Навігація</Text>
-        <Text>Буде</Text>
-        <Text>Тут</Text>
+        <Link href="/archives" color="blue.500" fontWeight={pathname === "/archives" ? 900 : 500}>
+          Архіви
+        </Link>
+        <Link href="/resources" color="blue.500" fontWeight={pathname === "/resources" ? 900 : 500}>
+          Джерела
+        </Link>
+        <Link href="/" color="blue.500" fontWeight={pathname === "/" ? 900 : 500}>
+          Пошук
+        </Link>
       </HStack>
     </HStack>
   );
