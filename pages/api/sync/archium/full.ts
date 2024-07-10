@@ -84,7 +84,7 @@ const syncAllMatches = async () => {
       caseMatchesChunk.map(async (match) => {
         console.log(`ARCHIUM: syncAllMatches: scrapping (${++scrappingCounter}/${caseMatches.length})`);
         try {
-          const parsed = await scrapping(match, { selector: "#all-images > ul > li" });
+          const parsed = await scrapping(match, { selector: "#all-images > ul > li" }, true);
           const count = parsed.length;
 
           const data = [
