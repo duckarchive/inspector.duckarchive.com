@@ -2,7 +2,6 @@
 
 import {
   Button,
-  Icon,
   ListItem,
   Modal,
   ModalBody,
@@ -16,9 +15,8 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { NextPage } from "next";
 
-const HomePage: NextPage = () => {
+const WelcomeModal: React.FC = () => {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
 
   return (
@@ -78,4 +76,4 @@ const HomePage: NextPage = () => {
   );
 };
 
-export default HomePage;
+export default WelcomeModal;
