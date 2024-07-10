@@ -65,7 +65,8 @@ interface ScrappingOptions {
 
 export const scrapping = async (
   { api_headers, api_method, api_params, api_url }: Match | Fetch,
-  { selector, responseKey }: ScrappingOptions
+  { selector, responseKey }: ScrappingOptions,
+  isAllowedNoDomContent: boolean = false
 ) => {
   const headers = parseDBParams(api_headers);
   const params = parseDBParams(api_params);
@@ -84,7 +85,7 @@ export const scrapping = async (
   }
   const dom = parse(content);
   const result = [...dom.querySelectorAll(selector)];
-  if (!result.length) {
+  if (!result.length && !isAllowedNoDomContent) {
     logger.error("scrapping: No content after DOM parse", { api_url, params, selector });
   }
 

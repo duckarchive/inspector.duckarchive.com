@@ -204,7 +204,13 @@ export const saveArchium = async (ids: Ids, fetch: Fetch) => {
     };
   }
 
-  const parsed = await scrapping(fetch, scrappingParams);
+  const parsed = await scrapping(fetch, scrappingParams, true);
+
+  if (!parsed.length) {
+    logger.info(`Step 3: No ${instanceType}s scrapped. Skipping...`);
+    return 0;
+  }
+
   const scrappedItems = parsed.map(html2item);
 
   // list of synced items that already exist in the database
