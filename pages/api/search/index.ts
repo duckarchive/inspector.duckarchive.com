@@ -34,7 +34,6 @@ export type SearchResponse = Prisma.MatchGetPayload<{
   };
 }>[];
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
   if (req.method === "POST") {
     const { archiveCode, fundCode, descriptionCode, caseCode } = req.body;
@@ -46,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       caseCode,
     };
 
-    const matches =await prisma.match.findMany({
+    const matches = await prisma.match.findMany({
       where: {
         archive: {
           code: query.archiveCode,
@@ -57,9 +56,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         description: {
           code: query.descriptionCode,
         },
-        case: {
-          code: query.caseCode,
-        },
+        ...(query.caseCode
+          ? {
+              case: {
+                code: query.caseCode,
+              },
+            }
+          : {
+              case_id: {
+                not: null,
+              },
+            }),
       },
       select: {
         id: true,

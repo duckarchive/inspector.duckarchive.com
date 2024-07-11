@@ -75,8 +75,8 @@ const SearchPage: NextPage = () => {
             type: "link",
             flex: 4,
             cellRenderer: (row: { value: string; data: TableItem }) => (
-              <Link href={row.value} isExternal color="blue.600">
-                {row.value || "Без назви"}
+              <Link href={row.value || "#"} isExternal color="blue.600">
+                {row.value || "Щось пішло не так"}
               </Link>
             ),
           },
