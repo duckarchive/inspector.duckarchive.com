@@ -1,51 +1,35 @@
 import {
-  Card,
-  CardBody,
-  CardHeader,
   Grid,
-  GridItem,
-  Heading,
-  HStack,
   Input,
-  InputGroup,
-  InputLeftAddon,
-  List,
-  ListItem,
-  SimpleGrid,
   Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { ChangeEvent, useState } from "react";
-import { parseSearchQuery } from "../utils/parser";
+import { ChangeEvent } from "react";
 import ArchiveSelect from "./Fields/ArchiveSelect";
-import { Match } from "@prisma/client";
-import { Link } from "@chakra-ui/next-js";
+import { SearchRequest } from "../../pages/api/search";
 
-const SearchPanel: React.FC = () => {
-  const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Match[]>([]);
+interface SearchPanelProps {
+  values?: SearchRequest;
+  onChange: (values: SearchRequest) => void;
+}
 
-  const handleFormattedInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    const parsed = parseSearchQuery(value);
+const SearchPanel: React.FC<SearchPanelProps> = ({ values, onChange }) => {
+  const handleArchiveChange = (archiveCode?: string) => {
+    onChange({ ...values, archiveCode });
+  }
 
-    console.log(parsed);
-
-    const fetchArchives = async () => {
-      const response = await fetch("/api/search", {
-        method: "POST",
-        body: JSON.stringify(parsed),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setSearchResults(data);
-    };
-
-    fetchArchives();
+  const handleFundChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...values, fundCode: e.target.value || undefined });
   };
+
+  const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...values, descriptionCode: e.target.value || undefined });
+  }
+
+  const handleCaseChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...values, caseCode: e.target.value || undefined });
+  }
 
   return (
     <VStack minW="xs" maxW="md">
@@ -54,25 +38,25 @@ const SearchPanel: React.FC = () => {
           <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             архів
           </Text>
-          <ArchiveSelect />
+          <ArchiveSelect onChange={handleArchiveChange} />
         </Stack>
         <Stack gap={0}>
           <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             фонд
           </Text>
-          <Input />
+          <Input value={values?.fundCode} onChange={handleFundChange} />
         </Stack>
         <Stack gap={0}>
           <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             опис
           </Text>
-          <Input />
+          <Input value={values?.descriptionCode} onChange={handleDescriptionChange} />
         </Stack>
         <Stack gap={0}>
           <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             справа
           </Text>
-          <Input />
+          <Input value={values?.caseCode} onChange={handleCaseChange} />
         </Stack>
       </Grid>
       {/* <Input placeholder="ДАХмО Р6193-12-1" onChange={handleFormattedInputChange} size="lg" w="full" readOnly /> */}

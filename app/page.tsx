@@ -1,47 +1,52 @@
 "use client";
 
-import { HStack, Input } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import WelcomeModal from "./components/WelcomeModal";
 import SearchPanel from "./components/SearchPanel";
-import { ChangeEvent, useState } from "react";
-import { parseSearchQuery } from "./utils/parser";
-import { Match } from "@prisma/client";
+import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 import DuckTable from "./components/Table";
-import { SearchResponse } from "../pages/api/search";
+import { SearchRequest, SearchResponse } from "../pages/api/search";
 import { Link } from "@chakra-ui/next-js";
 
 type TableItem = SearchResponse[number];
 
 const SearchPage: NextPage = () => {
+  const [searchValues, setSearchValues] = useState<SearchRequest>();
   const [searchResults, setSearchResults] = useState<SearchResponse>([]);
-  const handleFormattedInputChange = debounce((event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    const parsed = parseSearchQuery(value);
 
-    console.log(parsed);
-
-    const fetchArchives = async () => {
+  const fetchSearch = useCallback(
+    debounce(async (reqBody?: SearchRequest) => {
+      if (!reqBody) {
+        return;
+      }
       const response = await fetch("/api/search", {
         method: "POST",
-        body: JSON.stringify(parsed),
+        body: JSON.stringify(reqBody),
         headers: {
           "Content-Type": "application/json",
         },
       });
       const data = await response.json();
       setSearchResults(data);
-    };
+    }, 500),
+    []
+  );
 
-    fetchArchives();
-  }, 500);
+  useEffect(() => {
+    fetchSearch(searchValues);
+  }, [searchValues, fetchSearch]);
+
+  const handleSearchChange = async (values: SearchRequest) => {
+    setSearchValues((prev) => ({ ...prev, ...values }));
+  };
 
   return (
     <>
       <WelcomeModal />
       <HStack justifyContent="center" alignItems="center" minH="32">
-        <SearchPanel />
+        <SearchPanel values={searchValues} onChange={handleSearchChange} />
       </HStack>
       <DuckTable<TableItem>
         columns={[
@@ -73,7 +78,6 @@ const SearchPage: NextPage = () => {
           {
             field: "url",
             headerName: "Посилання",
-            type: "link",
             flex: 4,
             cellRenderer: (row: { value: string; data: TableItem }) => (
               <Link href={row.value || "#"} isExternal color="blue.600">

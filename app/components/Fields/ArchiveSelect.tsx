@@ -1,9 +1,13 @@
-import { Select } from "chakra-react-select";
+import { Select, SingleValue } from "chakra-react-select";
 import { useEffect, useState } from "react";
 import { GetArchivesOptionsResponse } from "../../../pages/api/archives/options";
 import { Box, Text } from "@chakra-ui/react";
 
-const ArchiveSelect: React.FC = () => {
+interface ArchiveSelectProps {
+  onChange: (value?: string) => void;
+}
+
+const ArchiveSelect: React.FC<ArchiveSelectProps> = ({ onChange }) => {
   const [archives, setArchives] = useState<GetArchivesOptionsResponse>();
 
   useEffect(() => {
@@ -21,6 +25,7 @@ const ArchiveSelect: React.FC = () => {
     <Select<SelectItem>
       placeholder=""
       options={archives}
+      onChange={(v) => onChange(v ? v.value : undefined)}
       formatOptionLabel={(option, { context }) => {
         if (context === "value") return <Text>{option.value}</Text>;
         return (

@@ -3,6 +3,13 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+export type SearchRequest = Partial<{
+  archiveCode: string;
+  fundCode: string;
+  descriptionCode: string;
+  caseCode: string;
+}>;
+
 export type SearchResponse = Prisma.MatchGetPayload<{
   select: {
     id: true;
@@ -36,30 +43,23 @@ export type SearchResponse = Prisma.MatchGetPayload<{
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
   if (req.method === "POST") {
-    const { archiveCode, fundCode, descriptionCode, caseCode } = req.body;
-
-    const query = {
-      archiveCode,
-      fundCode,
-      descriptionCode,
-      caseCode,
-    };
+    const { archiveCode, fundCode, descriptionCode, caseCode }: SearchRequest = req.body;
 
     const matches = await prisma.match.findMany({
       where: {
         archive: {
-          code: query.archiveCode,
+          code: archiveCode,
         },
         fund: {
-          code: query.fundCode,
+          code: fundCode,
         },
         description: {
-          code: query.descriptionCode,
+          code: descriptionCode,
         },
-        ...(query.caseCode
+        ...(caseCode
           ? {
               case: {
-                code: query.caseCode,
+                code: caseCode,
               },
             }
           : {
