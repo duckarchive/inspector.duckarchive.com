@@ -26,7 +26,7 @@ const ArchivesPage: NextPage = () => {
     <>
       <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
         <Heading as="h1" size="lg" lineHeight={1}>
-          Оберіть архів
+          Навігація
         </Heading>
       </HStack>
       <DuckTable<TableItem>
