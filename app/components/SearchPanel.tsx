@@ -2,12 +2,17 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Grid,
+  GridItem,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputLeftAddon,
   List,
   ListItem,
+  SimpleGrid,
+  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -43,39 +48,34 @@ const SearchPanel: React.FC = () => {
   };
 
   return (
-    <VStack>
-      <Input placeholder="ДАХмО Р6193-12-1" w="full" onChange={handleFormattedInputChange} size="lg" />
-      {/* <Text as="label" w="full">
-        або вкажіть вручну
-        <InputGroup>
-          <InputLeftAddon fontSize="xs" p={2}>
-            Архів
-          </InputLeftAddon>
+    <VStack flexBasis="400px">
+      <SimpleGrid columns={4} spacing={2}>
+        <Stack gap={0}>
+          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+            архів
+          </Text>
           <ArchiveSelect />
-          <InputLeftAddon fontSize="xs" p={2}>
-            Ф.
-          </InputLeftAddon>
-          <Input mr={2} />
-          <InputLeftAddon fontSize="xs" p={2}>
-            Оп.
-          </InputLeftAddon>
-          <Input mr={2} />
-          <InputLeftAddon fontSize="xs" p={2}>
-            Спр.
-          </InputLeftAddon>
+        </Stack>
+        <Stack gap={0}>
+          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+            фонд
+          </Text>
           <Input />
-        </InputGroup>
-      </Text> */}
-
-      <List>
-        {searchResults.map((result) => (
-          <ListItem key={result.id}>
-            <Link href={result.url || ""} key={result.id}>
-              {result.url}
-            </Link>
-          </ListItem>
-        ))}
-      </List>
+        </Stack>
+        <Stack gap={0}>
+          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+            опис
+          </Text>
+          <Input />
+        </Stack>
+        <Stack gap={0}>
+          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+            справа
+          </Text>
+          <Input />
+        </Stack>
+      </SimpleGrid>
+      <Input placeholder="ДАХмО Р6193-12-1" onChange={handleFormattedInputChange} size="lg" w="full" readOnly />
     </VStack>
   );
 };

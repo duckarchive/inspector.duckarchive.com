@@ -41,7 +41,7 @@ const SearchPage: NextPage = () => {
     <>
       <WelcomeModal />
       <HStack justifyContent="center" alignItems="center" minH="32">
-        <Input placeholder="ДАХмО Р6193-12-1" onChange={handleFormattedInputChange} size="lg" w="unset" />
+        <SearchPanel />
       </HStack>
       <DuckTable<TableItem>
         columns={[
@@ -50,6 +50,7 @@ const SearchPage: NextPage = () => {
             comparator: undefined,
             headerName: "Архів",
             flex: 1,
+            resizable: true,
           },
           {
             field: "fund.code",

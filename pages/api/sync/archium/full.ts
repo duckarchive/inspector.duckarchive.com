@@ -38,12 +38,12 @@ const syncAllMatches = async () => {
     orderBy: {
       created_at: "desc",
     },
-    take: 5000,
+    take: 1000,
   });
 
   logger.info(`Step 1: Cases to sync: ${caseMatches.length}`);
 
-  const caseMatchesChunks = chunk(caseMatches, 25);
+  const caseMatchesChunks = chunk(caseMatches, 10);
 
   let scrappingCounter = 0;
   let chunkCounter = 0;
