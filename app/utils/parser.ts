@@ -1,4 +1,4 @@
-const ARCH_REGEXP = /^([а-яїєі]{3,8})\s+(.+)-(\d+)/i;
+const ARCH_REGEXP = /^([а-яїєі]{3,8})\s+(.+)-(\d+)-(\d+)/i;
 
 export const parseSearchQuery = (input: string) => {
   const trimmed = input.trim();

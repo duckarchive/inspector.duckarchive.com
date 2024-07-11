@@ -1,81 +1,90 @@
 "use client";
 
-import {
-  Button,
-  Icon,
-  ListItem,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  OrderedList,
-  Text,
-  UnorderedList,
-  useDisclosure,
-  VStack,
-} from "@chakra-ui/react";
+import { HStack, Input } from "@chakra-ui/react";
 import { NextPage } from "next";
+import WelcomeModal from "./components/WelcomeModal";
+import SearchPanel from "./components/SearchPanel";
+import { ChangeEvent, useState } from "react";
+import { parseSearchQuery } from "./utils/parser";
+import { Match } from "@prisma/client";
+import { debounce } from "lodash";
+import DuckTable from "./components/Table";
+import { SearchResponse } from "../pages/api/search";
+import { Link } from "@chakra-ui/next-js";
 
-const HomePage: NextPage = () => {
-  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+type TableItem = SearchResponse[number];
+
+const SearchPage: NextPage = () => {
+  const [searchResults, setSearchResults] = useState<SearchResponse>([]);
+  const handleFormattedInputChange = debounce((event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const parsed = parseSearchQuery(value);
+
+    console.log(parsed);
+
+    const fetchArchives = async () => {
+      const response = await fetch("/api/search", {
+        method: "POST",
+        body: JSON.stringify(parsed),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setSearchResults(data);
+    };
+
+    fetchArchives();
+  }, 500);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Перед початком роботи:</ModalHeader>
-        <ModalBody>
-          <OrderedList mb={4} lineHeight={1.2}>
-            <ListItem mb={4}>
-              Це &quot;Качиний Інспектор&quot; ― пошукова система архівних справ онлайн. Дозволяє одним запитом
-              перевіряти наявність справи на всіх відомих джерелах.
-            </ListItem>
-            <ListItem mb={4}>
-              Кінцева мета, це зробити пошук архівних справ максимально простим та зручним для кожного. Незалежно від
-              того, чи ви юрист, адвокат, генеалог чи просто цікавитеся історією.
-            </ListItem>
-            <ListItem mb={4}>
-              Проект повністю безкоштовний і розробка ведеться на волонтерських засадах однією людиною.
-            </ListItem>
-          </OrderedList>
-          <VStack bg="orange.100" p={2}>
-            <Text fontWeight="bold">⚠️ РОЗРОБКА ТРИВАЄ ⚠️</Text>
-            <UnorderedList>
-              <ListItem mb={4}>
-                <Text>можливі помилки та недоліки</Text>
-                <Text fontSize="xs" fontStyle="italic">
-                  Наразі немає потреби повідомляти про знайдені проблеми. Розробник і так все знає і бачить, просто не
-                  має часу на все одразу. Відгуки будуть збиратись окремо, коли етап активної розробки буде завершено.
-                </Text>
-              </ListItem>
-              <ListItem mb={4}>
-                <Text>функції будуть додаватись</Text>
-                <Text fontSize="xs" fontStyle="italic">
-                  Якщо вам бракує якоїсь функції, це не означає, що її не буде. Просто вона ще не додана. Трохи
-                  зачекайте.
-                </Text>
-              </ListItem>
-              <ListItem mb={4}>
-                <Text>джерела будуть додаватись</Text>
-                <Text fontSize="xs" fontStyle="italic">
-                  На сайті будуть не тільки Wiki та Archium. Додавання Family Search, babynyar.org, та сайтів самих
-                  архівів вже є в планах.
-                </Text>
-              </ListItem>
-            </UnorderedList>
-          </VStack>
-        </ModalBody>
-
-        <ModalFooter>
-          <Button onClick={onClose} colorScheme="teal">
-            Зрозуміло
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <>
+      <WelcomeModal />
+      <HStack justifyContent="center" alignItems="center" minH="32">
+        <Input placeholder="ДАХмО Р6193-12-1" onChange={handleFormattedInputChange} size="lg" w="unset" />
+      </HStack>
+      <DuckTable<TableItem>
+        columns={[
+          {
+            field: "archive.code",
+            comparator: undefined,
+            headerName: "Архів",
+            flex: 1,
+          },
+          {
+            field: "fund.code",
+            comparator: undefined,
+            headerName: "Фонд",
+            flex: 1,
+          },
+          {
+            field: "description.code",
+            comparator: undefined,
+            headerName: "Опис",
+            flex: 1,
+          },
+          {
+            field: "case.code",
+            comparator: undefined,
+            headerName: "Справа",
+            flex: 1,
+          },
+          {
+            field: "url",
+            headerName: "Посилання",
+            type: "link",
+            flex: 4,
+            cellRenderer: (row: { value: string; data: TableItem }) => (
+              <Link href={row.value} isExternal color="blue.600">
+                {row.value || "Без назви"}
+              </Link>
+            ),
+          },
+        ]}
+        rows={searchResults}
+      />
+    </>
   );
 };
 
-export default HomePage;
+export default SearchPage;

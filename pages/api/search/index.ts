@@ -1,10 +1,41 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, ResourceType } from "@prisma/client";
-import { chunk } from "lodash";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export type SearchResponse = Prisma.MatchGetPayload<{
+  select: {
+    id: true;
+    url: true;
+    archive: {
+      select: {
+        code: true;
+        title: true;
+      };
+    };
+    fund: {
+      select: {
+        code: true;
+        title: true;
+      };
+    };
+    description: {
+      select: {
+        code: true;
+        title: true;
+      };
+    };
+    case: {
+      select: {
+        code: true;
+        title: true;
+      };
+    };
+  };
+}>[];
+
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
   if (req.method === "POST") {
     const { archiveCode, fundCode, descriptionCode, caseCode } = req.body;
 
@@ -28,6 +59,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
         case: {
           code: query.caseCode,
+        },
+      },
+      select: {
+        id: true,
+        url: true,
+        archive: {
+          select: {
+            code: true,
+            title: true,
+          },
+        },
+        fund: {
+          select: {
+            code: true,
+            title: true,
+          },
+        },
+        description: {
+          select: {
+            code: true,
+            title: true,
+          },
+        },
+        case: {
+          select: {
+            code: true,
+            title: true,
+          },
         },
       },
       take: 10,
