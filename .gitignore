@@ -38,3 +38,6 @@ next-env.d.ts
 
 # sync logs
 *sync.log
+
+# Local Netlify folder
+.netlify
