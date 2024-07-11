@@ -48,34 +48,34 @@ const SearchPanel: React.FC = () => {
   };
 
   return (
-    <VStack flexBasis="400px">
-      <SimpleGrid columns={4} spacing={2}>
+    <VStack minW="xs" maxW="md">
+      <Grid templateColumns='2fr repeat(3, 1fr)' gap={2} position="relative">
         <Stack gap={0}>
-          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+          <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             архів
           </Text>
           <ArchiveSelect />
         </Stack>
         <Stack gap={0}>
-          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+          <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             фонд
           </Text>
           <Input />
         </Stack>
         <Stack gap={0}>
-          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+          <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             опис
           </Text>
           <Input />
         </Stack>
         <Stack gap={0}>
-          <Text as="label" textAlign="center" textTransform="uppercase" fontSize="xs" color="gray.500">
+          <Text as="label" textTransform="uppercase" fontSize="xs" color="gray.500">
             справа
           </Text>
           <Input />
         </Stack>
-      </SimpleGrid>
-      <Input placeholder="ДАХмО Р6193-12-1" onChange={handleFormattedInputChange} size="lg" w="full" readOnly />
+      </Grid>
+      {/* <Input placeholder="ДАХмО Р6193-12-1" onChange={handleFormattedInputChange} size="lg" w="full" readOnly /> */}
     </VStack>
   );
 };
