@@ -6,6 +6,7 @@ const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.ARCHIUM]: "yellow",
   [ResourceType.FAMILY_SEARCH]: "green",
   [ResourceType.WIKIPEDIA]: "cyan",
+  [ResourceType.BABYN_YAR]: "black",
 };
 
 interface ResourceBadgeProps {
