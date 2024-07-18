@@ -49,7 +49,7 @@ const CasePage: NextPage = () => {
           {
             field: "resource.type",
             headerName: "Ресурс",
-            flex: 1,
+            flex: 1.5,
             cellRenderer: (row: { value: TableItem["resource"]["type"]; data: TableItem }) => (
               <ResourceBadge resource={row.value} />
             ),

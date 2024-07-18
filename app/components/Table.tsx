@@ -125,20 +125,23 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
               resizable: false,
               comparator: (_, __, { data: a }: any, { data: b }: any) => sortByMatches(a, b),
               cellRenderer: (row: { data: any }) => (
-                <HStack h="calc(var(--ag-row-height) - 4px)" alignItems="center" justifyContent="flex-end" gap={1} flexWrap="wrap">
+                <HStack
+                  h="calc(var(--ag-row-height) - 4px)"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                  gap={1}
+                  flexWrap="wrap"
+                >
                   {row.data.matches?.map(
                     ({ updated_at, children_count, resource: { type } }: any) =>
                       children_count && (
-                        <Tooltip
-                          label={getSyncAtLabel(updated_at)}
-                          hasArrow
+                        <ResourceBadge
                           key={`${row.data.id}_match_${type}`}
-                          placement="left"
+                          resource={type}
+                          tooltip={getSyncAtLabel(updated_at)}
                         >
-                          <Text as="p" lineHeight={1}>
-                            <ResourceBadge resource={type}>{children_count}</ResourceBadge>
-                          </Text>
-                        </Tooltip>
+                          {children_count}
+                        </ResourceBadge>
                       )
                   )}
                 </HStack>
@@ -151,7 +154,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
           localeText={AG_GRID_LOCALE_UK}
           pagination
           enableCellTextSelection
-          paginationPageSize={20}
+          paginationPageSize={50}
           alwaysShowVerticalScroll
           defaultColDef={{
             resizable: true,
