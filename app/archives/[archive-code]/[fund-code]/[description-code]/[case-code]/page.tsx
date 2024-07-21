@@ -47,12 +47,10 @@ const CasePage: NextPage = () => {
       <DuckTable<TableItem>
         columns={[
           {
-            field: "resource.type",
+            field: "resource_id",
             headerName: "Ресурс",
             flex: 1.5,
-            cellRenderer: (row: { value: TableItem["resource"]["type"]; data: TableItem }) => (
-              <ResourceBadge resource={row.value} />
-            ),
+            cellRenderer: (row: { value: TableItem["resource_id"] }) => <ResourceBadge resourceId={row.value} />,
           },
           {
             field: "url",

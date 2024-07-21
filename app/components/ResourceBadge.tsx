@@ -1,7 +1,8 @@
 import { Badge, Box, Text, Tooltip } from "@chakra-ui/react";
-import { ResourceType } from "@prisma/client";
+import { Resource, ResourceType } from "@prisma/client";
 import { startCase } from "lodash";
 import { PropsWithChildren } from "react";
+import { useResources } from "../contexts/Resources";
 
 const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.ARCHIUM]: "yellow",
@@ -11,11 +12,13 @@ const TYPE_COLORS: Record<ResourceType, string> = {
 };
 
 interface ResourceBadgeProps {
-  resource: ResourceType | null;
+  resourceId: Resource["id"];
   tooltip?: string;
 }
 
-const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({ resource, children, tooltip }) => {
+const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({ resourceId, children, tooltip }) => {
+  const resources = useResources();
+  const resource = resources[resourceId]?.type;
   const prettyResource = startCase(resource || "");
   const content = children !== undefined ? children : prettyResource;
   const inner = (

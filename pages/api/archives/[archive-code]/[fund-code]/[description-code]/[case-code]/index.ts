@@ -5,15 +5,7 @@ const prisma = new PrismaClient();
 
 export type GetCaseResponse = Prisma.CaseGetPayload<{
   include: {
-    matches: {
-      include: {
-        resource: {
-          select: {
-            type: true;
-          };
-        };
-      };
-    };
+    matches: true;
   };
 }>;
 
@@ -38,15 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         code: caseCode,
       },
       include: {
-        matches: {
-          include: {
-            resource: {
-              select: {
-                type: true,
-              },
-            },
-          },
-        },
+        matches: true,
       },
     });
     if (caseItem) {

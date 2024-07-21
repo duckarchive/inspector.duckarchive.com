@@ -133,11 +133,11 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
                   flexWrap="wrap"
                 >
                   {row.data.matches?.map(
-                    ({ updated_at, children_count, resource: { type } }: any) =>
+                    ({ updated_at, children_count, resource_id }: any) =>
                       children_count && (
                         <ResourceBadge
-                          key={`${row.data.id}_match_${type}`}
-                          resource={type}
+                          key={`${row.data.id}_match_${resource_id}`}
+                          resourceId={resource_id}
                           tooltip={getSyncAtLabel(updated_at)}
                         >
                           {children_count}
