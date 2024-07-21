@@ -1,26 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Container, ListItem, Text, UnorderedList } from "@chakra-ui/react";
-import { Resource } from "@prisma/client";
+import { useResources } from "../contexts/Resources";
 
 const AddMatch: React.FC = () => {
-  const [resources, setResources] = useState<Resource[]>([]);
-
-  useEffect(() => {
-    const fetchResources = async () => {
-      const response = await fetch("/api/resources");
-      const data = await response.json();
-      setResources(data);
-    };
-
-    fetchResources();
-  }, []);
+  const resources = useResources();
 
   return (
     <Container>
       <UnorderedList spacing={3}>
-        {resources.map((resource) => (
+        {Object.values(resources).map((resource) => (
           <ListItem key={resource.id}>
             <Text>{resource.title}</Text>
           </ListItem>
