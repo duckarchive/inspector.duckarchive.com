@@ -1,8 +1,9 @@
 import { Resource } from "@prisma/client";
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import { GetAllResourcesResponse } from "../../pages/api/resources";
 
 type ResourcesState = {
-  resources: Record<Resource["id"], Resource>;
+  resources: Record<Resource["id"], GetAllResourcesResponse[number]>;
 };
 
 const ResourcesContext = createContext<ResourcesState | undefined>(undefined);
