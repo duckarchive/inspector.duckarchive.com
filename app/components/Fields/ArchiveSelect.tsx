@@ -19,8 +19,6 @@ const ArchiveSelect: React.FC<ArchiveSelectProps> = ({ onChange }) => {
     fetchArchiveOptions();
   }, []);
 
-  console.log(archives);
-
   return (
     <Select<SelectItem>
       placeholder=""

@@ -16,7 +16,7 @@ const Loader: React.FC = () => {
   return (
     <Center h="full" flexGrow={1} flexDirection="column">
       <Spinner size="xl" />
-      <Text mt={2} textAlign="center">
+      <Text mt={2} textAlign="center" suppressHydrationWarning>
         {funnyMessages[Math.floor(Math.random() * funnyMessages.length)]}
       </Text>
     </Center>
