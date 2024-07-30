@@ -20,7 +20,7 @@ const WelcomeModal: React.FC = () => {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+    <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "xl"}}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Перед початком роботи:</ModalHeader>
@@ -58,8 +58,7 @@ const WelcomeModal: React.FC = () => {
               <ListItem mb={4}>
                 <Text>джерела будуть додаватись</Text>
                 <Text fontSize="xs" fontStyle="italic">
-                  На сайті будуть не тільки Wiki та Archium. Додавання Family Search, babynyar.org, та сайтів самих
-                  архівів вже є в планах.
+                  На сайті поступово будуть з&apos;являтись нові джерела. Наразі доступні: Archium, Вікіджерела, Family Search, babynyar.org.
                 </Text>
               </ListItem>
             </UnorderedList>
