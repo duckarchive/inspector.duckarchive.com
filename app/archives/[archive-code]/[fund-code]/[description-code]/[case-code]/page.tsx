@@ -1,6 +1,5 @@
 "use client";
 
-import { HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { GetCaseResponse } from "../../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]";
@@ -11,6 +10,7 @@ import useIsMobile from "../../../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../../../hooks/useCyrillicParams";
 import ResourceBadge from "../../../../../components/ResourceBadge";
 import PagePanel from "../../../../../components/PagePanel";
+import Loader from "../../../../../components/Loader";
 
 type TableItem = GetCaseResponse["matches"][number];
 
@@ -23,22 +23,23 @@ const CasePage: NextPage = () => {
   const code = params["case-code"];
 
   const [caseItem, setCaseItem] = useState<GetCaseResponse>();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const fetchCase = async () => {
       const response = await fetch(`/api/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`);
       const data = await response.json();
       setCaseItem(data);
+      setIsLoaded(true);
     };
     fetchCase();
   }, [archiveCode, fundCode, descriptionCode, code]);
 
-  return (
+  return !isLoaded ? (
+    <Loader />
+  ) : (
     <>
-      <PagePanel
-        titleLabel={`Справа ${code}`}
-        title={caseItem?.title || ""}
-      />
+      <PagePanel titleLabel={`Справа ${code}`} title={caseItem?.title || ""} />
       <DuckTable<TableItem>
         columns={[
           {

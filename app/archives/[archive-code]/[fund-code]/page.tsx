@@ -1,6 +1,5 @@
 "use client";
 
-import { HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { sortByCode } from "../../../utils/table";
 import useIsMobile from "../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../hooks/useCyrillicParams";
 import PagePanel from "../../../components/PagePanel";
+import Loader from "../../../components/Loader";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
@@ -20,17 +20,21 @@ const FundPage: NextPage = () => {
   const code = params["fund-code"];
 
   const [fund, setFund] = useState<GetFundResponse>();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const fetchFund = async () => {
       const response = await fetch(`/api/archives/${archiveCode}/${code}`);
       const data = await response.json();
       setFund(data);
+      setIsLoaded(true);
     };
     fetchFund();
   }, [code, archiveCode]);
 
-  return (
+  return !isLoaded ? (
+    <Loader />
+  ) : (
     <>
       <PagePanel
         titleLabel={`Фонд ${code}`}

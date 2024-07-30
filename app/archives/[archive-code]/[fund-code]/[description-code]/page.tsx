@@ -1,6 +1,5 @@
 "use client";
 
-import { HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archi
 import useIsMobile from "../../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../../hooks/useCyrillicParams";
 import PagePanel from "../../../../components/PagePanel";
+import Loader from "../../../../components/Loader";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
@@ -21,17 +21,21 @@ const DescriptionPage: NextPage = () => {
   const code = params["description-code"];
 
   const [description, setDescription] = useState<GetDescriptionResponse>();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const fetchDescription = async () => {
       const response = await fetch(`/api/archives/${archiveCode}/${fundCode}/${code}`);
       const data = await response.json();
       setDescription(data);
+      setIsLoaded(true);
     };
     fetchDescription();
   }, [archiveCode, fundCode, code]);
 
-  return (
+  return !isLoaded ? (
+    <Loader />
+  ) : (
     <>
       <PagePanel
         titleLabel={`Опис ${code}`}

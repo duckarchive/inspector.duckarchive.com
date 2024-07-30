@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, HStack, Heading, Image, VStack } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { sortByCode } from "../../utils/table";
 import useIsMobile from "../../hooks/useIsMobile";
 import useCyrillicParams from "../../hooks/useCyrillicParams";
 import PagePanel from "../../components/PagePanel";
+import Loader from "../../components/Loader";
 
 type TableItem = GetArchiveResponse["funds"][number];
 
@@ -19,17 +19,21 @@ const ArchivePage: NextPage = () => {
   const code = params["archive-code"];
 
   const [archive, setArchive] = useState<GetArchiveResponse>();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const fetchArchive = async () => {
       const response = await fetch(`/api/archives/${code}`);
       const data = await response.json();
       setArchive(data);
+      setIsLoaded(true);
     };
     fetchArchive();
   }, [code]);
 
-  return (
+  return !isLoaded ? (
+    <Loader />
+  ) : (
     <>
       <PagePanel
         titleLabel="Архів"

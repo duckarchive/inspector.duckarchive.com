@@ -1,29 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HStack, Heading } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
 import DuckTable from "../components/Table";
 import PagePanel from "../components/PagePanel";
+import Loader from "../components/Loader";
 
 type TableItem = GetAllArchivesResponse[number];
 
 const ArchivesPage: NextPage = () => {
   const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const fetchArchives = async () => {
       const response = await fetch("/api/archives");
       const data = await response.json();
       setArchives(data);
+      setIsLoaded(true);
     };
 
     fetchArchives();
   }, []);
 
-  return (
+  return !isLoaded ? (
+    <Loader />
+  ) : (
     <>
       <PagePanel
         title="Архіви"

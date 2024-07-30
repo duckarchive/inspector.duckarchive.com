@@ -6,13 +6,17 @@ import { GetAllResourcesResponse } from "../../pages/api/resources";
 import DuckTable from "../components/Table";
 import ResourceBadge from "../components/ResourceBadge";
 import PagePanel from "../components/PagePanel";
+import Loader from "../components/Loader";
+import { isEmpty } from "lodash";
 
 type TableItem = GetAllResourcesResponse[number];
 
 const ResourcesPage: React.FC = () => {
   const resources = useResources();
 
-  return (
+  return isEmpty(resources) ? (
+    <Loader />
+  ) : (
     <>
       <PagePanel
         title="Джерела"
