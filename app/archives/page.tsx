@@ -7,12 +7,14 @@ import { GetAllArchivesResponse } from "../../pages/api/archives";
 import DuckTable from "../components/Table";
 import PagePanel from "../components/PagePanel";
 import Loader from "../components/Loader";
+import useIsMobile from "../hooks/useIsMobile";
 
 type TableItem = GetAllArchivesResponse[number];
 
 const ArchivesPage: NextPage = () => {
   const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchArchives = async () => {
@@ -53,6 +55,7 @@ const ArchivesPage: NextPage = () => {
           {
             colId: "sync",
             headerName: "Фонди",
+            hide: isMobile,
           },
         ]}
         rows={archives}

@@ -21,7 +21,7 @@ export default function RootLayout({
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <body className={inter.className} style={{ backgroundColor: "lightgray" }}>
         <Providers>
-          <Container maxW="container.xl" py={2}>
+          <Container maxW="container.xl" p={{ base: 0, md: 2 }}>
             <Header />
             <VStack
               as="main"

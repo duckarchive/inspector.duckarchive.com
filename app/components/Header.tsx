@@ -1,10 +1,35 @@
 "use client";
 
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, HStack, Text } from "@chakra-ui/react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Button,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Show,
+  Text,
+} from "@chakra-ui/react";
 import useCyrillicParams from "../hooks/useCyrillicParams";
 import { usePathname } from "next/navigation";
 import { Link } from "@chakra-ui/next-js";
-import { IoHome } from "react-icons/io5";
+import { IoChevronDown, IoHome } from "react-icons/io5";
+
+const NAV = [
+  { href: "/archives", text: "Архіви" },
+  { href: "/resources", text: "Джерела" },
+  { href: "/", text: "Пошук" },
+];
+
+const isActiveLink = (pathname: string | null, href: string) => {
+  if (href === "/") {
+    return href === pathname;
+  }
+  return pathname?.startsWith(href);
+}
 
 const Header: React.FC = () => {
   const pathname = usePathname();
@@ -49,17 +74,27 @@ const Header: React.FC = () => {
             </BreadcrumbItem>
           ))}
       </Breadcrumb>
-      <HStack>
-        <Link href="/archives" color="blue.500" fontWeight={pathname === "/archives" ? 700 : 500}>
-          Архіви
-        </Link>
-        <Link href="/resources" color="blue.500" fontWeight={pathname === "/resources" ? 700 : 500}>
-          Джерела
-        </Link>
-        <Link href="/" color="blue.500" fontWeight={pathname === "/" ? 700 : 500}>
-          Пошук
-        </Link>
+      <HStack hideBelow="md">
+        {NAV.map(({ href, text }) => (
+          <Link key={href} href={href} color="blue.500" fontWeight={isActiveLink(pathname, href) ? 700 : 500}>
+            {text}
+          </Link>
+        ))}
       </HStack>
+      <Show below="md">
+        <Menu>
+          <MenuButton as={Button} variant="transparent" size="sm" rightIcon={<IoChevronDown />}>
+            {NAV.find(({ href }) => isActiveLink(pathname, href))?.text || "Навігація"}
+          </MenuButton>
+          <MenuList>
+            {NAV.map(({ href, text }) => (
+              <MenuItem key={href} as={Link} href={href}>
+                {text}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </Show>
     </HStack>
   );
 };

@@ -7,9 +7,9 @@ interface PagePanelProps {
   image?: string | null;
 }
 
-const PagePanel: React.FC<PagePanelProps> = ({ title, description, image, titleLabel }) => {
+const PagePanel: React.FC<PagePanelProps> = ({ title, description, titleLabel }) => {
   return (
-    <HStack justifyContent="space-between" alignItems="flex-start" minH="16">
+    <HStack justifyContent="space-between" alignItems="flex-start" minH="20">
       <HStack alignItems="flex-start">
         <Box>
           {titleLabel && (
