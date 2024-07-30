@@ -9,9 +9,8 @@ interface PagePanelProps {
 
 const PagePanel: React.FC<PagePanelProps> = ({ title, description, image, titleLabel }) => {
   return (
-    <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
+    <HStack justifyContent="space-between" alignItems="flex-start" minH="16">
       <HStack alignItems="flex-start">
-        {image && <Avatar borderRadius="md" src={image} name={title || "Архів"} size="xl" />}
         <Box>
           {titleLabel && (
             <Text color="gray.500" flexShrink={0}>

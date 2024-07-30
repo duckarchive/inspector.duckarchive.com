@@ -19,8 +19,8 @@ const ResourcesPage: React.FC = () => {
   ) : (
     <>
       <PagePanel
-        title="Джерела"
-        description="Список джерел, які містяться в базі даних"
+        titleLabel="Джерела"
+        title="Список джерел + загальна кількість справ онлайн"
       />
       <DuckTable<TableItem>
         columns={[

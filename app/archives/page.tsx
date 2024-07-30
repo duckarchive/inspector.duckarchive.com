@@ -30,8 +30,8 @@ const ArchivesPage: NextPage = () => {
   ) : (
     <>
       <PagePanel
-        title="Архіви"
-        description="Список архівів, які містяться в базі даних"
+        titleLabel="Архіви"
+        title="Список архівів, які містяться в базі даних"
       />
       <DuckTable<TableItem>
         columns={[

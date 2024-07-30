@@ -73,7 +73,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
 
   return (
     <>
-      <HStack alignItems="center">
+      <HStack alignItems="center" h={6}>
         {enabledFilters?.[QuickFilter.PRE_USSR_FUNDS] && (
           <Button
             onClick={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
