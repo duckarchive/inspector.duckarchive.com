@@ -53,6 +53,12 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
   const lastColumn = columns[columns.length - 1];
 
   useEffect(() => {
+    setTimeout(() => {
+      gridRef.current?.api?.sizeColumnsToFit()
+    }, 500);
+  }, [columns]);
+
+  useEffect(() => {
     if (!gridRef.current?.api) {
       return;
     }
@@ -162,9 +168,6 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
             filterParams: {
               buttons: ["clear"],
             } as ITextFilterParams,
-          }}
-          autoSizeStrategy={{
-            type: "fitGridWidth",
           }}
         />
       </Box>
