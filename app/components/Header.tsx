@@ -50,13 +50,13 @@ const Header: React.FC = () => {
           ))}
       </Breadcrumb>
       <HStack>
-        <Link href="/archives" color="blue.500" fontWeight={pathname === "/archives" ? 900 : 500}>
+        <Link href="/archives" color="blue.500" fontWeight={pathname === "/archives" ? 700 : 500}>
           Архіви
         </Link>
-        <Link href="/resources" color="blue.500" fontWeight={pathname === "/resources" ? 900 : 500}>
+        <Link href="/resources" color="blue.500" fontWeight={pathname === "/resources" ? 700 : 500}>
           Джерела
         </Link>
-        <Link href="/" color="blue.500" fontWeight={pathname === "/" ? 900 : 500}>
+        <Link href="/" color="blue.500" fontWeight={pathname === "/" ? 700 : 500}>
           Пошук
         </Link>
       </HStack>

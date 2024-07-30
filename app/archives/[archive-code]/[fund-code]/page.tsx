@@ -9,6 +9,7 @@ import { GetFundResponse } from "../../../../pages/api/archives/[archive-code]/[
 import { sortByCode } from "../../../utils/table";
 import useIsMobile from "../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../hooks/useCyrillicParams";
+import PagePanel from "../../../components/PagePanel";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
@@ -31,16 +32,10 @@ const FundPage: NextPage = () => {
 
   return (
     <>
-      <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <HStack alignItems="center">
-          <Text fontSize="xl" color="gray.500">
-            Фонд:
-          </Text>
-          <Heading as="h1" size="lg" lineHeight={1}>
-            {fund?.title}
-          </Heading>
-        </HStack>
-      </HStack>
+      <PagePanel
+        titleLabel={`Фонд ${code}`}
+        title={fund?.title || ""}
+      />
       <DuckTable<TableItem>
         columns={[
           {

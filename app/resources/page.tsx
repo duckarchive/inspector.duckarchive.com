@@ -5,14 +5,19 @@ import { useResources } from "../contexts/Resources";
 import { GetAllResourcesResponse } from "../../pages/api/resources";
 import DuckTable from "../components/Table";
 import ResourceBadge from "../components/ResourceBadge";
+import PagePanel from "../components/PagePanel";
 
 type TableItem = GetAllResourcesResponse[number];
 
-const AddMatch: React.FC = () => {
+const ResourcesPage: React.FC = () => {
   const resources = useResources();
 
   return (
     <>
+      <PagePanel
+        title="Джерела"
+        description="Список джерел, які містяться в базі даних"
+      />
       <DuckTable<TableItem>
         columns={[
           {
@@ -42,4 +47,4 @@ const AddMatch: React.FC = () => {
   );
 };
 
-export default AddMatch;
+export default ResourcesPage;

@@ -9,6 +9,7 @@ import DuckTable from "../../../../components/Table";
 import { GetDescriptionResponse } from "../../../../../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
 import useIsMobile from "../../../../hooks/useIsMobile";
 import useCyrillicParams from "../../../../hooks/useCyrillicParams";
+import PagePanel from "../../../../components/PagePanel";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
@@ -32,16 +33,10 @@ const DescriptionPage: NextPage = () => {
 
   return (
     <>
-      <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <HStack alignItems="center">
-          <Text fontSize="xl" color="gray.500">
-            Опис:
-          </Text>
-          <Heading as="h1" size="lg" lineHeight={1}>
-            {description?.title}
-          </Heading>
-        </HStack>
-      </HStack>
+      <PagePanel
+        titleLabel={`Опис ${code}`}
+        title={description?.title || ""}
+      />
       <DuckTable<TableItem>
         columns={[
           {

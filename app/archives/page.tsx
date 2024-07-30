@@ -6,6 +6,7 @@ import { NextPage } from "next";
 import { Link } from "@chakra-ui/next-js";
 import { GetAllArchivesResponse } from "../../pages/api/archives";
 import DuckTable from "../components/Table";
+import PagePanel from "../components/PagePanel";
 
 type TableItem = GetAllArchivesResponse[number];
 
@@ -24,11 +25,10 @@ const ArchivesPage: NextPage = () => {
 
   return (
     <>
-      <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <Heading as="h1" size="lg" lineHeight={1}>
-          Навігація
-        </Heading>
-      </HStack>
+      <PagePanel
+        title="Архіви"
+        description="Список архівів, які містяться в базі даних"
+      />
       <DuckTable<TableItem>
         columns={[
           {

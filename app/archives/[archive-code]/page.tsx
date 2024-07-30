@@ -9,6 +9,7 @@ import DuckTable from "../../components/Table";
 import { sortByCode } from "../../utils/table";
 import useIsMobile from "../../hooks/useIsMobile";
 import useCyrillicParams from "../../hooks/useCyrillicParams";
+import PagePanel from "../../components/PagePanel";
 
 type TableItem = GetArchiveResponse["funds"][number];
 
@@ -30,19 +31,11 @@ const ArchivePage: NextPage = () => {
 
   return (
     <>
-      <HStack justifyContent="space-between" alignItems="flex-start" minH="32">
-        <HStack alignItems="center">
-          <Avatar
-            rounded="full"
-            src={`/${archive?.logo_url}`}
-            name={archive?.title || "Архів"}
-            size="xl"
-          />
-          <Heading as="h1" size="lg" lineHeight={1}>
-            {archive?.title}
-          </Heading>
-        </HStack>
-      </HStack>
+      <PagePanel
+        titleLabel="Архів"
+        title={archive?.title || "Архів"}
+        image={`/${archive?.logo_url}`}
+      />
       <DuckTable<TableItem>
         enabledFilters={{
           partFunds: true,
