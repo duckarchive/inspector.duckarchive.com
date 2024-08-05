@@ -3,7 +3,7 @@ import { ColDef, ITextFilterParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { useEffect, useRef, useState } from "react";
-import { Box, Button, HStack, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Button, HStack } from "@chakra-ui/react";
 import { AG_GRID_LOCALE_UK } from "../utils/i18n";
 import { getSyncAtLabel, sortByMatches, sortCode } from "../utils/table";
 import ResourceBadge from "./ResourceBadge";
@@ -112,6 +112,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters }: 
         )}
       </HStack>
       <Box as="div" className="ag-theme-alpine" w="100%" h={300} flexGrow={1}>
+        {/* @ts-ignore */}
         <AgGridReact
           ref={gridRef}
           rowData={rows}
