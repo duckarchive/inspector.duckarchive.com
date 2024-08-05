@@ -64,14 +64,7 @@ const CasePage: NextPage = () => {
             flex: 2,
             hide: isMobile,
             cellRenderer: (row: { value: string; data: TableItem }) => getSyncAtLabel(row.value, true),
-          },
-          {
-            field: "children_count",
-            headerName: "Файли",
-            flex: 1,
-            hide: isMobile,
             comparator: undefined,
-            cellRenderer: undefined,
           },
         ]}
         rows={caseItem?.matches || []}
