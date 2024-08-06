@@ -17,7 +17,7 @@ import {
   BarElement,
   TimeScale,
 } from "chart.js";
-import { GetMonthStatsResponse } from "../../pages/api/stats";
+import { GetLatestStatsResponse } from "../../pages/api/stats";
 import { theme } from "@chakra-ui/react";
 import PagePanel from "../components/PagePanel";
 
@@ -36,7 +36,7 @@ ChartJS.register(
 );
 
 const StatsPage: NextPage = () => {
-  const [stats, setStats] = useState<GetMonthStatsResponse>([[], []]);
+  const [stats, setStats] = useState<GetLatestStatsResponse>([[], []]);
 
   useEffect(() => {
     const fetchStats = async () => {
