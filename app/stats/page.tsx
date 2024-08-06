@@ -82,26 +82,26 @@ const StatsPage: NextPage = () => {
           },
           {
             field: "archive_code",
-            comparator: undefined,
             headerName: "Архів",
+            filter: true,
             flex: 1,
           },
           {
             field: "fund_code",
-            comparator: undefined,
             headerName: "Фонд",
+            filter: true,
             flex: 1,
           },
           {
             field: "description_code",
-            comparator: undefined,
             headerName: "Опис",
+            filter: true,
             flex: 1,
           },
           {
             field: "case_code",
-            comparator: undefined,
             headerName: "Справа",
+            filter: true,
             flex: 1,
           },
           {
