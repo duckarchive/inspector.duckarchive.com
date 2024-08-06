@@ -1,13 +1,14 @@
-import { Avatar, Box, Heading, HStack, Text } from "@chakra-ui/react";
+import { Box, Heading, HStack, Text } from "@chakra-ui/react";
+import { PropsWithChildren } from "react";
 
-interface PagePanelProps {
+interface PagePanelProps extends PropsWithChildren {
   titleLabel?: string;
   title: string;
   description?: string;
   image?: string | null;
 }
 
-const PagePanel: React.FC<PagePanelProps> = ({ title, description, titleLabel }) => {
+const PagePanel: React.FC<PagePanelProps> = ({ title, description, titleLabel, children }) => {
   return (
     <HStack justifyContent="space-between" alignItems="flex-start" minH="20">
       <HStack alignItems="flex-start">
@@ -23,6 +24,7 @@ const PagePanel: React.FC<PagePanelProps> = ({ title, description, titleLabel })
           {description && <Text fontSize="lg">{description}</Text>}
         </Box>
       </HStack>
+      {children}
     </HStack>
   );
 };
