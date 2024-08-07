@@ -1,7 +1,6 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
+import prisma from "../../db";
 
 export type GetAllArchivesResponse = Prisma.ArchiveGetPayload<{
   select: {

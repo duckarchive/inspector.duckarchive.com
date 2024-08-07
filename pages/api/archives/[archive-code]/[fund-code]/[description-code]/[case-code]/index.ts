@@ -1,7 +1,6 @@
-import { Case, Match, PrismaClient } from "@prisma/client";
+import { Case, Match } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
+import prisma from "../../../../../../db";
 
 export type GetCaseResponse = {
   title: Case["title"];

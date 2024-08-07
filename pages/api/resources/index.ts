@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient, Resource } from "@prisma/client";
+import { Resource } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+import prisma from "../../db";
 
-const prisma = new PrismaClient();
 
 export type GetAllResourcesResponse = (Resource & { _count: { matches: number } })[];
 

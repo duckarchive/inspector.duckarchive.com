@@ -57,7 +57,7 @@ const StatsReport: React.FC<StatsReportProps> = ({ data }) => {
   return (
     <>
       <Button size="sm" onClick={onOpen}>
-        Звіт по архівам
+        Звіт по архівах
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "xl" }}>
         <ModalOverlay />

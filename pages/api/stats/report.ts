@@ -1,7 +1,6 @@
-import { Archive, Case, Description, Fund, Match, PrismaClient } from "@prisma/client";
+import { Archive, Case, Description, Fund, Match } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
+import prisma from "../../db";
 
 export type GetSyncReportResponse = {
   id: Match["id"];
@@ -76,6 +75,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             or (pr.count > 0
                 and lr.count = 0));
     `;
+
+    res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
     res.json(updatedMatchesInDateRange);
   } else {
     res.status(405);

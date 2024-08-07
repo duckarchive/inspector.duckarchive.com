@@ -1,7 +1,6 @@
-import { PrismaClient, Resource } from '@prisma/client';
+import { Resource } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-const prisma = new PrismaClient();
+import prisma from '../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Resource>) {
   const resourceId = req.query.id as string;
