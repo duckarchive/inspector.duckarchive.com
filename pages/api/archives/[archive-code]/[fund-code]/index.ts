@@ -59,6 +59,7 @@ export default async function handler(
       },
     });
     if (fund) {
+      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json(fund);
     } else {
       res.status(404);

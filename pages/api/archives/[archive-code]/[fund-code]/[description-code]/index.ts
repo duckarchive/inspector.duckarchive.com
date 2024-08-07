@@ -60,6 +60,7 @@ export default async function handler(
       },
     });
     if (description) {
+      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json(description);
     } else {
       res.status(404);

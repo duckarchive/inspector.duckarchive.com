@@ -22,6 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       order by created_at::date desc
       limit 7;
     `;
+
+    res.setHeader('Cache-Control', 'public, max-age=21600');
     res.json([matchesByDay.reverse(), fetchesByDay.reverse()]);
   } else {
     res.status(405);

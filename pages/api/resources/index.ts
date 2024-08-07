@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         },
       },
     });
+    res.setHeader('Cache-Control', 'public, max-age=864000');
     res.json(resources);
   } else {
     res.status(405);

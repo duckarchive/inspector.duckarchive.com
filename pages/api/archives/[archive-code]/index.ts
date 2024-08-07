@@ -56,6 +56,7 @@ export default async function handler(
       }
     });
     if (archive) {
+      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json(archive);
     } else {
       res.status(404);

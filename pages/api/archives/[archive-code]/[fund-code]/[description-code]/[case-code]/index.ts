@@ -37,6 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           },
         }
       });
+      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json({
         title: caseItem.title,
         matches,
