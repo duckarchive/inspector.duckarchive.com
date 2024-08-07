@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       limit 7;
     `;
 
-    res.setHeader('Cache-Control', 'public, max-age=21600');
+    res.setHeader('Cache-Control', 'public, max-age=600');
     res.json([matchesByDay.reverse(), fetchesByDay.reverse()]);
   } else {
     res.status(405);
