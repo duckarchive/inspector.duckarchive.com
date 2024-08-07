@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 and lr.count = 0));
     `;
 
-    res.setHeader('Cache-Control', 'public, max-age=21600');
+    res.setHeader('Cache-Control', 'public, max-age=10800');
     res.json(updatedMatchesInDateRange);
   } else {
     res.status(405);
