@@ -8,6 +8,7 @@ import DuckTable from "../components/Table";
 import PagePanel from "../components/PagePanel";
 import Loader from "../components/Loader";
 import useIsMobile from "../hooks/useIsMobile";
+import { sortByTitle, sortText } from "../utils/table";
 
 type TableItem = GetAllArchivesResponse[number];
 
@@ -39,13 +40,14 @@ const ArchivesPage: NextPage = () => {
         columns={[
           {
             field: "code",
-            comparator: undefined,
+            sortable: false,
           },
           {
             field: "title",
             headerName: "Назва",
             flex: 9,
             filter: true,
+            comparator: sortText,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`archives/${row.data.code}`} color="blue.600">
                 {row.value || `${row.data.code}`}
@@ -58,7 +60,7 @@ const ArchivesPage: NextPage = () => {
             hide: isMobile,
           },
         ]}
-        rows={archives}
+        rows={archives.sort(sortByTitle) || []}
       />
     </>
   );

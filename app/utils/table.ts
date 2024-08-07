@@ -7,6 +7,10 @@ export const sortText = (a: string, b: string) => a.localeCompare(b);
 interface WithCode {
   code: string;
 }
+
+interface WithTitle {
+  title: string | null;
+}
 export const sortByCode = (a: WithCode, b: WithCode) => sortCode(a.code, b.code);
 
 const groups = ["П", "Р", ""];
@@ -25,6 +29,10 @@ export const sortCode = (a: string, b: string) => {
 
 export const sortByTextCode = (a: WithCode, b: WithCode) => {
   return sortText(a.code, b.code);
+};
+
+export const sortByTitle = (a: WithTitle, b: WithTitle) => {
+  return sortText(a.title || "", b.title || "");
 };
 
 interface WithDates {
