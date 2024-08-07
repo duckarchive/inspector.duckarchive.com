@@ -1,6 +1,6 @@
 import { Archive, Case, Description, Fund, Match } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../db";
+import prisma from "../../../db";
 
 export type GetSyncReportResponse = {
   id: Match["id"];

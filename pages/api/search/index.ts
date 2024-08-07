@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
-import prisma from "../../db";
+import prisma from "../../../db";
 
 export type SearchRequest = Partial<{
   archiveCode: string;

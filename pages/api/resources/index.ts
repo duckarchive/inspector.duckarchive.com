@@ -1,6 +1,6 @@
 import { Resource } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../db";
+import prisma from "../../../db";
 
 
 export type GetAllResourcesResponse = (Resource & { _count: { matches: number } })[];
