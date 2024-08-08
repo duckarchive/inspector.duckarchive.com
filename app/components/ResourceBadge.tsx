@@ -9,6 +9,7 @@ const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.FAMILY_SEARCH]: "green",
   [ResourceType.WIKIPEDIA]: "cyan",
   [ResourceType.BABYN_YAR]: "black",
+  [ResourceType.WEBSITE]: "gold",
 };
 
 interface ResourceBadgeProps extends TextProps {
