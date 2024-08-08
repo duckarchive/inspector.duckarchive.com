@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.13.0",
     "@netlify/functions": "^2.8.1",
     "@prisma/client": "^5.18.0",
+    "ag-grid-community": "^32.0.2",
     "ag-grid-react": "^31.3.4",
     "chakra-react-select": "^4.9.1",
     "chart.js": "^4.4.3",
