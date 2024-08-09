@@ -29,29 +29,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const to = endOfYesterday.toISOString();
 
     const updatedMatchesInDateRange: GetSyncReportResponse = await prisma.$queryRaw`
-      with latest_rows as
-        (select match_id,
-                count,
-                created_at,
-                row_number() over (partition by match_id
-                                  order by created_at desc) as rn
-        from match_results
-        where created_at >= ${from}::timestamp
-          and created_at < ${to}::timestamp
-      ),
-          previous_rows as
-        (select match_id,
-                count,
-                created_at
-        from match_results
-        where (match_id,
-                created_at) in
-            (select match_id,
-                    max(created_at)
+      with
+        latest_rows as
+          (
+            select match_id, count, created_at, row_number() over (partition by match_id order by created_at desc) as rn
+            from match_results
+            where created_at >= ${from}::timestamp and created_at < ${to}::timestamp
+        ),
+        previous_rows as
+          (
+            select match_id, count, created_at
+            from match_results
+            where (match_id, created_at) in
+                (
+              select match_id, max(created_at)
               from match_results
               where created_at < ${from}::timestamp
-
-              group by match_id))
+              group by match_id
+            )
+        )
       select m.id,
             m.updated_at,
             m.resource_id,
@@ -60,20 +56,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             d.code as description_code,
             c.code as case_code,
             m.children_count,
+            lr.count as last_count,
+            pr.count as prev_count,
             m.url,
-            pr.count = 0 and lr.count > 0 as is_online
+            case
+          when (pr.count = 0 or pr.count is null) and m.children_count > 0 then true
+          else false
+        end as is_online
       from latest_rows lr
-      join previous_rows pr on lr.match_id = pr.match_id
       join matches m on lr.match_id = m.id
+      left join previous_rows pr on m.id = pr.match_id
       left join archives a on m.archive_id = a.id
       left join funds f on m.fund_id = f.id
       left join descriptions d on m.description_id = d.id
       left join cases c on m.case_id = c.id
       where lr.rn = 1
-        and ((pr.count = 0
-              and lr.count > 0)
-            or (pr.count > 0
-                and lr.count = 0));
+        and (
+          (pr.count is null and m.children_count > 0) or
+          (pr.count = 0 and m.children_count > 0) or
+          (pr.count > 0 and m.children_count = 0)
+        );
     `;
 
     res.setHeader('Cache-Control', 'public, max-age=10800');

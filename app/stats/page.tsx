@@ -77,7 +77,9 @@ const StatsPage: NextPage = () => {
           {
             field: "resource_id",
             headerName: "Ресурс",
-            flex: 1.5,
+            flex: 1,
+            sortable: false,
+            filter: false,
             cellRenderer: (row: { value: TableItem["resource_id"] }) => <ResourceBadge resourceId={row.value} />,
           },
           {
@@ -108,6 +110,7 @@ const StatsPage: NextPage = () => {
             field: "url",
             headerName: "Посилання",
             flex: 4,
+            sortable: false,
             cellRenderer: (row: { value: string; data: TableItem }) => (
               <Link href={row.value || "#"} isExternal color="blue.600">
                 {row.value || "Щось пішло не так"}
