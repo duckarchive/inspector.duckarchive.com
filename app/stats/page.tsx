@@ -18,7 +18,7 @@ import {
   TimeScale,
 } from "chart.js";
 import { GetLatestStatsResponse } from "../../pages/api/stats";
-import { theme } from "@chakra-ui/react";
+import { HStack, theme } from "@chakra-ui/react";
 import PagePanel from "../components/PagePanel";
 import { GetSyncReportResponse } from "../../pages/api/stats/report";
 import DuckTable from "../components/Table";
@@ -26,6 +26,7 @@ import ResourceBadge from "../components/ResourceBadge";
 import { Link } from "@chakra-ui/next-js";
 import Loader from "../components/Loader";
 import StatsReport from "../components/StatsReport";
+import { getSyncAtLabel } from "../utils/table";
 
 ChartJS.register(
   ArcElement,
@@ -45,7 +46,7 @@ type TableItem = GetSyncReportResponse[number];
 
 const StatsPage: NextPage = () => {
   const [stats, setStats] = useState<GetLatestStatsResponse>([[], []]);
-  const [report, setReport] = useState<GetSyncReportResponse>([]);
+  // const [report, setReport] = useState<GetSyncReportResponse>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -55,9 +56,9 @@ const StatsPage: NextPage = () => {
       setStats(data);
     };
     const fetchReport = async () => {
-      const response = await fetch("/api/stats/report");
-      const data = await response.json();
-      setReport(data);
+      // const response = await fetch("/api/stats/report");
+      // const data = await response.json();
+      // setReport(data);
       setIsLoaded(true);
     };
 
@@ -70,7 +71,7 @@ const StatsPage: NextPage = () => {
   ) : (
     <>
       <PagePanel titleLabel="Статистика" title="Список справ знайдених онлайн за минулу добу">
-        <StatsReport data={report} />
+        {/* <StatsReport data={report} /> */}
       </PagePanel>
       <DuckTable<TableItem>
         columns={[
@@ -80,7 +81,16 @@ const StatsPage: NextPage = () => {
             flex: 1,
             sortable: false,
             filter: false,
-            cellRenderer: (row: { value: TableItem["resource_id"] }) => <ResourceBadge resourceId={row.value} />,
+            cellRenderer: (row: { value: TableItem["resource_id"]; data: TableItem }) => (
+              <HStack
+                h="calc(var(--ag-row-height) - 4px)"
+                alignItems="center"
+                gap={1}
+                flexWrap="wrap"
+              >
+                <ResourceBadge resourceId={row.value} tooltip={getSyncAtLabel(row.data.updated_at)} />
+              </HStack>
+            ),
           },
           {
             field: "archive_code",
@@ -118,7 +128,7 @@ const StatsPage: NextPage = () => {
             ),
           },
         ]}
-        rows={report}
+        rows={[]}
       />
       <Bar
         style={{ maxHeight: "150px" }}
