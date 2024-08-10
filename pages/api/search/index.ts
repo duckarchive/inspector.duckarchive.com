@@ -66,6 +66,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 not: null,
               },
             }),
+        children_count: {
+          gt: 0,
+        },
       },
       select: {
         id: true,
