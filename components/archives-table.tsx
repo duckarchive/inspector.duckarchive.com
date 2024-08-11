@@ -9,12 +9,12 @@ import useIsMobile from "../hooks/useIsMobile";
 
 type TableItem = Archives[number];
 
-interface ArchiveTableProps {
+interface ArchivesTableProps {
   resources: Resources;
   archives: Archives;
 }
 
-const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources, archives }) => {
+const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) => {
   const isMobile = useIsMobile();
 
   return (
@@ -50,4 +50,4 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources, archives }) => {
   );
 };
 
-export default ArchiveTable;
+export default ArchivesTable;

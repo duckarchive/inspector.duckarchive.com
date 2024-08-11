@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@nextui-org/react";
 
 const funnyMessages = [
@@ -14,7 +16,7 @@ const Loader: React.FC = () => {
   return (
     <div className="flex flex-col h-full items-center justify-center">
       <Spinner />
-      <p className="mt-2 text-center">
+      <p className="mt-2 text-center" suppressHydrationWarning>
         {funnyMessages[Math.floor(Math.random() * funnyMessages.length)]}
       </p>
     </div>
