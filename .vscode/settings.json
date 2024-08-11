@@ -3,5 +3,6 @@
     "archium",
     "BABYN",
     "dakro"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,95 +1,37 @@
-"use client";
+import { Input } from "@nextui-org/input";
 
-import { HStack } from "@chakra-ui/react";
-import { NextPage } from "next";
-import WelcomeModal from "./components/WelcomeModal";
-import SearchPanel from "./components/SearchPanel";
-import { useCallback, useEffect, useState } from "react";
-import { debounce } from "lodash";
-import DuckTable from "./components/Table";
-import { SearchRequest, SearchResponse } from "../pages/api/search";
-import { Link } from "@chakra-ui/next-js";
+import { title } from "@/components/primitives";
+import { SearchIcon } from "@/components/icons";
 
-type TableItem = SearchResponse[number];
-
-const SearchPage: NextPage = () => {
-  const [searchValues, setSearchValues] = useState<SearchRequest>();
-  const [searchResults, setSearchResults] = useState<SearchResponse>([]);
-
-  const fetchSearch = useCallback(
-    debounce(async (reqBody?: SearchRequest) => {
-      if (!reqBody) {
-        return;
-      }
-      const response = await fetch("/api/search", {
-        method: "POST",
-        body: JSON.stringify(reqBody),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setSearchResults(data);
-    }, 500),
-    []
-  );
-
-  useEffect(() => {
-    fetchSearch(searchValues);
-  }, [searchValues, fetchSearch]);
-
-  const handleSearchChange = async (values: SearchRequest) => {
-    setSearchValues((prev) => ({ ...prev, ...values }));
-  };
-
+export default function Home() {
   return (
-    <>
-      <WelcomeModal />
-      <HStack justifyContent="center" alignItems="center" minH="32">
-        <SearchPanel values={searchValues} onChange={handleSearchChange} />
-      </HStack>
-      <DuckTable<TableItem>
-        columns={[
-          {
-            field: "archive.code",
-            comparator: undefined,
-            headerName: "Архів",
-            flex: 1,
-            resizable: true,
-          },
-          {
-            field: "fund.code",
-            comparator: undefined,
-            headerName: "Фонд",
-            flex: 1,
-          },
-          {
-            field: "description.code",
-            comparator: undefined,
-            headerName: "Опис",
-            flex: 1,
-          },
-          {
-            field: "case.code",
-            comparator: undefined,
-            headerName: "Справа",
-            flex: 1,
-          },
-          {
-            field: "url",
-            headerName: "Посилання",
-            flex: 4,
-            cellRenderer: (row: { value: string; data: TableItem }) => (
-              <Link href={row.value || "#"} isExternal color="blue.600">
-                {row.value || "Щось пішло не так"}
-              </Link>
-            ),
-          },
-        ]}
-        rows={searchResults}
-      />
-    </>
-  );
-};
+    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <div className="inline-block max-w-lg text-center justify-center">
+        <h1 className={title()}>
+          Щось тут треба буде написати, щоб привітати поважних гостей на
+          сайті&nbsp;
+        </h1>
+        <br />
+        <h1 className={title({ color: "violet" })}>Качиного Інспектора</h1>
+      </div>
 
-export default SearchPage;
+      <div className="mt-8 max-w-lg w-full">
+        <Input
+          aria-label="Пошук"
+          classNames={{
+            inputWrapper: "bg-default-100 w-full",
+            input: "w-full",
+          }}
+          label="Знайти справу онлайн"
+          labelPlacement="outside"
+          placeholder="ДАХмО Р6193-2-1"
+          size="lg"
+          startContent={
+            <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+          }
+          type="search"
+        />
+      </div>
+    </section>
+  );
+}

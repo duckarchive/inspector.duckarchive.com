@@ -1,52 +1,17 @@
-"use client";
+import { getResources } from "@/data/resources";
+import PagePanel from "@/components/page-panel";
+import ResourcesTable from "@/components/resources-table";
 
-import React from "react";
-import { useResources } from "../contexts/Resources";
-import { GetAllResourcesResponse } from "../../pages/api/resources";
-import DuckTable from "../components/Table";
-import ResourceBadge from "../components/ResourceBadge";
-import PagePanel from "../components/PagePanel";
-import Loader from "../components/Loader";
-import { isEmpty } from "lodash";
+const ResourcesPage = async () => {
+  const resources = await getResources();
 
-type TableItem = GetAllResourcesResponse[number];
-
-const ResourcesPage: React.FC = () => {
-  const resources = useResources();
-
-  return isEmpty(resources) ? (
-    <Loader />
-  ) : (
+  return (
     <>
       <PagePanel
-        titleLabel="Джерела"
-        title="Список джерел + загальна кількість справ онлайн"
+        title="Джерела"
+        description="Список вебсайтів та інших сервісів, де можна знайти справи онлайн"
       />
-      <DuckTable<TableItem>
-        columns={[
-          {
-            field: "id",
-            headerName: "Тип",
-            flex: 1.5,
-            comparator: undefined,
-            cellRenderer: (row: { value: TableItem["id"] }) => <ResourceBadge resourceId={row.value} />,
-          },
-          {
-            field: "title",
-            headerName: "Назва",
-            flex: 8,
-            filter: true,
-          },
-          {
-            field: "_count.matches",
-            flex: 2,
-            headerName: "Справ онлайн",
-            comparator: undefined,
-            cellRenderer: undefined,
-          },
-        ]}
-        rows={Object.values(resources)}
-      />
+      <ResourcesTable resources={resources} />
     </>
   );
 };
