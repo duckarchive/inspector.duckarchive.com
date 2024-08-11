@@ -11,6 +11,7 @@ import ResourceBadge from "./resource-badge";
 import { getSyncAtLabel, sortByMatches, sortCode } from "@/lib/table";
 import { Resource } from "@prisma/client";
 import { useTheme } from "next-themes";
+import { Button } from "@nextui-org/button";
 
 export enum QuickFilter {
   PRE_USSR_FUNDS = "preUssrFunds",
@@ -49,12 +50,7 @@ interface DuckTableProps<T> {
   enabledFilters?: Record<QuickFilter, boolean>;
 }
 
-const DuckTable = <T extends { id: string }>({
-  columns,
-  rows,
-  enabledFilters,
-  resources,
-}: DuckTableProps<T>) => {
+const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, resources }: DuckTableProps<T>) => {
   const { theme } = useTheme();
   const gridRef = useRef<AgGridReact<T>>(null);
   const [activeQuickFilter, setActiveQuickFilter] = useState<QuickFilter>();
@@ -75,11 +71,9 @@ const DuckTable = <T extends { id: string }>({
       return;
     }
     if (activeQuickFilter) {
-      gridRef.current.api
-        .setColumnFilterModel("code", FILTER_CONDITIONS[activeQuickFilter])
-        .then(() => {
-          gridRef.current?.api.onFilterChanged();
-        });
+      gridRef.current.api.setColumnFilterModel("code", FILTER_CONDITIONS[activeQuickFilter]).then(() => {
+        gridRef.current?.api.onFilterChanged();
+      });
     } else {
       gridRef.current.api.setColumnFilterModel("code", null).then(() => {
         gridRef.current?.api.onFilterChanged();
@@ -88,49 +82,44 @@ const DuckTable = <T extends { id: string }>({
   }, [activeQuickFilter]);
 
   const handleFilterClick = (newFilter: QuickFilter) => () => {
-    setActiveQuickFilter((prev) =>
-      prev === newFilter ? undefined : newFilter
-    );
+    setActiveQuickFilter((prev) => (prev === newFilter ? undefined : newFilter));
   };
 
   return (
     <>
-      <div className="flex items-center h-6">
+      <div className="flex items-center gap-1 h-10">
         {enabledFilters?.[QuickFilter.PRE_USSR_FUNDS] && (
-          <button
+          <Button
+            radius="full"
+            color="primary"
+            size="sm"
+            variant={activeQuickFilter === QuickFilter.PRE_USSR_FUNDS ? "solid" : "bordered"}
             onClick={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
-            className={`px-2 py-1 text-xs rounded ${
-              activeQuickFilter === QuickFilter.PRE_USSR_FUNDS
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-            }`}
           >
             Фонди до 1917
-          </button>
+          </Button>
         )}
         {enabledFilters?.[QuickFilter.USSR_FUNDS] && (
-          <button
+          <Button
+            radius="full"
+            color="primary"
+            size="sm"
+            variant={activeQuickFilter === QuickFilter.USSR_FUNDS ? "solid" : "bordered"}
             onClick={handleFilterClick(QuickFilter.USSR_FUNDS)}
-            className={`px-2 py-1 text-xs rounded ${
-              activeQuickFilter === QuickFilter.USSR_FUNDS
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-            }`}
           >
             Фонди після 1917
-          </button>
+          </Button>
         )}
         {enabledFilters?.[QuickFilter.PART_FUNDS] && (
-          <button
+          <Button
+            radius="full"
+            color="primary"
+            size="sm"
+            variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
             onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
-            className={`px-2 py-1 text-xs rounded ${
-              activeQuickFilter === QuickFilter.PART_FUNDS
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-            }`}
           >
             Фонди ПРУ
-          </button>
+          </Button>
         )}
       </div>
       <div className={`ag-theme-quartz h-96 flex-grow ${theme === "dark" ? "ag-theme-quartz-dark" : ""}`}>
@@ -158,7 +147,8 @@ const DuckTable = <T extends { id: string }>({
                 <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
                   {row.data.matches?.map(
                     ({ updated_at, children_count, resource_id }: any) =>
-                      children_count && resources && (
+                      children_count &&
+                      resources && (
                         <ResourceBadge
                           key={`${row.data.id}_match_${resource_id}`}
                           resources={resources}
@@ -167,7 +157,7 @@ const DuckTable = <T extends { id: string }>({
                         >
                           {children_count}
                         </ResourceBadge>
-                      )
+                      ),
                   )}
                 </div>
               ),
