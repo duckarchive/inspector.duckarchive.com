@@ -12,7 +12,7 @@ import { Input } from "@nextui-org/input";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { FaTelegramPlane } from "react-icons/fa";
+import { FaTelegram } from "react-icons/fa";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -62,8 +62,8 @@ export const Navbar = () => {
 
       <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden md:flex gap-2">
-          <Link isExternal aria-label="Telegram Chat" href={siteConfig.links.telegram}>
-            <FaTelegramPlane className="text-default-500" size={20} />
+          <Link isExternal aria-label="Telegram Chat" className="text-default-500" href={siteConfig.links.telegram}>
+            <FaTelegram size={20} />
           </Link>
           <ThemeSwitch />
         </NavbarItem>
@@ -83,8 +83,8 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="md:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Telegram Chat" href={siteConfig.links.telegram}>
-          <FaTelegramPlane className="text-default-500" size={20} />
+        <Link isExternal aria-label="Telegram Chat" className="text-default-500" href={siteConfig.links.telegram}>
+          <FaTelegram size={20} />
         </Link>
         <ThemeSwitch />
         <NavbarMenuToggle />
