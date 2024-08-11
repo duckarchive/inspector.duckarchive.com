@@ -151,10 +151,11 @@ const DuckTable = <T extends { id: string }>({
             {
               type: "numericColumn",
               flex: 2,
+              minWidth: 200,
               resizable: false,
               comparator: sortByMatches,
               cellRenderer: (row: { data: any }) => (
-                <div className="flex h-[calc(var(--ag-row-height) - 4px)] items-center justify-end gap-1 flex-wrap">
+                <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
                   {row.data.matches?.map(
                     ({ updated_at, children_count, resource_id }: any) =>
                       children_count && resources && (

@@ -1,8 +1,9 @@
 import { getResources } from "@/data/resources";
 import PagePanel from "@/components/page-panel";
 import ResourcesTable from "@/components/resources-table";
+import { NextPage } from "next";
 
-const ResourcesPage = async () => {
+const ResourcesPage: NextPage = async () => {
   const resources = await getResources();
 
   return (

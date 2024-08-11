@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media (max-width: theme('screens.md')) {
+  .ag-paging-panel {
+    justify-content: center!important;
+  }
+  .ag-paging-panel .ag-paging-page-size {
+    display: none;
+  }
+  .ag-paging-panel .ag-paging-row-summary-panel {
+    display: none;
+  }
+}

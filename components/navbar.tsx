@@ -7,7 +7,6 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
-import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
 import { link as linkStyles } from "@nextui-org/theme";
@@ -17,14 +16,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  TwitterIcon,
-  GithubIcon,
-  DiscordIcon,
-  HeartFilledIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
+import { SearchIcon } from "@/components/icons";
 
 export const Navbar = () => {
   const searchInput = (
@@ -36,9 +28,7 @@ export const Navbar = () => {
       }}
       labelPlacement="outside"
       placeholder="Шукати справу"
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
+      startContent={<SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />}
       type="search"
     />
   );
@@ -58,7 +48,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
                 href={item.href}
@@ -70,16 +60,9 @@ export const Navbar = () => {
         </ul>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
+      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden md:flex gap-2">
-          <Link
-            isExternal
-            aria-label="Telegram Chat"
-            href={siteConfig.links.telegram}
-          >
+          <Link isExternal aria-label="Telegram Chat" href={siteConfig.links.telegram}>
             <FaTelegramPlane className="text-default-500" size={20} />
           </Link>
           <ThemeSwitch />
@@ -100,11 +83,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="md:hidden basis-1 pl-4" justify="end">
-        <Link
-          isExternal
-          aria-label="Telegram Chat"
-          href={siteConfig.links.telegram}
-        >
+        <Link isExternal aria-label="Telegram Chat" href={siteConfig.links.telegram}>
           <FaTelegramPlane className="text-default-500" size={20} />
         </Link>
         <ThemeSwitch />
