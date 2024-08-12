@@ -1,41 +1,53 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Providers } from "./providers";
-import { Container, VStack } from "@chakra-ui/react";
-import Header from "./components/Header";
+import "@/styles/globals.css";
+import { Metadata, Viewport } from "next";
+import { Link } from "@nextui-org/link";
+import clsx from "clsx";
 
-const inter = Inter({ subsets: ["latin"] });
+import { Providers } from "./providers";
+
+import { siteConfig } from "@/config/site";
+import { fontSans } from "@/config/fonts";
+import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
-  title: "Качиний Інспектор",
-  description: "Допоможе знайти архівні матеріали, які вже доступні онлайн",
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <link rel="icon" href="/favicon.ico" sizes="any" />
-      <body className={inter.className} style={{ backgroundColor: "lightgray" }}>
-        <Providers>
-          <Container maxW="container.xl" p={{ base: 0, md: 2 }}>
-            <Header />
-            <VStack
-              as="main"
-              justifyContent="space-between"
-              alignItems="stretch"
-              bg="white"
-              p={2}
-              mt={2}
-              borderRadius="lg"
-              minH="calc(100vh - var(--chakra-fontSizes-sm) - var(--chakra-space-2) * 6)"
-            >
+    <html suppressHydrationWarning lang="en">
+      <head />
+      <body
+        className={clsx(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
+      >
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+          <div className="relative flex flex-col h-screen">
+            <Navbar />
+            <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">
               {children}
-            </VStack>
-          </Container>
+            </main>
+          </div>
         </Providers>
       </body>
     </html>

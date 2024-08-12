@@ -1,67 +1,20 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import PagePanel from "@/components/page-panel";
+import ArchivesTable from "@/components/archives-table";
 import { NextPage } from "next";
-import { Link } from "@chakra-ui/next-js";
-import { GetAllArchivesResponse } from "../../pages/api/archives";
-import DuckTable from "../components/Table";
-import PagePanel from "../components/PagePanel";
-import Loader from "../components/Loader";
-import useIsMobile from "../hooks/useIsMobile";
-import { sortByTitle, sortText } from "../utils/table";
+import { getArchives } from "@/data/archives";
+import { getResources } from "@/data/resources";
 
-type TableItem = GetAllArchivesResponse[number];
+const ArchivesPage: NextPage = async () => {
+  const resources = await getResources();
+  const archives = await getArchives();
 
-const ArchivesPage: NextPage = () => {
-  const [archives, setArchives] = useState<GetAllArchivesResponse>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const fetchArchives = async () => {
-      const response = await fetch("/api/archives");
-      const data = await response.json();
-      setArchives(data);
-      setIsLoaded(true);
-    };
-
-    fetchArchives();
-  }, []);
-
-  return !isLoaded ? (
-    <Loader />
-  ) : (
+  return (
     <>
       <PagePanel
-        titleLabel="Архіви"
-        title="Список архівів, які містяться в базі даних"
+        title="Архіви"
+        description="Список архівів в базі Інспектора"
       />
-      <DuckTable<TableItem>
-        columns={[
-          {
-            field: "code",
-            sortable: false,
-          },
-          {
-            field: "title",
-            headerName: "Назва",
-            flex: 9,
-            filter: true,
-            comparator: sortText,
-            cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`archives/${row.data.code}`} color="blue.600">
-                {row.value || `${row.data.code}`}
-              </Link>
-            ),
-          },
-          {
-            colId: "sync",
-            headerName: "Фонди",
-            hide: isMobile,
-          },
-        ]}
-        rows={archives.sort(sortByTitle) || []}
-      />
+      <ArchivesTable resources={resources} archives={archives} />
     </>
   );
 };

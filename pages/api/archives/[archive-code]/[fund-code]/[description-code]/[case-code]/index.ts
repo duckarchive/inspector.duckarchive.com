@@ -1,6 +1,6 @@
 import { Case, Match } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../../../../../db";
+import prisma from "@/lib/db";
 
 export type GetCaseResponse = {
   title: Case["title"];
@@ -37,13 +37,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           },
         }
       });
-      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json({
         title: caseItem.title,
         matches,
       });
     } else {
-      res.status(404);
+      res.status(404).end();
     }
   }
 }

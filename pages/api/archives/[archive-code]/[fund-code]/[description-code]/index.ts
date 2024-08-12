@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../../../../db";
+import prisma from "@/lib/db";
 
 export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
   include: {
@@ -11,8 +11,7 @@ export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
         title: true;
         matches: {
           select: {
-            updated_at: true,
-            last_count: true;
+            updated_at: true;
             children_count: true;
             resource_id: true;
           };
@@ -22,10 +21,7 @@ export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
   };
 }>;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<GetDescriptionResponse>) {
   const archiveCode = req.query["archive-code"] as string;
   const fundCode = req.query["fund-code"] as string;
   const descriptionCode = req.query["description-code"] as string;
@@ -50,20 +46,18 @@ export default async function handler(
             matches: {
               select: {
                 updated_at: true,
-                last_count: true,
                 children_count: true,
                 resource_id: true,
-              }
+              },
             },
           },
         },
       },
     });
     if (description) {
-      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json(description);
     } else {
-      res.status(404);
+      res.status(404).end();
     }
   }
 }

@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../../db";
+import prisma from "@/lib/db";
 
 export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
   include: {
@@ -12,7 +12,6 @@ export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
         matches: {
           select: {
             updated_at: true,
-            last_count: true;
             children_count: true;
             resource_id: true;
           };
@@ -46,7 +45,6 @@ export default async function handler(
               },
               select: {
                 updated_at: true,
-                last_count: true,
                 children_count: true,
                 resource_id: true,
               }
@@ -56,7 +54,6 @@ export default async function handler(
       }
     });
     if (archive) {
-      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json(archive);
     } else {
       res.status(404);
