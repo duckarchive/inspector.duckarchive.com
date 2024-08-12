@@ -12,7 +12,6 @@ export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
         matches: {
           select: {
             updated_at: true,
-            last_count: true;
             children_count: true;
             resource_id: true;
           };
@@ -46,7 +45,6 @@ export default async function handler(
               },
               select: {
                 updated_at: true,
-                last_count: true,
                 children_count: true,
                 resource_id: true,
               }

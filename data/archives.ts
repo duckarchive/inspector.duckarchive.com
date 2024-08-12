@@ -9,7 +9,6 @@ export type Archives = Prisma.ArchiveGetPayload<{
     matches: {
       select: {
         updated_at: true;
-        last_count: true;
         children_count: true;
         resource_id: true;
       };
@@ -31,7 +30,6 @@ export const getArchives = async () => {
         },
         select: {
           updated_at: true,
-          last_count: true,
           children_count: true,
           resource_id: true,
         },
