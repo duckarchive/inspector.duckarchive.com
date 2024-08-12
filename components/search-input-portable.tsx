@@ -26,7 +26,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ placeholder }
         name="search-case"
         aria-label="Search"
         classNames={{
-          inputWrapper: "bg-default-100 mb-2",
+          inputWrapper: "bg-default-100",
           input: "text-sm",
         }}
         labelPlacement="outside"
@@ -35,7 +35,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ placeholder }
         type="search"
       />
       {placeholder && (
-        <Button type="submit" color="primary" variant="light" className="w-full" endContent={<FaFeather />}>
+        <Button type="submit" color="primary" variant="light" className="w-full mt-2" endContent={<FaFeather />}>
           Полетіли
         </Button>
       )}
