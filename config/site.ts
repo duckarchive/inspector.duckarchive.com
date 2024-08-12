@@ -17,7 +17,7 @@ export const siteConfig = {
       href: "/stats",
     },
     {
-      label: "Продукти",
+      label: "🛠️ Продукти 🛠️",
       href: "/duck-universe",
     },
   ],

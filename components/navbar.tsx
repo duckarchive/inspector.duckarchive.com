@@ -28,8 +28,7 @@ export const Navbar = () => {
       }}
       isDisabled
       labelPlacement="outside"
-      placeholder="(тимчасово недоступно)"
-      // placeholder="Шукати справу (тимчасово недоступно)"
+      placeholder="🛠️ Шукати справу 🛠️"
       startContent={<SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />}
       type="search"
     />

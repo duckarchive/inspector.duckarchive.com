@@ -24,8 +24,7 @@ export default function Home() {
           }}
           label="Знайти справу онлайн"
           labelPlacement="outside"
-          placeholder="(тимчасово недоступно)"
-          // placeholder="ДАХмО Р6193-2-1"
+          placeholder="🛠️ ДАХмО Р6193-2-1 🛠️"
           isDisabled
           size="lg"
           startContent={

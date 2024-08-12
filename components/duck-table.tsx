@@ -87,40 +87,52 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
 
   return (
     <>
-      <div className="flex items-center gap-1 h-10">
-        {enabledFilters?.[QuickFilter.PRE_USSR_FUNDS] && (
-          <Button
-            radius="full"
-            color="primary"
-            size="sm"
-            variant={activeQuickFilter === QuickFilter.PRE_USSR_FUNDS ? "solid" : "bordered"}
-            onClick={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
-          >
-            Фонди до 1917
-          </Button>
-        )}
-        {enabledFilters?.[QuickFilter.USSR_FUNDS] && (
-          <Button
-            radius="full"
-            color="primary"
-            size="sm"
-            variant={activeQuickFilter === QuickFilter.USSR_FUNDS ? "solid" : "bordered"}
-            onClick={handleFilterClick(QuickFilter.USSR_FUNDS)}
-          >
-            Фонди після 1917
-          </Button>
-        )}
-        {enabledFilters?.[QuickFilter.PART_FUNDS] && (
-          <Button
-            radius="full"
-            color="primary"
-            size="sm"
-            variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
-            onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
-          >
-            Фонди ПРУ
-          </Button>
-        )}
+      <div className="flex justify-between items-center h-10">
+        <div className="flex gap-1">
+          {enabledFilters?.[QuickFilter.PRE_USSR_FUNDS] && (
+            <Button
+              radius="full"
+              color="primary"
+              size="sm"
+              variant={activeQuickFilter === QuickFilter.PRE_USSR_FUNDS ? "solid" : "bordered"}
+              onClick={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
+            >
+              Фонди до 1917
+            </Button>
+          )}
+          {enabledFilters?.[QuickFilter.USSR_FUNDS] && (
+            <Button
+              radius="full"
+              color="primary"
+              size="sm"
+              variant={activeQuickFilter === QuickFilter.USSR_FUNDS ? "solid" : "bordered"}
+              onClick={handleFilterClick(QuickFilter.USSR_FUNDS)}
+            >
+              Фонди після 1917
+            </Button>
+          )}
+          {enabledFilters?.[QuickFilter.PART_FUNDS] && (
+            <Button
+              radius="full"
+              color="primary"
+              size="sm"
+              variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
+              onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
+            >
+              Фонди ПРУ
+            </Button>
+          )}
+        </div>
+        <Button
+          radius="full"
+          color="secondary"
+          size="sm"
+          isDisabled
+          variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
+          onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
+        >
+          🛠️ Доступні 🛠️ 
+        </Button>
       </div>
       <div className={`ag-theme-quartz h-96 flex-grow ${theme === "dark" ? "ag-theme-quartz-dark" : ""}`}>
         {/* @ts-ignore */}
