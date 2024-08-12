@@ -2,7 +2,7 @@
 
 import { Archives } from "@/data/archives";
 import PagePanel from "./page-panel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchRequest, SearchResponse } from "@/pages/api/search";
 import useSearch from "@/hooks/useSearch";
 import { Autocomplete, AutocompleteItem, Button, Input, Link } from "@nextui-org/react";
@@ -21,6 +21,10 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
   const { searchResults, isLoading, isError, trigger } = useSearchRequest();
+
+  useEffect(() => {
+    trigger(searchValues);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
