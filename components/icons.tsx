@@ -4,8 +4,8 @@ import { IconSvgProps } from "@/types";
 
 export const Logo: React.FC<IconSvgProps> = ({ size = 36, width, height, ...props }) => (
   <svg height={size || height} viewBox="0 0 500 500" width={size || width} {...props}>
-    <circle cx="250" cy="250" r="240" fill="white" stroke="black" strokeWidth="20" />
-    <path d="M413.62 260L290.445 442H209.017L85.8427 260L413.62 260Z" fill="currentColor" stroke="black" strokeWidth="20" />
+    <circle cx="250" cy="250" r="240" fill="transparent" stroke="inherit" strokeWidth="20" />
+    <path d="M413.62 260L290.445 442H209.017L85.8427 260L413.62 260Z" fill="currentColor" stroke="inherit" strokeWidth="20" />
   </svg>
 );
 

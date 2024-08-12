@@ -39,8 +39,8 @@ export const Navbar: React.FC = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="text-transparent hover:text-warning flex justify-start items-center gap-1" href="/">
-            <Logo className="duration-200" />
-            <p className="font-bold text-black">Інспектор</p>
+            <Logo className="duration-200 stroke-foreground" />
+            <p className="font-bold text-foreground">Інспектор</p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden md:flex gap-4 justify-start ml-2">
