@@ -5,7 +5,7 @@ import { SearchIcon } from "@/components/icons";
 
 export default function Home() {
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+    <section className="flex flex-col items-center justify-center gap-4 h-full">
       <div className="inline-block max-w-lg text-center justify-center">
         <h1 className={title()}>
           Щось тут треба буде написати, щоб привітати поважних гостей на
