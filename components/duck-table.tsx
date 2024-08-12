@@ -164,7 +164,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
                 <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
                   {row.data.matches?.map(
                     ({ updated_at, children_count, resource_id }: any) =>
-                      children_count &&
+                      Boolean(children_count) &&
                       resources && (
                         <ResourceBadge
                           key={`${row.data.id}_match_${resource_id}`}
