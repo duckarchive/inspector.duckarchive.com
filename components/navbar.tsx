@@ -16,7 +16,7 @@ import { FaTelegram } from "react-icons/fa";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { SearchIcon } from "@/components/icons";
+import { SearchIcon, Logo } from "@/components/icons";
 
 export const Navbar = () => {
   const searchInput = (
@@ -26,8 +26,10 @@ export const Navbar = () => {
         inputWrapper: "bg-default-100",
         input: "text-sm",
       }}
+      isDisabled
       labelPlacement="outside"
-      placeholder="Шукати справу"
+      placeholder="(тимчасово недоступно)"
+      // placeholder="Шукати справу (тимчасово недоступно)"
       startContent={<SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />}
       type="search"
     />
@@ -37,9 +39,9 @@ export const Navbar = () => {
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
-            <p className="text-3xl font-bold text-inherit">🦆</p>
-            <p className="font-bold text-inherit">Інспектор</p>
+          <NextLink className="text-transparent hover:text-warning flex justify-start items-center gap-1" href="/">
+            <Logo className="duration-200" />
+            <p className="font-bold text-black">Інспектор</p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden md:flex gap-4 justify-start ml-2">
