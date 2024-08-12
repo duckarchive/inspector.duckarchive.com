@@ -10,6 +10,7 @@ import { FaFeather } from "react-icons/fa";
 import useSearchRequest from "../hooks/useSearchRequest";
 import DuckTable from "./duck-table";
 import Loader from "./loader";
+import useIsMobile from "../hooks/useIsMobile";
 
 type TableItem = SearchResponse[number];
 
@@ -18,6 +19,7 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ archives }) => {
+  const isMobile = useIsMobile();
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
   const { searchResults, isLoading, isError, trigger } = useSearchRequest();
@@ -36,7 +38,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
     <>
       <PagePanel
         title="Пошук"
-        description="Оберіть архів, фонд, опис та справу та натисніть Enter. Якщо вам пощастить, то за декілька секунд ви отримаєте посилання на запитувану справу на одному з онлайн джерел."
+        description="Оберіть архів, фонд, опис та справу і натисніть Enter. Якщо вам пощастить, то за декілька секунд ви отримаєте посилання на запитувану справу на одному з онлайн джерел."
       >
         <form className="flex flex-col grow shrink-0 basis-6/12 gap-2 items-center" onSubmit={handleSubmit}>
           <Autocomplete
@@ -89,26 +91,31 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               headerName: "Архів",
               flex: 1,
               resizable: true,
+              hide: isMobile,
             },
             {
               field: "fund_code",
               headerName: "Фонд",
               flex: 1,
+              hide: isMobile,
             },
             {
               field: "description_code",
               comparator: undefined,
               headerName: "Опис",
               flex: 1,
+              hide: isMobile,
             },
             {
               field: "case_code",
               comparator: undefined,
               headerName: "Справа",
               flex: 1,
+              hide: isMobile,
             },
             {
               field: "url",
+              type: undefined,
               headerName: "Посилання",
               flex: 4,
               comparator: undefined,

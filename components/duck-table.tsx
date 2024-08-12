@@ -144,6 +144,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
         <AgGridReact
           ref={gridRef}
           rowData={rows}
+          suppressMovableColumns
           columnDefs={[
             {
               headerName: "Індекс",
