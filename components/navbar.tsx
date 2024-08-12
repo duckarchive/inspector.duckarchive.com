@@ -16,24 +16,10 @@ import { FaTelegram } from "react-icons/fa";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { SearchIcon, Logo } from "@/components/icons";
+import { Logo } from "@/components/icons";
+import SearchInputPortable from "./search-input-portable";
 
 export const Navbar: React.FC = () => {
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      isDisabled
-      labelPlacement="outside"
-      placeholder="🛠️ Шукати справу 🛠️"
-      startContent={<SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />}
-      type="search"
-    />
-  );
-
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -68,7 +54,9 @@ export const Navbar: React.FC = () => {
           </Link>
           <ThemeSwitch />
         </NavbarItem>
-        <NavbarItem className="hidden md:flex">{searchInput}</NavbarItem>
+        <NavbarItem className="hidden md:flex">
+          <SearchInputPortable />
+        </NavbarItem>
         {/* <NavbarItem className="hidden md:flex">
           <Button
             isExternal
@@ -92,7 +80,7 @@ export const Navbar: React.FC = () => {
       </NavbarContent>
 
       <NavbarMenu>
-        {searchInput}
+        <SearchInputPortable />
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
