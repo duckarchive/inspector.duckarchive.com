@@ -18,7 +18,7 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon, Logo } from "@/components/icons";
 
-export const Navbar = () => {
+export const Navbar: React.FC = () => {
   const searchInput = (
     <Input
       aria-label="Search"
