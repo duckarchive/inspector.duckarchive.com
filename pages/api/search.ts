@@ -21,9 +21,11 @@ export type SearchResponse = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
   const { a, f, d, c } = req.body;
   if (req.method === "POST") {
+    const _a = a || "%"; // case sensitive
+    const rest = `${f || "%"}-${d || "%"}-${c || "%"}`.toUpperCase();
     const matches = await prisma.match.findMany({
       where: {
-        full_code: `${a || "%"}-${f || "%"}-${d || "%"}-${c || "%"}`.toUpperCase(),
+        full_code: `${_a}-${rest}`,
       },
       take: 20,
     });

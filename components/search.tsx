@@ -3,10 +3,15 @@
 import { Archives } from "@/data/archives";
 import PagePanel from "./page-panel";
 import { useState } from "react";
-import { SearchRequest } from "@/pages/api/search";
+import { SearchRequest, SearchResponse } from "@/pages/api/search";
 import useSearch from "@/hooks/useSearch";
-import { Autocomplete, AutocompleteItem, Button, Input } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem, Button, Input, Link } from "@nextui-org/react";
 import { FaFeather } from "react-icons/fa";
+import useSearchRequest from "../hooks/useSearchRequest";
+import DuckTable from "./duck-table";
+import Loader from "./loader";
+
+type TableItem = SearchResponse[number];
 
 interface SearchProps {
   archives: Archives;
@@ -15,10 +20,12 @@ interface SearchProps {
 const Search: React.FC<SearchProps> = ({ archives }) => {
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
+  const { searchResults, isLoading, isError, trigger } = useSearchRequest();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setQueryParams(searchValues);
+    trigger(searchValues);
   };
 
   return (
@@ -43,30 +50,74 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               </AutocompleteItem>
             ))}
           </Autocomplete>
-          <Input
-            label="Фонд"
-            
-            value={searchValues.f}
-            onChange={(e) => setSearchValues({ ...searchValues, f: e.target.value })}
-          />
-          <Input
-            label="Опис"
-            
-            value={searchValues.d}
-            onChange={(e) => setSearchValues({ ...searchValues, d: e.target.value })}
-          />
-          <Input
-            label="Справа"
-            
-            value={searchValues.c}
-            onChange={(e) => setSearchValues({ ...searchValues, c: e.target.value })}
-          />
+          <div className="flex gap-2">
+            <Input
+              label="Фонд"
+              value={searchValues.f}
+              onChange={(e) => setSearchValues({ ...searchValues, f: e.target.value })}
+            />
+            <Input
+              label="Опис"
+              value={searchValues.d}
+              onChange={(e) => setSearchValues({ ...searchValues, d: e.target.value })}
+            />
+            <Input
+              label="Справа"
+              value={searchValues.c}
+              onChange={(e) => setSearchValues({ ...searchValues, c: e.target.value })}
+            />
+          </div>
           <Button type="submit" color="primary" variant="light" className="w-full" endContent={<FaFeather />}>
             Полетіли
           </Button>
         </form>
       </PagePanel>
-      {/* <DuckTable<TableItem> */}
+      {isError && <p className="text-danger">Щось пішло не так</p>}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <DuckTable<TableItem>
+          columns={[
+            {
+              field: "archive_code",
+              comparator: undefined,
+              filter: false,
+              headerName: "Архів",
+              flex: 1,
+              resizable: true,
+            },
+            {
+              field: "fund_code",
+              headerName: "Фонд",
+              flex: 1,
+            },
+            {
+              field: "description_code",
+              comparator: undefined,
+              headerName: "Опис",
+              flex: 1,
+            },
+            {
+              field: "case_code",
+              comparator: undefined,
+              headerName: "Справа",
+              flex: 1,
+            },
+            {
+              field: "url",
+              headerName: "Посилання",
+              flex: 4,
+              comparator: undefined,
+              cellRenderer: (row: { value: string; data: TableItem }) => (
+                <Link href={row.value || "#"} isExternal>
+                  {row.value || "Щось пішло не так"}
+                </Link>
+              ),
+            },
+          ]}
+          rows={searchResults || []}
+        />
+      )}
     </>
   );
 };
