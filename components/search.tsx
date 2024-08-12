@@ -28,6 +28,11 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
     trigger(searchValues);
   }, []);
 
+  const handleInputChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^А-ЯҐЄІЇ0-9]/gi, "").toUpperCase();
+    setSearchValues({ ...searchValues, [key]: value });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setQueryParams(searchValues);
@@ -57,21 +62,9 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
             ))}
           </Autocomplete>
           <div className="flex gap-2">
-            <Input
-              label="Фонд"
-              value={searchValues.f}
-              onChange={(e) => setSearchValues({ ...searchValues, f: e.target.value })}
-            />
-            <Input
-              label="Опис"
-              value={searchValues.d}
-              onChange={(e) => setSearchValues({ ...searchValues, d: e.target.value })}
-            />
-            <Input
-              label="Справа"
-              value={searchValues.c}
-              onChange={(e) => setSearchValues({ ...searchValues, c: e.target.value })}
-            />
+            <Input label="Фонд" value={searchValues.f} onChange={handleInputChange("f")} />
+            <Input label="Опис" value={searchValues.d} onChange={handleInputChange("d")} />
+            <Input label="Справа" value={searchValues.c} onChange={handleInputChange("c")} />
           </div>
           <Button type="submit" color="primary" variant="light" className="w-full" endContent={<FaFeather />}>
             Полетіли
