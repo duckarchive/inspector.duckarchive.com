@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
@@ -8,8 +7,16 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
+import GoogleAnalytics from '@/components/ga';
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://duck-inspector.netlify.app"),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    images: '/og-image.png',
+  },
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
@@ -35,6 +42,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head />
+      <GoogleAnalytics />
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",

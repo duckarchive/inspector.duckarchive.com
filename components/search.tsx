@@ -11,6 +11,7 @@ import useSearchRequest from "../hooks/useSearchRequest";
 import DuckTable from "./duck-table";
 import Loader from "./loader";
 import useIsMobile from "../hooks/useIsMobile";
+import useGAEvent from "../hooks/useGAEvent";
 
 type TableItem = SearchResponse[number];
 
@@ -20,6 +21,7 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ archives }) => {
   const isMobile = useIsMobile();
+  const ga = useGAEvent();
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
   const { searchResults, isLoading, isError, trigger } = useSearchRequest();
@@ -35,6 +37,8 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const fullCode = `${searchValues.a}-${searchValues.f}-${searchValues.d}-${searchValues.c}`;
+    ga({ category: "search", action: "submit", label: "search", value: fullCode });
     setQueryParams(searchValues);
     trigger(searchValues);
   };
