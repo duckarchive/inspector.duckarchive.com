@@ -40,9 +40,9 @@ const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({ resour
       showArrow
       placement="left"
     >
-      <p className="leading-4 cursor-help" {...rest}>
+      <div className="leading-4 cursor-help" {...rest}>
         {inner}
-      </p>
+      </div>
     </Tooltip>
   ) : (
     inner

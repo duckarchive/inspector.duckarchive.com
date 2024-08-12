@@ -7,35 +7,32 @@ import DuckTable from "@/components/duck-table";
 import useIsMobile from "../hooks/useIsMobile";
 import useCyrillicParams from "../hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
-import useArchive from "../hooks/useArchive";
 import { sortByCode } from "../lib/table";
 import Loader from "./loader";
+import useDescription from "../hooks/useDescription";
+import { GetDescriptionResponse } from "../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
 
-type TableItem = Archives[number];
+type TableItem = GetDescriptionResponse["cases"][number];
 
-interface ArchiveTableProps {
+interface DescriptionTableProps {
   resources: Resources;
 }
 
-const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
+const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
   const params = useCyrillicParams();
-  const code = params["archive-code"];
+  const archiveCode = params["archive-code"];
+  const fundCode = params["fund-code"];
+  const code = params["description-code"];
   const isMobile = useIsMobile();
-  const { archive, isLoading } = useArchive(code);
+  const { description, isLoading } = useDescription(archiveCode, fundCode, code);
 
   if (isLoading) return <Loader />
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title="Архів" description={archive?.title || "Без назви"} />
+      <PagePanel title="Опис" description={description?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
-        enabledFilters={{
-          partFunds: true,
-          preUssrFunds: true,
-          ussrFunds: true,
-          online: true,
-        }}
         columns={[
           {
             field: "code",
@@ -46,21 +43,21 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/archives/${code}/${row.data.code}`}>
-                {row.value || `Фонд ${row.data.code}`}
+              <Link href={`/archives/${archiveCode}/${fundCode}/${code}/${row.data.code}`}>
+                {row.value || `Опис ${row.data.code}`}
               </Link>
             ),
           },
           {
             colId: "sync",
-            headerName: "Описи",
+            headerName: "Справи",
             hide: isMobile,
           },
         ]}
-        rows={archive?.funds.sort(sortByCode) || []}
+        rows={description?.cases.sort(sortByCode) || []}
       />
     </>
   );
 };
 
-export default ArchiveTable;
+export default DescriptionTable;

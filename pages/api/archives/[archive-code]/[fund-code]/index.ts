@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../../../db";
+import prisma from "@/lib/db";
 
 export type GetFundResponse = Prisma.FundGetPayload<{
   include: {
@@ -11,7 +11,7 @@ export type GetFundResponse = Prisma.FundGetPayload<{
         title: true;
         matches: {
           select: {
-            updated_at: true,
+            updated_at: true;
             children_count: true;
             resource_id: true;
           };
@@ -21,10 +21,7 @@ export type GetFundResponse = Prisma.FundGetPayload<{
   };
 }>;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<GetFundResponse>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<GetFundResponse>) {
   const archiveCode = req.query["archive-code"] as string;
   const fundCode = req.query["fund-code"] as string;
   // READ ONE DATA
@@ -50,17 +47,16 @@ export default async function handler(
                 updated_at: true,
                 children_count: true,
                 resource_id: true,
-              }
+              },
             },
           },
         },
       },
     });
     if (fund) {
-      res.setHeader('Cache-Control', 'public, max-age=10800');
       res.json(fund);
     } else {
-      res.status(404);
+      res.status(404).end();
     }
   }
 }

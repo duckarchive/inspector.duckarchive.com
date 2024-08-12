@@ -7,27 +7,29 @@ import DuckTable from "@/components/duck-table";
 import useIsMobile from "../hooks/useIsMobile";
 import useCyrillicParams from "../hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
-import useArchive from "../hooks/useArchive";
 import { sortByCode } from "../lib/table";
 import Loader from "./loader";
+import useFund from "../hooks/useFund";
+import { GetFundResponse } from "../pages/api/archives/[archive-code]/[fund-code]";
 
-type TableItem = Archives[number];
+type TableItem = GetFundResponse["descriptions"][number];
 
-interface ArchiveTableProps {
+interface FundTableProps {
   resources: Resources;
 }
 
-const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
+const FundTable: React.FC<FundTableProps> = ({ resources }) => {
   const params = useCyrillicParams();
-  const code = params["archive-code"];
+  const archiveCode = params["archive-code"];
+  const code = params["fund-code"];
   const isMobile = useIsMobile();
-  const { archive, isLoading } = useArchive(code);
+  const { fund, isLoading } = useFund(archiveCode, code);
 
   if (isLoading) return <Loader />
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title="Архів" description={archive?.title || "Без назви"} />
+      <PagePanel title="Фонд" description={fund?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
         enabledFilters={{
@@ -46,7 +48,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/archives/${code}/${row.data.code}`}>
+              <Link href={`/archives/${archiveCode}/${code}/${row.data.code}`}>
                 {row.value || `Фонд ${row.data.code}`}
               </Link>
             ),
@@ -57,10 +59,10 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             hide: isMobile,
           },
         ]}
-        rows={archive?.funds.sort(sortByCode) || []}
+        rows={fund?.descriptions.sort(sortByCode) || []}
       />
     </>
   );
 };
 
-export default ArchiveTable;
+export default FundTable;

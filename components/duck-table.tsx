@@ -17,6 +17,7 @@ export enum QuickFilter {
   PRE_USSR_FUNDS = "preUssrFunds",
   USSR_FUNDS = "ussrFunds",
   PART_FUNDS = "partFunds",
+  ONLINE = "online",
 }
 
 const FILTER_CONDITIONS = {
@@ -41,6 +42,7 @@ const FILTER_CONDITIONS = {
     type: "startsWith",
     filter: "П",
   },
+  [QuickFilter.ONLINE]: {},
 };
 
 interface DuckTableProps<T> {
@@ -123,16 +125,19 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
             </Button>
           )}
         </div>
-        <Button
-          radius="full"
-          color="secondary"
-          size="sm"
-          isDisabled
-          variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
-          onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
-        >
-          🛠️ Доступні 🛠️ 
-        </Button>
+
+        {enabledFilters?.[QuickFilter.PART_FUNDS] && (
+          <Button
+            radius="full"
+            color="secondary"
+            size="sm"
+            isDisabled
+            variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
+            onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
+          >
+            🛠️ Доступні 🛠️
+          </Button>
+        )}
       </div>
       <div className={`ag-theme-quartz h-96 flex-grow ${theme === "dark" ? "ag-theme-quartz-dark" : ""}`}>
         {/* @ts-ignore */}
