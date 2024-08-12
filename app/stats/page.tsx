@@ -46,7 +46,7 @@ type TableItem = GetSyncReportResponse[number];
 
 const StatsPage: NextPage = () => {
   const [stats, setStats] = useState<GetLatestStatsResponse>([[], []]);
-  // const [report, setReport] = useState<GetSyncReportResponse>([]);
+  const [report, setReport] = useState<GetSyncReportResponse>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -56,9 +56,9 @@ const StatsPage: NextPage = () => {
       setStats(data);
     };
     const fetchReport = async () => {
-      // const response = await fetch("/api/stats/report");
-      // const data = await response.json();
-      // setReport(data);
+      const response = await fetch("/api/stats/report");
+      const data = await response.json();
+      setReport(data);
       setIsLoaded(true);
     };
 
@@ -71,7 +71,7 @@ const StatsPage: NextPage = () => {
   ) : (
     <>
       <PagePanel titleLabel="Статистика" title="Список справ знайдених онлайн за минулу добу">
-        {/* <StatsReport data={report} /> */}
+        <StatsReport data={report} />
       </PagePanel>
       <DuckTable<TableItem>
         columns={[
