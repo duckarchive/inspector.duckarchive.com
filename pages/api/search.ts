@@ -23,12 +23,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (req.method === "POST") {
     const _a = a || "%"; // case sensitive
     const rest = `${f || "%"}-${d || "%"}-${c || "%"}`.toUpperCase();
-    const matches = await prisma.match.findMany({
-      where: {
-        full_code: `${_a}-${rest}`,
-      },
-      take: 20,
-    });
+    const full_code = `${_a}-${rest}`;
+    const matches: Match[] = await prisma.$queryRaw`
+      select * from matches
+      where full_code like ${full_code}
+      limit 20
+    `;
 
     const searchResults = matches
       .map((match) => {
