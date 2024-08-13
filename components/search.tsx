@@ -7,11 +7,12 @@ import { SearchRequest, SearchResponse } from "@/pages/api/search";
 import useSearch from "@/hooks/useSearch";
 import { Autocomplete, AutocompleteItem, Button, Input, Link } from "@nextui-org/react";
 import { FaFeather } from "react-icons/fa";
-import useSearchRequest from "../hooks/useSearchRequest";
+import useSearchRequest from "@/hooks/useSearchRequest";
 import DuckTable from "./duck-table";
 import Loader from "./loader";
-import useIsMobile from "../hooks/useIsMobile";
-import useGAEvent from "../hooks/useGAEvent";
+import useIsMobile from "@/hooks/useIsMobile";
+import useGAEvent from "@/hooks/useGAEvent";
+import { sortCode } from "@/lib/table";
 
 type TableItem = SearchResponse[number];
 
@@ -92,20 +93,21 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
             },
             {
               field: "fund_code",
+              comparator: sortCode,
               headerName: "Фонд",
               flex: 1,
               hide: isMobile,
             },
             {
               field: "description_code",
-              comparator: undefined,
+              comparator: sortCode,
               headerName: "Опис",
               flex: 1,
               hide: isMobile,
             },
             {
               field: "case_code",
-              comparator: undefined,
+              comparator: sortCode,
               headerName: "Справа",
               flex: 1,
               hide: isMobile,
