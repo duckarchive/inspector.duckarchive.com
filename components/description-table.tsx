@@ -44,7 +44,7 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${archiveCode}/${fundCode}/${code}/${row.data.code}`}>
-                {row.value || `Опис ${row.data.code}`}
+                {row.value || `Справа ${row.data.code}`}
               </Link>
             ),
           },

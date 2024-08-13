@@ -49,7 +49,7 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${archiveCode}/${code}/${row.data.code}`}>
-                {row.value || `Фонд ${row.data.code}`}
+                {row.value || `Опис ${row.data.code}`}
               </Link>
             ),
           },
