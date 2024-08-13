@@ -50,7 +50,7 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
           },
           {
             colId: "sync",
-            headerName: "Справи",
+            headerName: "Файли",
             hide: isMobile,
           },
         ]}
