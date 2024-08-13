@@ -42,7 +42,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
           },
           {
             field: "title",
-            headerName: "Назва",
+            headerName: "Назва фонду",
             flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (

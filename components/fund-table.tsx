@@ -44,7 +44,7 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
           },
           {
             field: "title",
-            headerName: "Назва",
+            headerName: "Назва опису",
             flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
@@ -55,7 +55,7 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
           },
           {
             colId: "sync",
-            headerName: "Описи",
+            headerName: "Справи",
             hide: isMobile,
           },
         ]}

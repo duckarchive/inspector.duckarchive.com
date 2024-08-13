@@ -39,7 +39,7 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
           },
           {
             field: "title",
-            headerName: "Назва",
+            headerName: "Назва справи",
             flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
