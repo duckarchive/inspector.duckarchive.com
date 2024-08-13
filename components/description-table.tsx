@@ -30,7 +30,7 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title="Опис" description={description?.title || "Без назви"} />
+      <PagePanel title={`Опис ${code}`} description={description?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
         columns={[

@@ -32,7 +32,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title="Справа" description={caseItem?.title || "Без назви"} />
+      <PagePanel title={`Справа ${code}`} description={caseItem?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
         columns={[

@@ -27,7 +27,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title="Архів" description={archive?.title || "Без назви"} />
+      <PagePanel title={`Архів ${code}`} description={archive?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
         enabledFilters={{

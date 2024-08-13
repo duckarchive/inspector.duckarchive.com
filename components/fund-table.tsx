@@ -29,7 +29,7 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title="Фонд" description={fund?.title || "Без назви"} />
+      <PagePanel title={`Фонд ${code}`} description={fund?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
         enabledFilters={{
