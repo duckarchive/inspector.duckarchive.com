@@ -67,7 +67,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           ),
         },
       ]}
-      rows={report || []}
+      rows={report}
     />
   );
 };

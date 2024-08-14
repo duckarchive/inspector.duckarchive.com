@@ -1,3 +1,4 @@
+import groupBy from "lodash/groupBy.js";
 import prisma from "../lib/db";
 import { Archive, Case, Description, Fund, Match } from "@prisma/client";
 
@@ -14,7 +15,12 @@ export type Report = {
   is_online: boolean;
 }[];
 
-export const getYesterdayReport = async () => {
+export type ReportSummary = {
+  code: Archive["code"];
+  count: number;
+}[]; 
+
+export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => {
   // start of yesterday using date-fns
   const startOfYesterday = new Date();
   startOfYesterday.setDate(startOfYesterday.getDate() - 1);
@@ -76,5 +82,12 @@ export const getYesterdayReport = async () => {
       );
   `;
 
-  return updatedMatchesInDateRange;
+  const groupedByArchive = Object.entries(groupBy(updatedMatchesInDateRange, "archive_code")).map(([code, rows]) => ({
+    code,
+    count: rows.length,
+  }));
+
+  const limitedReport = updatedMatchesInDateRange.slice(0, 10000);
+
+  return [limitedReport, groupedByArchive];
 };

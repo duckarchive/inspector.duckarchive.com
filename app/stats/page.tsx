@@ -7,12 +7,12 @@ import ReportModal from "@/components/report-modal";
 
 const ReportPage: NextPage = async () => {
   const resources = await getResources();
-  const report = await getYesterdayReport();
+  const [report, reportSummary] = await getYesterdayReport();
 
   return (
     <>
-      <PagePanel title="Звіт" description="Список справ онлайн, знайдених за минулу добу">
-        <ReportModal data={report} />
+      <PagePanel title="Звіт" description="Список справ онлайн, знайдених за минулу добу. З ціллю оптимізації, максимальна кількість справ до відображення обмежено 10,000.">
+        <ReportModal data={reportSummary} />
       </PagePanel>
       <ReportTable resources={resources} report={report} />
     </>

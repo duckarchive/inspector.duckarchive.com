@@ -1,11 +1,19 @@
 "use client";
 
-import { groupBy } from "lodash";
-import { Report } from "@/data/report";
-import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { ReportSummary } from "@/data/report";
+import {
+  Button,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 
 interface ReportModalProps {
-  data: Report;
+  data: ReportSummary;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
@@ -15,10 +23,8 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
     if (!token) {
       return;
     }
-    const groupedByArchive = groupBy(data, "archive_code");
-    const raw = Object.entries(groupedByArchive)
-      .map(([archiveCode, rows]) => {
-        return `*\\#${archiveCode}*: ${rows.length}`;
+    const raw = data.map(({ code, count }) => {
+        return `*\\#${code}*: ${count}`;
       })
       .join("\n\n");
     const date = new Date().toISOString().split("T")[0].replace(/-/g, "\\-");
@@ -40,8 +46,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
     });
   };
 
-  const groupedByArchive = groupBy(data, "archive_code");
-  const telegramBotToken = localStorage.getItem("duck_fs_tg_token");
+  const telegramBotToken = typeof window !== "undefined" && window.localStorage.getItem("duck_fs_tg_token");
 
   return (
     <>
@@ -53,23 +58,20 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
           <ModalHeader>Нові справи за минулу добу</ModalHeader>
           <ModalBody>
             <ul>
-              {Object.entries(groupedByArchive).map(([archiveCode, rows]) => (
-                <li key={archiveCode}>
-                  <Link href={`/archives/${archiveCode}`}>
-                    {archiveCode}
-                  </Link>
-                  : {rows.length}
+              {data.map(({ code, count }) => (
+                <li key={code}>
+                  <Link href={`/archives/${code}`}>{code}</Link>: {count}
                 </li>
               ))}
             </ul>
           </ModalBody>
-          {
-            telegramBotToken && (
-              <ModalFooter>
-                <Button onClick={() => handleSendMessageTG(telegramBotToken)}>Відправити в групу</Button>
-              </ModalFooter>
-            )
-          }
+          {telegramBotToken && (
+            <ModalFooter>
+              <Button onClick={() => handleSendMessageTG(telegramBotToken)}>
+                Відправити в групу
+              </Button>
+            </ModalFooter>
+          )}
         </ModalContent>
       </Modal>
     </>
