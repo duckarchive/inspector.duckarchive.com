@@ -10,8 +10,8 @@ export const sortCode = (a: string, b: string) => {
   const upB = b.toUpperCase();
   const idxA = groups.findIndex((group) => upA.startsWith(group));
   const idxB = groups.findIndex((group) => upB.startsWith(group));
-  const qA = idxA + 1;
-  const qB = idxB + 1;
+  const qA = idxA - 1;
+  const qB = idxB - 1;
   const pureA = upA.replace(/[^0-9]/g, "");
   const pureB = upB.replace(/[^0-9]/g, "");
   if (pureA === pureB) return qB - qA;
