@@ -81,7 +81,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ isLarge }) =>
                 <p className="text-gray-600 text-sm mb-2 bg-amber-100 p-2">
                   Це довідка про формат вводу в поле Швидкого пошуку. Для розширеного пошуку слід використовувати форму
                   на&nbsp;
-                  <Link href="/search-results" className="text-sm">
+                  <Link href="/search" className="text-sm">
                     сторінці пошуку
                   </Link>
                 </p>
