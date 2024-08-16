@@ -14,7 +14,7 @@ export default function Home() {
           Щоб розпочати пошук, введіть &quot;шифр&quot; справи в поле нижче та натисніть &quot;Enter&quot;.
         </p>
         <div className="mt-2 w-full">
-          <SearchInputPortable placeholder="ДАХмО-Р6193-12-6238" />
+          <SearchInputPortable isLarge />
         </div>
       </div>
     </section>
