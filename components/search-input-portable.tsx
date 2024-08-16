@@ -89,32 +89,39 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ isLarge }) =>
 
                 <div className="flex gap-1 w-full justify-around items-center text-center">
                   <div>
-                    <p className="text-3xl">ДАХмО</p>
-                    <p className="text-gray-600 text-xs">код архіву</p>
+                    <p className="text-lg md:text-3xl">ДАХмО</p>
+                    <p className="text-gray-600 text-xs hidden md:inline">код архіву</p>
+                    <p className="text-gray-600 text-xs inline md:hidden">архів</p>
                   </div>
                   <div>
-                    <p className="text-3xl">-</p>
-                    <p className="text-gray-600 text-xs">дефіс</p>
+                    <p className="text-lg md:text-3xl">-</p>
+                    <p className="text-gray-600 text-xs hidden md:inline">дефіс</p>
+                    <p className="text-gray-600 text-xs inline md:hidden">-</p>
                   </div>
                   <div>
-                    <p className="text-3xl">Р6193</p>
-                    <p className="text-gray-600 text-xs">код фонду</p>
+                    <p className="text-lg md:text-3xl">Р6193</p>
+                    <p className="text-gray-600 text-xs hidden md:inline">код фонду</p>
+                    <p className="text-gray-600 text-xs inline md:hidden">фонд</p>
                   </div>
                   <div>
-                    <p className="text-3xl">-</p>
-                    <p className="text-gray-600 text-xs">дефіс</p>
+                    <p className="text-lg md:text-3xl">-</p>
+                    <p className="text-gray-600 text-xs hidden md:inline">дефіс</p>
+                    <p className="text-gray-600 text-xs inline md:hidden">-</p>
                   </div>
                   <div>
-                    <p className="text-3xl">12</p>
-                    <p className="text-gray-600 text-xs">код опису</p>
+                    <p className="text-lg md:text-3xl">12</p>
+                    <p className="text-gray-600 text-xs hidden md:inline">код опису</p>
+                    <p className="text-gray-600 text-xs inline md:hidden">опис</p>
                   </div>
                   <div>
-                    <p className="text-3xl">-</p>
-                    <p className="text-gray-600 text-xs">дефіс</p>
+                    <p className="text-lg md:text-3xl">-</p>
+                    <p className="text-gray-600 text-xs hidden md:inline">дефіс</p>
+                    <p className="text-gray-600 text-xs inline md:hidden">-</p>
                   </div>
                   <div>
-                    <p className="text-3xl">321А</p>
-                    <p className="text-gray-600 text-xs">код справи</p>
+                    <p className="text-lg md:text-3xl">321А</p>
+                    <p className="text-gray-600 text-xs hidden md:inline">код справи</p>
+                    <p className="text-gray-600 text-xs inline md:hidden">справа</p>
                   </div>
                 </div>
                 <p className="text-gray-600 text-sm mt-2">Приклади:</p>
@@ -152,7 +159,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ isLarge }) =>
                   Всі літерні реквізити слід вводити великими літерами без пробілів та дефісів.
                 </p>
                 <p className="text-gray-600 text-sm mt-2">Р-фонди</p>
-                <div className="flex gap-1">
+                <div className="flex gap-1 flex-wrap">
                   <Chip startContent={<FaCheck size={18} />} color="success">
                     Р6193
                   </Chip>
@@ -168,7 +175,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ isLarge }) =>
                 </div>
                 <p className="text-gray-600 text-sm mt-2">Підфонди/описи/справи</p>
 
-                <div className="flex gap-1">
+                <div className="flex gap-1 flex-wrap">
                   <Chip startContent={<FaCheck size={18} />} color="success">
                     10А
                   </Chip>
@@ -183,7 +190,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ isLarge }) =>
                   </Chip>
                 </div>
                 <p className="text-gray-600 text-sm mt-2">Томи/розділи</p>
-                <div className="flex gap-1">
+                <div className="flex gap-1 flex-wrap">
                   <Chip startContent={<FaCheck size={18} />} color="success">
                     3Т1
                   </Chip>
