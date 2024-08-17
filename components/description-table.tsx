@@ -54,7 +54,7 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
             hide: isMobile,
           },
         ]}
-        rows={description?.cases.sort(sortByCode) || []}
+        rows={description?.cases?.sort(sortByCode) || []}
       />
     </>
   );
