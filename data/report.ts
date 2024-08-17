@@ -1,6 +1,9 @@
 import groupBy from "lodash/groupBy.js";
 import prisma from "../lib/db";
-import { Archive, Case, Description, Fund, Match } from "@prisma/client";
+import { Archive, Case, Description, Fund, Match, MatchResult } from "@prisma/client";
+import chunk from "lodash/chunk.js";
+
+process.env.TZ = "UTC";
 
 export type Report = {
   id: Match["id"];
@@ -18,7 +21,7 @@ export type Report = {
 export type ReportSummary = {
   code: Archive["code"];
   count: number;
-}[]; 
+}[];
 
 export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => {
   // start of yesterday using date-fns
@@ -32,62 +35,121 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   endOfYesterday.setHours(23, 59, 59, 999);
   const to = endOfYesterday.toISOString();
 
-  const updatedMatchesInDateRange: Report = await prisma.$queryRaw`
+  let prevMatchResults: MatchResult[] = await prisma.$queryRaw`
     with
-      latest_rows as
-        (
-          select match_id, count, created_at, row_number() over (partition by match_id order by created_at desc) as rn
-          from match_results
-          where created_at >= ${from}::timestamp and created_at < ${to}::timestamp
-      ),
-      previous_rows as
-        (
-          select match_id, count, created_at
-          from match_results
-          where (match_id, created_at) in
-              (
-            select match_id, max(created_at)
-            from match_results
-            where created_at < ${from}::timestamp
-            group by match_id
-          )
+      prev_match_results as (
+        select match_id, count, created_at, row_number() over (partition by match_id order by created_at desc) as rn
+        from match_results
+        where created_at < ${from}::timestamp
       )
-    select m.id,
-          m.updated_at,
-          m.resource_id,
-          a.code as archive_code,
-          f.code as fund_code,
-          d.code as description_code,
-          c.code as case_code,
-          m.children_count,
-          lr.count as last_count,
-          pr.count as prev_count,
-          m.url,
-          case
-            when (pr.count = 0 or pr.count is null) and m.children_count > 0 then true
-            else false
-          end as is_online
-    from latest_rows lr
-    join matches m on lr.match_id = m.id
-    left join previous_rows pr on m.id = pr.match_id
-    left join archives a on m.archive_id = a.id
-    left join funds f on m.fund_id = f.id
-    left join descriptions d on m.description_id = d.id
-    left join cases c on m.case_id = c.id
-    where lr.rn = 1
-      and (
-        (pr.count is null and m.children_count > 0) or
-        (pr.count = 0 and m.children_count > 0) or
-        (pr.count > 0 and m.children_count = 0)
-      );
+    select
+      pmr.created_at,
+      pmr.match_id,
+      pmr.count
+    from prev_match_results pmr
+    where pmr.rn = 1;
   `;
 
-  const groupedByArchive = Object.entries(groupBy(updatedMatchesInDateRange, "archive_code")).map(([code, rows]) => ({
+  const prevMatchResultsHash: Record<MatchResult["match_id"], MatchResult["count"]> = {};
+
+  prevMatchResults.forEach((result) => {
+    prevMatchResultsHash[result.match_id] = result.count;
+  });
+
+  // garbage collection
+  prevMatchResults = null as any;
+
+  let lastMatchResults: MatchResult[] = await prisma.$queryRaw`
+    with
+      last_match_results as (
+        select match_id, count, created_at, row_number() over (partition by match_id order by created_at desc) as rn
+        from match_results
+        where created_at >= ${from}::timestamp and created_at < ${to}::timestamp
+      )
+    select 
+      lmr.created_at,
+      lmr.match_id,
+      lmr.count
+    from last_match_results lmr
+    where lmr.rn = 1;
+  `;
+
+  const updatedMatchResultsHash: Record<MatchResult["match_id"], boolean> = {};
+
+  const updatedMatchResults = lastMatchResults.filter((result) => {
+    const prevCount = prevMatchResultsHash[result.match_id] || 0;
+    if (prevCount !== result.count) {
+      updatedMatchResultsHash[result.match_id] = result.count > prevCount;
+      return true;
+    }
+  });
+
+  // garbage collection
+  lastMatchResults = null as any;
+
+  const updatedMatchResultIds = updatedMatchResults.map((result) => result.match_id);
+  const updatedMatchResultIdsChunks = chunk(updatedMatchResultIds, 1000);
+
+  let updatedMatches: any[] = [];
+  for (const updatedMatchResultIdsChunk of updatedMatchResultIdsChunks) {
+    
+    const dbMatches = await prisma.match.findMany({
+      where: {
+        id: {
+          in: updatedMatchResultIdsChunk,
+        },
+      },
+      select: {
+        id: true,
+        updated_at: true,
+        resource_id: true,
+        archive: {
+          select: {
+            code: true,
+          },
+        },
+        fund: {
+          select: {
+            code: true,
+          },
+        },
+        description: {
+          select: {
+            code: true,
+          },
+        },
+        case: {
+          select: {
+            code: true,
+          },
+        },
+        children_count: true,
+        url: true,
+      },
+    });
+
+    updatedMatches = updatedMatches.concat(dbMatches);
+  }
+
+  const report = updatedMatches.map((match) => ({
+    id: match.id,
+    updated_at: match.updated_at,
+    resource_id: match.resource_id,
+    archive_code: match.archive.code,
+    fund_code: match.fund.code,
+    description_code: match.description.code,
+    case_code: match.case.code,
+    children_count: match.children_count,
+    url: match.url,
+    is_online: updatedMatchResultsHash[match.id],
+  }));
+
+  const groupedByArchive = Object.entries(groupBy(report, "archive_code")).map(([code, rows]) => ({
     code,
     count: rows.length,
   }));
 
-  const limitedReport = updatedMatchesInDateRange.slice(0, 10000);
+  const limitedReport = report.slice(0, 10000);
 
   return [limitedReport, groupedByArchive];
 };
