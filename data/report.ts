@@ -64,9 +64,9 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
           pr.count as prev_count,
           m.url,
           case
-        when (pr.count = 0 or pr.count is null) and m.children_count > 0 then true
-        else false
-      end as is_online
+            when (pr.count = 0 or pr.count is null) and m.children_count > 0 then true
+            else false
+          end as is_online
     from latest_rows lr
     join matches m on lr.match_id = m.id
     left join previous_rows pr on m.id = pr.match_id
