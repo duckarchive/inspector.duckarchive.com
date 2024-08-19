@@ -10,7 +10,7 @@ import { Navbar } from "@/components/navbar";
 import GoogleAnalytics from '@/components/ga';
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://duck-inspector.netlify.app"),
+  metadataBase: new URL(siteConfig.url || ""),
   alternates: {
     canonical: '/',
   },

@@ -2,6 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Інспектор",
+  url: process.env.WEB_APP_URL,
   description: "Пошук справ українських архівів онлайн",
   navItems: [
     {
@@ -15,14 +16,9 @@ export const siteConfig = {
     {
       label: "Статистика",
       href: "/stats",
-    },
-    {
-      label: "🛠️ Продукти 🛠️",
-      href: "/duck-universe",
-    },
+    }
   ],
   links: {
-    docs: "https://nextui.org",
     telegram: "https://t.me/spravnakachka",
   },
 };

@@ -29,7 +29,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
       .join("\n\n");
     const date = new Date().toISOString().split("T")[0].replace(/-/g, "\\-");
     const header = `*🌳 Знайдені справи за минулу добу*\n🗓️ ${date}\n\n`;
-    const markdownLink = `Переглянути повний звіт можна [за посиланням](https://duck-inspector.netlify.app/stats)\n`;
+    const markdownLink = `Переглянути повний звіт можна [за посиланням](${process.env.WEB_APP_URL}/stats)\n`;
     const message = header + raw.replace(/(-|\+|\(|\)|\.|=)/g, "\\$1") + `\n\n${markdownLink}`;
 
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
