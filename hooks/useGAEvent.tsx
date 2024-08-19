@@ -10,7 +10,7 @@ interface GAEvent {
 
 const useGAEvent = () => {
   const event = useCallback(({ category, action, label, value }: GAEvent) => {
-    (window as any).gtag('event', action, {
+    (window as any).gtag?.('event', action, {
       event_category: category,
       event_label: label,
       value: value,

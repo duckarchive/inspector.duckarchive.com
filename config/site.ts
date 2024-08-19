@@ -16,6 +16,10 @@ export const siteConfig = {
     {
       label: "Статистика",
       href: "/stats",
+    },
+    {
+      label: "Проєкти",
+      href: "/universe",
     }
   ],
   links: {
