@@ -24,9 +24,9 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
   const fundCode = params["fund-code"];
   const code = params["description-code"];
   const isMobile = useIsMobile();
-  const { description, isLoading } = useDescription(archiveCode, fundCode, code);
+  const { description, isLoading, page } = useDescription(archiveCode, fundCode, code);
 
-  if (isLoading) return <Loader />
+  if (isLoading) return <Loader progress={page} />
   // if (isError) return <Error error={} />
   return (
     <>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@nextui-org/react";
+import { Link, Spinner } from "@nextui-org/react";
 
 const funnyMessages = [
   "Качка може ходити, плавати і літати!",
@@ -22,13 +22,28 @@ const funnyMessages = [
   "Деякі види качок запам’ятовують маршрути міграції на все життя.",
 ];
 
-const Loader: React.FC = () => {
+interface LoaderProps {
+  progress?: number;
+}
+
+const Loader: React.FC<LoaderProps> = ({ progress }) => {
   return (
     <div className="flex flex-col h-full items-center justify-center">
       <Spinner />
       <p className="mt-2 text-center" suppressHydrationWarning>
         {funnyMessages[Math.floor(Math.random() * funnyMessages.length)]}
       </p>
+      {!!progress && (
+        <>
+          <p className="mt-2 text-center text-sm text-gray-400" suppressHydrationWarning>
+            Завантаження {progress} сторінки.
+          </p>
+          <p className="text-center text-sm text-gray-400 w-80" suppressHydrationWarning>
+            Завантаження списків на більше ніж 10,000 елементів може займати багато часу. Зручніше та швидше шукати
+            конкретну справу за реквізитами <Link href="/search">на сторінці пошуку.</Link>
+          </p>
+        </>
+      )}
     </div>
   );
 };

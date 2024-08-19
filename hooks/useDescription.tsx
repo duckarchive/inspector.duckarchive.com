@@ -1,29 +1,35 @@
-import useSWRInfinite from "swr/infinite";
+"use client";
+
 import { fetcher } from "@/lib/fetcher";
 import { GetDescriptionResponse } from "../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 const useDescription = (archiveCode: string, fundCode: string, code: string) => {
-  const getKey = (pageIndex: number, previousPageData: GetDescriptionResponse) => {
-    if (previousPageData && !previousPageData.cases.length) return null // reached the end
-    return `/api/archives/${archiveCode}/${fundCode}/${code}?page=${pageIndex}`
-  }
-  const { data, error, isLoading } = useSWRInfinite<GetDescriptionResponse>(getKey, fetcher, {
-    initialSize: 99,
-  });
+  const [fullData, setFullData] = useState<GetDescriptionResponse>();
+  const pageIndex = Math.floor((fullData?.cases.length || 1) / 10000) || 0;
+  const { data, isLoading, error } = useSWR(
+    `/api/archives/${archiveCode}/${fundCode}/${code}?page=${pageIndex}`,
+    fetcher,
+  );
 
-  const fullData: Partial<GetDescriptionResponse> = {};
+  useEffect(() => {
+    console.log("useEffect", isLoading, data);
+    if (!isLoading && data?.cases.length) {
+      console.log("if", !isLoading);
+      setFullData((prev) => ({
+        ...data,
+        cases: [...(prev?.cases || []), ...data.cases],
+      }));
+    }
+  }, [isLoading]);
 
-  if (data && !isLoading) {
-    data?.forEach((pageData) => {
-      fullData.cases = [...(fullData.cases || []), ...pageData.cases];
-    });
-  }
- 
   return {
     description: fullData,
-    isLoading: isLoading,
-    isError: error
-  }
-}
+    isLoading,
+    isError: error,
+    page: pageIndex + 1
+  };
+};
 
 export default useDescription;

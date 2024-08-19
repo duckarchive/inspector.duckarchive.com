@@ -1,7 +1,8 @@
 import React from 'react';
 import Script from 'next/script';
 
-const GoogleAnalytics = () => {
+const GoogleAnalytics: React.FC = () => {
+  if (process.env.NODE_ENV === 'development') return null;
   return (
     <>
       <Script
