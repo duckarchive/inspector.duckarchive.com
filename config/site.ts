@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Інспектор",
-  url: process.env.WEB_APP_URL,
+  url: "https://duck-inspector.vercel.app",
   description: "Пошук справ українських архівів онлайн",
   navItems: [
     {
