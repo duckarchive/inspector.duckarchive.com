@@ -31,7 +31,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
         const archiveRow = `*\\#${archive_code}*:\n${funds
           .sort((a, b) => b.count - a.count)
           .slice(0, LIMIT_FUNDS)
-          .map(({ fund_code, count }) => `  - \\${fund_code}: ${count}`)
+          .map(({ fund_code, count }) => `  - ${fund_code}: ${count}`)
           .join("\n")}`;
 
         if (funds.length > LIMIT_FUNDS) {
