@@ -13,6 +13,8 @@ import {
 } from "@nextui-org/react";
 import { siteConfig } from "../config/site";
 
+const LIMIT_FUNDS = 3;
+
 interface ReportModalProps {
   data: ReportSummary;
 }
@@ -24,8 +26,18 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
     if (!token) {
       return;
     }
-    const raw = data.map(({ code, count }) => {
-        return `*\\#${code}*: ${count}`;
+    const raw = data
+      .map(({ archive_code, funds }) => {
+        const archiveRow = `*\\#${archive_code}*:\n${funds
+          .sort((a, b) => b.count - a.count)
+          .slice(0, LIMIT_FUNDS)
+          .map(({ fund_code, count }) => `  - \\${fund_code}: ${count}`)
+          .join("\n")}`;
+
+        if (funds.length > LIMIT_FUNDS) {
+          return archiveRow + "\n  - та інші...";
+        }
+        return archiveRow;
       })
       .join("\n\n");
     const date = new Date().toISOString().split("T")[0].replace(/-/g, "\\-");
@@ -57,20 +69,29 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader>Нові справи за минулу добу</ModalHeader>
-          <ModalBody>
+          <ModalBody className="max-h-96 overflow-y-scroll">
             <ul>
-              {data.map(({ code, count }) => (
-                <li key={code}>
-                  <Link href={`/archives/${code}`}>{code}</Link>: {count}
+              {data.map(({ archive_code, funds }) => (
+                <li key={archive_code} className="mb-4">
+                  <Link href={`/archives/${archive_code}`}>{archive_code}</Link>:
+                  <ul className="list-disc ml-4 text-sm">
+                    {funds
+                      .sort((a, b) => b.count - a.count)
+                      .slice(0, LIMIT_FUNDS)
+                      .map(({ fund_code, count }) => (
+                        <li key={fund_code}>
+                          <Link href={`/archives/${archive_code}/${fund_code}`} className="text-sm">{fund_code}</Link>: {count}
+                        </li>
+                      ))}
+                    {funds.length > LIMIT_FUNDS && <li>та інші</li>}
+                  </ul>
                 </li>
               ))}
             </ul>
           </ModalBody>
           {telegramBotToken && (
             <ModalFooter>
-              <Button onClick={() => handleSendMessageTG(telegramBotToken)}>
-                Відправити в групу
-              </Button>
+              <Button onClick={() => handleSendMessageTG(telegramBotToken)}>Відправити в групу</Button>
             </ModalFooter>
           )}
         </ModalContent>

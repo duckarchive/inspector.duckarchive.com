@@ -19,8 +19,11 @@ export type Report = {
 }[];
 
 export type ReportSummary = {
-  code: Archive["code"];
-  count: number;
+  archive_code: Archive["code"];
+  funds: {
+    fund_code: Fund["code"];
+    count: number;
+  }[];
 }[];
 
 export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => {
@@ -144,12 +147,20 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     is_online: updatedMatchResultsHash[match.id],
   }));
 
-  const groupedByArchive = Object.entries(groupBy(report, "archive_code")).map(([code, rows]) => ({
-    code,
-    count: rows.length,
+  // const groupedByArchive = Object.entries(groupBy(report, "archive_code")).map(([code, rows]) => ({
+  //   code,
+  //   count: rows.length,
+  // }));
+
+  const groupedByFunds = Object.entries(groupBy(report, "archive_code")).map(([archive_code, funds]) => ({
+    archive_code,
+    funds: Object.entries(groupBy(funds, "fund_code")).map(([fund_code, rows]) => ({
+      fund_code,
+      count: rows.length
+    })),
   }));
 
   const limitedReport = report.slice(0, 10000);
 
-  return [limitedReport, groupedByArchive];
+  return [limitedReport, groupedByFunds];
 };
