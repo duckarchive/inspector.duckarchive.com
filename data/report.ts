@@ -1,3 +1,4 @@
+import fs from "fs/promises";
 import groupBy from "lodash/groupBy.js";
 import prisma from "../lib/db";
 import { Archive, Case, Description, Fund, Match, MatchResult } from "@prisma/client";
@@ -159,6 +160,10 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
       count: rows.length
     })),
   }));
+
+  if (process.env.SEND_NOTIFICATION === "true") {
+    await fs.writeFile("_notification.json", JSON.stringify(groupedByFunds, null, 2));
+  }
 
   const limitedReport = report.slice(0, 10000);
 

@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Інспектор",
-  url: "https://duck-inspector.vercel.app",
+  url: "https://inspector.duckarchive.com",
   description: "Пошук справ українських архівів онлайн",
   navItems: [
     {

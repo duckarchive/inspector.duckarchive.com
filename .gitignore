@@ -41,3 +41,6 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# Notification temp data file
+_notification.json
