@@ -1,8 +1,5 @@
 import { ReportSummary } from "../data/report";
 import { siteConfig } from "../config/site";
-import fs from "fs/promises";
-
-const PATH = "_notification.json";
 
 export const LIMIT_FUNDS = 3;
 
@@ -31,27 +28,16 @@ export const handleSendMessageTG = async (token: string | null | undefined, noti
   const message = header + raw.replace(/(-|\+|\.|=)/g, "\\$1") + `\n\n${markdownLink}`;
   // const message = header + raw.replace(/(-|\+|\(|\)|\.|=)/g, "\\$1") + `\n\n${markdownLink}`;
 
-  console.log(message);
-
-  // const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-  //   headers: {
-  //     "content-type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     parse_mode: "MarkdownV2",
-  //     chat_id: "-1002155783741",
-  //     text: message,
-  //   }),
-  //   method: "POST",
-  //   mode: "cors",
-  // });
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      parse_mode: "MarkdownV2",
+      chat_id: "-1002155783741",
+      text: message,
+    }),
+    method: "POST",
+    mode: "cors",
+  });
 };
-
-const main = async () => {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const data = await fs.readFile(PATH, "utf-8").then((data) => JSON.parse(data)).catch(() => []); 
-
-  await handleSendMessageTG(token, data);
-};
-
-main();

@@ -7,7 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"clear": "rm -rf .next",
-		"notify:tg": "tsx -r dotenv/config lib/sendNotification.ts",
+		"notify:tg": "tsx -r dotenv/config scripts/notification.ts",
 		"deploy": "vercel deploy --prod",
 		"prisma:generate": "prisma generate",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
