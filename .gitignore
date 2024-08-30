@@ -43,4 +43,4 @@ next-env.d.ts
 .netlify
 
 # Notification temp data file
-_notification.json
+# _notification.json
