@@ -34,7 +34,7 @@
 		"clsx": "2.1.1",
 		"date-fns": "^3.6.0",
 		"dotenv": "^16.4.5",
-		"duck-inspector-schema": "^1.5.0",
+		"duck-inspector-schema": "^1.6.0",
 		"framer-motion": "~11.1.9",
 		"intl-messageformat": "^10.5.14",
 		"lodash": "^4.17.21",

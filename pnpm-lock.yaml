@@ -69,8 +69,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       duck-inspector-schema:
-        specifier: ^1.5.0
-        version: 1.5.0(@prisma/client@5.18.0(prisma@5.18.0))
+        specifier: ^1.6.0
+        version: 1.6.0(@prisma/client@5.18.0(prisma@5.18.0))
       framer-motion:
         specifier: ~11.1.9
         version: 11.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1938,8 +1938,8 @@ packages:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
-  duck-inspector-schema@1.5.0:
-    resolution: {integrity: sha512-XqddQkRI+ZUjICL7TepNuiCSkDx8sGZrGwCCJ3mPr1hP17tawxYaxsZBwHdi3lPWKNlcoNAz7celRjbk9oMNXw==}
+  duck-inspector-schema@1.6.0:
+    resolution: {integrity: sha512-DiVgmz3ZbYwxVFJ+GrndRcvea1+f2jCSshP+sHnTtjsvfRDYnvaqtQ4BVlx1MENq21+p8jfSmzdlUnwoBGzz5A==}
     peerDependencies:
       '@prisma/client': '>=5'
 
@@ -5892,7 +5892,7 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  duck-inspector-schema@1.5.0(@prisma/client@5.18.0(prisma@5.18.0)):
+  duck-inspector-schema@1.6.0(@prisma/client@5.18.0(prisma@5.18.0)):
     dependencies:
       '@prisma/client': 5.18.0(prisma@5.18.0)
 
