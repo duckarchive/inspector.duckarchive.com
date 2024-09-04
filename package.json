@@ -8,6 +8,7 @@
 		"start": "next start",
 		"clear": "rm -rf .next",
 		"notify:tg": "tsx -r dotenv/config scripts/notification.ts",
+		"cache:purge": "tsx -r dotenv/config scripts/purge-cache.ts",
 		"deploy": "vercel deploy --prod",
 		"prisma:generate": "prisma generate",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
