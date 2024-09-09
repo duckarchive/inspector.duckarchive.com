@@ -44,7 +44,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
       prev_match_results as (
         select match_id, count, created_at, row_number() over (partition by match_id order by created_at desc) as rn
         from match_results
-        where created_at < ${from}::timestamp
+        where created_at < ${from}::timestamp and error is null
       )
     select
       pmr.created_at,
@@ -68,7 +68,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
       last_match_results as (
         select match_id, count, created_at, row_number() over (partition by match_id order by created_at desc) as rn
         from match_results
-        where created_at >= ${from}::timestamp and created_at < ${to}::timestamp
+        where created_at >= ${from}::timestamp and created_at < ${to}::timestamp and error is null
       )
     select 
       lmr.created_at,
