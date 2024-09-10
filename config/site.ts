@@ -18,8 +18,8 @@ export const siteConfig = {
       href: "/stats",
     },
     {
-      label: "Проєкти",
-      href: "/universe",
+      label: "Як користуватись?",
+      href: "/docs",
     }
   ],
   links: {
