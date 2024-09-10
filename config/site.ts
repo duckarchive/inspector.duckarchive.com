@@ -6,19 +6,23 @@ export const siteConfig = {
   description: "Пошук справ українських архівів онлайн",
   navItems: [
     {
+      label: "Пошук",
+      href: "/search",
+    },
+    {
       label: "Архіви",
       href: "/archives",
     },
-    {
-      label: "Джерела",
-      href: "/resources",
-    },
+    // {
+    //   label: "Джерела",
+    //   href: "/resources",
+    // },
     {
       label: "Статистика",
       href: "/stats",
     },
     {
-      label: "Як користуватись?",
+      label: "Про проєкт",
       href: "/docs",
     }
   ],

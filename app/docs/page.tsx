@@ -1,14 +1,12 @@
 import { NextPage } from "next";
+import Link from "next/link";
+import { FaInfoCircle } from "react-icons/fa";
+import { siteConfig } from "../../config/site";
 
 const AboutPage: NextPage = async () => {
   return (
     <div className="min-h-screen">
-      <header className="py-6">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold">Качиний Інспектор</h2>
-        </div>
-      </header>
-      <main className="container mx-auto py-6">
+      <main className="container mx-auto pb-6">
         <section className="mb-8">
           <h3 className="text-2xl font-semibold mb-4">Мотивація</h3>
           <p className="mb-4">
@@ -50,16 +48,66 @@ const AboutPage: NextPage = async () => {
           </p>
 
           {/* <p className="mb-4">
-            Способів використання подібного сервісу (а точніше даних, зібраних в його базі), насправді суттєво більше,
-            ніж просто пошук. Інспектор може бути допоміжним інструментом статистики для архівних установ, або
-            надсилати сповіщення дослідникам, коли цікава їм справа з&apos;являється онлайн. Простір для розвитку
-            проєкту досить широкий, але є &quot;але&quot;. Про це далі.
+            Способів використання сервісу (а точніше даних, зібраних в його базі), насправді суттєво більше, ніж простий
+            пошук. Інспектор може бути допоміжним інструментом статистики для архівних установ, або ж допомагати
+            дослідникам слідкувати за щоденними оновленнями, за допомогою сповіщень, коли цікава їм справа
+            з&apos;являється онлайн. Простір для розвитку проєкту досить широкий, але є &quot;але&quot;. Про це далі.
           </p> */}
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Як користуватись?</h2>
-          <p className="mb-4">Ознайомтесь з відео, або читайте текстову версію нижче</p>
+          <p className="mb-4">
+            Для пошуку справи онлайн є два шляхи –{" "}
+            <Link href="/search" className="underline">
+              пошук
+            </Link>{" "}
+            та{" "}
+            <Link href="/archives" className="underline">
+              навігація
+            </Link>
+            .
+          </p>
+          <h3 className="text-2xl font-semibold mb-4">Пошук</h3>
+          <p className="mb-4">
+            <ol className="list-decimal list-inside">
+              <li>
+                Для початку, відкрийте сторінку{" "}
+                <Link href="/search" className="underline">
+                  &quot;Пошук&quot;
+                </Link>
+                .
+                <p className="text-gray-600 text-sm my-2 bg-amber-100 p-2 rounded-md">
+                  Поле швидкого пошуку, що знаходиться на головній сторінці та в шапці сайту це всього лише спосіб
+                  перейти на сторінку &quot;Пошук&quot; з вже заповненими полями відповідно до введеного запиту. Різниці
+                  між використанням поля та сторінки немає. Інструкції, щодо формату та використання поля вводу, можна
+                  знайти натиснувши на підказку{" "}
+                  <FaInfoCircle className="text-lg text-default-400 hover:text-default-800 cursor-pointer flex-shrink-0 inline" />{" "}
+                  праворуч від поля.
+                </p>
+              </li>
+              <li>Оберіть код архіву зі списку</li>
+              <li>Введіть код фонду, опису та справи</li>
+              <li>Натисніть кнопку &quot;Полетіли&quot;</li>
+              <li>
+                Отримайте результати пошуку з посиланнями на онлайн справи.
+                <p className="text-gray-600 text-sm my-2 bg-amber-100 p-2 rounded-md">
+                  Кількість результатів обмежена 20 справами, з ціллю зменшення часу на завантаження сторінки та
+                  збереження ресурсів, тому намагайтесь конкретизувати свій запит.
+                </p>
+              </li>
+            </ol>
+          </p>
+          <h3 className="text-2xl font-semibold mb-4">Навігація</h3>
+          <p className="mb-4">
+            У випадку менш точних дослідженнь, коли ви не знаєте конкретних реквізитів справ, і хочете дізнатися, які
+            справи доступні в певному архіві, скористайтесь{" "}
+            <Link href="/archives" className="underline">
+              навігацією по архівам
+            </Link>
+            .
+          </p>
+          {/* <p className="mb-4">Ознайомтесь з відео, або читайте текстову версію нижче</p>
           <iframe
             className="w-full aspect-video"
             src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=TIKmCoB8x92au0sF"
@@ -67,8 +115,17 @@ const AboutPage: NextPage = async () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
-          />
-          
+          /> */}
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Документація доповнюється...</h2>
+          <p>
+            В разі виникнення питань, або пропозицій, будь ласка, звертайтеся до автора проєкту в групі телеграм:&nbsp;
+            <Link href={siteConfig.links.telegram} className="underline">
+              @spravnakachka
+            </Link>
+          </p>
         </section>
       </main>
     </div>

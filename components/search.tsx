@@ -66,7 +66,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               </AutocompleteItem>
             ))}
           </Autocomplete>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full">
             <Input label="Фонд" value={searchValues.f} onChange={handleInputChange("f")} />
             <Input label="Опис" value={searchValues.d} onChange={handleInputChange("d")} />
             <Input label="Справа" value={searchValues.c} onChange={handleInputChange("c")} />
