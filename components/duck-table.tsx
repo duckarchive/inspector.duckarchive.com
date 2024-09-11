@@ -126,7 +126,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
           )}
         </div>
 
-        {enabledFilters?.[QuickFilter.PART_FUNDS] && (
+        {/* {enabledFilters?.[QuickFilter.PART_FUNDS] && (
           <Button
             radius="full"
             color="secondary"
@@ -137,7 +137,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
           >
             🛠️ Доступні 🛠️
           </Button>
-        )}
+        )} */}
       </div>
       <div className={`ag-theme-quartz h-96 flex-grow ${theme === "dark" ? "ag-theme-quartz-dark" : ""}`}>
         {/* @ts-ignore */}
