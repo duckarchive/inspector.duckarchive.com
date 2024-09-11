@@ -116,6 +116,8 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               field: "url",
               type: undefined,
               headerName: "Посилання",
+              resizable: isMobile,
+              minWidth: 400,
               flex: 4,
               comparator: undefined,
               cellRenderer: (row: { value: string; data: TableItem }) => (
