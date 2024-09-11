@@ -78,7 +78,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ isLarge }) =>
           <ModalBody>
             <Accordion defaultSelectedKeys={["1"]} isCompact>
               <AccordionItem key="1" title="Формат">
-                <p className="text-gray-600 text-sm mb-2 bg-amber-100 p-2">
+                <p className="text-gray-600 text-sm mb-2 bg-amber-100 p-2 rounded-md">
                   Це довідка про формат вводу в поле Швидкого пошуку. Для розширеного пошуку слід використовувати форму
                   на&nbsp;
                   <Link href="/search" className="text-sm">
