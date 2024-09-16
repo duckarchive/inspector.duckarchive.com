@@ -10,6 +10,7 @@ import PagePanel from "./page-panel";
 import useArchive from "../hooks/useArchive";
 import { sortByCode } from "../lib/table";
 import Loader from "./loader";
+import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = Archives[number];
 
@@ -18,6 +19,7 @@ interface ArchiveTableProps {
 }
 
 const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
+  useNoRussians();
   const params = useCyrillicParams();
   const code = params["archive-code"];
   const isMobile = useIsMobile();

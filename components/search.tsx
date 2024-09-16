@@ -13,6 +13,7 @@ import Loader from "./loader";
 import useIsMobile from "@/hooks/useIsMobile";
 import useGAEvent from "@/hooks/useGAEvent";
 import { sortCode } from "@/lib/table";
+import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = SearchResponse[number];
 
@@ -21,6 +22,7 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ archives }) => {
+  useNoRussians();
   const isMobile = useIsMobile();
   const ga = useGAEvent();
   const [defaultValues, setQueryParams] = useSearch(archives);

@@ -11,6 +11,7 @@ import { sortByCode } from "../lib/table";
 import Loader from "./loader";
 import useDescription from "../hooks/useDescription";
 import { GetDescriptionResponse } from "../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
+import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
@@ -19,6 +20,7 @@ interface DescriptionTableProps {
 }
 
 const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
+  useNoRussians();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];

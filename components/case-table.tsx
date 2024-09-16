@@ -12,6 +12,7 @@ import useCase from "@/hooks/useCase";
 import { Match } from "@prisma/client";
 import ResourceBadge from "./resource-badge";
 import { GetCaseResponse } from "../pages/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]";
+import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = GetCaseResponse["matches"][number];
 
@@ -20,6 +21,7 @@ interface CaseTableProps {
 }
 
 const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
+  useNoRussians();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];

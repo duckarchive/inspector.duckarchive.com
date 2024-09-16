@@ -11,6 +11,7 @@ import { sortByCode } from "../lib/table";
 import Loader from "./loader";
 import useFund from "../hooks/useFund";
 import { GetFundResponse } from "../pages/api/archives/[archive-code]/[fund-code]";
+import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
@@ -19,6 +20,7 @@ interface FundTableProps {
 }
 
 const FundTable: React.FC<FundTableProps> = ({ resources }) => {
+  useNoRussians();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const code = params["fund-code"];
