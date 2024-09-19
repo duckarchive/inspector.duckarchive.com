@@ -34,12 +34,6 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
       <PagePanel title={`Фонд ${code}`} description={fund?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
-        enabledFilters={{
-          partFunds: true,
-          preUssrFunds: true,
-          ussrFunds: true,
-          online: true,
-        }}
         columns={[
           {
             field: "code",
