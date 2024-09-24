@@ -39,6 +39,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   endOfYesterday.setHours(23, 59, 59, 999);
   const to = endOfYesterday.toISOString();
 
+  const now = Date.now();
   let prevMatchResults: MatchResult[] = await prisma.$queryRaw`
     with
       prev_match_results as (
@@ -54,7 +55,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     where pmr.rn = 1;
   `;
 
-  console.log("prevMatchResults", prevMatchResults.length);
+  console.log("prevMatchResults", Date.now() - now);
 
   const prevMatchResultsHash: Record<MatchResult["match_id"], MatchResult["count"]> = {};
 
@@ -80,7 +81,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     where lmr.rn = 1;
   `;
 
-  console.log("lastMatchResults", lastMatchResults.length);
+  console.log("lastMatchResults", Date.now() - now);
 
   const updatedMatchResultsHash: Record<MatchResult["match_id"], boolean> = {};
 
@@ -98,11 +99,11 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   const updatedMatchResultIds = updatedMatchResults.map((result) => result.match_id);
   const updatedMatchResultIdsChunks = chunk(updatedMatchResultIds, 1000);
 
-  console.log("updatedMatchResults", updatedMatchResults.length);
+  console.log("updatedMatchResults", Date.now() - now);
 
   let updatedMatches: any[] = [];
   for (const updatedMatchResultIdsChunk of updatedMatchResultIdsChunks) {
-    console.log("updatedMatchResultIdsChunk", updatedMatchResultIdsChunk.length);
+    console.log("updatedMatchResultIdsChunk", Date.now() - now);
     const dbMatches = await prisma.match.findMany({
       where: {
         id: {
@@ -173,7 +174,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
 
   const limitedReport = report.slice(0, 10000);
 
-  console.log("limitedReport", limitedReport.length);
+  console.log("limitedReport", Date.now() - now);
 
   return [limitedReport, groupedByFunds];
 };
