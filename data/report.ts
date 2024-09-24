@@ -54,6 +54,8 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     where pmr.rn = 1;
   `;
 
+  console.log("prevMatchResults", prevMatchResults.length);
+
   const prevMatchResultsHash: Record<MatchResult["match_id"], MatchResult["count"]> = {};
 
   prevMatchResults.forEach((result) => {
@@ -78,6 +80,8 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     where lmr.rn = 1;
   `;
 
+  console.log("lastMatchResults", lastMatchResults.length);
+
   const updatedMatchResultsHash: Record<MatchResult["match_id"], boolean> = {};
 
   const updatedMatchResults = lastMatchResults.filter((result) => {
@@ -94,9 +98,11 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   const updatedMatchResultIds = updatedMatchResults.map((result) => result.match_id);
   const updatedMatchResultIdsChunks = chunk(updatedMatchResultIds, 1000);
 
+  console.log("updatedMatchResults", updatedMatchResults.length);
+
   let updatedMatches: any[] = [];
   for (const updatedMatchResultIdsChunk of updatedMatchResultIdsChunks) {
-    
+    console.log("updatedMatchResultIdsChunk", updatedMatchResultIdsChunk.length);
     const dbMatches = await prisma.match.findMany({
       where: {
         id: {
@@ -166,6 +172,8 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   }
 
   const limitedReport = report.slice(0, 10000);
+
+  console.log("limitedReport", limitedReport.length);
 
   return [limitedReport, groupedByFunds];
 };
