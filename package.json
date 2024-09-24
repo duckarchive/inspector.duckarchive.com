@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbo",
-		"build": "next build --experimental-debug-memory-usage",
+		"build": "next build",
 		"start": "next start",
 		"clear": "rm -rf .next",
 		"notify:tg": "tsx -r dotenv/config scripts/notification.ts",
