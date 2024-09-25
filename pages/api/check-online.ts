@@ -1,4 +1,4 @@
-import { Match } from "@prisma/client";
+import { Match, Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/db";
 import { isAuthorized } from "@/lib/auth";
@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
   if (req.method === "POST") {
     const { full_codes } = req.body as CheckOnlineRequest;
-    if (!full_codes) {
+    if (!full_codes || !full_codes.length) {
       res.status(400).json({ error: "full_codes is required" });
       return;
     }
@@ -25,12 +25,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return;
     }
     const matches: Match[] = await prisma.$queryRaw`
-      select * from matches
-      where full_code in (${full_codes}) and children_count > 0
+      select full_code from matches
+      where full_code in (${Prisma.join(full_codes)}) and children_count > 0
     `;
 
     const matchesHash: Record<string, boolean> = {};
-    
+
     matches.forEach((match) => {
       matchesHash[match.full_code || ""] = true;
     });
