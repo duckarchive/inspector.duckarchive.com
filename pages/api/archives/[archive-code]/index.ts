@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/db";
-import { isAuthorized } from "../../../../lib/auth";
 
 export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
   include: {
@@ -23,10 +22,6 @@ export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
 }>;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<GetArchiveResponse>) {
-  const isAuth = await isAuthorized(req);
-  if (!isAuth) {
-    return res.status(200).json({ code: "Тебе ж попросили, як людину – не парсити" } as any);
-  }
   const archiveCode = req.query["archive-code"] as string;
   // READ ONE DATA
   if (req.method === "GET") {

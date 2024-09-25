@@ -1,17 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
+
+// ridni.org API key
+const API_KEY = `API-89ef6011-a152-4296-y1b2-9bda6b0e49c5`;
 
 export const isAuthorized = async (req: NextApiRequest) => {
-  // check if request coming from duck-inspector.netlify.app
-  // if not, return 403
-  // log IP address
-  // if (req.headers.origin !== "https://duck-inspector.netlify.app") {
-  //   console.log("isAuthorized: origin mismatch", req.headers.origin);
-  //   return false;
-  // }
-  return true;
+  if (req.headers.authorization === `Bearer ${API_KEY}`) {
+    return true;
+  }
+  return false;
 }
-
-// const isAuth = await isAuthorized(req);
-//   if (!isAuth) {
-//     return res.status(200).json({ code: "Тебе ж попросили, як людину – не парсити" } as any);
-//   }

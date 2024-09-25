@@ -19,7 +19,7 @@ export type SearchResponse = {
 }[];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
-  const { a, f, d, c } = req.body;
+  const { a, f, d, c } = req.body as SearchRequest;
   if (req.method === "POST") {
     const _a = a || "%"; // case sensitive
     const rest = `${f || "%"}-${d || "%"}-${c || "%"}`.toUpperCase();
