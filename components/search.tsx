@@ -5,7 +5,7 @@ import PagePanel from "./page-panel";
 import { useEffect, useState } from "react";
 import { SearchRequest, SearchResponse } from "@/pages/api/search";
 import useSearch from "@/hooks/useSearch";
-import { Autocomplete, AutocompleteItem, Button, Input, Link } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem, Button, Checkbox, Input, Link } from "@nextui-org/react";
 import { FaFeather } from "react-icons/fa";
 import useSearchRequest from "@/hooks/useSearchRequest";
 import DuckTable from "./duck-table";
@@ -33,9 +33,13 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
     trigger(searchValues);
   }, []);
 
-  const handleInputChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (key: keyof SearchRequest) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^А-ЯҐЄІЇ0-9]/gi, "").toUpperCase();
     setSearchValues({ ...searchValues, [key]: value });
+  };
+
+  const handleStrictChange = (value: boolean) => {
+    setSearchValues({ ...searchValues, isStrict: value });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -73,9 +77,17 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
             <Input label="Опис" value={searchValues.d} onChange={handleInputChange("d")} />
             <Input label="Справа" value={searchValues.c} onChange={handleInputChange("c")} />
           </div>
-          <Button type="submit" color="primary" variant="light" className="w-full" endContent={<FaFeather />}>
+          <Button type="submit" color="primary" variant="light" endContent={<FaFeather />} className="w-full border-blue-200 border">
             Полетіли
           </Button>
+          <Checkbox
+            isSelected={searchValues.isStrict}
+            size="sm"
+            className="self-start"
+            onValueChange={handleStrictChange}
+          >
+            Суворий пошук
+          </Checkbox>
         </form>
       </PagePanel>
       {isError && <p className="text-danger">Щось пішло не так</p>}

@@ -27,6 +27,7 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
         f: "",
         d: "",
         c: "",
+        isStrict: true,
       },
       setSearchParams,
     ];
@@ -40,6 +41,7 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
       f: f || "",
       d: d || "",
       c: c || "",
+      isStrict: true,
     },
     setSearchParams,
   ];

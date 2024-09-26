@@ -68,7 +68,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = ({ isLarge }) =>
         type="search"
       />
       {isLarge && (
-        <Button type="submit" color="primary" variant="light" className="w-full mt-2" endContent={<FaFeather />}>
+        <Button type="submit" color="primary" variant="light" className="w-full mt-2 border-blue-200 border" endContent={<FaFeather />}>
           Полетіли
         </Button>
       )}
