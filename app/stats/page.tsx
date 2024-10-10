@@ -8,7 +8,7 @@ import ReportModal from "@/components/report-modal";
 const ReportPage: NextPage = async () => {
   const resources = await getResources();
   const [report, reportSummary] = await getYesterdayReport();
-  const note = report.length >= 10000 ? " Максимальна кількість знахідок обмежена 25,000.": "";
+  const note = report.length >= 25000 ? " Максимальна кількість знахідок обмежена 25,000.": "";
 
   return (
     <>

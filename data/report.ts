@@ -164,7 +164,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     await fs.writeFile("_notification.json", JSON.stringify(groupedByFunds, null, 2));
   }
 
-  const limitedReport = report.slice(0, 10000);
+  const limitedReport = report.slice(0, 25000);
 
   return [limitedReport, groupedByFunds];
 };
