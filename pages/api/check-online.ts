@@ -12,7 +12,7 @@ export type CheckOnlineResponse = boolean[] | { error: string };
 export default async function handler(req: NextApiRequest, res: NextApiResponse<CheckOnlineResponse>) {
   const isAuth = await isAuthorized(req);
   if (!isAuth) {
-    return res.status(401);
+    return res.status(401).end();
   }
   if (req.method === "POST") {
     const { full_codes } = req.body as CheckOnlineRequest;
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (searchResults) {
       res.json(searchResults);
     } else {
-      res.status(404);
+      res.status(404).end();
     }
   }
 }

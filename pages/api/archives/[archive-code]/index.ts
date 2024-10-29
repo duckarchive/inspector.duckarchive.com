@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (archive) {
       res.json(archive);
     } else {
-      res.status(404);
+      res.status(404).end();
     }
   }
 }

@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (searchResults) {
       res.json(searchResults);
     } else {
-      res.status(404);
+      res.status(404).end();
     }
   }
 }

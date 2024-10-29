@@ -1,29 +1,43 @@
-import { Match, Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/db";
 import { authorizeGoogle } from "@/lib/auth";
 
-export type CheckOnlineRequest = Partial<{
-  full_codes: string[];
-}>;
+const DAILY_DOWNLOAD_LIMIT = 1000;
 
-export type CheckOnlineResponse = boolean[] | { error: string };
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse<CheckOnlineResponse>) {
-  const userInfo = await authorizeGoogle(req);
-  if (!userInfo) {
-    return res.status(401);
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {;
+  const user = await authorizeGoogle(req);
+  if (!user) {
+    res.status(401).end();
+    return;
   }
   if (req.method === "GET") {
-    res.json(userInfo);
-    // const matches: Match[] = await prisma.$queryRaw`
-    //   select full_code from matches
-    //   where full_code in (${Prisma.join(full_codes)}) and children_count > 0
-    // `;
-    // if (searchResults) {
-    //   res.json(searchResults);
-    // } else {
-    //   res.status(404);
-    // }
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const userTodayDownloads = await prisma.userDownload.findMany({
+      where: {
+        user_id: user.id,
+        created_at: {
+          gte: startOfToday
+        }
+      }
+    });
+
+    const totalTodayDownloads = userTodayDownloads.reduce((acc, curr) => acc + curr.count, 0);
+    res.json({
+      total: totalTodayDownloads,
+      left: DAILY_DOWNLOAD_LIMIT - totalTodayDownloads
+    });
+    return;
+  }
+  if (req.method === "POST") {
+    await prisma.userDownload.create({
+      data: {
+        user_id: user.id,
+        count: Math.max(+req.body.count, 0)
+      }
+    });
+
+    res.status(201).end();
+    return;
   }
 }
