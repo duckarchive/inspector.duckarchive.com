@@ -17,7 +17,7 @@ const useDescription = (archiveCode: string, fundCode: string, code: string) => 
     console.log("useEffect", isLoading, data);
     if (!isLoading && data?.cases.length) {
       console.log("if", !isLoading);
-      setFullData((prev: GetDescriptionResponse) => ({
+      setFullData((prev) => ({
         ...data,
         cases: [...(prev?.cases || []), ...data.cases],
       }));
