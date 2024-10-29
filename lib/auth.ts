@@ -9,3 +9,25 @@ export const isAuthorized = async (req: NextApiRequest) => {
   }
   return false;
 }
+
+export const authorizeGoogle = async (req: NextApiRequest) => {
+  if (req.headers.authorization) {
+    try {
+      // get the token from the header and verify it with https://www.googleapis.com/oauth2/v3/userinfo
+      // if the token is valid, return user info
+      // if the token is invalid, return false
+      const token = req.headers.authorization.split(" ")[1];
+      const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+  return false;
+}
