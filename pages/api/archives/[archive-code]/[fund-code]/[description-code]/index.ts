@@ -64,8 +64,8 @@ export default async function handler(
           },
         },
       },
-      skip: page * 10000,
-      take: 10000,
+      skip: page * 5000,
+      take: 5000,
     });
   
     res.json({
