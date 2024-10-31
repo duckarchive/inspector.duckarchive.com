@@ -34,13 +34,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
   if (req.method === "POST") {
-    const count = Math.max(+req.body.count, 0);
+    const { count } = req.body;
+    const normalizedCount = Math.max(+count, 0);
     const user_id = user.id;
-    console.log({ count, user_id });
+    console.log({ body: req.body, count, normalizedCount, user_id });
     await prisma.userDownload.create({
       data: {
         user_id,
-        count
+        count: normalizedCount
       }
     });
 
