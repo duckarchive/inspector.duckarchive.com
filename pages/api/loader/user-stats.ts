@@ -36,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     const count = Math.max(+req.body.count, 0);
     const user_id = user.id;
+    console.log({ count, user_id });
     await prisma.userDownload.create({
       data: {
         user_id,
