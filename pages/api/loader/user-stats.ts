@@ -4,7 +4,19 @@ import { authorizeGoogle } from "@/lib/auth";
 
 const DAILY_DOWNLOAD_LIMIT = 1000;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'OPTIONS') {
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", "https://www.familysearch.org");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+    );
+
+    res.status(200).end();
+    return;
+  }
   const user = await authorizeGoogle(req);
   if (!user) {
     res.status(401).end();
