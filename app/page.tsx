@@ -1,6 +1,7 @@
+import { NextPage } from "next";
 import SearchInputPortable from "../components/search-input-portable";
 
-export default function Home() {
+const WelcomePage: NextPage = () => {
   return (
     <section className="flex flex-col items-center justify-center gap-4 mt-8">
       <div className="inline-block max-w-xl justify-center">
@@ -20,3 +21,5 @@ export default function Home() {
     </section>
   );
 }
+
+export default WelcomePage;
