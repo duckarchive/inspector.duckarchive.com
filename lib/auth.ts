@@ -10,7 +10,7 @@ export const isAuthorized = async (req: NextApiRequest) => {
     return true;
   }
   return false;
-}
+};
 
 interface GoogleUserInfo {
   sub: string;
@@ -31,23 +31,23 @@ export const authorizeGoogle = async (req: NextApiRequest): Promise<User | false
       const token = req.headers.authorization.toString().split(" ")[1];
       const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (response.ok) {
         const googleUserInfo: GoogleUserInfo = await response.json();
         const user = await prisma.user.findFirst({
           where: {
-            id: googleUserInfo.sub
-          }
+            id: googleUserInfo.sub,
+          },
         });
 
         if (!user) {
           const newUser = await prisma.user.create({
             data: {
               id: googleUserInfo.sub,
-              email: googleUserInfo.email
-            }
+              email: googleUserInfo.email,
+            },
           });
 
           return newUser;
@@ -62,6 +62,25 @@ export const authorizeGoogle = async (req: NextApiRequest): Promise<User | false
     } catch (e) {
       return false;
     }
+  } else if (req.headers.sub) {
+    try {
+      const user = await prisma.user.findFirst({
+        where: {
+          id: req.headers.sub.toString(),
+        },
+      });
+
+      if (user) {
+        if (user?.is_banned) {
+          return false;
+        }
+        return user;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
   return false;
-}
+};
