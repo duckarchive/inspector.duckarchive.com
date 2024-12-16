@@ -1,4 +1,4 @@
-import { Match, Prisma } from "@prisma/client";
+import { Match } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/db";
 import { authorizeGoogle } from "@/lib/auth";
