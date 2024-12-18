@@ -12,7 +12,6 @@ export const isAuthorized = async (req: NextApiRequest) => {
   return false;
 };
 
-
 interface GoogleUserInfo {
   sub: string;
   name: string;
@@ -66,4 +65,3 @@ export const authorizeGoogle = async (req: NextApiRequest): Promise<User | false
   }
   return false;
 };
-
