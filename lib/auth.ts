@@ -22,7 +22,7 @@ interface GoogleUserInfo {
   email_verified: boolean;
 }
 
-export const authorizeGoogle = async (req: NextApiRequest): Promise<User | false> => {
+export const authorizeGoogle = async (req: NextApiRequest, validateAdmin?: boolean): Promise<User | false> => {
   if (req.headers.authorization) {
     try {
       // get the token from the header and verify it with https://www.googleapis.com/oauth2/v3/userinfo
@@ -53,6 +53,10 @@ export const authorizeGoogle = async (req: NextApiRequest): Promise<User | false
           return newUser;
         } else {
           if (user?.is_banned) {
+            return false;
+          }
+
+          if (validateAdmin && !user.is_admin) {
             return false;
           }
 
