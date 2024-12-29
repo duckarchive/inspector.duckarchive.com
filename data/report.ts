@@ -41,6 +41,9 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
 
   const updatedMatches = await prisma.match.findMany({
     where: {
+      case_id: {
+        not: null,
+      },
       updated_at: {
         gte: from,
         lt: to,
@@ -84,10 +87,10 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     id: match.id,
     updated_at: match.updated_at,
     resource_id: match.resource_id,
-    archive_code: match.archive?.code || "unknown",
-    fund_code: match.fund?.code || "unknown",
-    description_code: match.description?.code || "unknown",
-    case_code: match.case?.code || "unknown",
+    archive_code: match.archive?.code || "",
+    fund_code: match.fund?.code || "",
+    description_code: match.description?.code || "",
+    case_code: match.case?.code || "",
     children_count: match.children_count,
     url: match.url,
     is_online: Boolean(match?.children_count),
