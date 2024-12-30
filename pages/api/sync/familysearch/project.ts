@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: true,
         children_count: true,
         prev_children_count: true,
+        updated_at: true,
         archive: {
           select: {
             id: true,
