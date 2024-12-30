@@ -34,13 +34,15 @@ const FSProjectTable: React.FC<FSProjectTableProps> = ({ projects }) => {
           flex: 1,
         },
         {
+          type: "numericColumn",
           field: "prev_children_count",
           headerName: "Попередня",
           flex: 1,
           comparator: undefined,
-          cellRenderer: null
+          cellRenderer: null,
         },
         {
+          type: "numericColumn",
           field: "children_count",
           headerName: "Поточна",
           flex: 1,
