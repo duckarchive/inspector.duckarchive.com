@@ -1,13 +1,11 @@
-import { FamilySearchProject } from "@prisma/client";
+import { FamilySearchProject, Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/db";
 import { authorizeGoogle } from "@/lib/auth";
 
 export type FamilySearchProjectRequest = Record<FamilySearchProject["id"], FamilySearchProject["children_count"]>;
 
-export type FamilySearchProjectResponse = FamilySearchProject[] | { error: string };
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse<FamilySearchProjectResponse>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
@@ -24,6 +22,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           not: null,
         },
       },
+      select: {
+        id: true,
+        children_count: true,
+        prev_children_count: true,
+        archive: {
+          select: {
+            id: true,
+            code: true,
+          },
+        }
+      }
     });
     res.status(200).json(projects);
   }
