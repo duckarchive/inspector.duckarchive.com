@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { FaInfoCircle } from "react-icons/fa";
 import { siteConfig } from "../../config/site";
-import useNoRussians from "../../hooks/useNoRussians";
 
 const AboutPage: NextPage = async () => {
   return (

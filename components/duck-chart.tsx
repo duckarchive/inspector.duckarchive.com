@@ -5,6 +5,7 @@ import { DailyStatWithArchive } from "@/data/report";
 import { useState } from "react";
 import { Archives } from "@/data/archives";
 import SelectArchive from "./select-archive";
+import useNoRussians from "@/hooks/useNoRussians";
 
 interface DuckChartProps {
   archives: Archives;
@@ -12,6 +13,7 @@ interface DuckChartProps {
 }
 
 const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
+  useNoRussians();
   const dataWithFormattedDate = data.map((stat) => ({
     ...stat,
     created_at: new Date(stat.created_at).toLocaleDateString("uk-UA"),
