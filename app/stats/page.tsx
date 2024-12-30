@@ -1,23 +1,19 @@
-import { getResources } from "@/data/resources";
-import { getYesterdayReport } from "@/data/report";
+import { getDailyStats } from "@/data/report";
 import PagePanel from "@/components/page-panel";
 import { NextPage } from "next";
-import ReportTable from "@/components/report-table";
-import ReportModal from "@/components/report-modal";
+import DuckChart from "@/components/duck-chart";
+import { getArchives } from "../../data/archives";
 
-const ReportPage: NextPage = async () => {
-  const resources = await getResources();
-  const [report, reportSummary] = await getYesterdayReport();
-  const note = report.length >= 25000 ? " Максимальна кількість знахідок обмежена 25,000.": "";
+const StatsPage: NextPage = async () => {
+  const archives = await getArchives();
+  const dailyStats = await getDailyStats();
 
   return (
     <>
-      <PagePanel title="Звіт" description={`Список справ онлайн, знайдених за минулу добу.${note}`}>
-        <ReportModal data={reportSummary} />
-      </PagePanel>
-      <ReportTable resources={resources} report={report} />
+      <PagePanel title="Статистика доступності справ" description="Оберіть архів, щоб побачити статистику по дням та ресурсам" />
+      <DuckChart data={dailyStats} archives={archives} />
     </>
   );
 };
 
-export default ReportPage;
+export default StatsPage;

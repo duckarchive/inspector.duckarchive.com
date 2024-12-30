@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import groupBy from "lodash/groupBy.js";
 import prisma from "../lib/db";
-import { Archive, Case, Description, Fund, Match } from "@prisma/client";
+import { Archive, Case, DailyStat, Description, Fund, Match } from "@prisma/client";
 import chunk from "lodash/chunk.js";
 
 process.env.TZ = "UTC";
@@ -116,4 +116,35 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   const limitedReport = report.slice(0, 25000);
 
   return [limitedReport, groupedByFunds];
+};
+
+export interface DailyStatWithArchive extends DailyStat {
+  archive: Archive;
+}
+
+export const getDailyStats = async (): Promise<DailyStatWithArchive[]> => {
+  const startOfOneMonthAgo = new Date();
+  startOfOneMonthAgo.setMonth(startOfOneMonthAgo.getMonth() - 1);
+  startOfOneMonthAgo.setHours(0, 0, 0, 0);
+  const from = startOfOneMonthAgo.toISOString();
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const to = startOfToday.toISOString();
+
+  const stats = await prisma.dailyStat.findMany({
+    where: {
+      created_at: {
+        gte: from,
+        // lt: to,
+      },
+    },
+    orderBy: {
+      created_at: "asc",
+    },
+    include: {
+      archive: true,
+    }
+  });
+
+  return stats;
 };

@@ -18,6 +18,10 @@ export const siteConfig = {
     //   href: "/resources",
     // },
     {
+      label: "Звіт за день",
+      href: "/daily-updates",
+    },
+    {
       label: "Статистика",
       href: "/stats",
     },

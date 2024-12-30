@@ -24,7 +24,7 @@ export const handleSendMessageTG = async (token: string | null | undefined, noti
     .join("\n\n");
   const date = new Date().toISOString().split("T")[0].replace(/-/g, "\\-");
   const header = `*🌳 Знайдені справи за минулу добу*\n🗓️ ${date}\n\n`;
-  const markdownLink = `Переглянути повний звіт можна [за посиланням](${siteConfig.url || baseUrl}/stats)\n`;
+  const markdownLink = `Повний звіт [за посиланням](${siteConfig.url || baseUrl}/daily-updates)\n`;
   const message = header + raw.replace(/(-|\+|\.|=)/g, "\\$1") + `\n\n${markdownLink}`;
   // const message = header + raw.replace(/(-|\+|\(|\)|\.|=)/g, "\\$1") + `\n\n${markdownLink}`;
 

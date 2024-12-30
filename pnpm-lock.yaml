@@ -53,6 +53,9 @@ importers:
       '@react-aria/visually-hidden':
         specifier: 3.8.12
         version: 3.8.12(react@18.3.1)
+      ag-charts-react:
+        specifier: ^11.0.3
+        version: 11.0.3(ag-charts-community@11.0.3)(react@18.3.1)
       ag-grid-community:
         specifier: ^32.3.1
         version: 32.3.1
@@ -69,8 +72,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       duck-inspector-schema:
-        specifier: ^1.10.0
-        version: 1.10.0(@prisma/client@5.21.1(prisma@5.21.1))
+        specifier: ^1.11.1
+        version: 1.11.1(@prisma/client@5.21.1(prisma@5.21.1))
       framer-motion:
         specifier: ~11.1.9
         version: 11.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1933,8 +1936,23 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  ag-charts-community@11.0.3:
+    resolution: {integrity: sha512-S3+gGxJSCSqMyyM8x2US1XBpS++UXLqcMu/Ne/PPXK0uyY7Ca4c6cjEj+ne+p0MTzSdgL0NaeGKxnzEyRpma1A==}
+
+  ag-charts-locale@11.0.3:
+    resolution: {integrity: sha512-DaHGu22bOrS+2WngwlAGwru7gQECMm9rkulGS0CxveNMwXkw42of6R81zcHZYWYRNuxqg00XKuWfa7nzakoO/w==}
+
+  ag-charts-react@11.0.3:
+    resolution: {integrity: sha512-QGXQoaPiGhPAmby1ISQ78Dy1qz0/xNqpYpkHY3qayQH72HBTAAHkBklLPKbwfr1Yu8quYkDzCd04MOjeOCsjyg==}
+    peerDependencies:
+      ag-charts-community: 11.0.3
+      react: ^18.0.0 || ^19.0.0
+
   ag-charts-types@10.3.1:
     resolution: {integrity: sha512-oZvu9vJLk6lmzaYi0TmVVmHFZJpVNFziU0bnllx4wR3muXCmnxz5LouKIZ8CYnNiC7VO5HmHNlFu+0DmEO5zxg==}
+
+  ag-charts-types@11.0.3:
+    resolution: {integrity: sha512-q7O2viQXPyO014QVH7KjFCUmQ/NvMBx9ReZtramQ44u+/aAa0ttLi/coK+V0Hse4/MG1eB/2XhgymdooQ0Kalg==}
 
   ag-grid-community@32.3.1:
     resolution: {integrity: sha512-j/VpFbDO+7tDNG5xq9JIg3zSYxKbTKlAYjaAFSUwiJF8SDyWYUALWjtiCa+mr/RowyGRTcFv5sc+HCbS6C4UKQ==}
@@ -2217,8 +2235,8 @@ packages:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
-  duck-inspector-schema@1.10.0:
-    resolution: {integrity: sha512-sfWPjExMys0HqPh+ADQP0c3ZHC/DEFgm5yeWwgF7pS79M2/sr8+oodAnkAAT1RLxTB60nTNLJ/BZQv8E6kWssw==}
+  duck-inspector-schema@1.11.1:
+    resolution: {integrity: sha512-jdRNmFdoi4Pq34Y7ezLJW1egJ8bEpgxJzqVL5hPGaUvWQz489dhbxYSZhYEcnTd1lig2Rn3fT57ELWBgHrXXCg==}
     peerDependencies:
       '@prisma/client': '>=5'
 
@@ -6218,7 +6236,21 @@ snapshots:
 
   acorn@8.14.0: {}
 
+  ag-charts-community@11.0.3:
+    dependencies:
+      ag-charts-locale: 11.0.3
+      ag-charts-types: 11.0.3
+
+  ag-charts-locale@11.0.3: {}
+
+  ag-charts-react@11.0.3(ag-charts-community@11.0.3)(react@18.3.1):
+    dependencies:
+      ag-charts-community: 11.0.3
+      react: 18.3.1
+
   ag-charts-types@10.3.1: {}
+
+  ag-charts-types@11.0.3: {}
 
   ag-grid-community@32.3.1:
     dependencies:
@@ -6515,7 +6547,7 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  duck-inspector-schema@1.10.0(@prisma/client@5.21.1(prisma@5.21.1)):
+  duck-inspector-schema@1.11.1(@prisma/client@5.21.1(prisma@5.21.1)):
     dependencies:
       '@prisma/client': 5.21.1(prisma@5.21.1)
 

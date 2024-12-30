@@ -14,6 +14,7 @@ import useIsMobile from "@/hooks/useIsMobile";
 import useGAEvent from "@/hooks/useGAEvent";
 import { sortCode } from "@/lib/table";
 import useNoRussians from "../hooks/useNoRussians";
+import SelectArchive from "./select-archive";
 
 type TableItem = SearchResponse[number];
 
@@ -57,27 +58,23 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
         description="Оберіть архів, фонд, опис та справу і натисніть Enter. Якщо вам пощастить, то за декілька секунд ви отримаєте посилання на запитувану справу на одному з онлайн джерел."
       >
         <form className="flex flex-col grow shrink-0 basis-6/12 gap-2 items-center" onSubmit={handleSubmit}>
-          <Autocomplete
-            label="Архів"
-            isClearable={false}
-            selectedKey={searchValues.a}
-            onSelectionChange={(value) => setSearchValues({ ...searchValues, a: value?.toString() || undefined })}
-          >
-            {archives.map((archive) => (
-              <AutocompleteItem key={archive.code} value={archive.code} textValue={archive.code}>
-                <div>
-                  <p>{archive.code}</p>
-                  <p className="opacity-70 text-sm text-wrap">{archive.title}</p>
-                </div>
-              </AutocompleteItem>
-            ))}
-          </Autocomplete>
+          <SelectArchive
+            archives={archives}
+            value={searchValues.a}
+            onChange={(v) => setSearchValues({ ...searchValues, a: v?.toString() || undefined })}
+          />
           <div className="flex gap-2 w-full">
             <Input label="Фонд" value={searchValues.f} onChange={handleInputChange("f")} />
             <Input label="Опис" value={searchValues.d} onChange={handleInputChange("d")} />
             <Input label="Справа" value={searchValues.c} onChange={handleInputChange("c")} />
           </div>
-          <Button type="submit" color="primary" variant="light" endContent={<FaFeather />} className="w-full border-blue-200 border">
+          <Button
+            type="submit"
+            color="primary"
+            variant="light"
+            endContent={<FaFeather />}
+            className="w-full border-blue-200 border"
+          >
             Полетіли
           </Button>
           <Checkbox
