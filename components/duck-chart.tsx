@@ -23,7 +23,7 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
   const filteredData = selectedArchiveCode ? dataWithFormattedDate.filter((stat) => stat.archive.code === selectedArchiveCode) : [];
 
   return (
-    <>
+    <div className="flex flex-col gap-2 mt-4 h-full">
       <SelectArchive archives={archives} value={selectedArchiveCode} onChange={(val) => setSelectedArchiveCode(val?.toString())} />
       <div style={{ display: "grid", width: "100%", height: "100%" }}>
         <AgCharts
@@ -31,7 +31,7 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
             title: {
               text: filteredData[0]?.archive?.title || "Архів не вибрано",
             },
-            data: [filteredData[0]],
+            data: filteredData,
             series: [
               {
                 type: "bar",
@@ -72,7 +72,7 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
           }}
         />
       </div>
-    </>
+    </div>
   );
 };
 
