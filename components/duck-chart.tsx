@@ -18,7 +18,7 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
     ...stat,
     created_at: new Date(stat.created_at).toLocaleDateString("uk-UA"),
   }));
-  const [selectedArchiveCode, setSelectedArchiveCode] = useState<string>();
+  const [selectedArchiveCode, setSelectedArchiveCode] = useState<string | undefined>("ЦДІАК");
 
   const filteredData = selectedArchiveCode ? dataWithFormattedDate.filter((stat) => stat.archive.code === selectedArchiveCode) : [];
 
@@ -28,6 +28,11 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
       <div style={{ display: "grid", width: "100%", height: "100%" }}>
         <AgCharts
           options={{
+            theme: {
+              palette: {
+                fills: ["#17c964", "#f5a524", "#006FEE", "#71717a", "#7828c8"],
+              },
+            },
             title: {
               text: filteredData[0]?.archive?.title || "Архів не вибрано",
             },
