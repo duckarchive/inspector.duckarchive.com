@@ -26,9 +26,9 @@ export const siteConfig = {
       href: "/stats",
     },
     {
-      label: "Про проєкт",
-      href: "/docs",
-    }
+      label: "Документація",
+      href: "https://duckarchive.com/docs/inspector",
+    },
   ],
   links: {
     telegram: "https://t.me/spravnakachka",
