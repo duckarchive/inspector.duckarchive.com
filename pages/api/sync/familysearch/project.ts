@@ -59,7 +59,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    res.status(200).end();
+    const freshProjects = await prisma.familySearchProject.findMany({
+      where: {
+        archive_id: {
+          not: null,
+        },
+      },
+      select: {
+        id: true,
+        children_count: true,
+        prev_children_count: true,
+        updated_at: true,
+        archive: {
+          select: {
+            id: true,
+            code: true,
+          },
+        }
+      }
+    });
+
+    res.status(200).json(freshProjects);
   }
 
   if (req.method === "PATCH") {
@@ -91,6 +111,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    res.status(200).end();
+    const freshProjects = await prisma.familySearchProject.findMany({
+      where: {
+        archive_id: {
+          not: null,
+        },
+      },
+      select: {
+        id: true,
+        children_count: true,
+        prev_children_count: true,
+        updated_at: true,
+        archive: {
+          select: {
+            id: true,
+            code: true,
+          },
+        }
+      }
+    });
+
+    res.status(200).json(freshProjects);
   }
 }
