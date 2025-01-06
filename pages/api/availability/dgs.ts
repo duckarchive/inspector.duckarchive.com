@@ -27,10 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
     const dgsMatch: Match | null = await prisma.match.findFirst({
       where: {
-        api_params: `dgs:${dgs}`,
-        children_count: {
-          gt: 0
-        }
+        api_params: `dgs:${dgs}`
       }
     });
 
