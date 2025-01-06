@@ -27,7 +27,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
     const dgsMatch: Match | null = await prisma.match.findFirst({
       where: {
-        api_params: `dgs:${dgs}`
+        api_params: `dgs:${dgs}`,
+        case_id: {
+          not: null
+        }
       }
     });
 
