@@ -12,6 +12,7 @@ interface FSProjectTableProps {
 
 const FSProjectTable: React.FC<FSProjectTableProps> = ({ projects }) => {
   useNoRussians();
+
   return (
     <DuckTable<TableItem>
       columns={[
@@ -47,7 +48,26 @@ const FSProjectTable: React.FC<FSProjectTableProps> = ({ projects }) => {
           headerName: "Поточна",
           flex: 1,
           comparator: undefined,
-          cellRenderer: null
+          cellRenderer: null,
+        },
+        {
+          type: "numericColumn",
+          headerName: "Різниця",
+          flex: 1,
+          comparator: undefined,
+          cellRenderer: (row: { value: number; data: TableItem }) => {
+            const prev = row.data.prev_children_count || 0;
+            const curr = row.data.children_count || 0;
+            const diff = curr - prev;
+            if (diff > 0) {
+              return <span style={{ color: "green" }}>+{diff}</span>;
+            }
+            if (diff < 0) {
+              return <span style={{ color: "red" }}>{diff}</span>;
+            }
+            
+            return <span>{diff}</span>;
+          },
         },
       ]}
       rows={projects}
