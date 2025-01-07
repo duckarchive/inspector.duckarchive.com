@@ -48,11 +48,19 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
         gte: from,
         lt: to,
       },
-      children_count: {
-        not: {
-          equals: prisma.match.fields.prev_children_count
+      OR: [{
+        prev_children_count: {
+          not: null
+        },
+        children_count: {
+          gt: prisma.match.fields.prev_children_count
         }
-      }
+      }, {
+        prev_children_count: null,
+        children_count: {
+          gt: 0
+        }
+      }]
     },
     select: {
       id: true,
