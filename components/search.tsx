@@ -5,7 +5,7 @@ import PagePanel from "./page-panel";
 import { useEffect, useState } from "react";
 import { SearchRequest, SearchResponse } from "@/pages/api/search";
 import useSearch from "@/hooks/useSearch";
-import { Autocomplete, AutocompleteItem, Button, Checkbox, Input, Link } from "@nextui-org/react";
+import { Button, Checkbox, Input, Link } from "@nextui-org/react";
 import { FaFeather } from "react-icons/fa";
 import useSearchRequest from "@/hooks/useSearchRequest";
 import DuckTable from "./duck-table";
@@ -56,6 +56,16 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
       <PagePanel
         title="Пошук"
         description="Оберіть архів, фонд, опис та справу і натисніть Enter. Якщо вам пощастить, то за декілька секунд ви отримаєте посилання на запитувану справу на одному з онлайн джерел."
+        message={
+          <p className="text-gray-600 text-xs my-2 bg-amber-100 p-2 rounded-md">
+            Кількість результатів пошуку обмежена 20 справами, тому намагайтесь конкретизувати свій запит, або
+            використовуйте&nbsp;
+            <Link href="/archives" className="text-xs">
+              навігацію по архівам
+            </Link>
+            , для перегляду всіх справ.
+          </p>
+        }
       >
         <form className="flex flex-col grow shrink-0 basis-6/12 gap-2 items-center" onSubmit={handleSubmit}>
           <SelectArchive
