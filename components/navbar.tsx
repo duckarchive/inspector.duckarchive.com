@@ -16,8 +16,9 @@ import { FaTelegram } from "react-icons/fa";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Logo } from "@/components/icons";
+import { HeartFilledIcon, Logo } from "@/components/icons";
 import SearchInputPortable from "./search-input-portable";
+import { Button } from "@nextui-org/button";
 
 export const Navbar: React.FC = () => {
   return (
@@ -49,6 +50,9 @@ export const Navbar: React.FC = () => {
 
       <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden md:flex gap-2">
+          <Link isExternal aria-label="Support Project" className="text-default-500" href={siteConfig.links.sponsor}>
+            <HeartFilledIcon className="text-danger" />
+          </Link>
           <Link isExternal aria-label="Telegram Chat" className="text-default-500" href={siteConfig.links.telegram}>
             <FaTelegram size={20} />
           </Link>
@@ -57,18 +61,6 @@ export const Navbar: React.FC = () => {
         <NavbarItem className="hidden md:flex">
           <SearchInputPortable />
         </NavbarItem>
-        {/* <NavbarItem className="hidden md:flex">
-          <Button
-            isExternal
-            as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.links.sponsor}
-            startContent={<HeartFilledIcon className="text-danger" />}
-            variant="flat"
-          >
-            Підтримати
-          </Button>
-        </NavbarItem> */}
       </NavbarContent>
 
       <NavbarContent className="md:hidden basis-1 pl-4" justify="end">

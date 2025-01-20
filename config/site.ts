@@ -32,5 +32,6 @@ export const siteConfig = {
   ],
   links: {
     telegram: "https://t.me/spravnakachka",
+    sponsor: "https://donate.stripe.com/dR629v5uRcj42Qg8wx",
   },
 };
