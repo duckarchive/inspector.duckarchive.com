@@ -64,6 +64,9 @@ export const Navbar: React.FC = () => {
       </NavbarContent>
 
       <NavbarContent className="md:hidden basis-1 pl-4" justify="end">
+        <Link isExternal aria-label="Support Project" className="text-default-500" href={siteConfig.links.sponsor}>
+          <HeartFilledIcon className="text-danger" />
+        </Link>
         <Link isExternal aria-label="Telegram Chat" className="text-default-500" href={siteConfig.links.telegram}>
           <FaTelegram size={20} />
         </Link>
