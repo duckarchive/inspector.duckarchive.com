@@ -8,7 +8,6 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import GoogleAnalytics from '@/components/ga';
-import GoogleAdSense from "@/components/gads";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url || ""),
@@ -44,7 +43,6 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="uk">
       <head />
       <GoogleAnalytics />
-      <GoogleAdSense />
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
