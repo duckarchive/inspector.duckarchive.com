@@ -138,7 +138,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
           </Button>
         )} */}
       </div>
-      <div className={`ag-theme-quartz h-96 flex-grow ${theme === "dark" ? "ag-theme-quartz-dark" : ""}`}>
+      <div className={`h-96 flex-grow ${theme === "dark" ? "ag-theme-quartz-dark" : "ag-theme-quartz"}`}>
         {/* @ts-ignore */}
         <AgGridReact
           ref={gridRef}
