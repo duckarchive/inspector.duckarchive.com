@@ -54,7 +54,11 @@ const FSProjectTable: React.FC<FSProjectTableProps> = ({ projects }) => {
           type: "numericColumn",
           headerName: "Різниця",
           flex: 1,
-          comparator: undefined,
+          comparator: (_, __, a, b) => {
+            const diffA = (a.data?.children_count || 0) - (a.data?.prev_children_count || 0);
+            const diffB = (b.data?.children_count || 0) - (b.data?.prev_children_count || 0);
+            return diffA - diffB;
+          },
           cellRenderer: (row: { value: number; data: TableItem }) => {
             const prev = row.data.prev_children_count || 0;
             const curr = row.data.children_count || 0;
