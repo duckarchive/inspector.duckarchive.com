@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@nextui-org/link";
+import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
 import useIsMobile from "@/hooks/useIsMobile";

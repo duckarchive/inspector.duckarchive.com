@@ -1,9 +1,9 @@
 "use client";
 
-import { Input } from "@nextui-org/input";
+import { Input } from "@heroui/input";
 import { useRouter } from "next/navigation";
 import { SearchIcon } from "./icons";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { FaCheck, FaFeather, FaInfoCircle, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import {
@@ -16,7 +16,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 interface SearchInputPortableProps {
   isLarge?: boolean;

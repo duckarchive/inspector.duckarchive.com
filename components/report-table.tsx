@@ -1,7 +1,7 @@
 "use client";
 
 import { Report } from "@/data/report";
-import { Link } from "@nextui-org/link";
+import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
 import { getSyncAtLabel } from "@/lib/table";

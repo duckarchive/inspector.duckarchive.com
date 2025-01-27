@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { handleSendMessageTG, LIMIT_FUNDS } from "../lib/sendNotification";
 import { siteConfig } from "../config/site";
 

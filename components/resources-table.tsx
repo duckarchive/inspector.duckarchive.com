@@ -4,7 +4,7 @@ import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
 import ResourceBadge from "./resource-badge";
 import { Resource } from "@prisma/client";
-import { Link } from "@nextui-org/link";
+import { Link } from "@heroui/link";
 
 type TableItem = Resources[number];
 

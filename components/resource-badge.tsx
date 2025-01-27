@@ -3,7 +3,7 @@
 import { Resource, ResourceType } from "@prisma/client";
 import { startCase } from "lodash";
 import { PropsWithChildren } from "react";
-import { Chip, Tooltip } from "@nextui-org/react";
+import { Chip, Tooltip } from "@heroui/react";
 
 const TYPE_COLORS: Record<ResourceType, any> = {
   [ResourceType.ARCHIUM]: "warning",

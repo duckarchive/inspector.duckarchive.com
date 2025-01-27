@@ -5,7 +5,7 @@ import PagePanel from "./page-panel";
 import { useEffect, useState } from "react";
 import { SearchRequest, SearchResponse } from "@/pages/api/search";
 import useSearch from "@/hooks/useSearch";
-import { Button, Checkbox, Input, Link } from "@nextui-org/react";
+import { Button, Checkbox, Input, Link } from "@heroui/react";
 import { FaFeather } from "react-icons/fa";
 import useSearchRequest from "@/hooks/useSearchRequest";
 import DuckTable from "./duck-table";

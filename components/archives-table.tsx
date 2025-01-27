@@ -1,7 +1,7 @@
 "use client";
 
 import { Archives } from "@/data/archives";
-import { Link } from "@nextui-org/link";
+import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
 import { sortByTitle, sortText } from "@/lib/table";

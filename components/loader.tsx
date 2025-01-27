@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, Spinner } from "@nextui-org/react";
+import { Link, Spinner } from "@heroui/react";
 
 const funnyMessages = [
   "Качка може ходити, плавати і літати!",

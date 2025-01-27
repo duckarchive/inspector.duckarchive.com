@@ -10,7 +10,7 @@ import ResourceBadge from "./resource-badge";
 import { getSyncAtLabel, sortByMatches, sortCode } from "@/lib/table";
 import { Resource } from "@prisma/client";
 import { useTheme } from "next-themes";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 
 export enum QuickFilter {
   PRE_USSR_FUNDS = "preUssrFunds",
