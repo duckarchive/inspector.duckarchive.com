@@ -12,7 +12,7 @@ import DuckTable from "./duck-table";
 import Loader from "./loader";
 import useIsMobile from "@/hooks/useIsMobile";
 import { sortCode } from "@/lib/table";
-import { sendGTMEvent } from '@next/third-parties/google'
+import { sendGTMEvent } from "@next/third-parties/google";
 import useNoRussians from "../hooks/useNoRussians";
 import SelectArchive from "./select-archive";
 
@@ -110,6 +110,11 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               flex: 1,
               resizable: true,
               hide: isMobile,
+              cellRenderer: (row: { value: TableItem["archive_code"]; data: TableItem }) => (
+                <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm">
+                  {row.value}
+                </Link>
+              ),
             },
             {
               field: "fund_code",
@@ -117,6 +122,14 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               headerName: "Фонд",
               flex: 1,
               hide: isMobile,
+              cellRenderer: (row: { value: TableItem["fund_code"]; data: TableItem }) => (
+                <Link
+                  href={`/archives/${row.data.archive_code}/${row.data.fund_code}`}
+                  className="text-inherit text-sm"
+                >
+                  {row.value}
+                </Link>
+              ),
             },
             {
               field: "description_code",
@@ -124,6 +137,14 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               headerName: "Опис",
               flex: 1,
               hide: isMobile,
+              cellRenderer: (row: { value: TableItem["description_code"]; data: TableItem }) => (
+                <Link
+                  href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}`}
+                  className="text-inherit text-sm"
+                >
+                  {row.value}
+                </Link>
+              ),
             },
             {
               field: "case_code",
@@ -131,6 +152,14 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               headerName: "Справа",
               flex: 1,
               hide: isMobile,
+              cellRenderer: (row: { value: TableItem["case_code"]; data: TableItem }) => (
+                <Link
+                  href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}/${row.data.case_code}`}
+                  className="text-inherit text-sm"
+                >
+                  {row.value}
+                </Link>
+              ),
             },
             {
               field: "url",
