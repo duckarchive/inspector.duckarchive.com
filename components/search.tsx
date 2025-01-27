@@ -111,7 +111,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
               resizable: true,
               hide: isMobile,
               cellRenderer: (row: { value: TableItem["archive_code"]; data: TableItem }) => (
-                <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm">
+                <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm" target="_blank">
                   {row.value}
                 </Link>
               ),
@@ -126,6 +126,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
                 <Link
                   href={`/archives/${row.data.archive_code}/${row.data.fund_code}`}
                   className="text-inherit text-sm"
+                  target="_blank"
                 >
                   {row.value}
                 </Link>
@@ -141,6 +142,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
                 <Link
                   href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}`}
                   className="text-inherit text-sm"
+                  target="_blank"
                 >
                   {row.value}
                 </Link>
@@ -156,6 +158,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
                 <Link
                   href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}/${row.data.case_code}`}
                   className="text-inherit text-sm"
+                  target="_blank"
                 >
                   {row.value}
                 </Link>

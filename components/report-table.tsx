@@ -43,7 +43,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           filter: true,
           flex: 1,
           cellRenderer: (row: { value: TableItem["archive_code"]; data: TableItem }) => (
-            <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm">
+            <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm" target="_blank">
               {row.value}
             </Link>
           ),
@@ -54,7 +54,11 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           filter: true,
           flex: 1,
           cellRenderer: (row: { value: TableItem["fund_code"]; data: TableItem }) => (
-            <Link href={`/archives/${row.data.archive_code}/${row.data.fund_code}`} className="text-inherit text-sm">
+            <Link
+              href={`/archives/${row.data.archive_code}/${row.data.fund_code}`}
+              className="text-inherit text-sm"
+              target="_blank"
+            >
               {row.value}
             </Link>
           ),
@@ -68,6 +72,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
             <Link
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}`}
               className="text-inherit text-sm"
+              target="_blank"
             >
               {row.value}
             </Link>
@@ -82,6 +87,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
             <Link
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}/${row.data.case_code}`}
               className="text-inherit text-sm"
+              target="_blank"
             >
               {row.value}
             </Link>
