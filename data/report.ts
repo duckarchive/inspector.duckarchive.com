@@ -2,7 +2,6 @@ import fs from "fs/promises";
 import groupBy from "lodash/groupBy.js";
 import prisma from "../lib/db";
 import { Archive, Case, DailyStat, Description, Fund, Match } from "@prisma/client";
-import chunk from "lodash/chunk.js";
 
 process.env.TZ = "UTC";
 
@@ -34,10 +33,10 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   startOfYesterday.setHours(0, 0, 0, 0);
   const from = startOfYesterday.toISOString();
   // end of yesterday using date-fns
-  const endOfYesterday = new Date();
-  endOfYesterday.setDate(endOfYesterday.getDate() - 1);
-  endOfYesterday.setHours(23, 59, 59, 999);
-  const to = endOfYesterday.toISOString();
+  // const endOfYesterday = new Date();
+  // endOfYesterday.setDate(endOfYesterday.getDate() - 1);
+  // endOfYesterday.setHours(23, 59, 59, 999);
+  // const to = endOfYesterday.toISOString();
 
   const updatedMatches = await prisma.match.findMany({
     where: {
@@ -46,7 +45,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
       },
       updated_at: {
         gte: from,
-        lt: to,
+        // lt: to,
       },
       OR: [{
         prev_children_count: {
@@ -135,9 +134,9 @@ export const getDailyStats = async (): Promise<DailyStatWithArchive[]> => {
   startOfOneMonthAgo.setMonth(startOfOneMonthAgo.getMonth() - 1);
   startOfOneMonthAgo.setHours(0, 0, 0, 0);
   const from = startOfOneMonthAgo.toISOString();
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-  const to = startOfToday.toISOString();
+  // const startOfToday = new Date();
+  // startOfToday.setHours(0, 0, 0, 0);
+  // const to = startOfToday.toISOString();
 
   const stats = await prisma.dailyStat.findMany({
     where: {
