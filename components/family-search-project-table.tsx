@@ -30,7 +30,7 @@ const FSProjectTable: React.FC<FSProjectTableProps> = ({ projects }) => {
         },
         {
           field: "updated_at",
-          headerName: "Оновлено",
+          headerName: "Перевірено",
           filter: true,
           flex: 1,
         },

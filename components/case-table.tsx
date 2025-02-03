@@ -56,7 +56,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
           },
           {
             field: "updated_at",
-            headerName: "Оновлено",
+            headerName: "Перевірено",
             flex: 2,
             hide: isMobile,
             cellRenderer: (row: { value: string; data: TableItem }) => getSyncAtLabel(row.value, true),

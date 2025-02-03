@@ -63,7 +63,7 @@ export const sortByMatches = (_: any, __: any, a: { data: WithMatches }, b: { da
 };
 
 export const getSyncAtLabel = (updatedAt?: Date | string | null, withoutPrefix?: boolean) => {
-  const prefix = withoutPrefix ? "" : "Оновлено ";
+  const prefix = withoutPrefix ? "" : "Перевірено ";
   return updatedAt
     ? `${prefix}${intlFormatDistance(new Date(updatedAt), new Date(), {
         locale: "uk",
