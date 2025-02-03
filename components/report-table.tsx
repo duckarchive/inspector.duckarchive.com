@@ -4,7 +4,7 @@ import { Report } from "@/data/report";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
-import { getSyncAtLabel } from "@/lib/table";
+import { getSyncAtLabel, sortCode } from "@/lib/table";
 import ResourceBadge from "./resource-badge";
 import useNoRussians from "../hooks/useNoRussians";
 
@@ -53,6 +53,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           headerName: "Фонд",
           filter: true,
           flex: 1,
+          comparator: sortCode,
           cellRenderer: (row: { value: TableItem["fund_code"]; data: TableItem }) => (
             <Link
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}`}
@@ -68,6 +69,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           headerName: "Опис",
           filter: true,
           flex: 1,
+          comparator: sortCode,
           cellRenderer: (row: { value: TableItem["description_code"]; data: TableItem }) => (
             <Link
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}`}
@@ -83,6 +85,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           headerName: "Справа",
           filter: true,
           flex: 1,
+          comparator: sortCode,
           cellRenderer: (row: { value: TableItem["case_code"]; data: TableItem }) => (
             <Link
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}/${row.data.case_code}`}
