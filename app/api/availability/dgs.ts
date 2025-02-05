@@ -8,9 +8,9 @@ export type CheckDGSRequest = Partial<{
   dgs: string;
 }>;
 
-export type CheckDGSResponse = boolean | ErrorResponse;
+export type CheckDGSResponse = boolean;
 
-export async function POST(req: NextRequest): Promise<NextResponse<CheckDGSResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse<CheckDGSResponse | ErrorResponse>> {
   const user = await authorizeGoogle(req);
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

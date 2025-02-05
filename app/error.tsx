@@ -7,7 +7,6 @@ import { Link } from "@heroui/link";
 
 interface ErrorComponentProps {
   error: Error;
-  reset: () => void;
 }
 
 const ErrorComponent: React.FC<ErrorComponentProps> = ({ error }) => {

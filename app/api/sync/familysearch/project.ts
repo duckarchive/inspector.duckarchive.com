@@ -21,9 +21,9 @@ export type GetFamilySearchProjectResponse =
         };
       };
     }>[]
-  | ErrorResponse;
+ ;
 
-export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse>> {
+export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse | ErrorResponse>> {
   const user = await authorizeGoogle(req, true);
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearc
   return NextResponse.json(projects);
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse | ErrorResponse>> {
   const user = await authorizeGoogle(req, true);
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<GetFamilySear
   return NextResponse.json(freshProjects);
 }
 
-export async function PATCH(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse>> {
+export async function PATCH(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse | ErrorResponse>> {
   const user = await authorizeGoogle(req, true);
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

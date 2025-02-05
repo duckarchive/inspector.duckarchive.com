@@ -6,7 +6,7 @@ import { ErrorResponse } from "@/types";
 export type GetCaseResponse = {
   title: Case["title"];
   matches: Match[];
-} | ErrorResponse;
+};
 
 interface GetCaseParams {
   params: {
@@ -20,7 +20,7 @@ interface GetCaseParams {
 export async function GET(
   _req: NextRequest,
   { params }: GetCaseParams,
-): Promise<NextResponse<GetCaseResponse>> {
+): Promise<NextResponse<GetCaseResponse | ErrorResponse>> {
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];
   const descriptionCode = params["description-code"];

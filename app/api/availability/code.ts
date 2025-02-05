@@ -8,9 +8,9 @@ export type CheckOnlineRequest = Partial<{
   full_codes: string[];
 }>;
 
-export type CheckOnlineResponse = boolean[] | ErrorResponse;
+export type CheckOnlineResponse = boolean[];
 
-export async function POST(req: NextRequest): Promise<NextResponse<CheckOnlineResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse<CheckOnlineResponse | ErrorResponse>> {
   const isAuth = await isAuthorized();
   if (!isAuth) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

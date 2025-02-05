@@ -6,9 +6,9 @@ import { ErrorResponse } from "@/types";
 
 export type FamilySearchPlaceRequest = Record<FamilySearchPlace["id"], FamilySearchPlace["total_count"]>;
 
-export type GetFamilySearchPlaceResponse = FamilySearchPlace[] | ErrorResponse;
+export type GetFamilySearchPlaceResponse = FamilySearchPlace[];
 
-export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearchPlaceResponse>> {
+export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearchPlaceResponse | ErrorResponse>> {
   const user = await authorizeGoogle(req, true);
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearc
   return NextResponse.json(places);
 }
 
-export async function PATCH(req: NextRequest): Promise<NextResponse> {
+export async function PATCH(req: NextRequest): Promise<NextResponse | ErrorResponse> {
   const places: FamilySearchPlaceRequest = await req.json();
   if (!places || !Object.keys(places).length) {
     return NextResponse.json({ message: "places list is required" }, { status: 400 });

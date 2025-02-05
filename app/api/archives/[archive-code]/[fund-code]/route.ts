@@ -22,7 +22,7 @@ export type GetFundResponse =
         };
       };
     }>
-  | ErrorResponse;
+ ;
 
 interface GetFundParams {
   params: {
@@ -31,7 +31,7 @@ interface GetFundParams {
   };
 }
 
-export async function GET(_req: NextRequest, { params }: GetFundParams): Promise<NextResponse<GetFundResponse>> {
+export async function GET(_req: NextRequest, { params }: GetFundParams): Promise<NextResponse<GetFundResponse | ErrorResponse>> {
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];
 

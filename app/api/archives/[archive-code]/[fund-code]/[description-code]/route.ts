@@ -22,7 +22,7 @@ export type GetDescriptionResponse =
         };
       };
     }>
-  | ErrorResponse;
+ ;
 
 interface GetDescriptionParams {
   params: {
@@ -35,7 +35,7 @@ interface GetDescriptionParams {
 export async function GET(
   req: NextRequest,
   { params }: GetDescriptionParams,
-): Promise<NextResponse<GetDescriptionResponse>> {
+): Promise<NextResponse<GetDescriptionResponse | ErrorResponse>> {
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];
   const descriptionCode = params["description-code"];

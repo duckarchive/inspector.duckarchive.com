@@ -26,7 +26,8 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
   const { archive, isLoading } = useArchive(code);
 
   if (isLoading) return <Loader />
-  // if (isError) return <Error error={} />
+  // if (isError) return <ErrorComponent error={isError} />
+
   return (
     <>
       <PagePanel title={`Архів ${code}`} description={archive?.title || "Без назви"} />

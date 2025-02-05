@@ -21,8 +21,7 @@ export type GetArchiveResponse =
           };
         };
       };
-    }>
-  | ErrorResponse;
+    }>;
 
 interface GetArchiveParams {
   params: {
@@ -30,7 +29,7 @@ interface GetArchiveParams {
   };
 }
 
-export async function GET(_req: NextRequest, { params }: GetArchiveParams): Promise<NextResponse<GetArchiveResponse>> {
+export async function GET(_req: NextRequest, { params }: GetArchiveParams): Promise<NextResponse<GetArchiveResponse | ErrorResponse>> {
   const archiveCode = params["archive-code"];
 
   if (!archiveCode) {

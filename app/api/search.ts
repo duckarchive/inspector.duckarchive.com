@@ -20,9 +20,9 @@ export type SearchResponse =
       case_code: Case["code"];
       url: Match["url"];
     }[]
-  | ErrorResponse;
+ ;
 
-export async function POST(req: NextRequest): Promise<NextResponse<SearchResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse<SearchResponse | ErrorResponse>> {
   const { a, f, d, c, isStrict }: SearchRequest = await req.json();
 
   const _a = a || "%"; // case sensitive
