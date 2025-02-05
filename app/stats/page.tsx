@@ -10,7 +10,7 @@ const StatsPage: NextPage = async () => {
 
   return (
     <>
-      <PagePanel title="Статистика доступності справ" description="Оберіть архів, щоб побачити статистику по дням та ресурсам" />
+      <PagePanel title="Статистика доступності справ" description="Оберіть архів, щоб побачити статистику по днях та ресурсах" />
       <DuckChart data={dailyStats} archives={archives} />
     </>
   );
