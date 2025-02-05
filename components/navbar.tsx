@@ -1,5 +1,7 @@
+"use client";
+
 import {
-  Navbar as NextUINavbar,
+  Navbar,
   NavbarContent,
   NavbarMenu,
   NavbarMenuToggle,
@@ -8,7 +10,6 @@ import {
   NavbarMenuItem,
 } from "@heroui/navbar";
 import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
@@ -18,11 +19,20 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { HeartFilledIcon, Logo } from "@/components/icons";
 import SearchInputPortable from "./search-input-portable";
-import { Button } from "@heroui/button";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 
-export const Navbar: React.FC = () => {
+const NavbarComponent: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  
   return (
-    <NextUINavbar maxWidth="xl" position="sticky">
+    <Navbar
+      maxWidth="xl"
+      position="sticky"
+      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="text-transparent hover:text-warning flex justify-start items-center gap-1" href="/">
@@ -32,7 +42,7 @@ export const Navbar: React.FC = () => {
         </NavbarBrand>
         <ul className="hidden md:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
+            <NavbarItem key={item.href} isActive={pathname === item.href}>
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
@@ -78,14 +88,16 @@ export const Navbar: React.FC = () => {
         <SearchInputPortable />
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link color="foreground" href={item.href} size="lg">
+            <NavbarMenuItem key={`${item}-${index}`} isActive={pathname === item.href}>
+              <Link color="foreground" href={item.href} onPress={() => setIsMenuOpen((prev) => !prev)} size="lg">
                 {item.label}
               </Link>
             </NavbarMenuItem>
           ))}
         </div>
       </NavbarMenu>
-    </NextUINavbar>
+    </Navbar>
   );
 };
+
+export default NavbarComponent;
