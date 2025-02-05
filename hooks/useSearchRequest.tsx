@@ -1,6 +1,6 @@
 import useSWRMutation from "swr/mutation";
 import { fetcher } from "@/lib/fetcher";
-import { SearchRequest, SearchResponse } from "../app/api/search";
+import { SearchRequest, SearchResponse } from "../app/api/search/route";
 
 const useSearchRequest = () => {
   const { data, error, trigger, isMutating } = useSWRMutation<SearchResponse, Error, string, SearchRequest>(`/api/search`, (url, { arg }) => fetcher(url, {

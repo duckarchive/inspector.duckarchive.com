@@ -16,6 +16,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<CheckDGSRespo
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   const { dgs }: CheckDGSRequest = await req.json();
+
+  console.log(dgs);
   if (!dgs) {
     return NextResponse.json({ message: '"dgs" is required' }, { status: 400 });
   }
