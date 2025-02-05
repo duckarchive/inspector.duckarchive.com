@@ -11,6 +11,7 @@ import { getSyncAtLabel, sortByMatches, sortCode } from "@/lib/table";
 import { Resource } from "@prisma/client";
 import { useTheme } from "next-themes";
 import { Button } from "@heroui/button";
+import clsx from "clsx";
 
 export enum QuickFilter {
   PRE_USSR_FUNDS = "preUssrFunds",
@@ -52,6 +53,7 @@ interface DuckTableProps<T> {
 }
 
 const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, resources }: DuckTableProps<T>) => {
+  const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const gridRef = useRef<AgGridReact<T>>(null);
   const [activeQuickFilter, setActiveQuickFilter] = useState<QuickFilter>();
@@ -82,9 +84,17 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
     }
   }, [activeQuickFilter]);
 
+  useEffect(() => {
+    setMounted(true)
+  }, []);
+
   const handleFilterClick = (newFilter: QuickFilter) => () => {
     setActiveQuickFilter((prev) => (prev === newFilter ? undefined : newFilter));
   };
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <>
@@ -96,7 +106,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
               color="primary"
               size="sm"
               variant={activeQuickFilter === QuickFilter.PRE_USSR_FUNDS ? "solid" : "bordered"}
-              onClick={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
+              onPress={handleFilterClick(QuickFilter.PRE_USSR_FUNDS)}
             >
               Фонди до 1917
             </Button>
@@ -107,7 +117,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
               color="primary"
               size="sm"
               variant={activeQuickFilter === QuickFilter.USSR_FUNDS ? "solid" : "bordered"}
-              onClick={handleFilterClick(QuickFilter.USSR_FUNDS)}
+              onPress={handleFilterClick(QuickFilter.USSR_FUNDS)}
             >
               Фонди після 1917
             </Button>
@@ -118,7 +128,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
               color="primary"
               size="sm"
               variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
-              onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
+              onPress={handleFilterClick(QuickFilter.PART_FUNDS)}
             >
               Фонди ПРУ
             </Button>
@@ -132,13 +142,18 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
             size="sm"
             isDisabled
             variant={activeQuickFilter === QuickFilter.PART_FUNDS ? "solid" : "bordered"}
-            onClick={handleFilterClick(QuickFilter.PART_FUNDS)}
+            onPress={handleFilterClick(QuickFilter.PART_FUNDS)}
           >
             🛠️ Доступні 🛠️
           </Button>
         )} */}
       </div>
-      <div className={`h-96 flex-grow ${theme === "dark" ? "ag-theme-quartz-dark" : "ag-theme-quartz"}`}>
+      <div
+        className={clsx("h-96 flex-grow", {
+          "ag-theme-quartz-dark": theme === "dark",
+          "ag-theme-quartz": theme !== "dark",
+        })}
+      >
         {/* @ts-ignore */}
         <AgGridReact
           ref={gridRef}
