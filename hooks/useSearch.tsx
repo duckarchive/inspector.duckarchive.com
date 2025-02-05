@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Archives } from "../data/archives";
-import { SearchRequest } from "../pages/api/search";
+import { SearchRequest } from "../app/api/search";
 
 const standardizeArchiveCode = (code: string, archives: Archives) => {
   const archive = archives.find((archive) => archive.code.toLocaleLowerCase() === code.toLocaleLowerCase());

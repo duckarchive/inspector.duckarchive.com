@@ -1,12 +1,15 @@
 import { User } from "duck-inspector-schema";
 import prisma from "./db";
-import { NextApiRequest } from "next";
+import { headers } from "next/headers";
+import { NextRequest } from "next/server";
 
 // ridni.org API key
 const API_KEY = `API-89ef6011-a152-4296-y1b2-9bda6b0e49c5`;
 
-export const isAuthorized = async (req: NextApiRequest) => {
-  if (req.headers.authorization === `Bearer ${API_KEY}`) {
+export const isAuthorized = async () => {
+  const headersList = headers();
+  const authorization = headersList.get('authorization')
+  if (authorization === `Bearer ${API_KEY}`) {
     return true;
   }
   return false;
@@ -22,13 +25,15 @@ interface GoogleUserInfo {
   email_verified: boolean;
 }
 
-export const authorizeGoogle = async (req: NextApiRequest, validateAdmin?: boolean): Promise<User | false> => {
-  if (req.headers.authorization) {
+export const authorizeGoogle = async (_req: NextRequest, validateAdmin?: boolean): Promise<User | false> => {
+  const headersList = headers();
+  const authorization = headersList.get('authorization');
+  if (authorization) {
     try {
       // get the token from the header and verify it with https://www.googleapis.com/oauth2/v3/userinfo
       // if the token is valid, return user info
       // if the token is invalid, return false
-      const token = req.headers.authorization.toString().split(" ")[1];
+      const token = authorization.toString().split(" ")[1];
       const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`, {
         headers: {
           Authorization: `Bearer ${token}`,

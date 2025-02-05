@@ -11,7 +11,7 @@ import Loader from "./loader";
 import useCase from "@/hooks/useCase";
 import { Match } from "@prisma/client";
 import ResourceBadge from "./resource-badge";
-import { GetCaseResponse } from "../pages/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]";
+import { GetCaseResponse } from "../app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
 import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = GetCaseResponse["matches"][number];

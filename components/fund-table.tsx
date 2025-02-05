@@ -10,7 +10,7 @@ import PagePanel from "./page-panel";
 import { sortByCode } from "../lib/table";
 import Loader from "./loader";
 import useFund from "../hooks/useFund";
-import { GetFundResponse } from "../pages/api/archives/[archive-code]/[fund-code]";
+import { GetFundResponse } from "../app/api/archives/[archive-code]/[fund-code]/route";
 import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = GetFundResponse["descriptions"][number];

@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/lib/fetcher";
-import { GetDescriptionResponse } from "../pages/api/archives/[archive-code]/[fund-code]/[description-code]";
+import { GetDescriptionResponse } from "../app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 

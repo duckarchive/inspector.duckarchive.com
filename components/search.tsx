@@ -3,7 +3,7 @@
 import { Archives } from "@/data/archives";
 import PagePanel from "./page-panel";
 import { useEffect, useState } from "react";
-import { SearchRequest, SearchResponse } from "@/pages/api/search";
+import { SearchRequest, SearchResponse } from "@/app/api/search";
 import useSearch from "@/hooks/useSearch";
 import { Button, Checkbox, Input, Link } from "@heroui/react";
 import { FaFeather } from "react-icons/fa";
