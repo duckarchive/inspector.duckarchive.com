@@ -12,12 +12,12 @@ export function middleware(req: NextRequest) {
   headers.set("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
-    return new NextResponse(null, { status: 200, headers });
+    return NextResponse.json({}, { headers });
   }
 
   return NextResponse.next({ headers });
 }
 
 export const config = {
-  matcher: ['/api/*'],
+  matcher: '/api/:path*',
 };
