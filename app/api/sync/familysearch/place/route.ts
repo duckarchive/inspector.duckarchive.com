@@ -17,7 +17,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearc
   return NextResponse.json(places);
 }
 
-export async function PATCH(req: NextRequest): Promise<NextResponse | ErrorResponse> {
+export async function PATCH(req: NextRequest): Promise<NextResponse> {
   const places: FamilySearchPlaceRequest = await req.json();
   if (!places || !Object.keys(places).length) {
     return NextResponse.json({ message: "places list is required" }, { status: 400 });
