@@ -7,15 +7,15 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Navbar from "@/components/navbar";
-import GoogleAnalytics from '@/components/ga';
+import GoogleAnalytics from "@/components/ga";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url || ""),
   alternates: {
-    canonical: '/',
+    canonical: "/",
   },
   openGraph: {
-    images: '/og-image.png',
+    images: "/og-image.png",
   },
   title: {
     default: siteConfig.name,
@@ -34,27 +34,16 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning lang="uk">
       <head />
       <GoogleAnalytics />
-      <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
+      <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">
-              {children}
-            </main>
+            <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">{children}</main>
           </div>
         </Providers>
       </body>
