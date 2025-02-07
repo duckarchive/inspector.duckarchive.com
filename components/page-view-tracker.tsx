@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { sendGTMEvent } from "@next/third-parties/google";
 
-const PageViewTracker: React.FC = () => {
+const _PageViewTracker: React.FC = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -15,5 +15,13 @@ const PageViewTracker: React.FC = () => {
 
   return null;
 };
+
+const PageViewTracker: React.FC = () => {
+  return (
+    <Suspense>
+      <_PageViewTracker />
+    </Suspense>
+  );
+}
 
 export default PageViewTracker;
