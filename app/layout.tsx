@@ -9,6 +9,8 @@ import { fontSans } from "@/config/fonts";
 import Navbar from "@/components/navbar";
 import GoogleAnalytics from "@/components/ga";
 import PageViewTracker from "../components/page-view-tracker";
+import { Suspense } from "react";
+import Loader from "@/components/loader";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url || ""),
@@ -43,10 +45,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <PageViewTracker />
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">{children}</main>
-          </div>
+          <Suspense fallback={<Loader />}>
+            <div className="relative flex flex-col h-screen">
+              <Navbar />
+              <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">{children}</main>
+            </div>
+          </Suspense>
         </Providers>
       </body>
     </html>
