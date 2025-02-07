@@ -34,38 +34,44 @@ const NavbarComponent: React.FC = () => {
       onMenuOpenChange={setIsMenuOpen}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
+        <NavbarBrand as="li" className="max-w-fit">
           <NextLink className="text-transparent hover:text-warning flex justify-start items-center gap-1" href="/">
             <Logo className="duration-200 stroke-foreground" />
             <p className="font-bold text-foreground">Інспектор</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden md:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href} isActive={pathname === item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
+        <NavbarItem className="hidden md:flex ml-2">
+          <ul className="flex gap-4 justify-start">
+            {siteConfig.navItems.map((item) => (
+              <NavbarItem key={item.href} isActive={pathname === item.href}>
+                <NextLink
+                  className={clsx(
+                    linkStyles({ color: "foreground" }),
+                    "data-[active=true]:text-primary data-[active=true]:font-medium",
+                  )}
+                  color="foreground"
+                  href={item.href}
+                >
+                  {item.label}
+                </NextLink>
+              </NavbarItem>
+            ))}
+          </ul>
+        </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
-        <NavbarItem className="hidden md:flex gap-2">
+      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full gap-2" justify="end">
+        <NavbarItem className="hidden md:flex">
           <Link isExternal aria-label="Support Project" className="text-default-500" href={siteConfig.links.sponsor}>
             <HeartFilledIcon className="text-danger" />
           </Link>
+        </NavbarItem>
+        <NavbarItem className="hidden md:flex">
           <Link isExternal aria-label="Telegram Chat" className="text-default-500" href={siteConfig.links.telegram}>
             <FaTelegram size={20} />
           </Link>
+        </NavbarItem>
+        <NavbarItem className="hidden md:flex">
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
