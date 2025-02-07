@@ -10,7 +10,7 @@ const PageViewTracker: React.FC = () => {
 
   useEffect(() => {
     const url = pathname + (searchParams?.toString() || "");
-    sendGTMEvent({ event: "pageview", page: url });
+    sendGTMEvent({ event: "page_view", page: url });
   }, [pathname, searchParams]);
 
   return null;
