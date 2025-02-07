@@ -30,11 +30,15 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
   const isMobile = useIsMobile();
   const { caseItem, isLoading } = useCase(archiveCode, fundCode, descriptionCode, code);
 
-  if (isLoading) return <Loader />
+  if (isLoading) return <Loader />;
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title={`Справа ${code}`} description={caseItem?.title || "Без назви"} />
+      <PagePanel
+        title={`${code} справа`}
+        breadcrumbs={[archiveCode, fundCode, descriptionCode, code]}
+        description={caseItem?.title || "Без назви"}
+      />
       <DuckTable<TableItem>
         resources={resources}
         columns={[
@@ -42,7 +46,9 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
             field: "resource_id",
             headerName: "Ресурс",
             flex: 1.5,
-            cellRenderer: (row: { value: TableItem["resource_id"] }) => <ResourceBadge resources={resources} resourceId={row.value} />,
+            cellRenderer: (row: { value: TableItem["resource_id"] }) => (
+              <ResourceBadge resources={resources} resourceId={row.value} />
+            ),
           },
           {
             field: "url",

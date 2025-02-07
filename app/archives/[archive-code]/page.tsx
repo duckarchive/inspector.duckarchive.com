@@ -1,7 +1,8 @@
 import ArchiveTable from "@/components/archive-table";
-import { Metadata, NextPage, ResolvingMetadata } from "next";
+import { Metadata, NextPage } from "next";
 import { getResources } from "@/data/resources";
-import { siteConfig } from "../../../config/site";
+import { siteConfig } from "@/config/site";
+import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
 
 export interface ArchivePageProps {
   params: Promise<{
@@ -10,15 +11,18 @@ export interface ArchivePageProps {
 }
 
 export async function generateMetadata(
-  pageProps: ArchivePageProps,
-  parent: ResolvingMetadata
+  pageProps: ArchivePageProps
 ): Promise<Metadata> {
   const params  = await pageProps.params;
   const code = decodeURIComponent(params["archive-code"]);
-  const archive = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json())
-  delete archive.funds;
+  const archive: GetArchiveResponse = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json())
+  
   return {
-    description: `Справи онлайн – ${archive.title} (${archive.code})`,
+    title: `${code}`,
+    description: `Пошук справ онлайн: ${archive.code} (${archive.title})`,
+    keywords: [
+      `архів ${code}`,
+    ],
   }
 }
 

@@ -27,11 +27,11 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
   const isMobile = useIsMobile();
   const { fund, isLoading } = useFund(archiveCode, code);
 
-  if (isLoading) return <Loader />
+  if (isLoading) return <Loader />;
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title={`Фонд ${code}`} description={fund?.title || "Без назви"} />
+      <PagePanel title={`${code} фонд`} breadcrumbs={[archiveCode, code]} description={fund?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
         columns={[

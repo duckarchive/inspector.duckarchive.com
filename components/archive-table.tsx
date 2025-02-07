@@ -25,12 +25,12 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
   const isMobile = useIsMobile();
   const { archive, isLoading } = useArchive(code);
 
-  if (isLoading) return <Loader />
+  if (isLoading) return <Loader />;
   // if (isError) return <ErrorComponent error={isError} />
 
   return (
     <>
-      <PagePanel title={`Архів ${code}`} description={archive?.title || "Без назви"} />
+      <PagePanel title={`${code} архів`} breadcrumbs={[code]} description={archive?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
         enabledFilters={{
@@ -49,9 +49,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             flex: 9,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/archives/${code}/${row.data.code}`}>
-                {row.value || `Фонд ${row.data.code}`}
-              </Link>
+              <Link href={`/archives/${code}/${row.data.code}`}>{row.value || `Фонд ${row.data.code}`}</Link>
             ),
           },
           {

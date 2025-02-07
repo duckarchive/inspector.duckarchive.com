@@ -1,9 +1,10 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Інспектор",
+  name: "Інспектор - пошук справ українських архівів онлайн",
   url: "https://inspector.duckarchive.com",
-  description: "Пошук справ українських архівів онлайн",
+  description:
+    "Інспектор ― це сервіс для пошуку справ українських архівів, що доступні онлайн. Введіть реквізити справи в просте вікно пошуку, та отримайте посилання на джерело.",
   navItems: [
     {
       label: "Пошук",
