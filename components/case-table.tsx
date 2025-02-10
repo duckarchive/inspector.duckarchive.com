@@ -9,8 +9,8 @@ import PagePanel from "./page-panel";
 import { getSyncAtLabel } from "@/lib/table";
 import useCase from "@/hooks/useCase";
 import ResourceBadge from "./resource-badge";
-import { GetCaseResponse } from "../app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
-import useNoRussians from "../hooks/useNoRussians";
+import { GetCaseResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
+import useNoRussians from "@/hooks/useNoRussians";
 
 type TableItem = GetCaseResponse["matches"][number];
 

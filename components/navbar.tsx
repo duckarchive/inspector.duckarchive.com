@@ -21,7 +21,7 @@ import { HeartFilledIcon, Logo } from "@/components/icons";
 import SearchInputPortable from "./search-input-portable";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import useNoRussians from "../hooks/useNoRussians";
+import useNoRussians from "@/hooks/useNoRussians";
 
 const NavbarComponent: React.FC = () => {
   useNoRussians();

@@ -11,8 +11,8 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@heroui/react";
-import { handleSendMessageTG, LIMIT_FUNDS } from "../lib/sendNotification";
-import { siteConfig } from "../config/site";
+import { handleSendMessageTG, LIMIT_FUNDS } from "@/lib/sendNotification";
+import { siteConfig } from "@/config/site";
 
 interface ReportModalProps {
   data: ReportSummary;

@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Archives } from "../data/archives";
-import { SearchRequest } from "../app/api/search/route";
+import { Archives } from "@/data/archives";
+import { SearchRequest } from "@/app/api/search/route";
 
 const standardizeArchiveCode = (code: string, archives: Archives) => {
   const archive = archives.find((archive) => archive.code.toLocaleLowerCase() === code.toLocaleLowerCase());

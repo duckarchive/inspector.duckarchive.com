@@ -13,7 +13,7 @@ import Loader from "./loader";
 import useIsMobile from "@/hooks/useIsMobile";
 import { sortCode } from "@/lib/table";
 import { sendGTMEvent } from "@next/third-parties/google";
-import useNoRussians from "../hooks/useNoRussians";
+import useNoRussians from "@/hooks/useNoRussians";
 import SelectArchive from "./select-archive";
 
 type TableItem = SearchResponse[number];

@@ -1,5 +1,5 @@
-import { ReportSummary } from "../data/report";
-import { siteConfig } from "../config/site";
+import { ReportSummary } from "@/data/report";
+import { siteConfig } from "@/config/site";
 
 export const LIMIT_FUNDS = 3;
 

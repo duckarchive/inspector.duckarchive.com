@@ -1,8 +1,8 @@
 "use client";
 
 import DuckTable from "@/components/duck-table";
-import useNoRussians from "../hooks/useNoRussians";
-import { FamilySearchProjectWithArchive } from "../data/family-search";
+import useNoRussians from "@/hooks/useNoRussians";
+import { FamilySearchProjectWithArchive } from "@/data/family-search";
 
 type TableItem = FamilySearchProjectWithArchive;
 

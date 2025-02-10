@@ -8,7 +8,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Navbar from "@/components/navbar";
 import GoogleAnalytics from "@/components/ga";
-import PageViewTracker from "../components/page-view-tracker";
+import PageViewTracker from "@/components/page-view-tracker";
 import { Suspense } from "react";
 import Loader from "@/components/loader";
 

@@ -1,4 +1,4 @@
-import prisma from "../lib/db";
+import prisma from "@/lib/db";
 import { Resource } from "@prisma/client";
 
 export type Resources = Record<Resource["id"], Resource & { _count: { matches: number } }>;
