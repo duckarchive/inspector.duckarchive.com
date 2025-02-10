@@ -2,9 +2,8 @@
 
 import { Input } from "@heroui/input";
 import { useRouter } from "next/navigation";
-import { FaInfoCircle, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
-import { useDisclosure } from "@heroui/react";
 import SearchInputGuideModal from "./search-input-guide-modal";
 
 interface SearchInputPortableProps {}
@@ -16,11 +15,12 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     router.push(`/search?q=${search}`);
+    setSearch("");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
-    const withFixedFundCode = raw.replace(/[-\s\t](Р|П)[-\s\t]/gi, " $1");
+    const withFixedFundCode = raw.replace(/[\/-\s\t](Р|П)[\/-\s\t]/gi, " $1");
     const withDelimiter = withFixedFundCode.replace(/[\s\t\/]/g, "-");
     setSearch(withDelimiter);
   };
