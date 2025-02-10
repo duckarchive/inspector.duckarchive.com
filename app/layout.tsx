@@ -45,12 +45,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <PageViewTracker />
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <Suspense fallback={<Loader />}>
-            <div className="relative flex flex-col h-screen">
+          <div className="relative flex flex-col h-screen">
+            <Suspense fallback={<Loader />}>
               <Navbar />
               <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">{children}</main>
-            </div>
-          </Suspense>
+            </Suspense>
+          </div>
         </Providers>
       </body>
     </html>

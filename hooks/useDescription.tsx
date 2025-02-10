@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/lib/fetcher";
-import { GetDescriptionResponse } from "../app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
+import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 
@@ -15,7 +15,7 @@ const useDescription = (archiveCode: string, fundCode: string, code: string) => 
 
   useEffect(() => {
     console.log("useEffect", isLoading, data);
-    if (!isLoading && data?.cases.length) {
+    if (!isLoading && data?.cases?.length) {
       console.log("if", !isLoading);
       setFullData((prev) => ({
         ...data,

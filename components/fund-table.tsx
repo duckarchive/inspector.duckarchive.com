@@ -1,17 +1,15 @@
 "use client";
 
-import { Archives } from "@/data/archives";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
-import useIsMobile from "../hooks/useIsMobile";
-import useCyrillicParams from "../hooks/useCyrillicParams";
+import useIsMobile from "@/hooks/useIsMobile";
+import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
-import { sortByCode } from "../lib/table";
-import Loader from "./loader";
-import useFund from "../hooks/useFund";
-import { GetFundResponse } from "../app/api/archives/[archive-code]/[fund-code]/route";
-import useNoRussians from "../hooks/useNoRussians";
+import { sortByCode } from "@/lib/table";
+import useFund from "@/hooks/useFund";
+import { GetFundResponse } from "@/app/api/archives/[archive-code]/[fund-code]/route";
+import useNoRussians from "@/hooks/useNoRussians";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
@@ -27,13 +25,14 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
   const isMobile = useIsMobile();
   const { fund, isLoading } = useFund(archiveCode, code);
 
-  if (isLoading) return <Loader />;
+  // if (isLoading) return <Loader />;
   // if (isError) return <Error error={} />
   return (
     <>
       <PagePanel title={`${code} фонд`} breadcrumbs={[archiveCode, code]} description={fund?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
+        isLoading={isLoading}
         columns={[
           {
             field: "code",
@@ -55,7 +54,7 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
             hide: isMobile,
           },
         ]}
-        rows={fund?.descriptions.sort(sortByCode) || []}
+        rows={fund?.descriptions?.sort(sortByCode) || []}
       />
     </>
   );

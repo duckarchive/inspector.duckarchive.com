@@ -7,9 +7,7 @@ import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import { getSyncAtLabel } from "@/lib/table";
-import Loader from "./loader";
 import useCase from "@/hooks/useCase";
-import { Match } from "@prisma/client";
 import ResourceBadge from "./resource-badge";
 import { GetCaseResponse } from "../app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
 import useNoRussians from "../hooks/useNoRussians";
@@ -30,7 +28,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
   const isMobile = useIsMobile();
   const { caseItem, isLoading } = useCase(archiveCode, fundCode, descriptionCode, code);
 
-  if (isLoading) return <Loader />;
+  // if (isLoading) return <Loader />;
   // if (isError) return <Error error={} />
   return (
     <>
@@ -41,6 +39,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
       />
       <DuckTable<TableItem>
         resources={resources}
+        isLoading={isLoading}
         columns={[
           {
             field: "resource_id",
