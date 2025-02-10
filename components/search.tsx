@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import useSearch from "@/hooks/useSearch";
 import { Button, Checkbox, Input, Link } from "@heroui/react";
-import { FaFeather } from "react-icons/fa";
+import { FaFeather, FaSearch } from "react-icons/fa";
 import useSearchRequest from "@/hooks/useSearchRequest";
 import DuckTable from "./duck-table";
 import Loader from "./loader";
@@ -23,7 +23,6 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ archives }) => {
-  useNoRussians();
   const isMobile = useIsMobile();
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
@@ -80,11 +79,11 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
           <Button
             type="submit"
             color="primary"
-            variant="light"
-            endContent={<FaFeather />}
-            className="w-full border-blue-200 border"
+            size="lg"
+            className="w-full font-bold text-lg"
+            startContent={<FaSearch />}
           >
-            Полетіли
+            Пошук
           </Button>
           <Checkbox
             isSelected={searchValues.isStrict}

@@ -18,7 +18,6 @@ interface DescriptionTableProps {
 }
 
 const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
-  useNoRussians();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];

@@ -18,7 +18,6 @@ interface FundTableProps {
 }
 
 const FundTable: React.FC<FundTableProps> = ({ resources }) => {
-  useNoRussians();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const code = params["fund-code"];

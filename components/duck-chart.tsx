@@ -14,7 +14,6 @@ interface DuckChartProps {
 }
 
 const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
-  useNoRussians();
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 

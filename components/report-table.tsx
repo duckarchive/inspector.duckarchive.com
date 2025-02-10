@@ -16,7 +16,6 @@ interface ReportTableProps {
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
-  useNoRussians();
   return (
     <DuckTable<TableItem>
       resources={resources}

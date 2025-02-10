@@ -16,7 +16,6 @@ interface ArchivesTableProps {
 }
 
 const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) => {
-  useNoRussians();
   const isMobile = useIsMobile();
 
   return (

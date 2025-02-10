@@ -19,7 +19,6 @@ interface ArchiveTableProps {
 }
 
 const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
-  useNoRussians();
   const params = useCyrillicParams();
   const code = params["archive-code"];
   const isMobile = useIsMobile();

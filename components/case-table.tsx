@@ -19,7 +19,6 @@ interface CaseTableProps {
 }
 
 const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
-  useNoRussians();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];

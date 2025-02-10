@@ -11,7 +11,6 @@ interface FSProjectTableProps {
 }
 
 const FSProjectTable: React.FC<FSProjectTableProps> = ({ projects }) => {
-  useNoRussians();
 
   return (
     <DuckTable<TableItem>

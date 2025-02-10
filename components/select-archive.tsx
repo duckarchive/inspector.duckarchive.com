@@ -6,9 +6,10 @@ interface SelectArchiveProps {
   archives: Archives;
   value?: string;
   onChange: (key: Key | null) => void;
+  withoutTitle?: boolean;
 }
 
-const SelectArchive: React.FC<SelectArchiveProps> = ({ archives, value, onChange }) => {
+const SelectArchive: React.FC<SelectArchiveProps> = ({ archives, value, onChange, withoutTitle }) => {
   return (
     <Autocomplete
       label="Архів"
@@ -20,7 +21,7 @@ const SelectArchive: React.FC<SelectArchiveProps> = ({ archives, value, onChange
         <AutocompleteItem key={archive.code} value={archive.code} textValue={archive.code}>
           <div>
             <p>{archive.code}</p>
-            <p className="opacity-70 text-sm text-wrap">{archive.title}</p>
+            {!withoutTitle && <p className="opacity-70 text-sm text-wrap">{archive.title}</p>}
           </div>
         </AutocompleteItem>
       ))}
