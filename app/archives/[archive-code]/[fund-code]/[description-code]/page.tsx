@@ -12,26 +12,21 @@ export interface DescriptionPageProps {
   }>;
 }
 
-export async function generateMetadata(
-  pageProps: DescriptionPageProps
-): Promise<Metadata> {
-  const params  = await pageProps.params;
+export async function generateMetadata(pageProps: DescriptionPageProps): Promise<Metadata> {
+  const params = await pageProps.params;
   const archiveCode = decodeURIComponent(params["archive-code"]);
   const fundCode = decodeURIComponent(params["fund-code"]);
   const code = decodeURIComponent(params["description-code"]);
-  const description: GetDescriptionResponse = await fetch(`${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${code}`).then((res) => res.json())
-  
-  const name = description.title ? ` (${description.title})`: "";
+  const description: GetDescriptionResponse = await fetch(
+    `${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${code}`,
+  ).then((res) => res.json());
+
+  const name = description.title ? ` (${description.title})` : "";
 
   return {
     title: `${archiveCode}-${fundCode}-${description.code}`,
-    description: `Пошук справ онлайн: ${archiveCode}-${fundCode}-${description.code}${name}`,
-    keywords: [
-      `архів ${archiveCode} фонд ${fundCode} опис ${description.code}`,
-      `${archiveCode} ф.${fundCode}, о.${description.code}`,
-      `${archiveCode} ф.${fundCode}, оп.${description.code}`,
-    ],
-  }
+    description: `Пошук справ онлайн в описі ${archiveCode}-${fundCode}-${description.code}${name} / архів ${archiveCode} фонд ${fundCode} опис ${description.code} / ${archiveCode} ф.${fundCode}, о.${description.code} / ${archiveCode} ф.${fundCode}, оп.${description.code}`,
+  };
 }
 
 const DescriptionPage: NextPage = async () => {

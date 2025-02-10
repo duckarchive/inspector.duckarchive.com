@@ -23,11 +23,7 @@ export async function generateMetadata(
 
   return {
     title: `${archiveCode}-${code}`,
-    description: `Пошук справ онлайн: ${archiveCode}-${code}${name}`,
-    keywords: [
-      `архів ${archiveCode} фонд ${code}`,
-      `${archiveCode} ф.${code}`,
-    ],
+    description: `Пошук справ онлайн в фонді ${archiveCode}-${code}${name} / архів ${archiveCode} фонд ${code} / ${archiveCode} ф.${code}`,
   }
 }
 
