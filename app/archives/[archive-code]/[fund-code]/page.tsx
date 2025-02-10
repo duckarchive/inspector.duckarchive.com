@@ -24,6 +24,10 @@ export async function generateMetadata(
   return {
     title: `${archiveCode}-${code}`,
     description: `Пошук справ онлайн в фонді ${archiveCode}-${code}${name} / архів ${archiveCode} фонд ${code} / ${archiveCode} ф.${code}`,
+    openGraph: {
+      type: "website",
+      url: `/archives/${archiveCode}/${code}`,
+    },
   }
 }
 

@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     images: "/og-image.png",
+    type: "website",
+    url: "/",
   },
   title: {
     default: siteConfig.name,

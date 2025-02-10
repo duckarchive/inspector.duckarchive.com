@@ -26,6 +26,10 @@ export async function generateMetadata(pageProps: DescriptionPageProps): Promise
   return {
     title: `${archiveCode}-${fundCode}-${description.code}`,
     description: `Пошук справ онлайн в описі ${archiveCode}-${fundCode}-${description.code}${name} / архів ${archiveCode} фонд ${fundCode} опис ${description.code} / ${archiveCode} ф.${fundCode}, о.${description.code} / ${archiveCode} ф.${fundCode}, оп.${description.code}`,
+    openGraph: {
+      type: "website",
+      url: `/archives/${archiveCode}/${fundCode}/${code}`,
+    },
   };
 }
 
