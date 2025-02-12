@@ -31,11 +31,21 @@ const SearchInput: React.FC<SearchInputProps> = () => {
     const parts = withDelimiter.split("-");
     if (parts.length === 4) {
       e.preventDefault();
-      const [a, f, d, c] = parts;
-      setA(a);
-      setF(f);
-      setD(d);
-      setC(c);
+      setA(parts[0]);
+      setF(parts[1]);
+      setD(parts[2]);
+      setC(parts[3]);
+      return false;
+    } else if (parts.length === 3 && a) {
+      e.preventDefault();
+      setF(parts[0]);
+      setD(parts[1]);
+      setC(parts[2]);
+      return false;
+    } else if (parts.length === 2 && a && f) {
+      e.preventDefault();
+      setD(parts[0]);
+      setC(parts[1]);
       return false;
     } else {
       return false;
