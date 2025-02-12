@@ -25,15 +25,21 @@ const SearchInput: React.FC<SearchInputProps> = () => {
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
     const raw = e.clipboardData.getData("text/plain");
     const withFixedFundCode = raw.replace(/[\/-\s\t](Р|П)[\/-\s\t]/gi, " $1");
     const withDelimiter = withFixedFundCode.replace(/[\s\t\/]/g, "-");
-    const [a, f, d, c] = withDelimiter.split("-");
-    setA(a);
-    setF(f);
-    setD(d);
-    setC(c);
+    const parts = withDelimiter.split("-");
+    if (parts.length === 4) {
+      e.preventDefault();
+      const [a, f, d, c] = parts;
+      setA(a);
+      setF(f);
+      setD(d);
+      setC(c);
+      return false;
+    } else {
+      return false;
+    }
   };
 
   const handleAChange = (e: React.ChangeEvent<HTMLInputElement>) => {
