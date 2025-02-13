@@ -1,4 +1,7 @@
 openapi: 3.1.0
+servers:
+  - url: https://inspector.duckarchive.com
+    description: Production server
 info:
   title: inspector.duckarchive.com API
   version: 1.0.0
@@ -436,3 +439,315 @@ paths:
                 properties:
                   message:
                     type: string
+  /api/availability/report-dgs:
+    post:
+      summary: Report DGS Availability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dgs:
+                  type: string
+                  description: The DGS code to report
+      responses:
+        '200':
+          description: DGS report successful
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: No DGS matches found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/sync/familysearch/place:
+    get:
+      summary: Get FamilySearch Places
+      responses:
+        '200':
+          description: FamilySearch places retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    total_count:
+                      type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    patch:
+      summary: Update FamilySearch Places
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                places:
+                  type: object
+                  additionalProperties:
+                    type: integer
+      responses:
+        '200':
+          description: FamilySearch places updated successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/sync/familysearch/project:
+    get:
+      summary: Get FamilySearch Projects
+      responses:
+        '200':
+          description: FamilySearch projects retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    children_count:
+                      type: integer
+                    prev_children_count:
+                      type: integer
+                    updated_at:
+                      type: string
+                      format: date-time
+                    archive:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        code:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    post:
+      summary: Create FamilySearch Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projects:
+                  type: object
+                  additionalProperties:
+                    type: integer
+      responses:
+        '200':
+          description: FamilySearch projects created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    children_count:
+                      type: integer
+                    prev_children_count:
+                      type: integer
+                    updated_at:
+                      type: string
+                      format: date-time
+                    archive:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        code:
+                          type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    patch:
+      summary: Update FamilySearch Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projects:
+                  type: object
+                  additionalProperties:
+                    type: integer
+      responses:
+        '200':
+          description: FamilySearch projects updated successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    children_count:
+                      type: integer
+                    prev_children_count:
+                      type: integer
+                    updated_at:
+                      type: string
+                      format: date-time
+                    archive:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        code:
+                          type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  
+  
