@@ -5,8 +5,8 @@ import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
 import { sortByTitle, sortText } from "@/lib/table";
-import useIsMobile from "../hooks/useIsMobile";
-import useNoRussians from "../hooks/useNoRussians";
+import useIsMobile from "@/hooks/useIsMobile";
+import useNoRussians from "@/hooks/useNoRussians";
 
 type TableItem = Archives[number];
 
@@ -16,7 +16,6 @@ interface ArchivesTableProps {
 }
 
 const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) => {
-  useNoRussians();
   const isMobile = useIsMobile();
 
   return (
@@ -47,7 +46,7 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
           hide: isMobile,
         },
       ]}
-      rows={archives.sort(sortByTitle) || []}
+      rows={archives?.sort(sortByTitle) || []}
     />
   );
 };

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
-import { getArchives } from "../data/archives";
+import { getArchives } from "@/data/archives";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const archives = await getArchives();

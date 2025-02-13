@@ -1,5 +1,5 @@
 import { Prisma } from "duck-inspector-schema";
-import prisma from "../lib/db";
+import prisma from "@/lib/db";
 
 export type FamilySearchProjectWithArchive  = Prisma.FamilySearchProjectGetPayload<{
   include: {

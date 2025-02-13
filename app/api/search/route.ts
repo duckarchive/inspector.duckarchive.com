@@ -11,19 +11,30 @@ export type SearchRequest = Partial<{
   isStrict: boolean;
 }>;
 
-export type SearchResponse =
-  | {
-      id: Match["id"];
-      archive_code: Archive["code"];
-      fund_code: Fund["code"];
-      description_code: Description["code"];
-      case_code: Case["code"];
-      url: Match["url"];
-    }[]
- ;
+export type SearchResponse = {
+  total_count: number;
+  items: {
+    id: Match["id"];
+    archive_code: Archive["code"];
+    fund_code: Fund["code"];
+    description_code: Description["code"];
+    case_code: Case["code"];
+    url: Match["url"];
+  }[];
+};
 
 export async function POST(req: NextRequest): Promise<NextResponse<SearchResponse | ErrorResponse>> {
   const { a, f, d, c, isStrict }: SearchRequest = await req.json();
+
+  // prevent SQL injection
+  if ([a, f, d, c].some((el) => /[a-zA-Z%*_]/.test(el || ""))) {
+    return NextResponse.json(
+      {
+        message: "Banned Permanently",
+      },
+      { status: 400 },
+    );
+  }
 
   const _a = a || "%"; // case sensitive
   const _f = isStrict ? f || "%" : `${f || ""}%`;
@@ -31,10 +42,17 @@ export async function POST(req: NextRequest): Promise<NextResponse<SearchRespons
   const _c = isStrict ? c || "%" : `${c || ""}%`;
   const rest = `${_f}-${_d}-${_c}`.toUpperCase();
   const full_code = `${_a}-${rest}`;
-  const matches: Match[] = await prisma.$queryRaw`
-      select * from matches
+  const matches: (Match & { total_count: number })[] = await prisma.$queryRaw`
+      select 
+          (
+            select count(*)::int
+            from matches
+            where full_code like ${full_code}
+          ) as total_count,
+          matches.*
+      from matches
       where full_code like ${full_code}
-      limit 20
+      limit 20;
     `;
 
   const searchResults = matches
@@ -53,10 +71,13 @@ export async function POST(req: NextRequest): Promise<NextResponse<SearchRespons
         url: match.url,
       };
     })
-    .filter((match) => match) as SearchResponse;
+    .filter((match) => match) as SearchResponse["items"];
 
   if (searchResults) {
-    return NextResponse.json(searchResults);
+    return NextResponse.json({
+      total_count: matches[0]?.total_count || 0,
+      items: searchResults,
+    });
   } else {
     return NextResponse.json(
       {

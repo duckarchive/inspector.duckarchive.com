@@ -5,13 +5,14 @@ import { ColDef, ITextFilterParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useEffect, useRef, useState } from "react";
-import { AG_GRID_LOCALE_UK } from "../config/i18n";
+import { AG_GRID_LOCALE_UK } from "@/config/i18n";
 import ResourceBadge from "./resource-badge";
 import { getSyncAtLabel, sortByMatches, sortCode } from "@/lib/table";
 import { Resource } from "@prisma/client";
 import { useTheme } from "next-themes";
 import { Button } from "@heroui/button";
 import clsx from "clsx";
+import Loader from "./loader";
 
 export enum QuickFilter {
   PRE_USSR_FUNDS = "preUssrFunds",
@@ -50,9 +51,11 @@ interface DuckTableProps<T> {
   columns: ColDef<T>[];
   rows: T[];
   enabledFilters?: Record<QuickFilter, boolean>;
+  isLoading?: boolean;
+  loadingPage?: number;
 }
 
-const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, resources }: DuckTableProps<T>) => {
+const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, resources, isLoading, loadingPage }: DuckTableProps<T>) => {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const gridRef = useRef<AgGridReact<T>>(null);
@@ -159,6 +162,8 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
           ref={gridRef}
           rowData={rows}
           suppressMovableColumns
+          loading={isLoading}
+          loadingOverlayComponent={() => <Loader progress={loadingPage} />}
           columnDefs={[
             {
               headerName: "Індекс",

@@ -4,13 +4,13 @@ import { Archives } from "@/data/archives";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
-import useIsMobile from "../hooks/useIsMobile";
-import useCyrillicParams from "../hooks/useCyrillicParams";
+import useIsMobile from "@/hooks/useIsMobile";
+import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
-import useArchive from "../hooks/useArchive";
-import { sortByCode } from "../lib/table";
+import useArchive from "@/hooks/useArchive";
+import { sortByCode } from "@/lib/table";
+import useNoRussians from "@/hooks/useNoRussians";
 import Loader from "./loader";
-import useNoRussians from "../hooks/useNoRussians";
 
 type TableItem = Archives[number];
 
@@ -19,20 +19,17 @@ interface ArchiveTableProps {
 }
 
 const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
-  useNoRussians();
   const params = useCyrillicParams();
   const code = params["archive-code"];
   const isMobile = useIsMobile();
   const { archive, isLoading } = useArchive(code);
-
-  if (isLoading) return <Loader />;
-  // if (isError) return <ErrorComponent error={isError} />
 
   return (
     <>
       <PagePanel title={`${code} архів`} breadcrumbs={[code]} description={archive?.title || "Без назви"} />
       <DuckTable<TableItem>
         resources={resources}
+        isLoading={isLoading}
         enabledFilters={{
           partFunds: true,
           preUssrFunds: true,
@@ -58,7 +55,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             hide: isMobile,
           },
         ]}
-        rows={archive?.funds.sort(sortByCode) || []}
+        rows={archive?.funds?.sort(sortByCode) || []}
       />
     </>
   );

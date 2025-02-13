@@ -1,4 +1,4 @@
-import prisma from "../lib/db";
+import prisma from "@/lib/db";
 import { Prisma } from "@prisma/client";
 
 export type Archives = Prisma.ArchiveGetPayload<{

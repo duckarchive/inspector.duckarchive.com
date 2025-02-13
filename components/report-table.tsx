@@ -6,7 +6,7 @@ import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
 import { getSyncAtLabel, sortCode } from "@/lib/table";
 import ResourceBadge from "./resource-badge";
-import useNoRussians from "../hooks/useNoRussians";
+import useNoRussians from "@/hooks/useNoRussians";
 
 type TableItem = Report[number];
 
@@ -16,7 +16,6 @@ interface ReportTableProps {
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
-  useNoRussians();
   return (
     <DuckTable<TableItem>
       resources={resources}

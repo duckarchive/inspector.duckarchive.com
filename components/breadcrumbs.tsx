@@ -13,7 +13,7 @@ const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrum
     separator="/"
     size="lg"
     itemClasses={{
-      item: "text-gray-500 data-[current=true]:text-white text-lg data-[current=true]:font-bold",
+      item: "text-gray-500 text-lg data-[current=true]:font-bold",
       separator: "text-gray-500/60",
     }}
   >

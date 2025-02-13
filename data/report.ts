@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import groupBy from "lodash/groupBy.js";
-import prisma from "../lib/db";
+import prisma from "@/lib/db";
 import { Archive, Case, DailyStat, Description, Fund, Match } from "@prisma/client";
 
 process.env.TZ = "UTC";
@@ -30,7 +30,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   // start of yesterday using date-fns
   const startOfYesterday = new Date();
   startOfYesterday.setDate(startOfYesterday.getDate() - 1);
-  startOfYesterday.setHours(0, 0, 0, 0);
+  // startOfYesterday.setHours(0, 0, 0, 0);
   const from = startOfYesterday.toISOString();
   // end of yesterday using date-fns
   // const endOfYesterday = new Date();
@@ -47,19 +47,22 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
         gte: from,
         // lt: to,
       },
-      OR: [{
-        prev_children_count: {
-          not: null
+      OR: [
+        {
+          prev_children_count: {
+            not: null,
+          },
+          children_count: {
+            gt: prisma.match.fields.prev_children_count,
+          },
         },
-        children_count: {
-          gt: prisma.match.fields.prev_children_count
+        {
+          prev_children_count: null,
+          children_count: {
+            gt: 0,
+          },
         }
-      }, {
-        prev_children_count: null,
-        children_count: {
-          gt: 0
-        }
-      }]
+      ],
     },
     select: {
       id: true,
@@ -112,7 +115,7 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     archive_code,
     funds: Object.entries(groupBy(funds, "fund_code")).map(([fund_code, rows]) => ({
       fund_code,
-      count: rows.length
+      count: rows.length,
     })),
   }));
 
@@ -150,7 +153,7 @@ export const getDailyStats = async (): Promise<DailyStatWithArchive[]> => {
     },
     include: {
       archive: true,
-    }
+    },
   });
 
   return stats;

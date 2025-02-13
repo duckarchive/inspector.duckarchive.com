@@ -1,17 +1,15 @@
 "use client";
 
-import { Archives } from "@/data/archives";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import DuckTable from "@/components/duck-table";
-import useIsMobile from "../hooks/useIsMobile";
-import useCyrillicParams from "../hooks/useCyrillicParams";
+import useIsMobile from "@/hooks/useIsMobile";
+import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
-import { sortByCode } from "../lib/table";
-import Loader from "./loader";
-import useDescription from "../hooks/useDescription";
-import { GetDescriptionResponse } from "../app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
-import useNoRussians from "../hooks/useNoRussians";
+import { sortByCode } from "@/lib/table";
+import useDescription from "@/hooks/useDescription";
+import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
+import useNoRussians from "@/hooks/useNoRussians";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
@@ -20,7 +18,6 @@ interface DescriptionTableProps {
 }
 
 const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
-  useNoRussians();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];
@@ -28,13 +25,18 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
   const isMobile = useIsMobile();
   const { description, isLoading, page } = useDescription(archiveCode, fundCode, code);
 
-  if (isLoading) return <Loader progress={page} />
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title={`${code} опис`} breadcrumbs={[archiveCode, fundCode, code]} description={description?.title || "Без назви"} />
+      <PagePanel
+        title={`${code} опис`}
+        breadcrumbs={[archiveCode, fundCode, code]}
+        description={description?.title || "Без назви"}
+      />
       <DuckTable<TableItem>
         resources={resources}
+        isLoading={isLoading}
+        loadingPage={page}
         columns={[
           {
             field: "code",
