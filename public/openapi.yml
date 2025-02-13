@@ -1,0 +1,438 @@
+openapi: 3.1.0
+info:
+  title: inspector.duckarchive.com API
+  version: 1.0.0
+paths:
+  /api/archives/{archive-code}:
+    get:
+      summary: Get Archive by Code
+      parameters:
+        - name: archive-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the archive to retrieve
+      responses:
+        '200':
+          description: Archive found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  code:
+                    type: string
+                  title:
+                    type: string
+                  funds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        code:
+                          type: string
+                        title:
+                          type: string
+                        matches:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              updated_at:
+                                type: string
+                                format: date-time
+                              children_count:
+                                type: integer
+                              resource_id:
+                                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Archive not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/archives/{archive-code}/{fund-code}:
+    get:
+      summary: Get Fund by Archive Code and Fund Code
+      parameters:
+        - name: archive-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the archive
+        - name: fund-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the fund to retrieve
+      responses:
+        '200':
+          description: Fund found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  code:
+                    type: string
+                  title:
+                    type: string
+                  descriptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        code:
+                          type: string
+                        title:
+                          type: string
+                        matches:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              updated_at:
+                                type: string
+                                format: date-time
+                              children_count:
+                                type: integer
+                              resource_id:
+                                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Fund not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/archives/{archive-code}/{fund-code}/{description-code}:
+    get:
+      summary: Get Description by Archive Code, Fund Code, and Description Code
+      parameters:
+        - name: archive-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the archive
+        - name: fund-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the fund
+        - name: description-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the description to retrieve
+      responses:
+        '200':
+          description: Description found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  code:
+                    type: string
+                  title:
+                    type: string
+                  cases:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        code:
+                          type: string
+                        title:
+                          type: string
+                        matches:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              updated_at:
+                                type: string
+                                format: date-time
+                              children_count:
+                                type: integer
+                              resource_id:
+                                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Description not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/archives/{archive-code}/{fund-code}/{description-code}/{case-code}:
+    get:
+      summary: Get Case by Archive Code, Fund Code, Description Code, and Case Code
+      parameters:
+        - name: archive-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the archive
+        - name: fund-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the fund
+        - name: description-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the description
+        - name: case-code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The code of the case to retrieve
+      responses:
+        '200':
+          description: Case found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  matches:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        updated_at:
+                          type: string
+                          format: date-time
+                        children_count:
+                          type: integer
+                        resource_id:
+                          type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Case not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/search:
+    post:
+      summary: Search for archives, funds, descriptions, and cases
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                a:
+                  type: string
+                  description: Archive code
+                f:
+                  type: string
+                  description: Fund code
+                d:
+                  type: string
+                  description: Description code
+                c:
+                  type: string
+                  description: Case code
+                isStrict:
+                  type: boolean
+                  description: Whether to use strict matching
+      responses:
+        '200':
+          description: Search results found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    archive_code:
+                      type: string
+                    fund_code:
+                      type: string
+                    description_code:
+                      type: string
+                    case_code:
+                      type: string
+                    url:
+                      type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: No matches found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/availability/code:
+    get:
+      summary: Get Availability by Code
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The code to check availability
+      responses:
+        '200':
+          description: Availability found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Availability not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/availability/dgs:
+    post:
+      summary: Check DGS Availability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dgs:
+                  type: string
+                  description: The DGS code to check availability
+      responses:
+        '200':
+          description: DGS availability found
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: No DGS matches found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string

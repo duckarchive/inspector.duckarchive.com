@@ -30,6 +30,7 @@
     "@prisma/client": "^5.22.0",
     "@react-aria/ssr": "3.9.4",
     "@react-aria/visually-hidden": "3.8.12",
+    "@scalar/nextjs-api-reference": "^0.5.7",
     "ag-charts-react": "^11.0.4",
     "ag-grid-community": "^33.0.4",
     "ag-grid-react": "^32.3.3",
