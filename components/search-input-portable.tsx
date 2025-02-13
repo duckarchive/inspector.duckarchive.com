@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import SearchInputGuideModal from "./search-input-guide-modal";
+import { sendGAEvent } from "@next/third-parties/google";
 
 interface SearchInputPortableProps {}
 
@@ -14,6 +15,7 @@ const SearchInputPortable: React.FC<SearchInputPortableProps> = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    sendGAEvent('event', 'search-input-portable', { value: search });
     router.push(`/search?q=${search}`);
     setSearch("");
   };

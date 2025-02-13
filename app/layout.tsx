@@ -8,7 +8,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Navbar from "@/components/navbar";
 import GoogleAnalytics from "@/components/ga";
-import PageViewTracker from "@/components/page-view-tracker";
+// import PageViewTracker from "@/components/page-view-tracker";
 import { Suspense } from "react";
 import Loader from "@/components/loader";
 
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html suppressHydrationWarning lang="uk">
       <head />
       <GoogleAnalytics />
-      <PageViewTracker />
+      {/* <PageViewTracker /> */}
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">

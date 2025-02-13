@@ -5,6 +5,7 @@ import { Button } from "@heroui/button";
 import { FaSearch } from "react-icons/fa";
 import { useRef, useState } from "react";
 import SearchInputGuideModal from "./search-input-guide-modal";
+import { sendGAEvent } from "@next/third-parties/google";
 
 interface SearchInputProps {}
 
@@ -21,7 +22,9 @@ const SearchInput: React.FC<SearchInputProps> = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/search?q=${a}-${f}-${d}-${c}`);
+    const fullCode = `${a}-${f}-${d}-${c}`;
+    sendGAEvent('event', 'search-input', { value: fullCode });
+    router.push(`/search?q=${fullCode}`);
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {

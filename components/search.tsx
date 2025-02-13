@@ -10,7 +10,7 @@ import useSearchRequest from "@/hooks/useSearchRequest";
 import DuckTable from "./duck-table";
 import useIsMobile from "@/hooks/useIsMobile";
 import { sortCode } from "@/lib/table";
-import { sendGTMEvent } from "@next/third-parties/google";
+import { sendGAEvent } from "@next/third-parties/google";
 import SelectArchive from "./select-archive";
 import SearchInputGuideModal from "./search-input-guide-modal";
 
@@ -42,7 +42,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fullCode = `${searchValues.a}-${searchValues.f}-${searchValues.d}-${searchValues.c}`;
-    sendGTMEvent({ category: "search", action: "submit", label: "search", value: fullCode });
+    sendGAEvent('event', 'search-form', { value: fullCode });
     setQueryParams(searchValues);
     trigger(searchValues);
   };
