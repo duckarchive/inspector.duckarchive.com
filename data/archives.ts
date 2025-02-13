@@ -35,6 +35,9 @@ export const getArchives = async () => {
         },
       },
     },
+    orderBy: {
+      code: "asc",
+    },
   });
 
   return archivesDb;
