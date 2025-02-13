@@ -11,8 +11,8 @@ const _GoogleAnalytics: React.FC<_GoogleAnalyticsProps> = ({ gtmId }) => {
 };
 
 const GoogleAnalytics = () => {
-  if (process.env.NODE_ENV !== "development" && process.env.NEXT_PUBLIC_GA_ID) {
-    return <_GoogleAnalytics gtmId={process.env.NEXT_PUBLIC_GA_ID} />;
+  if (process.env.NODE_ENV !== "development" && process.env.NEXT_PUBLIC_GTM_ID) {
+    return <_GoogleAnalytics gtmId={process.env.NEXT_PUBLIC_GTM_ID} />;
   }
 
   return null;
