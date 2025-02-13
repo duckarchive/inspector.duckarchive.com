@@ -1,13 +1,19 @@
-import type { MetadataRoute } from 'next'
-import { siteConfig } from '@/config/site'
- 
+import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site";
+
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: '/admin/',
-    },
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: "/admin/",
+      },
+      {
+        userAgent: "Yandex",
+        disallow: "/",
+      },
+    ],
     sitemap: `${siteConfig.url}/sitemap.xml`,
-  }
+  };
 }
