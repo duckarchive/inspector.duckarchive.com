@@ -1,5 +1,5 @@
 import DescriptionTable from "@/components/description-table";
-import { Metadata, NextPage } from "next";
+import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
 import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
 import { siteConfig } from "@/config/site";
@@ -12,8 +12,10 @@ export interface DescriptionPageProps {
   }>;
 }
 
-export async function generateMetadata(pageProps: DescriptionPageProps): Promise<Metadata> {
+export async function generateMetadata(pageProps: DescriptionPageProps,
+  parent: ResolvingMetadata): Promise<Metadata> {
   const params = await pageProps.params;
+  const { openGraph } = await parent;
   const archiveCode = decodeURIComponent(params["archive-code"]);
   const fundCode = decodeURIComponent(params["fund-code"]);
   const code = decodeURIComponent(params["description-code"]);
@@ -27,6 +29,7 @@ export async function generateMetadata(pageProps: DescriptionPageProps): Promise
     title: `${archiveCode}-${fundCode}-${description.code}`,
     description: `Пошук справ онлайн в описі ${archiveCode}-${fundCode}-${description.code}${name} / архів ${archiveCode} фонд ${fundCode} опис ${description.code} / ${archiveCode} ф.${fundCode}, о.${description.code} / ${archiveCode} ф.${fundCode}, оп.${description.code}`,
     openGraph: {
+      ...openGraph,
       type: "website",
       url: `/archives/${archiveCode}/${fundCode}/${code}`,
     },

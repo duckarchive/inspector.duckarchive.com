@@ -1,5 +1,5 @@
 import FundTable from "@/components/fund-table";
-import { Metadata, NextPage } from "next";
+import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
 import { siteConfig } from "@/config/site";
 import { GetFundResponse } from "@/app/api/archives/[archive-code]/[fund-code]/route";
@@ -12,9 +12,11 @@ export interface FundPageProps {
 }
 
 export async function generateMetadata(
-  pageProps: FundPageProps
+  pageProps: FundPageProps,
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params  = await pageProps.params;
+  const { openGraph } = await parent;
   const archiveCode = decodeURIComponent(params["archive-code"]);
   const code = decodeURIComponent(params["fund-code"]);
   const fund: GetFundResponse = await fetch(`${siteConfig.url}/api/archives/${archiveCode}/${code}`).then((res) => res.json())
@@ -25,6 +27,7 @@ export async function generateMetadata(
     title: `${archiveCode}-${code}`,
     description: `Пошук справ онлайн в фонді ${archiveCode}-${code}${name} / архів ${archiveCode} фонд ${code} / ${archiveCode} ф.${code}`,
     openGraph: {
+      ...openGraph,
       type: "website",
       url: `/archives/${archiveCode}/${code}`,
     },

@@ -1,5 +1,5 @@
 import CaseTable from "@/components/case-table";
-import { Metadata, NextPage } from "next";
+import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
 import { siteConfig } from "@/config/site";
 import { GetCaseResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
@@ -14,9 +14,11 @@ export interface CasePageProps {
 }
 
 export async function generateMetadata(
-  pageProps: CasePageProps
+  pageProps: CasePageProps,
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params  = await pageProps.params;
+  const { openGraph } = await parent;
   const archiveCode = decodeURIComponent(params["archive-code"]);
   const fundCode = decodeURIComponent(params["fund-code"]);
   const descriptionCode = decodeURIComponent(params["description-code"]);
@@ -29,6 +31,7 @@ export async function generateMetadata(
     title: `${archiveCode}-${fundCode}-${descriptionCode}-${code}`,
     description: `Справа онлайн ${archiveCode}-${fundCode}-${descriptionCode}-${code}${name} / архів ${archiveCode} фонд ${fundCode} опис ${descriptionCode} справа ${code} / ${archiveCode} ф.${fundCode}, о.${descriptionCode}, с.${code} / ${archiveCode} ф.${fundCode}, оп.${descriptionCode}, спр.${code}`,
     openGraph: {
+      ...openGraph,
       type: "website",
       url: `/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`,
     },
