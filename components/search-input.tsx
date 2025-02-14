@@ -19,11 +19,12 @@ const SearchInput: React.FC<SearchInputProps> = () => {
   const [f, setF] = useState("");
   const [d, setD] = useState("");
   const [c, setC] = useState("");
+  const setters = [setA, setF, setD, setC];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const fullCode = `${a}-${f}-${d}-${c}`;
-    sendGAEvent('event', 'search-input', { value: fullCode });
+    sendGAEvent("event", "search-input", { value: fullCode });
     router.push(`/search?q=${fullCode}`);
   };
 
@@ -32,23 +33,46 @@ const SearchInput: React.FC<SearchInputProps> = () => {
     const withFixedFundCode = raw.replace(/[\/-\s\t](Р|П)[\/-\s\t]/gi, " $1");
     const withDelimiter = withFixedFundCode.replace(/[\s\t\/]/g, "-");
     const parts = withDelimiter.split("-");
+    // e.preventDefault();
+    // const filtered = [a, f, d, c, ...parts].filter((part) => part);
+    // setA(filtered[0] || "");
+    // setF(filtered[1] || "");
+    // setD(filtered[2] || "");
+    // setC(filtered[3] || "");
+    console.log(e.target);
     if (parts.length === 4) {
       e.preventDefault();
-      setA(parts[0]);
-      setF(parts[1]);
-      setD(parts[2]);
-      setC(parts[3]);
+      setters.forEach((setter, idx) => {
+        setter(parts[idx]);
+      });
       return false;
-    } else if (parts.length === 3 && a) {
+    } else if (parts.length === 3) {
       e.preventDefault();
-      setF(parts[0]);
-      setD(parts[1]);
-      setC(parts[2]);
+      if (a) {
+        setters.slice(1).forEach((setter, idx) => {
+          setter(parts[idx]);
+        });
+      } else {
+        setters.forEach((setter, idx) => {
+          setter(parts[idx]);
+        });
+      }
       return false;
-    } else if (parts.length === 2 && a && f) {
+    } else if (parts.length === 2) {
       e.preventDefault();
-      setD(parts[0]);
-      setC(parts[1]);
+      if (a && f) {
+        setters.slice(2).forEach((setter, idx) => {
+          setter(parts[idx]);
+        });
+      } else if (a) {
+        setters.slice(1).forEach((setter, idx) => {
+          setter(parts[idx]);
+        });
+      } else {
+        setters.forEach((setter, idx) => {
+          setter(parts[idx]);
+        });
+      }
       return false;
     } else {
       return false;
