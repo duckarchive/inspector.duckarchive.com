@@ -9,8 +9,6 @@ import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import useArchive from "@/hooks/useArchive";
 import { sortByCode } from "@/lib/table";
-import useNoRussians from "@/hooks/useNoRussians";
-import Loader from "./loader";
 
 type TableItem = Archives[number];
 

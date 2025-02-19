@@ -6,6 +6,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 import { useEffect } from "react";
+import useNoRussians from "@/hooks/useNoRussians";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -16,6 +17,7 @@ export interface ProvidersProps {
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
+  useNoRussians();
   const router = useRouter();
   useEffect(() => {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {

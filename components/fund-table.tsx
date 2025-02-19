@@ -9,7 +9,6 @@ import PagePanel from "./page-panel";
 import { sortByCode } from "@/lib/table";
 import useFund from "@/hooks/useFund";
 import { GetFundResponse } from "@/app/api/archives/[archive-code]/[fund-code]/route";
-import useNoRussians from "@/hooks/useNoRussians";
 
 type TableItem = GetFundResponse["descriptions"][number];
 

@@ -9,7 +9,6 @@ import PagePanel from "./page-panel";
 import { sortByCode } from "@/lib/table";
 import useDescription from "@/hooks/useDescription";
 import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
-import useNoRussians from "@/hooks/useNoRussians";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 

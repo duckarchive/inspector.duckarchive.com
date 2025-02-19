@@ -5,7 +5,6 @@ import { DailyStatWithArchive } from "@/data/report";
 import { useEffect, useState } from "react";
 import { Archives } from "@/data/archives";
 import SelectArchive from "./select-archive";
-import useNoRussians from "@/hooks/useNoRussians";
 import { useTheme } from "next-themes";
 
 interface DuckChartProps {

@@ -24,7 +24,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
 
   return (
     <>
-      <Button size="sm" onClick={onOpen}>
+      <Button size="sm" onPress={onOpen}>
         Звіт по архівах
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -52,7 +52,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
           </ModalBody>
           {telegramBotToken && (
             <ModalFooter>
-              <Button onClick={() => handleSendMessageTG(telegramBotToken, data, siteConfig.url)}>Відправити в групу</Button>
+              <Button onPress={() => handleSendMessageTG(telegramBotToken, data, siteConfig.url)}>Відправити в групу</Button>
             </ModalFooter>
           )}
         </ModalContent>
