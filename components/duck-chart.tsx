@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { Archives } from "@/data/archives";
 import SelectArchive from "./select-archive";
 import { useTheme } from "next-themes";
+import { TYPE_LABEL } from "./resource-badge";
+import { ResourceType } from "duck-inspector-schema";
 
 interface DuckChartProps {
   archives: Archives;
@@ -59,35 +61,35 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "family_search_count",
-                yName: "Family Search",
+                yName: TYPE_LABEL[ResourceType.FAMILY_SEARCH],
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "archium_count",
-                yName: "ARCHIUM",
+                yName: TYPE_LABEL[ResourceType.ARCHIUM],
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "wikipedia_count",
-                yName: "Wikipedia",
+                yName: TYPE_LABEL[ResourceType.WIKIPEDIA],
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "babyn_yar_count",
-                yName: "Babyn Yar",
+                yName: TYPE_LABEL[ResourceType.BABYN_YAR],
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "website_count",
-                yName: "Website",
+                yName: TYPE_LABEL[ResourceType.WEBSITE],
                 stackGroup: "resources",
               },
             ],

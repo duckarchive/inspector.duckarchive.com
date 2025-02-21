@@ -21,17 +21,21 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
       columns={[
         {
           field: "resource_id",
-          headerName: "Ресурс",
-          flex: 1,
+          headerName: "",
+          flex: 0,
+          width: 55,
+          minWidth: 55,
           sortable: false,
           filter: false,
           cellRenderer: (row: { value: TableItem["resource_id"]; data: TableItem }) => (
-            <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
+            <div className="flex h-10 w-full items-center justify-center">
               <ResourceBadge
                 resourceId={row.value}
                 resources={resources}
                 tooltip={getSyncAtLabel(row.data.updated_at)}
-              />
+              >
+                &nbsp;
+              </ResourceBadge>
             </div>
           ),
         },
