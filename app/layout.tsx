@@ -46,7 +46,7 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale}>
+    <html suppressHydrationWarning lang={locale} className="overflow-y-hidden">
       <head />
       <GoogleAnalytics />
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
