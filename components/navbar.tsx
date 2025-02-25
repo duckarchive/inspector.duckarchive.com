@@ -40,7 +40,7 @@ const NavbarComponent: React.FC = () => {
         <NavbarBrand as="li" className="max-w-fit">
           <NextLink className="text-transparent hover:text-warning flex justify-start items-center gap-1" href="/">
             <Logo className="duration-200 stroke-foreground" />
-            <p className="font-bold text-foreground">Інспектор</p>
+            <p className="font-bold text-foreground">{t("logo")}</p>
           </NextLink>
         </NavbarBrand>
         <NavbarItem className="hidden md:flex ml-2">

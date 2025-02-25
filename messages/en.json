@@ -12,6 +12,7 @@
     "submit-button": "Search"
   },
   "navigation": {
+    "logo": "Inspector",
     "search": "Search",
     "archives": "Archives",
     "daily-updates": "Daily report",
