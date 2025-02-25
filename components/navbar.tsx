@@ -21,6 +21,7 @@ import { HeartFilledIcon, Logo } from "@/components/icons";
 import SearchInputPortable from "./search-input-portable";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { LocaleSelector } from "./locale-selector";
 
 const NavbarComponent: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -75,6 +76,9 @@ const NavbarComponent: React.FC = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
+          <LocaleSelector />
+        </NavbarItem>
+        <NavbarItem className="hidden md:flex">
           <SearchInputPortable />
         </NavbarItem>
       </NavbarContent>
@@ -87,6 +91,7 @@ const NavbarComponent: React.FC = () => {
           <FaTelegram size={20} />
         </Link>
         <ThemeSwitch />
+        <LocaleSelector />
         <NavbarMenuToggle />
       </NavbarContent>
 

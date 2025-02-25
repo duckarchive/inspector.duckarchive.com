@@ -4,7 +4,7 @@ import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { useEffect } from "react";
 import useNoRussians from "@/hooks/useNoRussians";
 
@@ -23,12 +23,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
       navigator.serviceWorker
         .register("/sw.js")
-        .then((registration) =>
-          console.log(
-            "Service Worker registration successful with scope: ",
-            registration.scope,
-          ),
-        )
+        .then((registration) => console.log("Service Worker registration successful with scope: ", registration.scope))
         .catch((err) => console.log("Service Worker registration failed: ", err));
     }
   }, []);

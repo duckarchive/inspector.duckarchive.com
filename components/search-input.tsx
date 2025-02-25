@@ -6,10 +6,12 @@ import { FaSearch } from "react-icons/fa";
 import { useRef, useState } from "react";
 import SearchInputGuideModal from "./search-input-guide-modal";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useTranslations } from "next-intl";
 
 interface SearchInputProps {}
 
 const SearchInput: React.FC<SearchInputProps> = () => {
+  const t = useTranslations('HomePage');
   const router = useRouter();
   const aInputRef = useRef<HTMLInputElement>(null);
   const fInputRef = useRef<HTMLInputElement>(null);
@@ -202,7 +204,8 @@ const SearchInput: React.FC<SearchInputProps> = () => {
           className="w-full mt-2 font-bold text-lg"
           startContent={<FaSearch />}
         >
-          Пошук
+          {/* Пошук */}
+          {t('title')}
         </Button>
       </form>
     </>

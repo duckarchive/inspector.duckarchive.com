@@ -1,9 +1,7 @@
 import { NextPage } from "next";
-import { getArchives } from "@/data/archives";
 import SearchInput from "@/components/search-input";
 
 const WelcomePage: NextPage = async () => {
-  const archives = await getArchives();
   return (
     <section className="flex flex-col items-center justify-center gap-4 mt-8">
       <div className="inline-block max-w-2xl justify-center">
