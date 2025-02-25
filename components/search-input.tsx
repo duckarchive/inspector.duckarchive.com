@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl";
 interface SearchInputProps {}
 
 const SearchInput: React.FC<SearchInputProps> = () => {
-  const t = useTranslations('HomePage');
+  const t = useTranslations("search-input");
   const router = useRouter();
   const aInputRef = useRef<HTMLInputElement>(null);
   const fInputRef = useRef<HTMLInputElement>(null);
@@ -138,12 +138,12 @@ const SearchInput: React.FC<SearchInputProps> = () => {
     <>
       <form className="flex flex-wrap gap-2" onSubmit={handleSearch}>
         <div className="flex justify-between w-full">
-          <p className="font-bold md:text-xl">Введіть реквізити справи:</p>
+          <p className="font-bold md:text-xl">{t('label')}</p>
           <SearchInputGuideModal />
         </div>
         <div className="flex justify-between items-end w-full py-2 border-2 rounded-xl overflow-hidden">
           <div className="flex flex-col items-center flex-shrink-0 basis-1/4">
-            <span className="text-gray-500">Архів</span>
+            <span className="text-gray-500">{t('archive-label')}</span>
             <input
               ref={aInputRef}
               type="text"
@@ -156,7 +156,7 @@ const SearchInput: React.FC<SearchInputProps> = () => {
           </div>
           <span className="text-xl md:text-4xl">-</span>
           <div className="flex flex-col items-center flex-grow basis-1/4">
-            <span className="text-gray-500">Фонд</span>
+            <span className="text-gray-500">{t('fund-label')}</span>
             <input
               ref={fInputRef}
               type="text"
@@ -170,7 +170,7 @@ const SearchInput: React.FC<SearchInputProps> = () => {
           </div>
           <span className="text-xl md:text-4xl">-</span>
           <div className="flex flex-col items-center flex-grow basis-1/4">
-            <span className="text-gray-500">Опис</span>
+            <span className="text-gray-500">{t('description-label')}</span>
             <input
               ref={dInputRef}
               type="text"
@@ -184,7 +184,7 @@ const SearchInput: React.FC<SearchInputProps> = () => {
           </div>
           <span className="text-xl md:text-4xl">-</span>
           <div className="flex flex-col items-center flex-grow basis-1/4">
-            <span className="text-gray-500">Справа</span>
+            <span className="text-gray-500">{t('case-label')}</span>
             <input
               ref={cInputRef}
               type="text"
@@ -204,8 +204,7 @@ const SearchInput: React.FC<SearchInputProps> = () => {
           className="w-full mt-2 font-bold text-lg"
           startContent={<FaSearch />}
         >
-          {/* Пошук */}
-          {t('title')}
+          {t('submit-button')}
         </Button>
       </form>
     </>

@@ -1,6 +1,14 @@
 {
-  "HomePage": {
-    "title": "Hello world!",
-    "about": "Go to the about page"
+  "home-page": {
+    "title": "Find an archival case online ― easily!",
+    "description": "Duck Inspector is a search service that allows you to find an archive case online. Just enter the details of the archive, fund, description, and case and get a link to the source."
+  },
+  "search-input": {
+    "label": "Enter the case details:",
+    "archive-label": "Archive",
+    "fund-label": "Fund",
+    "description-label": "Description",
+    "case-label": "Case",
+    "submit-button": "Search"
   }
 }
