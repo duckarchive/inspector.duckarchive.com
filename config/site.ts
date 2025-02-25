@@ -1,17 +1,16 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Качиний Інспектор ― пошук справ українських архівів онлайн",
+  name: "title",
   url: "https://inspector.duckarchive.com",
-  description:
-    "Сервіс для пошуку справ українських архівів, що доступні онлайн. Введіть реквізити справи в просте вікно пошуку, та отримайте посилання на джерело.",
+  description: "description",
   navItems: [
     {
-      label: "Пошук",
+      label: "search",
       href: "/search",
     },
     {
-      label: "Архіви",
+      label: "archives",
       href: "/archives",
     },
     // {
@@ -19,15 +18,15 @@ export const siteConfig = {
     //   href: "/resources",
     // },
     {
-      label: "Звіт за день",
+      label: "daily-updates",
       href: "/daily-updates",
     },
     {
-      label: "Статистика",
+      label: "stats",
       href: "/stats",
     },
     {
-      label: "Документація",
+      label: "docs",
       href: "https://duckarchive.com/docs/inspector",
     },
   ],

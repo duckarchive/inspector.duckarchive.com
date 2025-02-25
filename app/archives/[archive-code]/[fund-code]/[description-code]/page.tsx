@@ -3,6 +3,7 @@ import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
 import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
 import { siteConfig } from "@/config/site";
+import { getTranslations } from "next-intl/server";
 
 export interface DescriptionPageProps {
   params: Promise<{
@@ -14,6 +15,7 @@ export interface DescriptionPageProps {
 
 export async function generateMetadata(pageProps: DescriptionPageProps,
   parent: ResolvingMetadata): Promise<Metadata> {
+  const t = await getTranslations("metadata");
   const params = await pageProps.params;
   const { openGraph } = await parent;
   const archiveCode = decodeURIComponent(params["archive-code"]);
@@ -27,7 +29,7 @@ export async function generateMetadata(pageProps: DescriptionPageProps,
 
   return {
     title: `${archiveCode}-${fundCode}-${description.code}`,
-    description: `Пошук справ онлайн в описі ${archiveCode}-${fundCode}-${description.code}${name} / архів ${archiveCode} фонд ${fundCode} опис ${description.code} / ${archiveCode} ф.${fundCode}, о.${description.code} / ${archiveCode} ф.${fundCode}, оп.${description.code}`,
+    description:  t("description-description", { archiveCode, fundCode: code, descriptionCode: description.code, descriptionTitle: name }),
     openGraph: {
       ...openGraph,
       type: "website",

@@ -10,5 +10,20 @@
     "description-label": "Опис",
     "case-label": "Справа",
     "submit-button": "Пошук"
+  },
+  "navigation": {
+    "search": "Пошук",
+    "archives": "Архіви",
+    "daily-updates": "Звіт за день",
+    "stats": "Статистика",
+    "docs": "Документація"
+  },
+  "metadata": {
+    "title": "Качиний Інспектор ― пошук справ українських архівів онлайн",
+    "description": "Сервіс для пошуку справ українських архівів, що доступні онлайн. Введіть реквізити справи в просте вікно пошуку, та отримайте посилання на джерело.",
+    "archive-description": "Пошук справ онлайн в архіві {archiveCode} ({archiveTitle})",
+    "fund-description": "Пошук справ онлайн в фонді {archiveCode}-{fundCode}{fundTitle} / архів {archiveCode} фонд {fundCode} / {archiveCode} ф.{fundCode}",
+    "description-description": "Пошук справ онлайн в описі {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / архів {archiveCode} фонд {fundCode} опис {descriptionCode} / {archiveCode} ф.{fundCode}, о.{descriptionCode} / {archiveCode} ф.{fundCode}, оп.{descriptionCode}",
+    "case-description": "Справа онлайн {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / архів {archiveCode} фонд {fundCode} опис {descriptionCode} справа {caseCode} / {archiveCode} ф.{fundCode}, о.{descriptionCode}, с.{caseCode} / {archiveCode} ф.{fundCode}, оп.{descriptionCode}, спр.{caseCode}"
   }
 }

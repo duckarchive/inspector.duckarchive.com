@@ -10,5 +10,20 @@
     "description-label": "Description",
     "case-label": "Case",
     "submit-button": "Search"
+  },
+  "navigation": {
+    "search": "Search",
+    "archives": "Archives",
+    "daily-updates": "Daily report",
+    "stats": "Statistics",
+    "docs": "Documentation"
+  },
+  "metadata": {
+    "title": "Duck Inspector ― search for Ukrainian archive cases online",
+    "description": "A service for searching Ukrainian archive cases available online. Enter the case details in a simple search window and get a link to the source.",
+    "archive-description": "Search online in archive {archiveCode} ({archiveTitle})",
+    "fund-description": "Search for cases online in the fund {archiveCode}-{fundCode}{fundTitle} / archive {archiveCode} fund {fundCode} / {archiveCode} f.{fundCode}",
+    "description-description": "Search for cases online in the description {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
+    "case-description": "Case online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} case {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
   }
 }

@@ -22,9 +22,11 @@ import SearchInputPortable from "./search-input-portable";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { LocaleSelector } from "./locale-selector";
+import { useTranslations } from "next-intl";
 
 const NavbarComponent: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const t = useTranslations("navigation");
   const pathname = usePathname();
   
   return (
@@ -53,7 +55,7 @@ const NavbarComponent: React.FC = () => {
                   color="foreground"
                   href={item.href}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </NextLink>
               </NavbarItem>
             ))}

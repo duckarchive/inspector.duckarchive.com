@@ -3,6 +3,7 @@ import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
 import { siteConfig } from "@/config/site";
 import { GetCaseResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
+import { getTranslations } from "next-intl/server";
 
 export interface CasePageProps {
   params: Promise<{
@@ -17,6 +18,7 @@ export async function generateMetadata(
   pageProps: CasePageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const t = await getTranslations("metadata");
   const params  = await pageProps.params;
   const { openGraph } = await parent;
   const archiveCode = decodeURIComponent(params["archive-code"]);
@@ -29,7 +31,7 @@ export async function generateMetadata(
 
   return {
     title: `${archiveCode}-${fundCode}-${descriptionCode}-${code}`,
-    description: `Справа онлайн ${archiveCode}-${fundCode}-${descriptionCode}-${code}${name} / архів ${archiveCode} фонд ${fundCode} опис ${descriptionCode} справа ${code} / ${archiveCode} ф.${fundCode}, о.${descriptionCode}, с.${code} / ${archiveCode} ф.${fundCode}, оп.${descriptionCode}, спр.${code}`,
+    description:  t("case-description", { archiveCode, fundCode: code, descriptionCode: descriptionCode, caseCode: code, caseTitle: name }),
     openGraph: {
       ...openGraph,
       type: "website",

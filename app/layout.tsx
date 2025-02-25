@@ -10,25 +10,29 @@ import Navbar from "@/components/navbar";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
 import Loader from "@/components/loader";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url || ""),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    images: "/og-image.png",
-    type: "website",
-    url: "/",
-  },
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-};
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    metadataBase: new URL(siteConfig.url || ""),
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      images: "/og-image.png",
+      type: "website",
+      url: "/",
+    },
+    title: {
+      default: t("title"),
+      template: `%s | ${t("title")}`,
+    },
+    description: t("description"),
+  }
+}
 
 export const viewport: Viewport = {
   themeColor: [
