@@ -14,6 +14,7 @@
   "navigation": {
     "logo": "Inspector",
     "search": "Search",
+    "search-by-location": "Map",
     "archives": "Archives",
     "daily-updates": "Daily report",
     "stats": "Statistics",

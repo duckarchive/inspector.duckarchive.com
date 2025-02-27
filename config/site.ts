@@ -10,6 +10,10 @@ export const siteConfig = {
       href: "/search",
     },
     {
+      label: "search-by-location",
+      href: "/search-by-location",
+    },
+    {
       label: "archives",
       href: "/archives",
     },
