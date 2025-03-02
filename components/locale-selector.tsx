@@ -3,12 +3,12 @@
 import { IoGlobe } from "react-icons/io5";
 import { useLocale } from "next-intl";
 import { Avatar, Button, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
+import { SUPPORTED_LOCALES } from "@/i18n/request";
 
-const LOCALES = ["uk", "en"];
 const LOCALE2FLAG: Record<string, string> = {
-  uk: 'ua',
-  en: 'us',
-}
+  uk: "ua",
+  en: "us",
+};
 
 export const LocaleSelector: React.FC = () => {
   const locale = useLocale();
@@ -21,13 +21,12 @@ export const LocaleSelector: React.FC = () => {
   return (
     <Popover showArrow>
       <PopoverTrigger>
-
-      <Button isIconOnly variant="light" size="sm" className="w-6 h-6 min-w-0">
-        <IoGlobe className="w-6 h-6 block fill-current text-default-500" />
-      </Button>
+        <Button isIconOnly variant="light" size="sm" className="w-6 h-6 min-w-0" isDisabled>
+          <IoGlobe className="w-6 h-6 block fill-current text-default-500" />
+        </Button>
       </PopoverTrigger>
       <PopoverContent>
-        {LOCALES.map((code) => (
+        {SUPPORTED_LOCALES.map((code) => (
           <Button
             key={code}
             onPress={onChange(code)}

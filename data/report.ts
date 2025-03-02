@@ -120,11 +120,8 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   }));
 
   if (process.env.SEND_NOTIFICATION === "true") {
-    console.log("generate _notification.json");
     await fs.rm("_notification.json", { force: true });
     await fs.writeFile("_notification.json", JSON.stringify(groupedByFunds, null, 2));
-  } else {
-    console.log(process.env);
   }
 
   const limitedReport = report.slice(0, 25000);

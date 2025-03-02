@@ -13,7 +13,6 @@ import Loader from "@/components/loader";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
-
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
   return {
@@ -50,16 +49,16 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
       <head />
       <GoogleAnalytics />
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-            <div className="relative flex flex-col h-screen">
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+          <div className="relative flex flex-col h-screen">
+            <NextIntlClientProvider locale={locale} messages={messages}>
               <Suspense fallback={<Loader />}>
                 <Navbar />
                 <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">{children}</main>
               </Suspense>
-            </div>
-          </Providers>
-        </NextIntlClientProvider>
+            </NextIntlClientProvider>
+          </div>
+        </Providers>
       </body>
     </html>
   );

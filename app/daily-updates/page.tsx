@@ -4,15 +4,17 @@ import PagePanel from "@/components/page-panel";
 import { NextPage } from "next";
 import ReportTable from "@/components/report-table";
 import ReportModal from "@/components/report-modal";
+import { getTranslations } from "next-intl/server";
 
 const DailyUpdatesPage: NextPage = async () => {
+  const t = await getTranslations("daily-updates-page");
   const resources = await getResources();
   const [report, reportSummary] = await getYesterdayReport();
-  const note = report.length >= 25000 ? " Максимальна кількість знахідок обмежена 25,000.": "";
+  const note = report.length >= 25000 ? t("limit-note"): "";
 
   return (
     <>
-      <PagePanel title="Звіт" description={`Список справ онлайн, знайдених за минулу добу.${note}`}>
+      <PagePanel title={t("title")} description={`${t("description")}${note}`}>
         <ReportModal data={reportSummary} />
       </PagePanel>
       <ReportTable resources={resources} report={report} />
