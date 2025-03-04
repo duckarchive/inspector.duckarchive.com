@@ -17,4 +17,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: pm2 start UPDATE__inspector-duckarchive-com
+          script: pm2 start UPDATE__inspector-duckarchive-com > /dev/null 2>&1
