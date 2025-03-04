@@ -119,7 +119,8 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
     })),
   }));
 
-  if (process.env.SEND_NOTIFICATION === "true") {
+  // check if it's not CI
+  if (process.env.CI !== "true") {
     await fs.rm("_notification.json", { force: true });
     await fs.writeFile("_notification.json", JSON.stringify(groupedByFunds, null, 2));
   }
