@@ -30,13 +30,8 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   // start of yesterday using date-fns
   const startOfYesterday = new Date();
   startOfYesterday.setDate(startOfYesterday.getDate() - 1);
-  // startOfYesterday.setHours(0, 0, 0, 0);
+  startOfYesterday.setHours(0, 0, 0, 0);
   const from = startOfYesterday.toISOString();
-  // end of yesterday using date-fns
-  // const endOfYesterday = new Date();
-  // endOfYesterday.setDate(endOfYesterday.getDate() - 1);
-  // endOfYesterday.setHours(23, 59, 59, 999);
-  // const to = endOfYesterday.toISOString();
 
   const updatedMatches = await prisma.match.findMany({
     where: {
@@ -45,7 +40,6 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
       },
       updated_at: {
         gte: from,
-        // lt: to,
       },
       OR: [
         {
