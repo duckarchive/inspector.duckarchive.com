@@ -40,8 +40,13 @@ export const viewport: Viewport = {
   ],
 };
 
-const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
-  const locale = await getLocale();
+export async function generateStaticParams() {
+  return [{ locale: 'uk' }, { locale: 'en' }]
+}
+
+const RootLayout: React.FC<PropsWithChildren<{ params: Promise<{ locale: string }> }>> = async ({ children, params }) => {
+  const { locale } = await params;
+  console.log(locale);
   const messages = await getMessages({ locale });
 
   return (
