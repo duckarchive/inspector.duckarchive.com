@@ -5,19 +5,23 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
-import { useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import useNoRussians from "@/hooks/useNoRussians";
+import { DonationProvider } from "@/providers/donation";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-export interface ProvidersProps {
-  children: React.ReactNode;
+const _ForeignUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
+  useNoRussians();
+  return children;
+};
+
+interface ProvidersProps {
   themeProps?: ThemeProviderProps;
 }
 
-export function Providers({ children, themeProps }: ProvidersProps) {
-  useNoRussians();
+export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ children, themeProps }) => {
   const router = useRouter();
   useEffect(() => {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
@@ -30,7 +34,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <HeroUIProvider navigate={router.push}>
-      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+      <NextThemesProvider {...themeProps}>
+        <DonationProvider>
+          <_ForeignUserProvider>{children}</_ForeignUserProvider>
+        </DonationProvider>
+      </NextThemesProvider>
     </HeroUIProvider>
   );
-}
+};
