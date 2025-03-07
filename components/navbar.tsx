@@ -53,6 +53,7 @@ const NavbarComponent: React.FC = () => {
                     "data-[active=true]:text-primary data-[active=true]:font-medium",
                   )}
                   color="foreground"
+                  target={item.href.startsWith('https') ? "_blank": undefined}
                   href={item.href}
                 >
                   {t(item.label)}
@@ -102,8 +103,8 @@ const NavbarComponent: React.FC = () => {
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`} isActive={pathname === item.href}>
-              <Link color="foreground" href={item.href} onPress={() => setIsMenuOpen((prev) => !prev)} size="lg">
-                {item.label}
+              <Link color="foreground" href={item.href} target={item.href.startsWith('https') ? "_blank": undefined} onPress={() => setIsMenuOpen((prev) => !prev)} size="lg">
+                {t(item.label)}
               </Link>
             </NavbarMenuItem>
           ))}

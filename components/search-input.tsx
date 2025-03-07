@@ -25,7 +25,7 @@ const SearchInput: React.FC<SearchInputProps> = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const fullCode = `${a}-${f}-${d}-${c}`;
+    const fullCode = `${a || ""}-${f || ""}-${d || ""}-${c || ""}`;
     sendGAEvent("event", "search-input", { value: fullCode });
     router.push(`/search?q=${fullCode}`);
   };
