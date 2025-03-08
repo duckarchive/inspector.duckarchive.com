@@ -9,9 +9,10 @@ const CORS_ALLOWED_ORIGINS = [
 ];
 
 export function middleware(req: NextRequest) {
-  if (CORS_ALLOWED_ORIGINS.includes(req.nextUrl.origin)) {
+  const origin = req.headers.get("origin") || req.nextUrl.origin;
+  if (CORS_ALLOWED_ORIGINS.includes(origin)) {
     const headers = new Headers();
-    headers.set("Access-Control-Allow-Origin", req.nextUrl.origin);
+    headers.set("Access-Control-Allow-Origin", origin);
     headers.set("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS");
     headers.set(
       "Access-Control-Allow-Headers",
@@ -20,7 +21,7 @@ export function middleware(req: NextRequest) {
     headers.set("Access-Control-Allow-Credentials", "true");
   
     if (req.method === "OPTIONS") {
-      return NextResponse.json({}, { headers });
+      return NextResponse.next({ headers });
     }
   
     return NextResponse.next({ headers });
