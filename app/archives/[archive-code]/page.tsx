@@ -14,7 +14,6 @@ export interface ArchivePageProps {
 export async function generateMetadata(pageProps: ArchivePageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const t = await getTranslations("metadata");
   const params = await pageProps.params;
-  const { openGraph } = await parent;
   const code = decodeURIComponent(params["archive-code"]);
   const archive: GetArchiveResponse = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json());
 
@@ -22,7 +21,6 @@ export async function generateMetadata(pageProps: ArchivePageProps, parent: Reso
     title: `${code}`,
     description: t("archive-description", { archiveCode: archive.code, archiveTitle: archive.title }),
     openGraph: {
-      ...openGraph,
       type: "website",
       url: `/archives/${code}`,
     },
