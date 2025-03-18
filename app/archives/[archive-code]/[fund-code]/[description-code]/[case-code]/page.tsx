@@ -31,7 +31,7 @@ export async function generateMetadata(
 
   return {
     title: `${archiveCode}-${fundCode}-${descriptionCode}-${code}`,
-    description:  t("case-description", { archiveCode, fundCode: code, descriptionCode: descriptionCode, caseCode: code, caseTitle: name }),
+    description:  t("case-description", { archiveCode, fundCode, descriptionCode, caseCode: code, caseTitle: name }),
     openGraph: {
       ...openGraph,
       type: "website",
