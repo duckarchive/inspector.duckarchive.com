@@ -28,8 +28,8 @@ export async function generateMetadata(pageProps: DescriptionPageProps,
   const name = description.title ? ` (${description.title})` : "";
 
   return {
-    title: `${archiveCode}-${fundCode}-${description.code}`,
-    description:  t("description-description", { archiveCode, fundCode: code, descriptionCode: description.code, descriptionTitle: name }),
+    title: `${archiveCode}-${fundCode}-${code}`,
+    description:  t("description-description", { archiveCode, fundCode, descriptionCode: code, descriptionTitle: name }),
     openGraph: {
       ...openGraph,
       type: "website",
