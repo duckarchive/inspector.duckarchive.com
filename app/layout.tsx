@@ -54,7 +54,7 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
             <NextIntlClientProvider locale={locale} messages={messages}>
               <Suspense fallback={<Loader />}>
                 <Navbar />
-                <main className="container mx-auto max-w-7xl pt-6 px-6 flex-grow flex flex-col">{children}</main>
+                <main className="container mx-auto max-w-7xl py-3 px-6 flex-grow flex flex-col h-[calc(100vh-4rem)]">{children}</main>
               </Suspense>
             </NextIntlClientProvider>
           </div>
