@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { JSX, PropsWithChildren } from "react";
 import NavigationBreadcrumbs from "./breadcrumbs";
 
 interface PagePanelProps extends PropsWithChildren {

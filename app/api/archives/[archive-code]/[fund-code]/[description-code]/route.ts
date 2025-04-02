@@ -25,17 +25,18 @@ export type GetDescriptionResponse =
  ;
 
 interface GetDescriptionParams {
-  params: {
+  params: Promise<{
     "archive-code": string;
     "fund-code": string;
     "description-code": string;
-  };
+  }>;
 }
 
 export async function GET(
   req: NextRequest,
-  { params }: GetDescriptionParams,
+  props: GetDescriptionParams,
 ): Promise<NextResponse<GetDescriptionResponse | ErrorResponse>> {
+  const params = await props.params;
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];
   const descriptionCode = params["description-code"];
