@@ -9,18 +9,19 @@ export type GetCaseResponse = {
 };
 
 interface GetCaseParams {
-  params: {
+  params: Promise<{
     "archive-code": string;
     "fund-code": string;
     "description-code": string;
     "case-code": string;
-  };
+  }>;
 }
 
 export async function GET(
   _req: NextRequest,
-  { params }: GetCaseParams,
+  props: GetCaseParams,
 ): Promise<NextResponse<GetCaseResponse | ErrorResponse>> {
+  const params = await props.params;
   const archiveCode = params["archive-code"];
   const fundCode = params["fund-code"];
   const descriptionCode = params["description-code"];

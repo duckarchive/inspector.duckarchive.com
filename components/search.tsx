@@ -28,6 +28,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
 
   useEffect(() => {
     trigger(searchValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = (key: keyof SearchRequest) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +43,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fullCode = `${searchValues.a}-${searchValues.f}-${searchValues.d}-${searchValues.c}`;
-    sendGAEvent('event', 'search-form', { value: fullCode });
+    sendGAEvent("event", "search-form", { value: fullCode });
     setQueryParams(searchValues);
     trigger(searchValues);
   };

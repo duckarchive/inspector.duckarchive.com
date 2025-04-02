@@ -173,12 +173,14 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
               comparator: sortCode,
               ...firstColumn,
             },
+            // @ts-ignore
             ...middleColumns,
             {
               type: "numericColumn",
               flex: 2,
               minWidth: 200,
               resizable: false,
+              // @ts-ignore
               comparator: sortByMatches,
               cellRenderer: (row: { data: any }) => (
                 <div className="flex h-10 items-center justify-end gap-1 flex-wrap">

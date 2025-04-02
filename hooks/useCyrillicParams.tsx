@@ -8,7 +8,7 @@ const useCyrillicParams = () => {
   return Object.fromEntries(
     Object.entries(params).map(([key, value]) => [
       key,
-      decodeURIComponent(value.toString())
+      decodeURIComponent(value?.toString() || "")
     ])
   );
 };
