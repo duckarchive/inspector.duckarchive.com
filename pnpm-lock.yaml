@@ -45,7 +45,7 @@ importers:
         specifier: 2.4.6
         version: 2.4.6(tailwindcss@3.4.3)
       '@next/third-parties':
-        specifier: ^15.2.4
+        specifier: ^15.1.6
         version: 15.2.4(next@14.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@prisma/client':
         specifier: ^5.22.0
@@ -57,16 +57,16 @@ importers:
         specifier: 3.8.12
         version: 3.8.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@scalar/nextjs-api-reference':
-        specifier: ^0.5.15
+        specifier: ^0.5.7
         version: 0.5.15(next@14.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       ag-charts-react:
-        specifier: ^11.2.1
+        specifier: ^11.0.4
         version: 11.2.1(react@18.3.1)
       ag-grid-community:
-        specifier: ^33.2.1
+        specifier: ^33.0.4
         version: 33.2.1
       ag-grid-react:
-        specifier: ^32.3.4
+        specifier: ^32.3.3
         version: 32.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx:
         specifier: 2.1.1
@@ -84,7 +84,7 @@ importers:
         specifier: 12.0.5
         version: 12.0.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       intl-messageformat:
-        specifier: ^10.7.16
+        specifier: ^10.7.14
         version: 10.7.16
       lodash:
         specifier: ^4.17.21
@@ -105,17 +105,17 @@ importers:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
       react-icons:
-        specifier: ^5.5.0
+        specifier: ^5.4.0
         version: 5.5.0(react@18.3.1)
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
       swr:
-        specifier: ^2.3.3
+        specifier: ^2.3.0
         version: 2.3.3(react@18.3.1)
     devDependencies:
       '@types/lodash':
-        specifier: ^4.17.16
+        specifier: ^4.17.14
         version: 4.17.16
       '@types/node':
         specifier: 20.5.7
@@ -136,7 +136,7 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       eslint:
-        specifier: ^8.57.1
+        specifier: ^8.56.0
         version: 8.57.1
       eslint-config-next:
         specifier: 14.2.1
@@ -154,8 +154,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(eslint@8.57.1)
       eslint-plugin-prettier:
-        specifier: ^5.2.6
-        version: 5.2.6(eslint-config-prettier@8.10.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.4.2)
+        specifier: ^5.2.3
+        version: 5.2.6(eslint-config-prettier@8.10.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.3)
       eslint-plugin-react:
         specifier: ^7.37.4
         version: 7.37.4(eslint@8.57.1)
@@ -178,7 +178,7 @@ importers:
         specifier: 3.4.3
         version: 3.4.3
       tsx:
-        specifier: ^4.19.3
+        specifier: ^4.19.2
         version: 4.19.3
       typescript:
         specifier: 5.5.4
@@ -3197,8 +3197,8 @@ packages:
     resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
     engines: {node: '>=6.0.0'}
 
-  prettier@3.4.2:
-    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
+  prettier@3.5.3:
+    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -6879,10 +6879,10 @@ snapshots:
       resolve: 1.22.10
       semver: 6.3.1
 
-  eslint-plugin-prettier@5.2.6(eslint-config-prettier@8.10.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.4.2):
+  eslint-plugin-prettier@5.2.6(eslint-config-prettier@8.10.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.3):
     dependencies:
       eslint: 8.57.1
-      prettier: 3.4.2
+      prettier: 3.5.3
       prettier-linter-helpers: 1.0.0
       synckit: 0.11.1
     optionalDependencies:
@@ -7673,7 +7673,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@3.4.2: {}
+  prettier@3.5.3: {}
 
   prisma@5.22.0:
     dependencies:
