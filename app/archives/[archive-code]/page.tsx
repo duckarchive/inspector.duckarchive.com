@@ -19,7 +19,7 @@ export async function generateMetadata(pageProps: ArchivePageProps, parent: Reso
 
   return {
     title: `${code}`,
-    description: t("archive-description", { archiveCode: archive.code, archiveTitle: archive.title }),
+    description: t("archive-description", { archiveCode: archive.code, archiveTitle: archive.title || "" }),
     openGraph: {
       type: "website",
       url: `/archives/${code}`,

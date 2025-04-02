@@ -24,12 +24,13 @@ export type GetArchiveResponse =
     }>;
 
 interface GetArchiveParams {
-  params: {
+  params: Promise<{
     "archive-code": string;
-  };
+  }>;
 }
 
-export async function GET(_req: NextRequest, { params }: GetArchiveParams): Promise<NextResponse<GetArchiveResponse | ErrorResponse>> {
+export async function GET(_req: NextRequest, props: GetArchiveParams): Promise<NextResponse<GetArchiveResponse | ErrorResponse>> {
+  const params = await props.params;
   const archiveCode = params["archive-code"];
 
   if (!archiveCode) {

@@ -7,7 +7,7 @@ import { NextRequest } from "next/server";
 const API_KEY = `API-89ef6011-a152-4296-y1b2-9bda6b0e49c5`;
 
 export const isAuthorized = async () => {
-  const headersList = headers();
+  const headersList = await headers();
   const authorization = headersList.get('authorization')
   if (authorization === `Bearer ${API_KEY}`) {
     return true;
@@ -26,7 +26,7 @@ interface GoogleUserInfo {
 }
 
 export const authorizeGoogle = async (_req: NextRequest, validateAdmin?: boolean): Promise<User | false> => {
-  const headersList = headers();
+  const headersList = await headers();
   const authorization = headersList.get('authorization');
   if (authorization) {
     try {

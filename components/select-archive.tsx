@@ -20,7 +20,7 @@ const SelectArchive: React.FC<SelectArchiveProps> = ({ archives, value, onChange
       className={className}
     >
       {archives.map((archive) => (
-        <AutocompleteItem key={archive.code} value={archive.code} textValue={archive.code}>
+        <AutocompleteItem key={archive.code} textValue={archive.code}>
           <div>
             <p>{archive.code}</p>
             {!withoutTitle && <p className="opacity-70 text-sm text-wrap">{archive.title}</p>}
