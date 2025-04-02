@@ -13,6 +13,7 @@ export type GetFamilySearchProjectResponse =
         children_count: true;
         prev_children_count: true;
         updated_at: true;
+        synced_at: true;
         archive: {
           select: {
             id: true;
@@ -40,6 +41,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearc
       children_count: true,
       prev_children_count: true,
       updated_at: true,
+      synced_at: true,
       archive: {
         select: {
           id: true,
@@ -88,6 +90,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<GetFamilySear
       children_count: true,
       prev_children_count: true,
       updated_at: true,
+      synced_at: true,
       archive: {
         select: {
           id: true,
@@ -143,6 +146,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse<GetFamilySea
       children_count: true,
       prev_children_count: true,
       updated_at: true,
+      synced_at: true,
       archive: {
         select: {
           id: true,
