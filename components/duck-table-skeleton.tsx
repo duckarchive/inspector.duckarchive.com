@@ -1,5 +1,5 @@
 "use client";
-import { Skeleton } from "@heroui/react";
+import { Skeleton } from "@heroui/skeleton";
 
 interface DuckTableSkeletonProps {
   withFilters?: boolean;

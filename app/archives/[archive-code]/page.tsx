@@ -1,5 +1,5 @@
 import ArchiveTable from "@/components/archive-table";
-import { Metadata, NextPage, ResolvingMetadata } from "next";
+import { Metadata, NextPage } from "next";
 import { getResources } from "@/data/resources";
 import { siteConfig } from "@/config/site";
 import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
@@ -11,7 +11,7 @@ export interface ArchivePageProps {
   }>;
 }
 
-export async function generateMetadata(pageProps: ArchivePageProps, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(pageProps: ArchivePageProps): Promise<Metadata> {
   const t = await getTranslations("metadata");
   const params = await pageProps.params;
   const code = decodeURIComponent(params["archive-code"]);

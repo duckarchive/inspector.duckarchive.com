@@ -2,7 +2,9 @@
 
 import { HeartFilledIcon } from "@/components/icons";
 import { siteConfig } from "@/config/site";
-import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 import React, { createContext, useContext, ReactNode } from "react";
 
 const DONATE_KEY = "asked-for-donate-at";

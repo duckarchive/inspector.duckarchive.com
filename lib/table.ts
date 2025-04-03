@@ -38,6 +38,8 @@ export const sortByTitle = (a: WithTitle, b: WithTitle) => {
 interface WithType {
   type: string | null;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const sortByType = (_a: any, _b: any, a: { data: WithType }, b: { data: WithType }) => {
   return sortText(a.data.type || "", b.data.type || "");
 };
@@ -54,6 +56,7 @@ interface WithMatches {
   matches: { children_count: number | null }[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const sortByMatches = (_: any, __: any, a: { data: WithMatches }, b: { data: WithMatches }) => {
   if (!a.data || !b.data) return 0;
   return (

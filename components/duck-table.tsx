@@ -1,9 +1,7 @@
 "use client";
 
 import { AgGridReact } from "ag-grid-react";
-import { ColDef, ITextFilterParams } from "ag-grid-community";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
+import { ColDef, ITextFilterParams, themeQuartz, colorSchemeDark } from "ag-grid-community";
 import { useEffect, useRef, useState } from "react";
 import { AG_GRID_LOCALE_UK } from "@/config/i18n";
 import ResourceBadge from "./resource-badge";
@@ -11,7 +9,6 @@ import { getSyncAtLabel, sortByMatches, sortCode } from "@/lib/table";
 import { Resource } from "@prisma/client";
 import { useTheme } from "next-themes";
 import { Button } from "@heroui/button";
-import clsx from "clsx";
 import Loader from "./loader";
 
 export enum QuickFilter {
@@ -55,7 +52,14 @@ interface DuckTableProps<T> {
   loadingPage?: number;
 }
 
-const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, resources, isLoading, loadingPage }: DuckTableProps<T>) => {
+const DuckTable = <T extends { id: string }>({
+  columns,
+  rows,
+  enabledFilters,
+  resources,
+  isLoading,
+  loadingPage,
+}: DuckTableProps<T>) => {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const gridRef = useRef<AgGridReact<T>>(null);
@@ -88,7 +92,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
   }, [activeQuickFilter]);
 
   useEffect(() => {
-    setMounted(true)
+    setMounted(true);
   }, []);
 
   const handleFilterClick = (newFilter: QuickFilter) => () => {
@@ -96,8 +100,10 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
   };
 
   if (!mounted) {
-    return null
+    return null;
   }
+
+  const agGridTheme = theme === "dark" ? themeQuartz.withPart(colorSchemeDark) : themeQuartz;
 
   return (
     <>
@@ -151,15 +157,12 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
           </Button>
         )} */}
       </div>
-      <div
-        className={clsx("h-96 flex-grow", {
-          "ag-theme-quartz-dark": theme === "dark",
-          "ag-theme-quartz": theme !== "dark",
-        })}
-      >
+      <div className="h-96 flex-grow">
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}
         <AgGridReact
           ref={gridRef}
+          theme={agGridTheme}
           rowData={rows}
           suppressMovableColumns
           loading={isLoading}
@@ -173,6 +176,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
               comparator: sortCode,
               ...firstColumn,
             },
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             ...middleColumns,
             {
@@ -180,11 +184,14 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
               flex: 2,
               minWidth: 200,
               resizable: false,
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               comparator: sortByMatches,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               cellRenderer: (row: { data: any }) => (
                 <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
                   {row.data.matches?.map(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ({ updated_at, children_count, resource_id }: any) =>
                       Boolean(children_count) &&
                       resources && (
@@ -196,7 +203,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
                         >
                           {children_count}
                         </ResourceBadge>
-                      ),
+                      )
                   )}
                 </div>
               ),

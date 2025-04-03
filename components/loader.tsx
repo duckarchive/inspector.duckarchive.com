@@ -1,6 +1,7 @@
 "use client";
 
-import { Link, Spinner } from "@heroui/react";
+import { Link } from "@heroui/link";
+import { Spinner } from "@heroui/spinner";
 
 const funnyMessages = [
   "Качка може ходити, плавати і літати!",

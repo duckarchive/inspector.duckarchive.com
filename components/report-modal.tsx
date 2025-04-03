@@ -1,16 +1,9 @@
 "use client";
 
 import { ReportSummary } from "@/data/report";
-import {
-  Button,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from "@heroui/react";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 import { handleSendMessageTG, LIMIT_FUNDS } from "@/lib/sendNotification";
 import { siteConfig } from "@/config/site";
 
@@ -41,7 +34,10 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
                       .slice(0, LIMIT_FUNDS)
                       .map(({ fund_code, count }) => (
                         <li key={fund_code}>
-                          <Link href={`/archives/${archive_code}/${fund_code}`} className="text-sm">{fund_code}</Link>: {count}
+                          <Link href={`/archives/${archive_code}/${fund_code}`} className="text-sm">
+                            {fund_code}
+                          </Link>
+                          : {count}
                         </li>
                       ))}
                     {funds.length > LIMIT_FUNDS && <li>та інші</li>}
@@ -52,7 +48,9 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
           </ModalBody>
           {telegramBotToken && (
             <ModalFooter>
-              <Button onPress={() => handleSendMessageTG(telegramBotToken, data, siteConfig.url)}>Відправити в групу</Button>
+              <Button onPress={() => handleSendMessageTG(telegramBotToken, data, siteConfig.url)}>
+                Відправити в групу
+              </Button>
             </ModalFooter>
           )}
         </ModalContent>

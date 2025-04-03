@@ -2,7 +2,9 @@
 
 import { IoGlobe } from "react-icons/io5";
 import { useLocale } from "next-intl";
-import { Avatar, Button, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
+import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
+import { Button } from "@heroui/button";
+import { Avatar } from "@heroui/avatar";
 import { SUPPORTED_LOCALES } from "@/i18n/request";
 
 const LOCALE2FLAG: Record<string, string> = {
