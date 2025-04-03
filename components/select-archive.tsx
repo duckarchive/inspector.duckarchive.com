@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteItem } from "@heroui/react";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { Archives } from "@/data/archives";
 import { Key } from "react";
 

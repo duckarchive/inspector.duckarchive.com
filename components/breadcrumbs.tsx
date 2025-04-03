@@ -1,6 +1,6 @@
 "use client";
 
-import { BreadcrumbItem, Breadcrumbs } from "@heroui/react";
+import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
 import { FaHome } from "react-icons/fa";
 
 interface NavigationBreadcrumbsProps {

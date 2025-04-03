@@ -2,7 +2,8 @@
 
 import { Resource, ResourceType } from "@prisma/client";
 import { PropsWithChildren } from "react";
-import { Chip, Tooltip } from "@heroui/react";
+import { Chip } from "@heroui/chip";
+import { Tooltip } from "@heroui/tooltip";
 
 export const TYPE_COLORS: Record<ResourceType, any> = {
   [ResourceType.ARCHIUM]: "warning",
