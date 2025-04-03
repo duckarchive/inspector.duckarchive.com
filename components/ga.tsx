@@ -19,8 +19,8 @@ const GoogleAnalytics = () => {
   if (process.env.NODE_ENV !== "development" && process.env.NEXT_PUBLIC_GA_ID) {
     return (
       <>
-        {/* <_GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />; */}
-        <_GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />;
+        {/* <_GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} /> */}
+        <_GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
       </>
     );
   }
