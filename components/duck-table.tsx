@@ -1,9 +1,7 @@
 "use client";
 
 import { AgGridReact } from "ag-grid-react";
-import { ColDef, ITextFilterParams } from "ag-grid-community";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
+import { ColDef, ITextFilterParams, themeQuartz, colorSchemeDark } from "ag-grid-community";
 import { useEffect, useRef, useState } from "react";
 import { AG_GRID_LOCALE_UK } from "@/config/i18n";
 import ResourceBadge from "./resource-badge";
@@ -55,7 +53,14 @@ interface DuckTableProps<T> {
   loadingPage?: number;
 }
 
-const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, resources, isLoading, loadingPage }: DuckTableProps<T>) => {
+const DuckTable = <T extends { id: string }>({
+  columns,
+  rows,
+  enabledFilters,
+  resources,
+  isLoading,
+  loadingPage,
+}: DuckTableProps<T>) => {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const gridRef = useRef<AgGridReact<T>>(null);
@@ -88,7 +93,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
   }, [activeQuickFilter]);
 
   useEffect(() => {
-    setMounted(true)
+    setMounted(true);
   }, []);
 
   const handleFilterClick = (newFilter: QuickFilter) => () => {
@@ -96,8 +101,10 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
   };
 
   if (!mounted) {
-    return null
+    return null;
   }
+
+  const agGridTheme = theme === "dark" ? themeQuartz.withPart(colorSchemeDark) : themeQuartz;
 
   return (
     <>
@@ -151,15 +158,11 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
           </Button>
         )} */}
       </div>
-      <div
-        className={clsx("h-96 flex-grow", {
-          "ag-theme-quartz-dark": theme === "dark",
-          "ag-theme-quartz": theme !== "dark",
-        })}
-      >
+      <div className="h-96 flex-grow">
         {/* @ts-ignore */}
         <AgGridReact
           ref={gridRef}
+          theme={agGridTheme}
           rowData={rows}
           suppressMovableColumns
           loading={isLoading}
@@ -196,7 +199,7 @@ const DuckTable = <T extends { id: string }>({ columns, rows, enabledFilters, re
                         >
                           {children_count}
                         </ResourceBadge>
-                      ),
+                      )
                   )}
                 </div>
               ),

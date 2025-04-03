@@ -2,8 +2,7 @@
 
 import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { ThemeProviderProps } from "next-themes";
+import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from "next-themes";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { PropsWithChildren, useEffect } from "react";
 import useNoRussians from "@/hooks/useNoRussians";
