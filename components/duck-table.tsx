@@ -9,7 +9,6 @@ import { getSyncAtLabel, sortByMatches, sortCode } from "@/lib/table";
 import { Resource } from "@prisma/client";
 import { useTheme } from "next-themes";
 import { Button } from "@heroui/button";
-import clsx from "clsx";
 import Loader from "./loader";
 
 export enum QuickFilter {
@@ -159,6 +158,7 @@ const DuckTable = <T extends { id: string }>({
         )} */}
       </div>
       <div className="h-96 flex-grow">
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}
         <AgGridReact
           ref={gridRef}
@@ -176,6 +176,7 @@ const DuckTable = <T extends { id: string }>({
               comparator: sortCode,
               ...firstColumn,
             },
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             ...middleColumns,
             {
@@ -183,11 +184,14 @@ const DuckTable = <T extends { id: string }>({
               flex: 2,
               minWidth: 200,
               resizable: false,
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               comparator: sortByMatches,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               cellRenderer: (row: { data: any }) => (
                 <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
                   {row.data.matches?.map(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ({ updated_at, children_count, resource_id }: any) =>
                       Boolean(children_count) &&
                       resources && (

@@ -11,7 +11,7 @@
     "cache:purge": "tsx -r dotenv/config scripts/purge-cache.ts",
     "deploy": "vercel deploy --prod",
     "prisma:generate": "prisma generate",
-    "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
+    "lint": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
     "@heroui/accordion": "^2.2.13",
@@ -57,6 +57,7 @@
     "swr": "^2.3.3"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@types/lodash": "^4.17.16",
     "@types/node": "22.14.0",
     "@types/react": "19.1.0",

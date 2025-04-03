@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 import { Chip } from "@heroui/chip";
 import { Tooltip } from "@heroui/tooltip";
 
-export const TYPE_COLORS: Record<ResourceType, any> = {
+export const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.ARCHIUM]: "warning",
   [ResourceType.FAMILY_SEARCH]: "success",
   [ResourceType.WIKIPEDIA]: "primary",
@@ -13,7 +13,7 @@ export const TYPE_COLORS: Record<ResourceType, any> = {
   [ResourceType.WEBSITE]: "secondary",
 };
 
-export const TYPE_LABEL: Record<ResourceType, any> = {
+export const TYPE_LABEL: Record<ResourceType, string> = {
   [ResourceType.ARCHIUM]: "АРХІУМ",
   [ResourceType.FAMILY_SEARCH]: "Family Search",
   [ResourceType.WIKIPEDIA]: "Вікіджерела",
@@ -32,7 +32,8 @@ const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({ resour
   const prettyResource = resource && TYPE_LABEL[resource];
   const content = children !== undefined ? children : prettyResource;
   const inner = (
-    <Chip color={resource ? TYPE_COLORS[resource] : "default"} size="sm" variant="solid">
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <Chip color={resource ? TYPE_COLORS[resource] as any : "default"} size="sm" variant="solid">
       {content || "Невідомий ресурс"}
     </Chip>
   );

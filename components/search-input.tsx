@@ -8,9 +8,7 @@ import SearchInputGuideModal from "./search-input-guide-modal";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useTranslations } from "next-intl";
 
-interface SearchInputProps {}
-
-const SearchInput: React.FC<SearchInputProps> = () => {
+const SearchInput: React.FC = () => {
   const t = useTranslations("search-input");
   const router = useRouter();
   const aInputRef = useRef<HTMLInputElement>(null);
