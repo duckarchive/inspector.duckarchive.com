@@ -14,7 +14,6 @@ const useDescription = (archiveCode: string, fundCode: string, code: string) => 
   );
 
   useEffect(() => {
-    console.log("useEffect", isLoading, data);
     if (!isLoading && data?.cases?.length) {
       console.log("if", !isLoading);
       setFullData((prev) => ({
@@ -22,7 +21,7 @@ const useDescription = (archiveCode: string, fundCode: string, code: string) => 
         cases: [...(prev?.cases || []), ...data.cases],
       }));
     }
-  }, [isLoading]);
+  }, [isLoading, data]);
 
   return {
     description: fullData,

@@ -68,7 +68,8 @@ export const authorizeGoogle = async (_req: NextRequest, validateAdmin?: boolean
           return user;
         }
       }
-    } catch (e) {
+    } catch (err) {
+      console.error("Error authorizing user", err);
       return false;
     }
   }

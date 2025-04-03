@@ -1,14 +1,7 @@
-import {
-  Accordion,
-  AccordionItem,
-  Chip,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-} from "@heroui/react";
+import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@heroui/modal";
+import { Link } from "@heroui/link";
+import { Chip } from "@heroui/chip";
+import { Accordion, AccordionItem } from "@heroui/accordion";
 import { FaCheck, FaInfoCircle, FaTimes } from "react-icons/fa";
 
 interface SearchInputGuideModalProps {
@@ -24,7 +17,11 @@ const SearchInputGuideModal: React.FC<SearchInputGuideModalProps> = ({ withoutTi
 
   return (
     <>
-      <div className="flex justify-between gap-2 items-center cursor-pointer text-default-400 hover:text-default-800 cursor-pointer" aria-label="Відкрити інструкцію" onClick={handleInfoClick}>
+      <div
+        className="flex justify-between gap-2 items-center cursor-pointer text-default-400 hover:text-default-800 cursor-pointer"
+        aria-label="Відкрити інструкцію"
+        onClick={handleInfoClick}
+      >
         {!withoutTitle && <p className="text-sm">Як шукати?</p>}
         <FaInfoCircle className="text-lg flex-shrink-0" />
       </div>

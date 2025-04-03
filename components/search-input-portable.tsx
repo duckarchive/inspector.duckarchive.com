@@ -7,9 +7,7 @@ import { useState } from "react";
 import SearchInputGuideModal from "./search-input-guide-modal";
 import { sendGAEvent } from "@next/third-parties/google";
 
-interface SearchInputPortableProps {}
-
-const SearchInputPortable: React.FC<SearchInputPortableProps> = () => {
+const SearchInputPortable: React.FC = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
