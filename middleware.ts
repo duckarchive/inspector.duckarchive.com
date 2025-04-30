@@ -16,14 +16,28 @@ export function middleware(req: NextRequest) {
     headers.set("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS");
     headers.set(
       "Access-Control-Allow-Headers",
-      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
+      [
+        "Accept-Version",
+        "Accept",
+        "Authorization",
+        "Cache-Control",
+        "Content-Length",
+        "Content-MD5",
+        "Content-Type",
+        "Date",
+        "Pragma",
+        "Priority",
+        "X-Api-Version",
+        "X-CSRF-Token",
+        "X-Requested-With",
+      ].join(", ")
     );
     headers.set("Access-Control-Allow-Credentials", "true");
-  
+
     if (req.method === "OPTIONS") {
       return NextResponse.next({ headers });
     }
-  
+
     return NextResponse.next({ headers });
-  };
+  }
 }

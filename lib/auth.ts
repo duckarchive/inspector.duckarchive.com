@@ -3,15 +3,12 @@ import prisma from "./db";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 
-// ridni.org API key
-const API_KEY = `API-89ef6011-a152-4296-y1b2-9bda6b0e49c5`;
-
 export const isAuthorized = async () => {
-  const headersList = await headers();
-  const authorization = headersList.get('authorization')
-  if (authorization === `Bearer ${API_KEY}`) {
-    return true;
-  }
+  // const headersList = await headers();
+  // const authorization = headersList.get('authorization')
+  // if (authorization === `Bearer ${API_KEY}`) {
+  //   return true;
+  // }
   return false;
 };
 
