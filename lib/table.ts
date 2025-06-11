@@ -1,3 +1,4 @@
+import { IRowNode } from "ag-grid-community";
 import { intlFormatDistance } from "date-fns/intlFormatDistance";
 
 export const sortNumeric = (a: string, b: string) => parseInt(a) - parseInt(b);
@@ -57,11 +58,11 @@ interface WithMatches {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const sortByMatches = (_: any, __: any, a: { data: WithMatches }, b: { data: WithMatches }) => {
+export const sortByMatches = (_: any, __: any, a: IRowNode<any>, b: IRowNode<any>) => {
   if (!a.data || !b.data) return 0;
   return (
-    b.data.matches.reduce((acc, { children_count }) => acc + (children_count || 0), 0) -
-    a.data.matches.reduce((acc, { children_count }) => acc + (children_count || 0), 0)
+    b.data.matches.reduce((acc: number, { children_count }: WithMatches['matches'][number]) => acc + (children_count || 0), 0) -
+    a.data.matches.reduce((acc: number, { children_count }: WithMatches['matches'][number]) => acc + (children_count || 0), 0)
   );
 };
 
