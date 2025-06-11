@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@duckarchive/framework':
+        specifier: github:duckarchive/framework
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5(@heroui/skeleton@2.2.10(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.0)(next@15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       '@heroui/accordion':
         specifier: ^2.2.13
         version: 2.2.13(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -214,6 +217,15 @@ packages:
   '@babel/runtime@7.27.0':
     resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==}
     engines: {node: '>=6.9.0'}
+
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5':
+    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5}
+    version: 0.0.1
+    peerDependencies:
+      '@heroui/skeleton': ^2.2.13
+      '@types/react': ^19.1.8
+      next: ^13.0.0
+      react: ^18.0.0
 
   '@emnapi/core@1.4.0':
     resolution: {integrity: sha512-H+N/FqT07NmLmt6OFFtDfwe8PNygprzBikrEMyQfgqSmT0vzE515Pz7R8izwB9q/zsH/MA64AKoul3sA6/CzVg==}
@@ -3624,6 +3636,13 @@ snapshots:
   '@babel/runtime@7.27.0':
     dependencies:
       regenerator-runtime: 0.14.1
+
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5(@heroui/skeleton@2.2.10(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.0)(next@15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@heroui/skeleton': 2.2.10(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@types/react': 19.1.0
+      next: 15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
 
   '@emnapi/core@1.4.0':
     dependencies:

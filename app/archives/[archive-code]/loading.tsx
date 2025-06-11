@@ -1,7 +1,6 @@
 "use client";
 
-import PagePanelSkeleton from "@/components/page-panel-skeleton";
-import DuckTableSkeleton from "@/components/duck-table-skeleton";
+import { DuckTableSkeleton, PagePanelSkeleton } from "@duckarchive/framework";
 
 export default function LoadingArchivesPage() {
   return (
