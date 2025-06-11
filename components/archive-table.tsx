@@ -3,7 +3,7 @@
 import { Archives } from "@/data/archives";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
-import DuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/duck-table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
@@ -25,15 +25,10 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel title={`${code} архів`} breadcrumbs={[code]} description={archive?.title || "Без назви"} />
-      <DuckTable<TableItem>
+      <InspectorDuckTable<TableItem>
         resources={resources}
         isLoading={isLoading}
-        enabledFilters={{
-          partFunds: true,
-          preUssrFunds: true,
-          ussrFunds: true,
-          online: true,
-        }}
+        isFiltersEnabled
         columns={[
           {
             field: "code",

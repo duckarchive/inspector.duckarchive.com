@@ -1,6 +1,6 @@
 "use client";
 
-import DuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/duck-table";
 import { FamilySearchProjectWithArchive } from "@/data/family-search";
 
 type TableItem = FamilySearchProjectWithArchive;
@@ -12,7 +12,7 @@ interface FSProjectTableProps {
 const FSProjectTable: React.FC<FSProjectTableProps> = ({ projects }) => {
 
   return (
-    <DuckTable<TableItem>
+    <InspectorDuckTable<TableItem>
       columns={[
         {
           field: "archive.code",

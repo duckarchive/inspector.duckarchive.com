@@ -10,7 +10,7 @@ import { Input } from "@heroui/input";
 import { Link } from "@heroui/link";
 import { FaSearch } from "react-icons/fa";
 import useSearchRequest from "@/hooks/useSearchRequest";
-import DuckTable from "./duck-table";
+import InspectorDuckTable from "./duck-table";
 import useIsMobile from "@/hooks/useIsMobile";
 import { sortCode } from "@/lib/table";
 import { sendGAEvent } from "@next/third-parties/google";
@@ -117,7 +117,7 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
         </div>
       </form>
       {isError && <p className="text-danger">Щось пішло не так</p>}
-      <DuckTable<TableItem>
+      <InspectorDuckTable<TableItem>
         isLoading={isLoading}
         columns={[
           {

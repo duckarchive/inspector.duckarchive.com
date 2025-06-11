@@ -1,7 +1,7 @@
 "use client";
 
 import { Resources } from "@/data/resources";
-import DuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/duck-table";
 import ResourceBadge from "./resource-badge";
 import { Resource } from "@prisma/client";
 import { Link } from "@heroui/link";
@@ -14,7 +14,7 @@ interface ResourceTableProps {
 
 const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
   return (
-    <DuckTable<TableItem>
+    <InspectorDuckTable<TableItem>
       resources={resources}
       columns={[
         {

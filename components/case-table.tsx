@@ -2,7 +2,7 @@
 
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
-import DuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/duck-table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
@@ -35,7 +35,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
         breadcrumbs={[archiveCode, fundCode, descriptionCode, code]}
         description={caseItem?.title || "Без назви"}
       />
-      <DuckTable<TableItem>
+      <InspectorDuckTable<TableItem>
         resources={resources}
         isLoading={isLoading}
         columns={[

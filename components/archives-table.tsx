@@ -3,7 +3,7 @@
 import { Archives } from "@/data/archives";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
-import DuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/duck-table";
 import { sortByTitle, sortText } from "@/lib/table";
 import useIsMobile from "@/hooks/useIsMobile";
 
@@ -18,7 +18,7 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
   const isMobile = useIsMobile();
 
   return (
-    <DuckTable<TableItem>
+    <InspectorDuckTable<TableItem>
       resources={resources}
       columns={[
         {

@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@duckarchive/framework':
         specifier: github:duckarchive/framework
-        version: https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5(@heroui/skeleton@2.2.10(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.0)(next@15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/15dbfc4e1492593df29098ccfec30bb01c9f82cb(4e0fd811823c1fa942d352530c097eb4)
       '@heroui/accordion':
         specifier: ^2.2.13
         version: 2.2.13(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -218,12 +218,18 @@ packages:
     resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==}
     engines: {node: '>=6.9.0'}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5':
-    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5}
-    version: 0.0.1
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/15dbfc4e1492593df29098ccfec30bb01c9f82cb':
+    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/15dbfc4e1492593df29098ccfec30bb01c9f82cb}
+    version: 0.0.2
     peerDependencies:
+      '@heroui/button': ^2.2.21
+      '@heroui/link': ^2.2.18
       '@heroui/skeleton': ^2.2.13
+      '@heroui/spinner': ^2.2.18
       '@types/react': ^19.1.8
+      ag-grid-community: ^33.3.2
+      ag-grid-react: ^33.3.2
+      date-fns: ^4.1.0
       next: ^13.0.0
       react: ^18.0.0
 
@@ -3637,10 +3643,16 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/0527f2190ac74075172283654f2f7e170305c4f5(@heroui/skeleton@2.2.10(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.0)(next@15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)':
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/15dbfc4e1492593df29098ccfec30bb01c9f82cb(4e0fd811823c1fa942d352530c097eb4)':
     dependencies:
+      '@heroui/button': 2.2.16(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@heroui/link': 2.2.13(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@heroui/skeleton': 2.2.10(@heroui/system@2.4.12(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.12(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@heroui/spinner': 2.2.13(@heroui/theme@2.4.12(tailwindcss@3.4.17))(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@types/react': 19.1.0
+      ag-grid-community: 33.2.1
+      ag-grid-react: 33.2.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      date-fns: 4.1.0
       next: 15.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 

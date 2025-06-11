@@ -3,7 +3,7 @@
 import { Report } from "@/data/report";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
-import DuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/duck-table";
 import { getSyncAtLabel, sortCode } from "@/lib/table";
 import ResourceBadge from "./resource-badge";
 
@@ -16,7 +16,7 @@ interface ReportTableProps {
 
 const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
   return (
-    <DuckTable<TableItem>
+    <InspectorDuckTable<TableItem>
       resources={resources}
       columns={[
         {
