@@ -3,7 +3,7 @@
 import { Report } from "@/data/report";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
-import InspectorDuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/table";
 import { getSyncAtLabel, sortCode } from "@/lib/table";
 import ResourceBadge from "./resource-badge";
 

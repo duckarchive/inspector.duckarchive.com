@@ -10,7 +10,7 @@ import { Input } from "@heroui/input";
 import { Link } from "@heroui/link";
 import { FaSearch } from "react-icons/fa";
 import useSearchRequest from "@/hooks/useSearchRequest";
-import InspectorDuckTable from "./duck-table";
+import InspectorDuckTable from "./table";
 import useIsMobile from "@/hooks/useIsMobile";
 import { sortCode } from "@/lib/table";
 import { sendGAEvent } from "@next/third-parties/google";

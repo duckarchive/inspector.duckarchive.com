@@ -2,7 +2,7 @@
 
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
-import InspectorDuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";

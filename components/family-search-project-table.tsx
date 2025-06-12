@@ -1,6 +1,6 @@
 "use client";
 
-import InspectorDuckTable from "@/components/duck-table";
+import InspectorDuckTable from "@/components/table";
 import { FamilySearchProjectWithArchive } from "@/data/family-search";
 
 type TableItem = FamilySearchProjectWithArchive;
