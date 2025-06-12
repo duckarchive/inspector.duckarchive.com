@@ -9,9 +9,9 @@ import { fontSans } from "@/config/fonts";
 import Navbar from "@/components/navbar";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
-import Loader from "@/components/loader";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
+import { DuckLoader } from "@duckarchive/framework";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
@@ -52,7 +52,7 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
             <NextIntlClientProvider locale={locale} messages={messages}>
-              <Suspense fallback={<Loader />}>
+              <Suspense fallback={<DuckLoader />}>
                 <Navbar />
                 <main className="container mx-auto max-w-7xl py-3 px-6 flex-grow flex flex-col h-[calc(100vh-4rem)]">{children}</main>
               </Suspense>
