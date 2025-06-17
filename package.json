@@ -11,10 +11,12 @@
     "cache:purge": "tsx -r dotenv/config scripts/purge-cache.ts",
     "deploy": "vercel deploy --prod",
     "prisma:generate": "prisma generate",
-    "lint": "eslint . --ext .ts,.tsx --fix"
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@duckarchive/framework": "github:duckarchive/framework",
+    "@duckarchive/prisma": "github:duckarchive/prisma",
     "@heroui/accordion": "^2.2.18",
     "@heroui/avatar": "^2.2.17",
     "@heroui/button": "^2.2.21",
@@ -44,7 +46,6 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
-    "duck-inspector-schema": "^1.14.1",
     "framer-motion": "^12.17.3",
     "intl-messageformat": "^10.7.16",
     "lodash": "^4.17.21",
@@ -84,14 +85,14 @@
     "typescript": "5.8.2"
   },
   "prisma": {
-    "schema": "node_modules/duck-inspector-schema/prisma/schema.prisma"
+    "schema": "node_modules/@duckarchive/prisma/prisma/inspector/schema.prisma"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@heroui/shared-utils",
       "@prisma/client",
       "@prisma/engines",
-      "duck-inspector-schema",
+      "@duckarchive/prisma",
       "esbuild",
       "prisma",
       "sharp",
