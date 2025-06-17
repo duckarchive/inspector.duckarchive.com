@@ -1,4 +1,4 @@
-import { User } from "duck-inspector-schema";
+import { User } from "@duckarchive/prisma";
 import prisma from "./db";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
