@@ -11,7 +11,7 @@
     "cache:purge": "tsx -r dotenv/config scripts/purge-cache.ts",
     "prisma:generate": "PRISMA_CLIENT_OUTPUT=\"$(pwd)/generated/prisma/client\" prisma generate",
     "lint": "eslint . --ext .ts,.tsx --fix",
-    "postinstall": "prisma generate"
+    "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
     "@duckarchive/framework": "github:duckarchive/framework",
