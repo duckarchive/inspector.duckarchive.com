@@ -44,3 +44,5 @@ next-env.d.ts
 
 # Notification temp data file
 _notification.json
+
+/generated/
