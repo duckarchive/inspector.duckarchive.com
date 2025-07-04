@@ -7,7 +7,7 @@ import { Archives } from "@/data/archives";
 import SelectArchive from "./select-archive";
 import { useTheme } from "next-themes";
 import { TYPE_LABEL } from "./resource-badge";
-import { ResourceType } from "@duckarchive/prisma";
+import { ResourceType } from "@/generated/prisma/client";
 
 interface DuckChartProps {
   archives: Archives;

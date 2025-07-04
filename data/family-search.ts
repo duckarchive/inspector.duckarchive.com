@@ -1,4 +1,4 @@
-import { Prisma } from "@duckarchive/prisma";
+import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 
 export type FamilySearchProjectWithArchive  = Prisma.FamilySearchProjectGetPayload<{
