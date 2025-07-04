@@ -11,6 +11,7 @@ export const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.WIKIPEDIA]: "primary",
   [ResourceType.BABYN_YAR]: "default",
   [ResourceType.WEBSITE]: "secondary",
+  [ResourceType.GOOGLE_DRIVE]: "info",
 };
 
 export const TYPE_LABEL: Record<ResourceType, string> = {
@@ -19,6 +20,7 @@ export const TYPE_LABEL: Record<ResourceType, string> = {
   [ResourceType.WIKIPEDIA]: "Вікіджерела",
   [ResourceType.BABYN_YAR]: 'Проєкт "Бабин Яр"',
   [ResourceType.WEBSITE]: "Вебсайт",
+  [ResourceType.GOOGLE_DRIVE]: "Google Drive",
 };
 
 interface ResourceBadgeProps {
