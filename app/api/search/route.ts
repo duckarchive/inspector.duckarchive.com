@@ -1,4 +1,4 @@
-import { Archive, Case, Description, Fund, Match } from "@prisma/client";
+import { Archive, Case, Description, Fund, Match } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { ErrorResponse } from "@/types";

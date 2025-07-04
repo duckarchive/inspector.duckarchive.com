@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import groupBy from "lodash/groupBy.js";
 import prisma from "@/lib/db";
-import { Archive, Case, DailyStat, Description, Fund, Match } from "@prisma/client";
+import { Archive, Case, DailyStat, Description, Fund, Match } from "@/generated/prisma/client";
 
 process.env.TZ = "UTC";
 
