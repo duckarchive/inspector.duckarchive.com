@@ -1,4 +1,4 @@
-import { User } from "@duckarchive/prisma";
+import { User } from "@/generated/prisma/client";
 import prisma from "./db";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
