@@ -5,7 +5,7 @@ import { ColDef, IRowNode } from "ag-grid-community";
 import { useEffect, useState } from "react";
 import ResourceBadge from "./resource-badge";
 import { getSyncAtLabel, sortByMatches, sortCode } from "@/lib/table";
-import { Match, Resource } from "@prisma/client";
+import { Match, Resource } from "@/generated/prisma/client";
 import { useTheme } from "next-themes";
 
 const INSPECTOR_FILTERS = [

@@ -1,4 +1,4 @@
-import { Match, Prisma } from "@prisma/client";
+import { Match, Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 import { isAuthorized } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";

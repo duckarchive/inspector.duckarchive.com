@@ -1,4 +1,4 @@
-import { Match } from "@prisma/client";
+import { Match } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 import { authorizeGoogle } from "@/lib/auth";
 import { ErrorResponse } from "@/types";

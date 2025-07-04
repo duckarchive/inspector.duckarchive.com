@@ -1,4 +1,4 @@
-import { Case, Match } from "@prisma/client";
+import { Case, Match } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";

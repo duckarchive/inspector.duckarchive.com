@@ -1,6 +1,6 @@
 'use client';
 
-import { Resource, ResourceType } from "@prisma/client";
+import { Resource, ResourceType } from "@/generated/prisma/client";
 import { PropsWithChildren } from "react";
 import { Chip } from "@heroui/chip";
 import { Tooltip } from "@heroui/tooltip";
