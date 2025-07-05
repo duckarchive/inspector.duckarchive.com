@@ -11,7 +11,7 @@ export const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.WIKIPEDIA]: "primary",
   [ResourceType.BABYN_YAR]: "default",
   [ResourceType.WEBSITE]: "secondary",
-  [ResourceType.GOOGLE_DRIVE]: "info",
+  [ResourceType.GOOGLE_DRIVE]: "danger",
 };
 
 export const TYPE_LABEL: Record<ResourceType, string> = {
