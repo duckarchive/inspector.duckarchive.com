@@ -7,7 +7,9 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig = {
   staticPageGenerationTimeout: 300,
-  staticGenerationMaxConcurrency: 2,
+  experimental: {
+    staticGenerationMaxConcurrency: 2,
+  }
 };
 
 module.exports = withNextIntl(nextConfig);
