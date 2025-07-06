@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@duckarchive/framework':
         specifier: github:duckarchive/framework
-        version: https://codeload.github.com/duckarchive/framework/tar.gz/e94ad8abfb50d27a0d19a835b97493c75bccad2a(b3a771db8e26b94656ab9e7353c1c2a2)
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/3f8f9402264462d6bf2c09de0b7cb9f6e69e6cee(b3a771db8e26b94656ab9e7353c1c2a2)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
         version: https://codeload.github.com/duckarchive/prisma/tar.gz/689cd95c311d76acbcccc0bec9a3bffa6bc92105(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.13(prisma@6.9.0(typescript@5.8.2)))
@@ -230,9 +230,9 @@ packages:
     resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
     engines: {node: '>=6.9.0'}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/e94ad8abfb50d27a0d19a835b97493c75bccad2a':
-    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/e94ad8abfb50d27a0d19a835b97493c75bccad2a}
-    version: 0.0.2
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/3f8f9402264462d6bf2c09de0b7cb9f6e69e6cee':
+    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/3f8f9402264462d6bf2c09de0b7cb9f6e69e6cee}
+    version: 0.1.1
     peerDependencies:
       '@heroui/button': ^2.2.21
       '@heroui/link': ^2.2.18
@@ -4414,7 +4414,7 @@ snapshots:
 
   '@babel/runtime@7.27.6': {}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/e94ad8abfb50d27a0d19a835b97493c75bccad2a(b3a771db8e26b94656ab9e7353c1c2a2)':
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/3f8f9402264462d6bf2c09de0b7cb9f6e69e6cee(b3a771db8e26b94656ab9e7353c1c2a2)':
     dependencies:
       '@heroui/button': 2.2.21(@heroui/system@2.4.17(@heroui/theme@2.4.17(tailwindcss@3.4.17))(framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.17(tailwindcss@3.4.17))(framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@heroui/link': 2.2.18(@heroui/system@2.4.17(@heroui/theme@2.4.17(tailwindcss@3.4.17))(framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.17(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -4425,6 +4425,7 @@ snapshots:
       ag-grid-react: 33.3.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       date-fns: 4.1.0
       framer-motion: 12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      lodash: 4.17.21
       next: 15.3.3(@opentelemetry/api@1.4.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 
