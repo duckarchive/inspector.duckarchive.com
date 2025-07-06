@@ -25,9 +25,11 @@ const DGSArchivePage: NextPage<DGSArchivePageProps> = async ({ params }) => {
   const p = await params;
   const archiveCode = decodeURIComponent(p["archive-code"]);
   const dgsList = await getDGSListByArchive(archiveCode);
+  const updatedAt = new Date().toISOString().split("T")[0];
 
   return (
     <DGSArchiveTable
+      updatedAt={updatedAt}
       items={dgsList}
     />
   );
