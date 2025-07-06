@@ -19,15 +19,26 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { HeartFilledIcon, Logo } from "@/components/icons";
 import SearchInputPortable from "./search-input-portable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { LocaleSelector } from "./locale-selector";
 import { useTranslations } from "next-intl";
 
 const NavbarComponent: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isInIframe, setIsInIframe] = useState(false);
   const t = useTranslations("navigation");
   const pathname = usePathname();
+  
+  useEffect(() => {
+    // Check if running inside an iframe
+    setIsInIframe(window !== window.top);
+  }, []);
+
+  // Return null if running inside an iframe
+  if (isInIframe) {
+    return null;
+  }
   
   return (
     <Navbar
