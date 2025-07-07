@@ -4,10 +4,9 @@ import { Link } from "@heroui/link";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import { DGSArchiveListItem } from "@/data/dgs-archive-list";
-import { DuckTable } from "@duckarchive/framework";
+import { DuckTable, sortCode } from "@duckarchive/framework";
 import { Button, ButtonGroup } from "@heroui/button";
 import { FaDownload } from "react-icons/fa";
-import { sortCode } from "@/lib/table";
 
 type TableItem = DGSArchiveListItem;
 type DownloadItem = {
