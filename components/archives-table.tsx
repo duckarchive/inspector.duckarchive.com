@@ -4,8 +4,9 @@ import { Archives } from "@/data/archives";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
-import { sortByTitle, sortText } from "@/lib/table";
+import { sortByTitle } from "@/lib/table";
 import useIsMobile from "@/hooks/useIsMobile";
+import { sortText } from "@duckarchive/framework";
 
 type TableItem = Archives[number];
 

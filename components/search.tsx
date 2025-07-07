@@ -12,7 +12,7 @@ import { FaSearch } from "react-icons/fa";
 import useSearchRequest from "@/hooks/useSearchRequest";
 import InspectorDuckTable from "./table";
 import useIsMobile from "@/hooks/useIsMobile";
-import { sortCode } from "@/lib/table";
+import { sortCode } from "@duckarchive/framework";
 import { sendGAEvent } from "@next/third-parties/google";
 import SelectArchive from "./select-archive";
 import SearchInputGuideModal from "./search-input-guide-modal";

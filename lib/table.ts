@@ -1,23 +1,6 @@
 import { IRowNode } from "ag-grid-community";
 import { intlFormatDistance } from "date-fns/intlFormatDistance";
-
-export const sortNumeric = (a: string, b: string) => parseInt(a) - parseInt(b);
-
-export const sortText = (a: string, b: string) => a.localeCompare(b);
-
-const groups = ["П", "Р", ""];
-export const sortCode = (a: string, b: string) => {
-  const upA = a.toUpperCase();
-  const upB = b.toUpperCase();
-  const idxA = groups.findIndex((group) => upA.startsWith(group));
-  const idxB = groups.findIndex((group) => upB.startsWith(group));
-  const qA = idxA - 1;
-  const qB = idxB - 1;
-  const pureA = upA.replace(/[^0-9]/g, "");
-  const pureB = upB.replace(/[^0-9]/g, "");
-  if (pureA === pureB) return qB - qA;
-  return sortNumeric(pureA, pureB);
-};
+import { sortText, sortCode, sortDate } from "@duckarchive/framework";
 
 interface WithCode {
   code: string;
@@ -27,7 +10,6 @@ export const sortByCode = (a: WithCode, b: WithCode) => sortCode(a.code, b.code)
 export const sortByTextCode = (a: WithCode, b: WithCode) => {
   return sortText(a.code, b.code);
 };
-
 
 interface WithTitle {
   title: string | null;
@@ -49,9 +31,7 @@ interface WithDates {
   created_at: Date | string;
   updated_at?: Date | string | null;
 }
-export const sortByDate = (a: WithDates, b: WithDates) => {
-  return new Date(b.updated_at || b.created_at).valueOf() - new Date(a.updated_at || a.created_at).valueOf();
-};
+export const sortByDate = (a: WithDates, b: WithDates) => sortDate(b.updated_at || b.created_at, a.updated_at || a.created_at);
 
 interface WithMatches {
   matches: { children_count: number | null }[];
