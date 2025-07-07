@@ -7,6 +7,7 @@ import { DGSArchiveListItem } from "@/data/dgs-archive-list";
 import { DuckTable } from "@duckarchive/framework";
 import { Button, ButtonGroup } from "@heroui/button";
 import { FaDownload } from "react-icons/fa";
+import { DELIMITER } from "@/app/iframe/family-search-dgs-list/[archive-code]/page";
 
 type TableItem = DGSArchiveListItem;
 type DownloadItem = {
@@ -28,7 +29,7 @@ const prepareToDownload = (items: TableItem[]): DownloadItem[] => {
 
 const DGSArchiveTable: React.FC<DGSArchiveTableProps> = ({ items, updatedAt }) => {
   const params = useCyrillicParams();
-  const code = params["archive-code"];
+  const [code, pagination] = params["archive-code"].split(DELIMITER);
 
   const handleDownloadJsonClick = () => {
     const jsonData = JSON.stringify(prepareToDownload(items), null, 2);
@@ -75,9 +76,11 @@ const DGSArchiveTable: React.FC<DGSArchiveTableProps> = ({ items, updatedAt }) =
     document.body.removeChild(a);
   };
 
+  const [page, total] = pagination.split('-');
+
   return (
     <>
-      <PagePanel title={`Список DGS кодів на сайті Family Search до справ ${code}`} description={`від ${updatedAt}`}>
+      <PagePanel title={`Список DGS кодів на сайті Family Search до справ ${code} (сторінка ${page} з ${total})`} description={`від ${updatedAt}`}>
         <ButtonGroup>
           <Button size="sm" variant="bordered" color="primary" onPress={handleDownloadJsonClick}>
             JSON
