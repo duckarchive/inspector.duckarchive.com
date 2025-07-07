@@ -7,6 +7,7 @@ import { DGSArchiveListItem } from "@/data/dgs-archive-list";
 import { DuckTable } from "@duckarchive/framework";
 import { Button, ButtonGroup } from "@heroui/button";
 import { FaDownload } from "react-icons/fa";
+import { sortCode } from "@/lib/table";
 
 type TableItem = DGSArchiveListItem;
 type DownloadItem = {
@@ -114,6 +115,7 @@ const DGSArchiveTable: React.FC<DGSArchiveTableProps> = ({ items, updatedAt }) =
             headerName: "Реквізити",
             filter: true,
             flex: 8,
+            comparator: sortCode,
             cellRenderer: (row: { value: number; data: TableItem }) =>
               row.value ? (
                 <Link href={`/search?q=${row.value}`} target="_blank" className="text-md">
