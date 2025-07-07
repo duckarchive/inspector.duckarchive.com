@@ -7,7 +7,6 @@ import { DGSArchiveListItem } from "@/data/dgs-archive-list";
 import { DuckTable } from "@duckarchive/framework";
 import { Button, ButtonGroup } from "@heroui/button";
 import { FaDownload } from "react-icons/fa";
-import { DELIMITER } from "@/app/iframe/family-search-dgs-list/[archive-code]/page";
 
 type TableItem = DGSArchiveListItem;
 type DownloadItem = {
@@ -29,7 +28,7 @@ const prepareToDownload = (items: TableItem[]): DownloadItem[] => {
 
 const DGSArchiveTable: React.FC<DGSArchiveTableProps> = ({ items, updatedAt }) => {
   const params = useCyrillicParams();
-  const [code, pagination] = params["archive-code"].split(DELIMITER);
+  const [code, pagination] = params["archive-code"].split("___");
 
   const handleDownloadJsonClick = () => {
     const jsonData = JSON.stringify(prepareToDownload(items), null, 2);

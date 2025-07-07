@@ -9,7 +9,6 @@ const nextConfig = {
   staticPageGenerationTimeout: 300,
   experimental: {
     staticGenerationMaxConcurrency: 2,
-    staticGenerationMinPagesPerWorker: 2,
   }
 };
 

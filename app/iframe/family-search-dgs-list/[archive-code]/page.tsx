@@ -8,8 +8,8 @@ import { Snippet } from "@heroui/snippet";
 export const dynamic = "force-static";
 export const revalidate = false;
 export const dynamicParams = false;
-export const PAGE_SIZE = 50000; // 50k items per page
-export const DELIMITER = "___"; // delimiter for archive code and page number
+const PAGE_SIZE = 50000; // 50k items per page
+const DELIMITER = "___"; // delimiter for archive code and page number
 
 interface DGSArchivePageStaticParams {
   "archive-code": string;
@@ -102,13 +102,13 @@ const DGSArchivePage: NextPage<DGSArchivePageProps> = async ({ params }) => {
             </li>
             <li>Увійдіть в адмін-панель вашого сайту.</li>
             <li>Відкрийте сторінку або запис, куди хочете вставити список.</li>
-            <li>Перейдіть у режим редагування HTML (у WordPress це "Блок Коду" або "HTML").</li>
+            <li>Перейдіть у режим редагування HTML (у WordPress це &quot;Блок Коду&quot; або &quot;HTML&quot;).</li>
             <li>Вставте скопійований код у потрібне місце.</li>
             <li>Збережіть зміни та перегляньте сторінку.</li>
           </ol>
           <span className="block mt-2">
             Аналогічно можна вставити код у більшість популярних конструкторів сайтів (Wix, Tilda, Joomla тощо) —
-            шукайте можливість додати "HTML" або "Власний код".
+            шукайте можливість додати &quot;HTML&quot; або &quot;Власний код&quot;.
           </span>
         </div>
         {Array.from({ length: total }, (_, i) => (
@@ -119,7 +119,7 @@ const DGSArchivePage: NextPage<DGSArchivePageProps> = async ({ params }) => {
             <Snippet
               symbol={null}
               className="wrap whitespace-pre-wrap bg-gray-100 p-4 rounded-md"
-            >{`<iframe src=https://inspector.duckarchive.com/iframe/family-search-dgs-list/${archiveCode}${DELIMITER}${
+            >{`<iframe src="https://inspector.duckarchive.com/iframe/family-search-dgs-list/${archiveCode}${DELIMITER}${
               i + 1
             }-${total}" width="100%" height="600" frameborder="0"></iframe>`}</Snippet>
           </div>
