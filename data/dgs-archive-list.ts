@@ -1,4 +1,3 @@
-import { DELIMITER } from "@/app/iframe/family-search-dgs-list/[archive-code]/page";
 import { Match, ResourceType } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 import { parseDBParams } from "@duckarchive/framework";
@@ -6,7 +5,7 @@ import { parseDBParams } from "@duckarchive/framework";
 export interface DGSArchiveListItem extends Pick<Match, "id" | "full_code" | "url" | "api_params"> {}
 
 export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchiveListItem[]> => {
-  const [code, pagination] = archiveCode.split(DELIMITER);
+  const [code, pagination] = archiveCode.split("___");
   const [page, _total] = pagination ? pagination.split("-") : [undefined, undefined];
   const dgsList = await prisma.match.findMany({
     where: {
