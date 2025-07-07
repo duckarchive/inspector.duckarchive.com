@@ -26,9 +26,6 @@ importers:
       '@heroui/chip':
         specifier: ^2.2.17
         version: 2.2.17(@heroui/system@2.4.17(@heroui/theme@2.4.17(tailwindcss@3.4.17))(framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.17(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@heroui/code':
-        specifier: ^2.2.16
-        version: 2.2.16(@heroui/theme@2.4.17(tailwindcss@3.4.17))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@heroui/input':
         specifier: ^2.4.21
         version: 2.4.21(@heroui/system@2.4.17(@heroui/theme@2.4.17(tailwindcss@3.4.17))(framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.17(tailwindcss@3.4.17))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -8697,7 +8694,7 @@ snapshots:
   normalize-package-data@2.5.0:
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.22.2
+      resolve: 1.22.10
       semver: 5.7.2
       validate-npm-package-license: 3.0.4
 

@@ -1,3 +1,4 @@
+import { DELIMITER } from "@/app/iframe/family-search-dgs-list/[archive-code]/page";
 import { Match, ResourceType } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 import { parseDBParams } from "@duckarchive/framework";
@@ -5,10 +6,12 @@ import { parseDBParams } from "@duckarchive/framework";
 export interface DGSArchiveListItem extends Pick<Match, "id" | "full_code" | "url" | "api_params"> {}
 
 export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchiveListItem[]> => {
+  const [code, pagination] = archiveCode.split(DELIMITER);
+  const [page, _total] = pagination ? pagination.split("-") : [undefined, undefined];
   const dgsList = await prisma.match.findMany({
     where: {
       archive: {
-        code: archiveCode,
+        code,
       },
       resource: {
         type: ResourceType.FAMILY_SEARCH,
@@ -38,12 +41,17 @@ export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchi
         },
       }
     },
+    take: 50000,
+    skip: page ? (parseInt(page, 10) - 1) * 50000 : 0,
+    orderBy: {
+      api_params: "asc",
+    },
   });
 
   return dgsList.map((item) => {
     return {
       ...item,
-      full_code: item.full_code || `${archiveCode}-${item.fund?.code || ""}-${item.description?.code || ""}-${item.case?.code || ""}`.trim(),
+      full_code: item.full_code || `${code}-${item.fund?.code || ""}-${item.description?.code || ""}-${item.case?.code || ""}`.trim(),
       url: item.full_code ? item.url : "",
       api_params: parseDBParams(item.api_params).dgs,
     };
