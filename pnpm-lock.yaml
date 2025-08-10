@@ -13,7 +13,7 @@ importers:
         version: https://codeload.github.com/duckarchive/framework/tar.gz/55df13c52c276349beaac9382608bf76195eba10(b3a771db8e26b94656ab9e7353c1c2a2)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
-        version: https://codeload.github.com/duckarchive/prisma/tar.gz/689cd95c311d76acbcccc0bec9a3bffa6bc92105(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.13(prisma@6.9.0(typescript@5.8.2)))
+        version: https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.13(prisma@6.9.0(typescript@5.8.2)))
       '@heroui/accordion':
         specifier: ^2.2.18
         version: 2.2.18(@heroui/system@2.4.17(@heroui/theme@2.4.17(tailwindcss@3.4.17))(framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.17(tailwindcss@3.4.17))(framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -243,9 +243,9 @@ packages:
       next: ^15.2.4
       react: ^19.1.0
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/689cd95c311d76acbcccc0bec9a3bffa6bc92105':
-    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/689cd95c311d76acbcccc0bec9a3bffa6bc92105}
-    version: 2.0.0
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415':
+    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415}
+    version: 2.0.1
     peerDependencies:
       '@prisma/client': '>=5'
       prisma-zod-generator: ^0.8.13
@@ -4005,8 +4005,8 @@ packages:
   spdx-expression-parse@3.0.1:
     resolution: {integrity: sha512-cbqHunsQWnJNE6KhVSMsMeH5H/L9EpymbzqTQ3uLwNCLZ1Q481oWaofqH7nO6V07xlXwY6PhQdQ2IedWx/ZK4Q==}
 
-  spdx-license-ids@3.0.21:
-    resolution: {integrity: sha512-Bvg/8F5XephndSK3JffaRqdT+gyhfqIPwDHpX80tJrF8QQRYMo8sNMeaZ2Dp5+jhwKnUmIOyFFQfHRkjJm5nXg==}
+  spdx-license-ids@3.0.22:
+    resolution: {integrity: sha512-4PRT4nh1EImPbt2jASOKHX7PB7I+e4IWNLvkKFDxNhJlfjbYlleYQh285Z/3mPTHSAK/AvdMmw5BNNuYH8ShgQ==}
 
   stable-hash@0.0.5:
     resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
@@ -4426,7 +4426,7 @@ snapshots:
       next: 15.3.3(@opentelemetry/api@1.4.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/689cd95c311d76acbcccc0bec9a3bffa6bc92105(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.13(prisma@6.9.0(typescript@5.8.2)))':
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415(@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.13(prisma@6.9.0(typescript@5.8.2)))':
     dependencies:
       '@prisma/client': 6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2)
       prisma-zod-generator: 0.8.13(prisma@6.9.0(typescript@5.8.2))
@@ -9250,16 +9250,16 @@ snapshots:
   spdx-correct@3.2.0:
     dependencies:
       spdx-expression-parse: 3.0.1
-      spdx-license-ids: 3.0.21
+      spdx-license-ids: 3.0.22
 
   spdx-exceptions@2.5.0: {}
 
   spdx-expression-parse@3.0.1:
     dependencies:
       spdx-exceptions: 2.5.0
-      spdx-license-ids: 3.0.21
+      spdx-license-ids: 3.0.22
 
-  spdx-license-ids@3.0.21: {}
+  spdx-license-ids@3.0.22: {}
 
   stable-hash@0.0.5: {}
 
