@@ -78,6 +78,15 @@ const InspectorDuckTable = <T,>({
 
   useEffect(() => {
     setMounted(true);
+    if (typeof navigator !== "undefined") {
+      const ua = navigator.userAgent;
+      const firefoxMatch = ua.match(/Firefox\/(\d+)/);
+      if (firefoxMatch && parseInt(firefoxMatch[1], 10) <= 115) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        import("ag-grid-community/styles/ag-grid.css");
+      }
+    }
   }, []);
 
   if (!mounted) {

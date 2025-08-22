@@ -82,6 +82,9 @@
     "tsx": "^4.20.2",
     "typescript": "5.8.2"
   },
+  "browserslist": [
+    "firefox 115"
+  ],
   "prisma": {
     "schema": "node_modules/@duckarchive/prisma/prisma/inspector/schema.prisma"
   },
