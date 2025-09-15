@@ -7,6 +7,7 @@ import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { PropsWithChildren, useEffect } from "react";
 import useNoRussians from "@/hooks/useNoRussians";
 import { DonationProvider } from "@/providers/donation";
+import { ToastProvider } from "@heroui/toast";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -35,6 +36,7 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
         <DonationProvider>
+          <ToastProvider />
           <ForeignUserProvider>{children}</ForeignUserProvider>
         </DonationProvider>
       </NextThemesProvider>
