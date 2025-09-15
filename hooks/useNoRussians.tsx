@@ -30,8 +30,6 @@ const useNoRussians = () => {
       const ukPos = preferredLangs.findIndex((l) => l.startsWith("uk"));
       const ruPos = preferredLangs.findIndex((l) => l.startsWith("ru"));
 
-      console.log("Preferred languages:", preferredLangs, "ukPos:", ukPos, "ruPos:", ruPos);
-
       if (ukPos !== -1 && ruPos === -1) {
         // all good
         return;
