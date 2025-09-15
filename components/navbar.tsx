@@ -9,27 +9,90 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Link } from "@heroui/link";
+import { Link, LinkProps } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
-import NextLink from "next/link";
+import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import clsx from "clsx";
 import { FaTelegram } from "react-icons/fa";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { HeartFilledIcon, Logo } from "@/components/icons";
-import SearchInputPortable from "./search-input-portable";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { LocaleSelector } from "./locale-selector";
 import { useTranslations } from "next-intl";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
+import { IoChevronDown } from "react-icons/io5";
+import { Accordion, AccordionItem } from "@heroui/accordion";
+
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+interface NavWithChildren extends Omit<NavItem, "href"> {
+  children: NavItem[];
+}
+
+const ExpandableNav: React.FC<NavWithChildren> = ({ label, children }) => {
+  const [selectedKeys, setSelectedKeys] = useState(new Set(["1"]));
+  return (
+    <Accordion
+      selectionMode="single"
+      isCompact
+      className="p-0"
+      variant="light"
+      selectedKeys={selectedKeys}
+      onSelectionChange={setSelectedKeys}
+    >
+      <AccordionItem
+        key={label}
+        aria-label={label}
+        title={label}
+        classNames={{
+          trigger: "p-0 gap-1",
+          titleWrapper: "grow-0",
+        }}
+        disableIndicatorAnimation
+        indicator={({ isOpen }) => (
+          <IoChevronDown className={`${isOpen ? "rotate-180" : ""} transition-transform inline`} />
+        )}
+      >
+        <ul className="mx-4 mt-2 flex flex-col gap-2">
+          {children.map((child) => (
+            <li key={child.href}>
+              <NavLink
+                href={child.href}
+              >
+                {child.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </AccordionItem>
+    </Accordion>
+  );
+};
+
+const NavLink: React.FC<LinkProps> = (props) => (
+  <Link
+    as={NextLink}
+    color="foreground"
+    target={props.href?.startsWith("https") ? "_blank" : undefined}
+    href={props.href}
+    {...props}
+  >
+    {props.children}
+  </Link>
+);
 
 const NavbarComponent: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInIframe, setIsInIframe] = useState(false);
+  const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
   const t = useTranslations("navigation");
   const pathname = usePathname();
-  
+
   useEffect(() => {
     // Check if running inside an iframe
     setIsInIframe(window !== window.top);
@@ -39,15 +102,10 @@ const NavbarComponent: React.FC = () => {
   if (isInIframe) {
     return null;
   }
-  
+
   return (
-    <Navbar
-      maxWidth="xl"
-      position="sticky"
-      isMenuOpen={isMenuOpen}
-      onMenuOpenChange={setIsMenuOpen}
-    >
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+    <Navbar maxWidth="xl" position="sticky" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent className="basis-1/5" justify="start">
         <NavbarBrand as="li" className="max-w-fit">
           <NextLink className="text-transparent hover:text-warning flex justify-start items-center gap-1" href="/">
             <Logo className="duration-200 stroke-foreground" />
@@ -56,48 +114,46 @@ const NavbarComponent: React.FC = () => {
         </NavbarBrand>
         <NavbarItem className="hidden md:flex ml-2">
           <ul className="flex gap-4 justify-start">
-            {siteConfig.navItems.map((item) => (
-              <NavbarItem key={item.href} isActive={pathname === item.href}>
-                <NextLink
-                  className={clsx(
-                    linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium",
-                  )}
-                  color="foreground"
-                  target={item.href.startsWith('https') ? "_blank": undefined}
-                  href={item.href}
+            {siteConfig.navItems.map((item) =>
+              item.children ? (
+                <Dropdown
+                  key={item.label}
+                  isOpen={activeSubMenu === item.label}
+                  onOpenChange={(isOpen) => setActiveSubMenu(isOpen ? item.label : null)}
+                  placement="bottom-start"
+                  triggerScaleOnOpen={false}
                 >
-                  {t(item.label)}
-                </NextLink>
-              </NavbarItem>
-            ))}
+                  <DropdownTrigger className="cursor-pointer select-none">
+                    <div
+                      className={clsx("flex items-center gap-1", {
+                        "opacity-50": activeSubMenu === item.label,
+                      })}
+                    >
+                      {t(item.label)}
+                      <IoChevronDown
+                        className={`${activeSubMenu === item.label ? "rotate-180" : ""} transition-transform inline`}
+                      />
+                    </div>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label={item.label} variant="light" color="default">
+                    {item.children.map((child) => (
+                      <DropdownItem key={child.href} as={NextLink} href={child.href} color="primary">
+                        {t(child.label)}
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
+                </Dropdown>
+              ) : (
+                <NavbarItem key={item.href} isActive={item.href === pathname} className="px-0">
+                  <NavLink href={item.href}>{t(item.label)}</NavLink>
+                </NavbarItem>
+              )
+            )}
           </ul>
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full gap-2" justify="end">
-        <NavbarItem className="hidden md:flex">
-          <Link isExternal aria-label="Support Project" className="text-default-500" href={siteConfig.links.sponsor}>
-            <HeartFilledIcon className="text-danger" />
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <Link isExternal aria-label="Telegram Chat" className="text-default-500" href={siteConfig.links.telegram}>
-            <FaTelegram size={20} />
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <ThemeSwitch />
-        </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <LocaleSelector />
-        </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <SearchInputPortable />
-        </NavbarItem>
-      </NavbarContent>
-
-      <NavbarContent className="md:hidden basis-1 pl-4" justify="end">
+      <NavbarContent className="basis-1 pl-4" justify="end">
         <Link isExternal aria-label="Support Project" className="text-default-500" href={siteConfig.links.sponsor}>
           <HeartFilledIcon className="text-danger" />
         </Link>
@@ -105,21 +161,27 @@ const NavbarComponent: React.FC = () => {
           <FaTelegram size={20} />
         </Link>
         <ThemeSwitch />
-        <LocaleSelector />
-        <NavbarMenuToggle />
+        {/* <LocaleSelector /> */}
+        <NavbarMenuToggle className="md:hidden" />
       </NavbarContent>
 
       <NavbarMenu>
-        <SearchInputPortable />
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`} isActive={pathname === item.href}>
-              <Link color="foreground" href={item.href} target={item.href.startsWith('https') ? "_blank": undefined} onPress={() => setIsMenuOpen((prev) => !prev)} size="lg">
-                {t(item.label)}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
+        <ul className="mx-4 mt-2 flex flex-col gap-2">
+          {siteConfig.navItems.map((item) =>
+            item.children ? (
+              <ExpandableNav
+                key={item.label}
+                {...item}
+              />
+            ) : (
+              <NavbarMenuItem key={`${item.label}`} isActive={pathname === item.href}>
+                <NavLink href={item.href} onPress={() => setIsMenuOpen((prev) => !prev)}>
+                  {t(item.label)}
+                </NavLink>
+              </NavbarMenuItem>
+            )
+          )}
+        </ul>
       </NavbarMenu>
     </Navbar>
   );

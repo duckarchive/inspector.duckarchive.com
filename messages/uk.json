@@ -18,6 +18,9 @@
   },
   "navigation": {
     "logo": "Інспектор",
+    "resources": "Джерела",
+    "main": "Головна",
+    "inspector": "Інспектор",
     "search": "Пошук",
     "archives": "Архіви",
     "daily-updates": "Звіт за день",

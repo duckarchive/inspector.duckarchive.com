@@ -6,24 +6,33 @@ export const siteConfig = {
   description: "description",
   navItems: [
     {
-      label: "search",
-      href: "/search",
-    },
-    {
-      label: "archives",
-      href: "/archives",
-    },
-    // {
-    //   label: "Джерела",
-    //   href: "/resources",
-    // },
-    {
-      label: "daily-updates",
-      href: "/daily-updates",
-    },
-    {
-      label: "stats",
-      href: "/stats",
+      label: "inspector",
+      children: [
+        {
+          label: "main",
+          href: "https://inspector.duckarchive.com/",
+        },
+        {
+          label: "search",
+          href: "https://inspector.duckarchive.com/search",
+        },
+        {
+          label: "archives",
+          href: "https://inspector.duckarchive.com/archives",
+        },
+        {
+          label: "resources",
+          href: "https://inspector.duckarchive.com/resources",
+        },
+        {
+          label: "daily-updates",
+          href: "https://inspector.duckarchive.com/daily-updates",
+        },
+        {
+          label: "stats",
+          href: "https://inspector.duckarchive.com/stats",
+        },
+      ],
     },
     {
       label: "docs",
