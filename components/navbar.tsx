@@ -10,8 +10,7 @@ import {
   NavbarMenuItem,
 } from "@heroui/navbar";
 import { Link, LinkProps } from "@heroui/link";
-import { link as linkStyles } from "@heroui/theme";
-import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import NextLink from "next/link";
 import clsx from "clsx";
 import { FaTelegram } from "react-icons/fa";
 
@@ -23,7 +22,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
 import { IoChevronDown } from "react-icons/io5";
-import { Accordion, AccordionItem } from "@heroui/accordion";
+import { Accordion, AccordionItem, AccordionProps } from "@heroui/accordion";
 
 interface NavItem {
   label: string;
@@ -35,11 +34,11 @@ interface NavWithChildren extends Omit<NavItem, "href"> {
 }
 
 const ExpandableNav: React.FC<NavWithChildren> = ({ label, children }) => {
-  const [selectedKeys, setSelectedKeys] = useState(new Set(["1"]));
+  const [selectedKeys, setSelectedKeys] = useState<AccordionProps["selectedKeys"]>();
   return (
     <Accordion
-      selectionMode="single"
       isCompact
+      selectionMode="single"
       className="p-0"
       variant="light"
       selectedKeys={selectedKeys}
@@ -103,6 +102,15 @@ const NavbarComponent: React.FC = () => {
     return null;
   }
 
+  const navItems = useMemo(() => siteConfig.navItems.map((item) => ({
+    ...item,
+    label: t(item.label),
+    children: item.children?.map((child) => ({
+      ...child,
+      label: t(child.label),
+    })),
+  })), [t, siteConfig.navItems]);
+
   return (
     <Navbar maxWidth="xl" position="sticky" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="basis-1/5" justify="start">
@@ -114,7 +122,7 @@ const NavbarComponent: React.FC = () => {
         </NavbarBrand>
         <NavbarItem className="hidden md:flex ml-2">
           <ul className="flex gap-4 justify-start">
-            {siteConfig.navItems.map((item) =>
+            {navItems.map((item) =>
               item.children ? (
                 <Dropdown
                   key={item.label}
@@ -129,7 +137,7 @@ const NavbarComponent: React.FC = () => {
                         "opacity-50": activeSubMenu === item.label,
                       })}
                     >
-                      {t(item.label)}
+                      {item.label}
                       <IoChevronDown
                         className={`${activeSubMenu === item.label ? "rotate-180" : ""} transition-transform inline`}
                       />
@@ -138,14 +146,14 @@ const NavbarComponent: React.FC = () => {
                   <DropdownMenu aria-label={item.label} variant="light" color="default">
                     {item.children.map((child) => (
                       <DropdownItem key={child.href} as={NextLink} href={child.href} color="primary">
-                        {t(child.label)}
+                        {child.label}
                       </DropdownItem>
                     ))}
                   </DropdownMenu>
                 </Dropdown>
               ) : (
                 <NavbarItem key={item.href} isActive={item.href === pathname} className="px-0">
-                  <NavLink href={item.href}>{t(item.label)}</NavLink>
+                  <NavLink href={item.href}>{item.label}</NavLink>
                 </NavbarItem>
               )
             )}
@@ -167,16 +175,17 @@ const NavbarComponent: React.FC = () => {
 
       <NavbarMenu>
         <ul className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navItems.map((item) =>
+          {navItems.map((item) =>
             item.children ? (
               <ExpandableNav
                 key={item.label}
-                {...item}
+                children={item.children}
+                label={item.label}
               />
             ) : (
               <NavbarMenuItem key={`${item.label}`} isActive={pathname === item.href}>
                 <NavLink href={item.href} onPress={() => setIsMenuOpen((prev) => !prev)}>
-                  {t(item.label)}
+                  {item.label}
                 </NavLink>
               </NavbarMenuItem>
             )
