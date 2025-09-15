@@ -14,26 +14,31 @@ import NextLink from "next/link";
 import clsx from "clsx";
 import { FaTelegram } from "react-icons/fa";
 
-import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { HeartFilledIcon, Logo } from "@/components/icons";
 import { useState, useEffect, useMemo } from "react";
-import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
 import { IoChevronDown } from "react-icons/io5";
 import { Accordion, AccordionItem, AccordionProps } from "@heroui/accordion";
+import navigation from "./navigation.json";
+import { siteConfig } from "@/config/site";
+import { usePathname } from "next/navigation";
+
+const LINK_CLASS = "text-base underline-offset-4 hover:underline hover:opacity-70";
 
 interface NavItem {
   label: string;
   href: string;
+  isActive?: boolean;
 }
 
 interface NavWithChildren extends Omit<NavItem, "href"> {
+  isActive?: boolean;
   children: NavItem[];
 }
 
-const ExpandableNav: React.FC<NavWithChildren> = ({ label, children }) => {
+const ExpandableNav: React.FC<NavWithChildren> = ({ label, children, isActive }) => {
   const [selectedKeys, setSelectedKeys] = useState<AccordionProps["selectedKeys"]>();
   return (
     <Accordion
@@ -41,6 +46,7 @@ const ExpandableNav: React.FC<NavWithChildren> = ({ label, children }) => {
       selectionMode="single"
       className="p-0"
       variant="light"
+      defaultSelectedKeys={isActive ? [label] : undefined}
       selectedKeys={selectedKeys}
       onSelectionChange={setSelectedKeys}
     >
@@ -49,8 +55,8 @@ const ExpandableNav: React.FC<NavWithChildren> = ({ label, children }) => {
         aria-label={label}
         title={label}
         classNames={{
-          trigger: "p-0 gap-1",
-          titleWrapper: "grow-0",
+          trigger: `p-0 gap-1 w-auto`,
+          titleWrapper: `grow-0`,
         }}
         disableIndicatorAnimation
         indicator={({ isOpen }) => (
@@ -60,9 +66,7 @@ const ExpandableNav: React.FC<NavWithChildren> = ({ label, children }) => {
         <ul className="mx-4 mt-2 flex flex-col gap-2">
           {children.map((child) => (
             <li key={child.href}>
-              <NavLink
-                href={child.href}
-              >
+              <NavLink href={child.href} className={clsx({ "underline underline-offset-4": child.isActive })}>
                 {child.label}
               </NavLink>
             </li>
@@ -73,12 +77,48 @@ const ExpandableNav: React.FC<NavWithChildren> = ({ label, children }) => {
   );
 };
 
+const DropdownNav: React.FC<NavWithChildren> = ({ label, children, isActive }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <Dropdown
+      key={label}
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
+      placement="bottom-start"
+      radius="sm"
+      triggerScaleOnOpen={false}
+    >
+      <DropdownTrigger className="cursor-pointer select-none">
+        <div className={clsx("flex items-center gap-1", LINK_CLASS, { "underline underline-offset-4": isActive })}>
+          {label}
+          <IoChevronDown className={`${isOpen ? "rotate-180" : ""} transition-transform inline`} />
+        </div>
+      </DropdownTrigger>
+      <DropdownMenu aria-label={label} variant="light" color="default">
+        {children.map((child) => (
+          <DropdownItem
+            key={child.href}
+            as={NextLink}
+            href={child.href}
+            color="default"
+            className={clsx({ "underline underline-offset-4": child.isActive })}
+            classNames={{ title: LINK_CLASS }}
+          >
+            {child.label}
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
+  );
+};
+
 const NavLink: React.FC<LinkProps> = (props) => (
   <Link
     as={NextLink}
     color="foreground"
     target={props.href?.startsWith("https") ? "_blank" : undefined}
     href={props.href}
+    className={clsx(LINK_CLASS, props.className)}
     {...props}
   >
     {props.children}
@@ -88,7 +128,6 @@ const NavLink: React.FC<LinkProps> = (props) => (
 const NavbarComponent: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInIframe, setIsInIframe] = useState(false);
-  const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
   const t = useTranslations("navigation");
   const pathname = usePathname();
 
@@ -102,14 +141,25 @@ const NavbarComponent: React.FC = () => {
     return null;
   }
 
-  const navItems = useMemo(() => siteConfig.navItems.map((item) => ({
-    ...item,
-    label: t(item.label),
-    children: item.children?.map((child) => ({
-      ...child,
-      label: t(child.label),
-    })),
-  })), [t, siteConfig.navItems]);
+  const navItems = useMemo(() => {
+    if (!navigation || typeof window === "undefined") return [];
+    const fullUrl = window.location.origin + pathname;
+    return navigation.map((item) => {
+      const isActive = item.href
+        ? fullUrl === item.href
+        : item.children?.some((child) => fullUrl.startsWith(child.href));
+      return {
+        ...item,
+        label: item.label,
+        isActive,
+        children: item.children?.map((child) => ({
+          ...child,
+          isActive: fullUrl === child.href,
+          label: child.label,
+        })),
+      };
+    });
+  }, [pathname, navigation]);
 
   return (
     <Navbar maxWidth="xl" position="sticky" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
@@ -124,35 +174,9 @@ const NavbarComponent: React.FC = () => {
           <ul className="flex gap-4 justify-start">
             {navItems.map((item) =>
               item.children ? (
-                <Dropdown
-                  key={item.label}
-                  isOpen={activeSubMenu === item.label}
-                  onOpenChange={(isOpen) => setActiveSubMenu(isOpen ? item.label : null)}
-                  placement="bottom-start"
-                  triggerScaleOnOpen={false}
-                >
-                  <DropdownTrigger className="cursor-pointer select-none">
-                    <div
-                      className={clsx("flex items-center gap-1", {
-                        "opacity-50": activeSubMenu === item.label,
-                      })}
-                    >
-                      {item.label}
-                      <IoChevronDown
-                        className={`${activeSubMenu === item.label ? "rotate-180" : ""} transition-transform inline`}
-                      />
-                    </div>
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label={item.label} variant="light" color="default">
-                    {item.children.map((child) => (
-                      <DropdownItem key={child.href} as={NextLink} href={child.href} color="primary">
-                        {child.label}
-                      </DropdownItem>
-                    ))}
-                  </DropdownMenu>
-                </Dropdown>
+                <DropdownNav key={item.label} isActive={item.isActive} label={item.label} children={item.children} />
               ) : (
-                <NavbarItem key={item.href} isActive={item.href === pathname} className="px-0">
+                <NavbarItem key={item.href} isActive={item.isActive} className="px-0">
                   <NavLink href={item.href}>{item.label}</NavLink>
                 </NavbarItem>
               )
@@ -177,13 +201,9 @@ const NavbarComponent: React.FC = () => {
         <ul className="mx-4 mt-2 flex flex-col gap-2">
           {navItems.map((item) =>
             item.children ? (
-              <ExpandableNav
-                key={item.label}
-                children={item.children}
-                label={item.label}
-              />
+              <ExpandableNav key={item.label} isActive={item.isActive} children={item.children} label={item.label} />
             ) : (
-              <NavbarMenuItem key={`${item.label}`} isActive={pathname === item.href}>
+              <NavbarMenuItem key={`${item.label}`} isActive={item.isActive}>
                 <NavLink href={item.href} onPress={() => setIsMenuOpen((prev) => !prev)}>
                   {item.label}
                 </NavLink>
