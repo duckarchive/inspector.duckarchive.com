@@ -17,7 +17,6 @@ import { FaTelegram } from "react-icons/fa";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { HeartFilledIcon } from "@/components/icons";
 import { useState, useEffect, useMemo } from "react";
-import { useTranslations } from "next-intl";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
 import { IoChevronDown } from "react-icons/io5";
 import { Accordion, AccordionItem, AccordionProps } from "@heroui/accordion";
@@ -25,6 +24,8 @@ import navigation from "./navigation.json";
 import { siteConfig } from "@/config/site";
 import { usePathname } from "next/navigation";
 import SelectProject from "@/components/DuckNavbar/select-project";
+import { Divider } from "@heroui/divider";
+import AuthButton from "@/components/DuckNavbar/auth-button";
 
 const LINK_CLASS = "text-base underline-offset-4 hover:underline hover:opacity-70";
 
@@ -134,7 +135,6 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({ siteUrl }) => {
   const originSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInIframe, setIsInIframe] = useState(false);
-  const t = useTranslations("navigation");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -175,11 +175,27 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({ siteUrl }) => {
         </Link>
         <ThemeSwitch />
         {/* <LocaleSelector /> */}
+        <NavbarItem
+          className="hidden md:flex"
+          style={{
+            colorScheme: "normal",
+          }}
+        >
+          <AuthButton />
+        </NavbarItem>
         <NavbarMenuToggle className="md:hidden" />
       </NavbarContent>
 
       <NavbarMenu>
         <ul className="mx-4 mt-2 flex flex-col gap-2">
+          <NavbarItem
+            style={{
+              colorScheme: "normal",
+            }}
+          >
+            <AuthButton isFull />
+            <Divider className="my-4" />
+          </NavbarItem>
           {currentProject?.children?.map((item) => (
             <NavbarMenuItem key={`${item.label}`} isActive={item.path === pathname}>
               <NavLink href={item.path} onPress={() => setIsMenuOpen((prev) => !prev)}>
