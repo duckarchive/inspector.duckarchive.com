@@ -4,7 +4,7 @@ servers:
     description: Production server
 info:
   title: inspector.duckarchive.com API
-  version: 1.3.0
+  version: 1.4.0
 components:
   securitySchemes:
     bearerAuth:
@@ -44,22 +44,28 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    archive_code:
-                      type: string
-                    fund_code:
-                      type: string
-                    description_code:
-                      type: string
-                    case_code:
-                      type: string
-                    url:
-                      type: string
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                    description: Total number of matches found
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        archive_code:
+                          type: string
+                        fund_code:
+                          type: string
+                        description_code:
+                          type: string
+                        case_code:
+                          type: string
+                        url:
+                          type: string
         "400":
           description: Bad Request
           content:
@@ -239,6 +245,13 @@ paths:
           schema:
             type: string
           description: The code of the description to retrieve
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+          description: Page number for pagination (0-based)
       responses:
         "200":
           description: Description found
@@ -338,12 +351,28 @@ paths:
                     items:
                       type: object
                       properties:
+                        id:
+                          type: string
+                        full_code:
+                          type: string
+                        url:
+                          type: string
                         updated_at:
                           type: string
                           format: date-time
                         children_count:
                           type: integer
                         resource_id:
+                          type: string
+                        api_params:
+                          type: string
+                        archive_id:
+                          type: string
+                        fund_id:
+                          type: string
+                        description_id:
+                          type: string
+                        case_id:
                           type: string
         "400":
           description: Bad Request
@@ -623,6 +652,9 @@ paths:
                     updated_at:
                       type: string
                       format: date-time
+                    synced_at:
+                      type: string
+                      format: date-time
                     archive:
                       type: object
                       properties:
@@ -681,6 +713,9 @@ paths:
                     prev_children_count:
                       type: integer
                     updated_at:
+                      type: string
+                      format: date-time
+                    synced_at:
                       type: string
                       format: date-time
                     archive:
@@ -752,6 +787,9 @@ paths:
                     updated_at:
                       type: string
                       format: date-time
+                    synced_at:
+                      type: string
+                      format: date-time
                     archive:
                       type: object
                       properties:
@@ -786,3 +824,188 @@ paths:
                 properties:
                   message:
                     type: string
+  /api/auth/signin:
+    get:
+      summary: Sign In Page
+      description: Displays the built-in sign-in page
+      responses:
+        "200":
+          description: Sign-in page displayed
+          content:
+            text/html:
+              schema:
+                type: string
+        "302":
+          description: Redirect to custom sign-in page if configured
+  /api/auth/signin/google:
+    post:
+      summary: Google OAuth Sign In
+      description: Initiates Google OAuth sign-in flow
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                csrfToken:
+                  type: string
+                  description: CSRF token from /api/auth/csrf
+      responses:
+        "302":
+          description: Redirect to Google OAuth authorization
+        "400":
+          description: Bad Request - missing CSRF token
+        "500":
+          description: Internal Server Error
+  /api/auth/callback/google:
+    get:
+      summary: Google OAuth Callback
+      description: Handles the callback from Google OAuth provider
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Authorization code from Google
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+          description: State parameter for CSRF protection
+      responses:
+        "302":
+          description: Redirect after successful authentication
+        "400":
+          description: Bad Request - invalid state or code
+        "500":
+          description: Internal Server Error
+    post:
+      summary: Google OAuth Callback
+      description: Handles the callback from Google OAuth provider
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: Authorization code from Google
+                state:
+                  type: string
+                  description: State parameter for CSRF protection
+      responses:
+        "302":
+          description: Redirect after successful authentication
+        "400":
+          description: Bad Request - invalid state or code
+        "500":
+          description: Internal Server Error
+  /api/auth/signout:
+    get:
+      summary: Sign Out Page
+      description: Displays the built-in sign-out page
+      responses:
+        "200":
+          description: Sign-out page displayed
+          content:
+            text/html:
+              schema:
+                type: string
+        "302":
+          description: Redirect to custom sign-out page if configured
+    post:
+      summary: Sign Out
+      description: Signs out the current user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                csrfToken:
+                  type: string
+                  description: CSRF token from /api/auth/csrf
+      responses:
+        "302":
+          description: Redirect after successful sign-out
+        "400":
+          description: Bad Request - missing CSRF token
+        "500":
+          description: Internal Server Error
+  /api/auth/session:
+    get:
+      summary: Get Session
+      description: Returns the current user session
+      responses:
+        "200":
+          description: Session data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      image:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                  accessToken:
+                    type: string
+                    description: Google access token
+        "404":
+          description: No session found
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/auth/csrf:
+    get:
+      summary: Get CSRF Token
+      description: Returns a CSRF token for form submissions
+      responses:
+        "200":
+          description: CSRF token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  csrfToken:
+                    type: string
+                    description: CSRF token to include in POST requests
+  /api/auth/providers:
+    get:
+      summary: Get Providers
+      description: Returns list of configured authentication providers
+      responses:
+        "200":
+          description: List of providers
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    type:
+                      type: string
+                    signinUrl:
+                      type: string
+                    callbackUrl:
+                      type: string
