@@ -6,12 +6,11 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import Navbar from "@/components/navbar";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { DuckLoader } from "@duckarchive/framework";
+import { DuckLoader, DuckNav } from "@duckarchive/framework";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
@@ -53,7 +52,7 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
           <div className="relative flex flex-col h-screen overflow-y-scroll">
             <NextIntlClientProvider locale={locale} messages={messages}>
               <Suspense fallback={<DuckLoader />}>
-                <Navbar />
+                <DuckNav siteUrl={siteConfig.url} />
                 <main className="container mx-auto max-w-7xl py-3 px-6 flex-grow flex flex-col min-h-[calc(100vh-4rem)]">{children}</main>
               </Suspense>
             </NextIntlClientProvider>

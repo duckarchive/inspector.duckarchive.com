@@ -8,6 +8,8 @@ import { PropsWithChildren, useEffect } from "react";
 import useNoRussians from "@/hooks/useNoRussians";
 import { DonationProvider } from "@/providers/donation";
 import { ToastProvider } from "@heroui/toast";
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -19,9 +21,10 @@ const ForeignUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 interface ProvidersProps {
   themeProps?: ThemeProviderProps;
+  session?: Session;
 }
 
-export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ children, themeProps }) => {
+export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ children, themeProps, session }) => {
   const router = useRouter();
   useEffect(() => {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
@@ -33,13 +36,15 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
   }, []);
 
   return (
-    <HeroUIProvider navigate={router.push}>
-      <NextThemesProvider {...themeProps}>
-        <DonationProvider>
-          <ToastProvider />
-          <ForeignUserProvider>{children}</ForeignUserProvider>
-        </DonationProvider>
-      </NextThemesProvider>
-    </HeroUIProvider>
+    <SessionProvider session={session} refetchOnWindowFocus={false}>
+      <HeroUIProvider navigate={router.push}>
+        <NextThemesProvider {...themeProps}>
+          <DonationProvider>
+            <ToastProvider />
+            <ForeignUserProvider>{children}</ForeignUserProvider>
+          </DonationProvider>
+        </NextThemesProvider>
+      </HeroUIProvider>
+    </SessionProvider>
   );
 };

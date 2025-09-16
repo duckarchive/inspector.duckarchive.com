@@ -18,6 +18,9 @@
   },
   "navigation": {
     "logo": "Inspector",
+    "main": "Home",
+    "resources": "Resources",
+    "inspector": "Inspector",
     "search": "Search",
     "archives": "Archives",
     "daily-updates": "Daily report",
