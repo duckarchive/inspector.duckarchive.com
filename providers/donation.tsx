@@ -1,10 +1,10 @@
 "use client";
 
 import { HeartFilledIcon } from "@/components/icons";
-import { siteConfig } from "@/config/site";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
+import { links } from "@duckarchive/framework/components/duck-nav/config.json";
 import React, { createContext, useContext, ReactNode } from "react";
 
 const DONATE_KEY = "asked-for-donate-at";
@@ -57,7 +57,7 @@ export const DonationProvider: React.FC<{ children: ReactNode }> = ({ children }
               className="w-full"
               startContent={<HeartFilledIcon className="text-danger" />}
               isExternal
-              href={siteConfig.links.sponsor}
+              href={links.sponsor}
             >
               Підтримайте проєкт
             </Button>
