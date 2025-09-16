@@ -1,6 +1,9 @@
-import * as React from "react";
+import { SVGProps } from "react";
+interface IconSvgProps extends SVGProps<SVGSVGElement> {
+  size?: number;
+}
 
-export const HeartFilledIcon = ({ size = 24, width, height, ...props }: any) => (
+export const HeartFilledIcon = ({ size = 24, width, height, ...props }: IconSvgProps) => (
   <svg
     aria-hidden="true"
     focusable="false"
