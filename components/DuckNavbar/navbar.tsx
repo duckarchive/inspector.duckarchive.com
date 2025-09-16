@@ -24,6 +24,8 @@ import { Accordion, AccordionItem, AccordionProps } from "@heroui/accordion";
 import navigation from "./navigation.json";
 import { siteConfig } from "@/config/site";
 import { usePathname } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
+import SelectProject from "@/components/DuckNavbar/select-project";
 
 const LINK_CLASS = "text-base underline-offset-4 hover:underline hover:opacity-70";
 
@@ -164,11 +166,13 @@ const NavbarComponent: React.FC = () => {
   return (
     <Navbar maxWidth="xl" position="sticky" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="basis-1/5" justify="start">
-        <NavbarBrand as="li" className="max-w-fit">
-          <NextLink className="text-transparent hover:text-warning flex justify-start items-center gap-1" href="/">
-            <Logo className="duration-200 stroke-foreground" />
-            <p className="font-bold text-foreground">{t("logo")}</p>
-          </NextLink>
+        <NavbarBrand as="li">
+          <SelectProject selectedKey={`${window.location.origin}/`} onSelect={href => console.log("Selected project href:", href)} projects={navigation.map(item => ({
+            href: item.href,
+            name: item.label,
+            description: item.description,
+            icon: item.icon,
+          }))} />
         </NavbarBrand>
         <NavbarItem className="hidden md:flex ml-2">
           <ul className="flex gap-4 justify-start">

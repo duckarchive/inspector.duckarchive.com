@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/DuckNavbar/navbar";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
