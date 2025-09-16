@@ -166,13 +166,8 @@ const NavbarComponent: React.FC = () => {
   return (
     <Navbar maxWidth="xl" position="sticky" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="basis-1/5" justify="start">
-        <NavbarBrand as="li">
-          <SelectProject selectedKey={`${window.location.origin}/`} onSelect={href => console.log("Selected project href:", href)} projects={navigation.map(item => ({
-            href: item.href,
-            name: item.label,
-            description: item.description,
-            icon: item.icon,
-          }))} />
+        <NavbarBrand as="li" className="h-full relative">
+          <SelectProject selectedKey={`${window.location.origin}/`} onSelect={href => console.log("Selected project href:", href)} projects={navigation} />
         </NavbarBrand>
         <NavbarItem className="hidden md:flex ml-2">
           <ul className="flex gap-4 justify-start">

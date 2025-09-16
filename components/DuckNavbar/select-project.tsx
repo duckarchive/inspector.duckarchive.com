@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
 import { IoChevronDown } from "react-icons/io5";
 import { Logo } from "@/components/icons";
-import { ICONS } from "@/components/DuckNavbar/icons";
+import { DuckIcon } from "@/components/DuckNavbar/icons";
+import { NavbarItem } from "@heroui/navbar";
+import NextLink from "next/link";
+import { Link } from "@heroui/link";
+import clsx from "clsx";
 
 interface Project {
   href: string;
-  name: string;
+  label: string;
   description?: string;
   icon?: string;
   is_disabled?: boolean;
@@ -22,44 +25,55 @@ interface SelectProjectProps {
 
 const SelectProject: React.FC<SelectProjectProps> = ({ projects, selectedKey, onSelect, label = "Інспектор" }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const filteredProjects = projects.filter((p) => p.href !== selectedKey);
   const selectedProject = projects.find((p) => p.href === selectedKey);
 
+  console.log("Selected project:", filteredProjects);
+
   return (
-    <Dropdown
-      triggerScaleOnOpen={false}
-      placement="bottom-start"
-      radius="sm"
-      isOpen={isOpen}
-      onOpenChange={setIsOpen}
-      crossOffset={-17}
-    >
-      <DropdownTrigger>
-        <div className="text-transparent hover:text-warning flex justify-start items-center gap-1 cursor-pointer">
-          {selectedProject?.icon || <Logo className="duration-200 stroke-foreground" />}
-          <p className="font-bold text-foreground">{selectedProject?.name || label}</p>
-          <IoChevronDown className={`${isOpen ? "rotate-180" : ""} transition-transform inline`} />
-        </div>
-      </DropdownTrigger>
-      <DropdownMenu
-        aria-label="Project selection"
-        variant="faded"
-        selectionMode="single"
-        selectedKeys={new Set(selectedKey ? [selectedKey] : [])}
-        onAction={(key) => onSelect(String(key))}
-        disabledKeys={projects.filter((p) => p.is_disabled).map((p) => p.href)}
+    <div className="relative group z-30">
+      <style>
+        {`
+        #projects {
+          max-height: 0;
+        }
+        #logo:hover ~ #projects, #projects:hover {
+          max-height: 1000px;
+        }
+      `}
+      </style>
+      <Link
+        as={NextLink}
+        id="logo"
+        className="flex justify-start items-center gap-2 text-transparent hover:text-[#F97316]"
+        href="/"
       >
-        {projects.map((project) => (
-          <DropdownItem
-            key={project.href}
-            description={project.description}
-            startContent={project.icon && ICONS[project.icon]}
-            href={project.href}
-          >
-            {project.name}
-          </DropdownItem>
+        <DuckIcon name={selectedProject?.icon} className="duration-200 stroke-foreground" />
+        <p className="font-bold text-foreground">{selectedProject?.label || label}</p>
+      </Link>
+      <ul
+        id="projects"
+        className="absolute top-10 -left-2 flex flex-col opacity-0 overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg group-hover:opacity-100 transition-all delay-200"
+      >
+        <li className="text-sm leading-none p-2">інші проєкти:</li>
+        {filteredProjects.map((project) => (
+          <li key={project.href}>
+            <Link
+              as={NextLink}
+              className="flex justify-start items-center p-2 gap-2 text-transparent hover:text-[#F97316] hover:bg-gray-100 dark:hover:bg-gray-800 py-2 rounded-lg"
+              href={project.href}
+              isDisabled={project.is_disabled}
+            >
+              <DuckIcon name={project.icon} className="duration-200 stroke-foreground" />
+              <div>
+                <p className="font-medium text-base leading-tight text-foreground">{project.label || label}</p>
+                <p className="opacity-80 text-sm leading-none text-foreground">{project.description}</p>
+              </div>
+            </Link>
+          </li>
         ))}
-      </DropdownMenu>
-    </Dropdown>
+      </ul>
+    </div>
   );
 };
 
