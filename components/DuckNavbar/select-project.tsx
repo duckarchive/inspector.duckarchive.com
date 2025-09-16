@@ -1,11 +1,7 @@
-import { useMemo, useState } from "react";
-import { IoChevronDown } from "react-icons/io5";
-import { Logo } from "@/components/icons";
+import { useMemo } from "react";
 import { DuckIcon } from "@/components/DuckNavbar/icons";
-import { NavbarItem } from "@heroui/navbar";
 import NextLink from "next/link";
 import { Link } from "@heroui/link";
-import clsx from "clsx";
 
 interface Project {
   href: string;
@@ -18,26 +14,29 @@ interface Project {
 
 interface SelectProjectProps {
   projects: Project[];
-  selectedKey?: string;
-  onSelect: (key: string) => void;
-  label?: string;
+  siteUrl: string;
 }
 
-const SelectProject: React.FC<SelectProjectProps> = ({ projects, selectedKey, onSelect, label = "Інспектор" }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const filteredProjects = projects.filter((p) => p.href !== selectedKey);
-  const selectedProject = projects.find((p) => p.href === selectedKey);
-
-  console.log("Selected project:", filteredProjects);
+const SelectProject: React.FC<SelectProjectProps> = ({ projects, siteUrl }) => {
+  const filteredProjects = useMemo(
+    () => projects.filter((p) => p.href !== siteUrl),
+    [projects, siteUrl]
+  );
+  const selectedProject = useMemo(
+    () => projects.find((p) => p.href === siteUrl),
+    [projects, siteUrl]
+  );
 
   return (
-    <div className="relative group z-30">
+    <>
       <style>
         {`
         #projects {
+          opacity: 0;
           max-height: 0;
         }
         #logo:hover ~ #projects, #projects:hover {
+          opacity: 1;
           max-height: 1000px;
         }
       `}
@@ -48,12 +47,12 @@ const SelectProject: React.FC<SelectProjectProps> = ({ projects, selectedKey, on
         className="flex justify-start items-center gap-2 text-transparent hover:text-[#F97316]"
         href="/"
       >
-        <DuckIcon name={selectedProject?.icon} className="duration-200 stroke-foreground" />
-        <p className="font-bold text-foreground">{selectedProject?.label || label}</p>
+        {selectedProject?.icon && <DuckIcon name={selectedProject.icon} className="duration-200 stroke-foreground" />}
+        <p className="font-bold text-foreground">{selectedProject?.label}</p>
       </Link>
       <ul
         id="projects"
-        className="absolute top-10 -left-2 flex flex-col opacity-0 overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg group-hover:opacity-100 transition-all delay-200"
+        className="absolute top-14 -left-2 flex flex-col overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:opacity-100 transition-all delay-200"
       >
         <li className="text-sm leading-none p-2">інші проєкти:</li>
         {filteredProjects.map((project) => (
@@ -64,16 +63,16 @@ const SelectProject: React.FC<SelectProjectProps> = ({ projects, selectedKey, on
               href={project.href}
               isDisabled={project.is_disabled}
             >
-              <DuckIcon name={project.icon} className="duration-200 stroke-foreground" />
+              {project.icon && <DuckIcon name={project.icon} className="duration-200 stroke-foreground" />}
               <div>
-                <p className="font-medium text-base leading-tight text-foreground">{project.label || label}</p>
+                <p className="font-medium text-base leading-tight text-foreground">{project.label}</p>
                 <p className="opacity-80 text-sm leading-none text-foreground">{project.description}</p>
               </div>
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 

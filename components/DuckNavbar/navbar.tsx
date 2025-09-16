@@ -127,7 +127,12 @@ const NavLink: React.FC<LinkProps> = (props) => (
   </Link>
 );
 
-const NavbarComponent: React.FC = () => {
+interface NavbarComponentProps {
+  siteUrl: string;
+};
+
+const NavbarComponent: React.FC<NavbarComponentProps> = ({ siteUrl }) => {
+  const originSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInIframe, setIsInIframe] = useState(false);
   const t = useTranslations("navigation");
@@ -144,8 +149,8 @@ const NavbarComponent: React.FC = () => {
   }
 
   const navItems = useMemo(() => {
-    if (!navigation || typeof window === "undefined") return [];
-    const fullUrl = window.location.origin + pathname;
+    if (!navigation) return [];
+    const fullUrl = originSiteUrl + pathname;
     return navigation.map((item) => {
       const isActive = item.href
         ? fullUrl === item.href
@@ -167,7 +172,7 @@ const NavbarComponent: React.FC = () => {
     <Navbar maxWidth="xl" position="sticky" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="basis-1/5" justify="start">
         <NavbarBrand as="li" className="h-full relative">
-          <SelectProject selectedKey={`${window.location.origin}/`} onSelect={href => console.log("Selected project href:", href)} projects={navigation} />
+          <SelectProject projects={navigation} siteUrl={originSiteUrl} />
         </NavbarBrand>
         <NavbarItem className="hidden md:flex ml-2">
           <ul className="flex gap-4 justify-start">

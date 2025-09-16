@@ -2,13 +2,13 @@
   {
     "label": "Local",
     "icon": "inspector",
-    "href": "http://localhost:3000/",
+    "href": "http://localhost:3000",
     "description": "Пошук за реквізитами онлайн"
   },
   {
     "label": "Інспектор",
     "icon": "inspector",
-    "href": "https://inspector.duckarchive.com/",
+    "href": "https://inspector.duckarchive.com",
     "description": "Пошук справ онлайн",
     "children": [
       {
@@ -36,21 +36,21 @@
   {
     "label": "Каталог",
     "icon": "lake",
-    "href": "https://catalog.duckarchive.com/",
+    "href": "https://catalog.duckarchive.com",
     "description": "Пошук архівних справ",
     "is_disabled": true
   },
   {
     "label": "Ключ",
     "icon": "key",
-    "href": "https://index.duckarchive.com/",
+    "href": "https://index.duckarchive.com",
     "description": "Генеалогічний індекс",
     "is_disabled": true
   },
   {
     "label": "Мапа",
     "icon": "map",
-    "href": "https://map.duckarchive.com/",
+    "href": "https://map.duckarchive.com",
     "description": "Історичні кордони"
   },
   {
@@ -62,13 +62,13 @@
   {
     "label": "Лапка",
     "icon": "foot",
-    "href": "https://foot.duckarchive.com/",
+    "href": "https://foot.duckarchive.com",
     "description": "Допоміжні інструменти"
   },
   {
     "label": "Моя качка",
     "icon": "egg",
-    "href": "https://duckarchive.com/",
+    "href": "https://duckarchive.com",
     "description": "Персональний кабінет",
     "children": [
       {
@@ -90,6 +90,6 @@
   },
   {
     "label": "Документація",
-    "href": "https://duckarchive.com/docs/"
+    "href": "https://duckarchive.com/docs"
   }
 ]

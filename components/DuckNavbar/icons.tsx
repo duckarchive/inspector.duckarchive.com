@@ -1,9 +1,21 @@
+"use client";
+
 import { IconSvgProps } from "@/types";
 
 const InspectorIcon: React.FC<IconSvgProps> = ({ size = 36, width, height, ...props }) => (
-  <svg height={size || height} viewBox="0 0 500 500" width={size || width} {...props}>
-    <circle cx="250" cy="250" r="240" fill="transparent" strokeWidth="20" />
-    <path d="M413.62 260L290.445 442H209.017L85.8427 260L413.62 260Z" fill="currentColor" strokeWidth="20" />
+  <svg
+    height={size || height}
+    width={size || width}
+    viewBox="0 0 36 36"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M18 34C26.8366 34 34 26.8366 34 18C34 9.16344 26.8366 2 18 2C9.16344 2 2 9.16344 2 18C2 26.8366 9.16344 34 18 34Z"
+      fill="white"
+    />
+    <path d="M28.908 18.6667L20.6963 30.8H15.2678L7.05618 18.6667H28.908Z" fill="currentColor" />
   </svg>
 );
 
@@ -32,7 +44,7 @@ const KeyIcon: React.FC<IconSvgProps> = ({ size = 36, width, height, ...props })
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <path d="M18 32L32 4L4 4" stroke-width="2" stroke-dasharray="2 2" />
+    <path d="M18 32L32 4L4 4" strokeWidth="2" strokeDasharray="2 2" />
   </svg>
 );
 
@@ -49,25 +61,25 @@ const EggIcon: React.FC<IconSvgProps> = ({ size = 36, width, height, ...props })
       d="M18 26.4706C22.5882 26.4706 26.3077 22.6782 26.3077 18C26.3077 13.3218 22.5882 9.52939 18 9.52939C13.4118 9.52939 9.69229 13.3218 9.69229 18C9.69229 22.6782 13.4118 26.4706 18 26.4706Z"
       fill="white"
       stroke="black"
-      stroke-width="0.5"
+      strokeWidth="0.5"
     />
     <path
       d="M23.6638 18.3529L19.4 24.7765H16.5814L12.3176 18.3529H23.6638Z"
       fill="#F97316"
       stroke="black"
-      stroke-width="0.5"
+      strokeWidth="0.5"
     />
     <path
       d="M18 34C24.6274 34 30 28.3114 30 21.2941L26 17.0588L22 21.2941L18 17.0588L14 21.2941L10 17.0588L6 21.2941C6 28.3114 11.3726 34 18 34Z"
       fill="white"
       stroke="black"
-      stroke-linecap="round"
+      strokeLinecap="round"
     />
     <path
       d="M18 2C11.3726 2 6 12.4637 6 18.9412L10 15.0317L14 18.9412L18 15.0317L22 18.9412L26 15.0317L30 18.9412C30 12.4637 24.6274 2 18 2Z"
       fill="white"
       stroke="black"
-      stroke-linecap="round"
+      strokeLinecap="round"
     />
   </svg>
 );
