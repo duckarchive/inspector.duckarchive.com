@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import { Link } from "@heroui/link";
 
 interface Project {
-  href: string;
+  url: string;
   label: string;
   description?: string;
   icon?: string;
@@ -14,19 +14,15 @@ interface Project {
 
 interface SelectProjectProps {
   projects: Project[];
-  siteUrl: string;
+  currentProject?: Project;
 }
 
-const SelectProject: React.FC<SelectProjectProps> = ({ projects, siteUrl }) => {
+const SelectProject: React.FC<SelectProjectProps> = ({ projects, currentProject }) => {
   const filteredProjects = useMemo(
-    () => projects.filter((p) => p.href !== siteUrl),
-    [projects, siteUrl]
+    () => projects.filter((p) => p.url !== currentProject?.url),
+    [projects, currentProject]
   );
-  const selectedProject = useMemo(
-    () => projects.find((p) => p.href === siteUrl),
-    [projects, siteUrl]
-  );
-
+  
   return (
     <>
       <style>
@@ -47,8 +43,8 @@ const SelectProject: React.FC<SelectProjectProps> = ({ projects, siteUrl }) => {
         className="flex justify-start items-center gap-2 text-transparent hover:text-[#F97316]"
         href="/"
       >
-        {selectedProject?.icon && <DuckIcon name={selectedProject.icon} className="duration-200 stroke-foreground" />}
-        <p className="font-bold text-foreground">{selectedProject?.label}</p>
+        <DuckIcon name={currentProject?.icon} className="duration-200 stroke-foreground" />
+        <p className="font-bold text-foreground">{currentProject?.label}</p>
       </Link>
       <ul
         id="projects"
@@ -56,11 +52,11 @@ const SelectProject: React.FC<SelectProjectProps> = ({ projects, siteUrl }) => {
       >
         <li className="text-sm leading-none p-2">інші проєкти:</li>
         {filteredProjects.map((project) => (
-          <li key={project.href}>
+          <li key={project.url}>
             <Link
               as={NextLink}
               className="flex justify-start items-center p-2 gap-2 text-transparent hover:text-[#F97316] hover:bg-gray-100 dark:hover:bg-gray-800 py-2 rounded-lg"
-              href={project.href}
+              href={project.url}
               isDisabled={project.is_disabled}
             >
               {project.icon && <DuckIcon name={project.icon} className="duration-200 stroke-foreground" />}

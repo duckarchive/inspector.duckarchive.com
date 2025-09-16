@@ -15,7 +15,7 @@ import clsx from "clsx";
 import { FaTelegram } from "react-icons/fa";
 
 import { ThemeSwitch } from "@/components/theme-switch";
-import { HeartFilledIcon, Logo } from "@/components/icons";
+import { HeartFilledIcon } from "@/components/icons";
 import { useState, useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
@@ -24,7 +24,6 @@ import { Accordion, AccordionItem, AccordionProps } from "@heroui/accordion";
 import navigation from "./navigation.json";
 import { siteConfig } from "@/config/site";
 import { usePathname } from "next/navigation";
-import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import SelectProject from "@/components/DuckNavbar/select-project";
 
 const LINK_CLASS = "text-base underline-offset-4 hover:underline hover:opacity-70";
@@ -129,7 +128,7 @@ const NavLink: React.FC<LinkProps> = (props) => (
 
 interface NavbarComponentProps {
   siteUrl: string;
-};
+}
 
 const NavbarComponent: React.FC<NavbarComponentProps> = ({ siteUrl }) => {
   const originSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
@@ -148,43 +147,21 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({ siteUrl }) => {
     return null;
   }
 
-  const navItems = useMemo(() => {
-    if (!navigation) return [];
-    const fullUrl = originSiteUrl + pathname;
-    return navigation.map((item) => {
-      const isActive = item.href
-        ? fullUrl === item.href
-        : item.children?.some((child) => fullUrl.startsWith(child.href));
-      return {
-        ...item,
-        label: item.label,
-        isActive,
-        children: item.children?.map((child) => ({
-          ...child,
-          isActive: fullUrl === child.href,
-          label: child.label,
-        })),
-      };
-    });
-  }, [pathname, navigation]);
+  const currentProject = useMemo(() => navigation.find((p) => p.url === originSiteUrl), [navigation, originSiteUrl]);
 
   return (
     <Navbar maxWidth="xl" position="sticky" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="basis-1/5" justify="start">
         <NavbarBrand as="li" className="h-full relative">
-          <SelectProject projects={navigation} siteUrl={originSiteUrl} />
+          <SelectProject projects={navigation} currentProject={currentProject} />
         </NavbarBrand>
         <NavbarItem className="hidden md:flex ml-2">
           <ul className="flex gap-4 justify-start">
-            {navItems.map((item) =>
-              item.children ? (
-                <DropdownNav key={item.label} isActive={item.isActive} label={item.label} children={item.children} />
-              ) : (
-                <NavbarItem key={item.href} isActive={item.isActive} className="px-0">
-                  <NavLink href={item.href}>{item.label}</NavLink>
-                </NavbarItem>
-              )
-            )}
+            {currentProject?.children?.map((item) => (
+              <NavbarItem key={item.path} isActive={item.path === pathname} className="px-0">
+                <NavLink href={item.path}>{item.label}</NavLink>
+              </NavbarItem>
+            ))}
           </ul>
         </NavbarItem>
       </NavbarContent>
@@ -203,17 +180,13 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({ siteUrl }) => {
 
       <NavbarMenu>
         <ul className="mx-4 mt-2 flex flex-col gap-2">
-          {navItems.map((item) =>
-            item.children ? (
-              <ExpandableNav key={item.label} isActive={item.isActive} children={item.children} label={item.label} />
-            ) : (
-              <NavbarMenuItem key={`${item.label}`} isActive={item.isActive}>
-                <NavLink href={item.href} onPress={() => setIsMenuOpen((prev) => !prev)}>
-                  {item.label}
-                </NavLink>
-              </NavbarMenuItem>
-            )
-          )}
+          {currentProject?.children?.map((item) => (
+            <NavbarMenuItem key={`${item.label}`} isActive={item.path === pathname}>
+              <NavLink href={item.path} onPress={() => setIsMenuOpen((prev) => !prev)}>
+                {item.label}
+              </NavLink>
+            </NavbarMenuItem>
+          ))}
         </ul>
       </NavbarMenu>
     </Navbar>
