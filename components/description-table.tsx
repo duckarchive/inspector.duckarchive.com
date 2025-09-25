@@ -12,6 +12,26 @@ import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
+const Details: React.FC<{
+  description?: GetDescriptionResponse;
+}> = ({ description }) => (
+  <div className="text-sm text-gray-500">
+    {description?.info && <p>{description.info}</p>}
+    {description?.start_year || description?.matches?.length ? (
+      <ul className="list-disc list-inside py-2">
+        {Boolean(description.start_year) && <li>Роки: {description.start_year}-{description.end_year || "?"}</li>}
+        {(description.matches.filter(match => match.url) as { url: string }[]).map((match) => (
+          <li key={match.url}>
+            <Link href={match.url} target="_blank" className="text-inherit text-sm underline">
+              {match.url}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    ) : null}
+  </div>
+);
+
 interface DescriptionTableProps {
   resources: Resources;
 }
@@ -31,6 +51,7 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
         title={`${code} опис`}
         breadcrumbs={[archiveCode, fundCode, code]}
         description={description?.title || "Без назви"}
+        message={<Details description={description} />}
       />
       <InspectorDuckTable<TableItem>
         resources={resources}

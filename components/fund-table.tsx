@@ -12,6 +12,19 @@ import { GetFundResponse } from "@/app/api/archives/[archive-code]/[fund-code]/r
 
 type TableItem = GetFundResponse["descriptions"][number];
 
+const Details: React.FC<{
+  fund?: GetFundResponse;
+}> = ({ fund }) => (
+  <div className="text-sm text-gray-500">
+    {fund?.info && <p>{fund.info}</p>}
+    {fund?.start_year ? (
+      <ul className="list-disc list-inside py-2">
+        {fund.start_year && <li>Роки: {fund.start_year}-{fund.end_year || "?"}</li>}
+      </ul>
+    ) : null}
+  </div>
+);
+
 interface FundTableProps {
   resources: Resources;
 }
@@ -27,7 +40,12 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
   // if (isError) return <Error error={} />
   return (
     <>
-      <PagePanel title={`${code} фонд`} breadcrumbs={[archiveCode, code]} description={fund?.title || "Без назви"} />
+      <PagePanel
+        title={`${code} фонд`}
+        breadcrumbs={[archiveCode, code]}
+        description={fund?.title || "Без назви"}
+        message={<Details fund={fund} />}
+      />
       <InspectorDuckTable<TableItem>
         resources={resources}
         isLoading={isLoading}
