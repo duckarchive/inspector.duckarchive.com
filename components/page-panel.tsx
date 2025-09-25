@@ -20,7 +20,7 @@ const PagePanel: React.FC<PagePanelProps> = ({ title, description, message, chil
             <h1 className="text-lg">{title}</h1>
           )}
 
-          {description && <p className="text-gray-500 flex-shrink-0">{description}</p>}
+          {description && <p className="flex-shrink-0">{description}</p>}
           {message}
         </div>
       </div>

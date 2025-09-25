@@ -1,6 +1,5 @@
 "use client";
 
-import { Archives } from "@/data/archives";
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
@@ -9,8 +8,44 @@ import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import useArchive from "@/hooks/useArchive";
 import { sortByCode } from "@/lib/table";
+import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
 
-type TableItem = Archives[number];
+type TableItem = GetArchiveResponse["funds"][number];
+
+const Details: React.FC<{
+  archive?: GetArchiveResponse;
+}> = ({ archive }) => (
+  <div className="text-sm text-gray-500">
+    {archive?.info && <p>{archive.info}</p>}
+    {
+      archive?.url || archive?.address || archive?.phone_number ? (
+        <ul className="list-disc list-inside py-2">
+          {archive.address && (
+            <li>
+              Адреса: {archive.address}
+            </li>
+          )}
+          {archive.url && (
+            <li>
+              Офіційний сайт:&nbsp;
+              <Link href={archive.url} target="_blank" className="text-inherit text-sm underline">
+                {archive.url}
+              </Link>
+            </li>
+          )}
+          {archive.phone_number && (
+            <li>
+              Телефон:&nbsp;
+              <Link href={`tel:${archive.phone_number}`} className="text-inherit text-sm underline">
+                {archive.phone_number}
+              </Link>
+            </li>
+          )}
+        </ul>
+      ) : null
+    }
+  </div>
+);
 
 interface ArchiveTableProps {
   resources: Resources;
@@ -24,7 +59,12 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
 
   return (
     <>
-      <PagePanel title={`${code} архів`} breadcrumbs={[code]} description={archive?.title || "Без назви"} />
+      <PagePanel
+        title={`${code} архів`}
+        breadcrumbs={[code]}
+        description={archive?.title || "Без назви"}
+        message={<Details archive={archive} />}
+      />
       <InspectorDuckTable<TableItem>
         resources={resources}
         isLoading={isLoading}

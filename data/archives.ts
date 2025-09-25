@@ -6,6 +6,7 @@ export type Archives = Prisma.ArchiveGetPayload<{
     id: true;
     code: true;
     title: true;
+    url: true;
     matches: {
       select: {
         updated_at: true;
@@ -22,6 +23,7 @@ export const getArchives = async () => {
       id: true,
       code: true,
       title: true,
+      url: true,
       matches: {
         where: {
           fund_id: null,
