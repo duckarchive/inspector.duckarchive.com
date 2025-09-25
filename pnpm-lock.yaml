@@ -13,7 +13,7 @@ importers:
         version: https://codeload.github.com/duckarchive/framework/tar.gz/9259392d6f0eb8098fcfa4cf4df5be9df0895a26(b4f6c1dfc60337db172aa51b12e9ff5c)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
-        version: https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))
+        version: https://codeload.github.com/duckarchive/prisma/tar.gz/ca5c88acca23ea939659f6dabbbe13371c9c9589(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))
       '@heroui/accordion':
         specifier: ^2.2.18
         version: 2.2.23(@heroui/system@2.4.22(@heroui/theme@2.4.22(tailwindcss@3.4.17))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@heroui/theme@2.4.22(tailwindcss@3.4.17))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -258,9 +258,9 @@ packages:
       react: ^19.1.0
       react-icons: ^5.5.0
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415':
-    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415}
-    version: 2.0.1
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/ca5c88acca23ea939659f6dabbbe13371c9c9589':
+    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/ca5c88acca23ea939659f6dabbbe13371c9c9589}
+    version: 2.5.0
     peerDependencies:
       '@prisma/client': '>=5'
       prisma-zod-generator: ^0.8.13
@@ -3590,8 +3590,8 @@ packages:
   zod@3.24.1:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
 
-  zod@4.1.8:
-    resolution: {integrity: sha512-5R1P+WwQqmmMIEACyzSvo4JXHY5WiAFHRMg+zBZKgKS+Q1viRa0C1hmUKtHltoIFKtIdki3pRxkmpP74jnNYHQ==}
+  zod@4.1.11:
+    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
 
 snapshots:
 
@@ -3623,7 +3623,7 @@ snapshots:
       react: 19.1.1
       react-icons: 5.5.0(react@19.1.1)
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/932190b69ddd71e008685df0d19f11b13e4a6415(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))':
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/ca5c88acca23ea939659f6dabbbe13371c9c9589(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))':
     dependencies:
       '@prisma/client': 6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2)
       prisma-zod-generator: 0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2)
@@ -6963,7 +6963,7 @@ snapshots:
       '@prisma/internals': 6.16.2(typescript@5.8.2)
       prettier: 3.6.2
       tslib: 2.8.1
-      zod: 4.1.8
+      zod: 4.1.11
     transitivePeerDependencies:
       - magicast
       - prisma
@@ -7605,4 +7605,4 @@ snapshots:
 
   zod@3.24.1: {}
 
-  zod@4.1.8: {}
+  zod@4.1.11: {}
