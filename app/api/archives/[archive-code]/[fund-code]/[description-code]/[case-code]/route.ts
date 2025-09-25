@@ -1,12 +1,21 @@
-import { Case, Match } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
 
-export type GetCaseResponse = {
-  title: Case["title"];
-  matches: Match[];
-};
+export type GetCaseResponse = Prisma.CaseGetPayload<{
+  include: {
+    matches: true;
+    locations: {
+      select: {
+        id: true,
+        lat: true,
+        lng: true,
+        radius_m: true
+      },
+    }
+  };
+}>
 
 interface GetCaseParams {
   params: Promise<{
@@ -36,32 +45,29 @@ export async function GET(
 
   const caseItem = await prisma.case.findFirst({
     where: {
-      description: {
-        code: descriptionCode,
-        fund: {
-          code: fundCode,
-          archive: {
-            code: archiveCode,
+      full_code: `${archiveCode}-${fundCode}-${descriptionCode}-${caseCode}`,
+    },
+    include: {
+      locations: {
+        select: {
+          id: true,
+          lat: true,
+          lng: true,
+          radius_m: true
+        },
+      },
+      matches: {
+        where: {
+          children_count: {
+            gt: 0,
           },
         },
       },
-      code: caseCode,
     },
   });
 
   if (caseItem) {
-    const matches = await prisma.match.findMany({
-      where: {
-        case_id: caseItem.id,
-        children_count: {
-          gt: 0,
-        },
-      },
-    });
-    return NextResponse.json({
-      title: caseItem.title,
-      matches,
-    });
+    return NextResponse.json(caseItem);
   } else {
     return NextResponse.json({ message: "Case not found" }, { status: 404 });
   }

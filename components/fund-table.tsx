@@ -9,6 +9,7 @@ import PagePanel from "./page-panel";
 import { sortByCode } from "@/lib/table";
 import useFund from "@/hooks/useFund";
 import { GetFundResponse } from "@/app/api/archives/[archive-code]/[fund-code]/route";
+import { getYearsString } from "@/lib/text";
 
 type TableItem = GetFundResponse["descriptions"][number];
 
@@ -19,7 +20,7 @@ const Details: React.FC<{
     {fund?.info && <p>{fund.info}</p>}
     {fund?.start_year ? (
       <ul className="list-disc list-inside py-2">
-        {fund.start_year && <li>Роки: {fund.start_year}-{fund.end_year || "?"}</li>}
+        {fund.start_year && <li>{getYearsString(fund.start_year, fund.end_year)}</li>}
       </ul>
     ) : null}
   </div>

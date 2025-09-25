@@ -7,7 +7,8 @@ module.exports = {
     './providers/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     "./node_modules/@heroui/theme/dist/components/*.{js,ts,jsx,tsx}",
-    "./node_modules/@duckarchive/framework/dist/components/**/*.{js,ts,jsx,tsx}"
+    "./node_modules/@duckarchive/framework/dist/components/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@duckarchive/map/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {},

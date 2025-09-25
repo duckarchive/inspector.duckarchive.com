@@ -9,6 +9,7 @@ import PagePanel from "./page-panel";
 import { sortByCode } from "@/lib/table";
 import useDescription from "@/hooks/useDescription";
 import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
+import { getYearsString } from "@/lib/text";
 
 type TableItem = GetDescriptionResponse["cases"][number];
 
@@ -19,7 +20,7 @@ const Details: React.FC<{
     {description?.info && <p>{description.info}</p>}
     {description?.start_year || description?.matches?.length ? (
       <ul className="list-disc list-inside py-2">
-        {Boolean(description.start_year) && <li>Роки: {description.start_year}-{description.end_year || "?"}</li>}
+        {Boolean(description.start_year) && <li>{getYearsString(description.start_year, description.end_year)}</li>}
         {(description.matches.filter(match => match.url) as { url: string }[]).map((match) => (
           <li key={match.url}>
             <Link href={match.url} target="_blank" className="text-inherit text-sm underline">

@@ -1,4 +1,7 @@
+// @refresh reset
 "use client";
+import "leaflet/dist/leaflet.css";
+import "../node_modules/@duckarchive/map/dist/style.css";
 
 import { Link } from "@heroui/link";
 import { Resources } from "@/data/resources";
@@ -10,8 +13,69 @@ import { getSyncAtLabel } from "@/lib/table";
 import useCase from "@/hooks/useCase";
 import ResourceBadge from "./resource-badge";
 import { GetCaseResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
+import { getYearsString } from "@/lib/text";
+import dynamic from "next/dynamic";
+
+const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.default), {
+  ssr: false,
+});
 
 type TableItem = GetCaseResponse["matches"][number];
+
+const Details: React.FC<{
+  caseItem?: GetCaseResponse;
+}> = ({ caseItem }) => (
+  <div className="text-sm text-gray-500">
+    {caseItem?.info && <p>{caseItem.info}</p>}
+    {caseItem?.start_year || caseItem?.locations?.length ? (
+      <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
+        {caseItem.locations && (
+          <div className="h-64 grow">
+            <GeoDuckMap
+              key="static-geoduck-map"
+              className="rounded-lg text-primary"
+              center={[caseItem.locations[0].lat, caseItem.locations[0].lng]}
+              positions={caseItem.locations.map((loc) => [loc.lat, loc.lng, loc.radius_m])}
+              year={caseItem.start_year || undefined}
+              hideLayers={{ searchInput: true, historicalLayers: true }}
+              zoom={12}
+              scrollWheelZoom
+              dragging
+            />
+          </div>
+        )}
+        <ul className="list-disc list-inside basis-1/2">
+          {Boolean(caseItem.start_year) && (
+            <li>
+              Рік: <span className="text-primary">{getYearsString(caseItem.start_year, caseItem.end_year)}</span>
+            </li>
+          )}
+          {Boolean(caseItem.author) && (
+            <li>
+              Автор: <span className="text-primary">{caseItem.author}</span>
+            </li>
+          )}
+          {Boolean(caseItem.author_administration) && (
+            <li>
+              Підпорядковано: <span className="text-primary">{caseItem.author_administration}</span>
+            </li>
+          )}
+          {Boolean(caseItem.tags.length) && (
+            <li>
+              Теги:&nbsp;
+              {caseItem.tags.map((tag, index) => (
+                <span key={tag}>
+                  {index > 0 && ", "}
+                  <span className="text-primary">{tag}</span>
+                </span>
+              ))}
+            </li>
+          )}
+        </ul>
+      </div>
+    ) : null}
+  </div>
+);
 
 interface CaseTableProps {
   resources: Resources;
@@ -34,6 +98,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
         title={`${code} справа`}
         breadcrumbs={[archiveCode, fundCode, descriptionCode, code]}
         description={caseItem?.title || "Без назви"}
+        message={<Details caseItem={caseItem} />}
       />
       <InspectorDuckTable<TableItem>
         resources={resources}
