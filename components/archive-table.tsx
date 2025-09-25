@@ -17,33 +17,46 @@ const Details: React.FC<{
 }> = ({ archive }) => (
   <div className="text-sm text-gray-500">
     {archive?.info && <p>{archive.info}</p>}
-    {
-      archive?.url || archive?.address || archive?.phone_number ? (
-        <ul className="list-disc list-inside py-2">
-          {archive.address && (
-            <li>
-              Адреса: {archive.address}
-            </li>
-          )}
-          {archive.url && (
-            <li>
-              Офіційний сайт:&nbsp;
-              <Link href={archive.url} target="_blank" className="text-inherit text-sm underline">
-                {archive.url}
-              </Link>
-            </li>
-          )}
-          {archive.phone_number && (
-            <li>
-              Телефон:&nbsp;
-              <Link href={`tel:${archive.phone_number}`} className="text-inherit text-sm underline">
-                {archive.phone_number}
-              </Link>
-            </li>
-          )}
-        </ul>
-      ) : null
-    }
+    {archive?.url || archive?.address || archive?.phone_number || archive?.email ? (
+      <ul className="list-disc list-inside py-2">
+        {archive.address && (
+          <li>
+            Адреса:&nbsp;
+            <Link
+              href={`https://www.google.com/maps/place/${archive.address.split(/,?\s+/).join("+")}`}
+              target="_blank"
+              className="text-primary text-sm"
+            >
+              {archive.address}
+            </Link>
+          </li>
+        )}
+        {archive.url && (
+          <li>
+            Офіційний сайт:&nbsp;
+            <Link href={archive.url} target="_blank" className="text-primary text-sm">
+              {archive.url}
+            </Link>
+          </li>
+        )}
+        {archive.phone_number && (
+          <li>
+            Телефон:&nbsp;
+            <Link href={`tel:${archive.phone_number}`} className="text-primary text-sm">
+              {archive.phone_number}
+            </Link>
+          </li>
+        )}
+        {archive.email && (
+          <li>
+            Email:&nbsp;
+            <Link href={`mailto:${archive.email}`} className="text-primary text-sm">
+              {archive.email}
+            </Link>
+          </li>
+        )}
+      </ul>
+    ) : null}
   </div>
 );
 
