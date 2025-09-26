@@ -1,11 +1,9 @@
 "use client";
 
 import { DuckTable, sortCode } from "@duckarchive/framework";
-import { ColDef, IRowNode } from "ag-grid-community";
+import { ColDef } from "ag-grid-community";
 import { useEffect, useState } from "react";
-import ResourceBadge from "./resource-badge";
-import { getSyncAtLabel, sortByMatches } from "@/lib/table";
-import { Match, Resource } from "@/generated/prisma/client";
+import { Resource } from "@/generated/prisma/client";
 import { useTheme } from "next-themes";
 import useIsMobile from "@/hooks/useIsMobile";
 
@@ -58,7 +56,6 @@ const InspectorDuckTable = <T,>({
   columns,
   rows,
   isFiltersEnabled,
-  resources,
   isLoading,
   loadingPage,
 }: DuckTableProps<T>) => {
