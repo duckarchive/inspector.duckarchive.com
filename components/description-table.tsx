@@ -18,9 +18,9 @@ const Details: React.FC<{
 }> = ({ description }) => (
   <div className="text-sm text-gray-500">
     {description?.info && <p>{description.info}</p>}
-    {description?.start_year || description?.matches?.length ? (
+    {description?.years.length || description?.matches?.length ? (
       <ul className="list-disc list-inside py-2">
-        {Boolean(description.start_year) && <li>{getYearsString(description.start_year, description.end_year)}</li>}
+        {Boolean(description.years.length) && <li>Роки: {getYearsString(description.years)}</li>}
         {(description.matches.filter(match => match.url) as { url: string }[]).map((match) => (
           <li key={match.url}>
             <Link href={match.url} target="_blank" className="text-inherit text-sm underline">

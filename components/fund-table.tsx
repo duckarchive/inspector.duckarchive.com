@@ -18,9 +18,11 @@ const Details: React.FC<{
 }> = ({ fund }) => (
   <div className="text-sm text-gray-500">
     {fund?.info && <p>{fund.info}</p>}
-    {fund?.start_year ? (
+    {fund?.years.length ? (
       <ul className="list-disc list-inside py-2">
-        {fund.start_year && <li>{getYearsString(fund.start_year, fund.end_year)}</li>}
+        <li>
+          Роки: {getYearsString(fund.years)}
+        </li>
       </ul>
     ) : null}
   </div>

@@ -27,7 +27,7 @@ const Details: React.FC<{
 }> = ({ caseItem }) => (
   <div className="text-sm text-gray-500">
     {caseItem?.info && <p>{caseItem.info}</p>}
-    {caseItem?.start_year || caseItem?.locations?.length ? (
+    {caseItem?.years.length || caseItem?.locations?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
         {caseItem.locations && (
           <div className="h-64 grow">
@@ -36,7 +36,7 @@ const Details: React.FC<{
               className="rounded-lg text-primary"
               center={[caseItem.locations[0].lat, caseItem.locations[0].lng]}
               positions={caseItem.locations.map((loc) => [loc.lat, loc.lng, loc.radius_m])}
-              year={caseItem.start_year || undefined}
+              year={caseItem.years[0].start_year || undefined}
               hideLayers={{ searchInput: true, historicalLayers: true }}
               zoom={12}
               scrollWheelZoom
@@ -45,9 +45,9 @@ const Details: React.FC<{
           </div>
         )}
         <ul className="list-disc list-inside basis-1/2">
-          {Boolean(caseItem.start_year) && (
+          {Boolean(caseItem.years.length) && (
             <li>
-              Рік: <span className="text-primary">{getYearsString(caseItem.start_year, caseItem.end_year)}</span>
+              Рік: <span className="text-primary">{getYearsString(caseItem.years)}</span>
             </li>
           )}
           {Boolean(caseItem.author) && (

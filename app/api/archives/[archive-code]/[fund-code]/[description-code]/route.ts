@@ -6,6 +6,7 @@ import { ErrorResponse } from "@/types";
 export type GetDescriptionResponse =
   | Prisma.DescriptionGetPayload<{
       include: {
+        years: true;
         matches: {
           select: {
             url: true;
@@ -66,6 +67,7 @@ export async function GET(
       code: descriptionCode,
     },
     include: {
+      years: true,
       matches: {
         where: {
           case_id: null,

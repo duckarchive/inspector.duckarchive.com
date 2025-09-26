@@ -5,6 +5,7 @@ import { ErrorResponse } from "@/types";
 
 export type GetCaseResponse = Prisma.CaseGetPayload<{
   include: {
+    years: true;
     matches: true;
     locations: {
       select: {
@@ -48,6 +49,7 @@ export async function GET(
       full_code: `${archiveCode}-${fundCode}-${descriptionCode}-${caseCode}`,
     },
     include: {
+      years: true,
       locations: {
         select: {
           id: true,

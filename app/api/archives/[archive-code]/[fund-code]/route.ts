@@ -6,6 +6,7 @@ import { ErrorResponse } from "@/types";
 export type GetFundResponse =
   | Prisma.FundGetPayload<{
       include: {
+        years: true;
         descriptions: {
           select: {
             id: true;
@@ -48,6 +49,7 @@ export async function GET(_req: NextRequest, props: GetFundParams): Promise<Next
       code: fundCode,
     },
     include: {
+      years: true,
       descriptions: {
         select: {
           id: true,
