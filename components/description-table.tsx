@@ -16,7 +16,7 @@ type TableItem = GetDescriptionResponse["cases"][number];
 const Details: React.FC<{
   description?: GetDescriptionResponse;
 }> = ({ description }) => (
-  <div className="text-sm text-gray-500">
+  <div className="text-sm text-gray-500 max-h-[200px] overflow-y-auto">
     {description?.info && <p>{description.info}</p>}
     {description?.years.length || description?.matches?.length ? (
       <ul className="list-disc list-inside py-2">
@@ -44,6 +44,8 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
   const code = params["description-code"];
   const isMobile = useIsMobile();
   const { description, isLoading, page } = useDescription(archiveCode, fundCode, code);
+
+  console.log(description);
 
   // if (isError) return <Error error={} />
   return (

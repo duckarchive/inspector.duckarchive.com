@@ -16,7 +16,7 @@ type TableItem = GetArchiveResponse["funds"][number];
 const Details: React.FC<{
   archive?: GetArchiveResponse;
 }> = ({ archive }) => (
-  <div className="text-sm text-gray-500">
+  <div className="text-sm text-gray-500 max-h-[200px] overflow-y-auto">
     {archive?.info && <p>{archive.info}</p>}
     {archive?.url || archive?.address || archive?.phone_number || archive?.email ? (
       <ul className="list-disc list-inside py-2">

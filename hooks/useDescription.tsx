@@ -10,8 +10,7 @@ const useDescription = (archiveCode: string, fundCode: string, code: string) => 
   const { data, isLoading, error } = useGet<GetDescriptionResponse>(`/api/archives/${archiveCode}/${fundCode}/${code}?page=${pageIndex}`);
 
   useEffect(() => {
-    if (!isLoading && data?.cases?.length) {
-      console.log("if", !isLoading);
+    if (!isLoading && data) {
       setFullData((prev) => ({
         ...data,
         cases: [...(prev?.cases || []), ...data.cases],
