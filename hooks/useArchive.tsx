@@ -1,10 +1,9 @@
-import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
 import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
+import { useGet } from "@/hooks/useApi";
 
 const useArchive = (code: string) => {
-  const { data, error, isLoading } = useSWR<GetArchiveResponse>(`/api/archives/${code}`, fetcher);
- 
+  const { data, error, isLoading } = useGet<GetArchiveResponse>(`/api/archives/${code}`);
+
   return {
     archive: data,
     isLoading,

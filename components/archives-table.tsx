@@ -25,12 +25,11 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
         {
           field: "code",
           sortable: false,
-          hide: isMobile,
         },
         {
           field: "title",
           headerName: "Назва",
-          flex: 9,
+          flex: isMobile ? 4 : 9,
           filter: true,
           comparator: sortText,
           cellRenderer: (row: { value: number; data: TableItem }) => (
@@ -38,12 +37,6 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
               {row.value || `${row.data.code}`}
             </Link>
           ),
-
-        },
-        {
-          colId: "sync",
-          headerName: "Фонди",
-          hide: isMobile,
         },
       ]}
       rows={archives?.sort(sortByTitle) || []}

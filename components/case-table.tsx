@@ -108,6 +108,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
             field: "resource_id",
             headerName: "Ресурс",
             flex: 1.5,
+            hide: isMobile,
             cellRenderer: (row: { value: TableItem["resource_id"] }) => (
               <ResourceBadge resources={resources} resourceId={row.value} />
             ),
@@ -115,7 +116,9 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
           {
             field: "url",
             headerName: "Посилання",
-            flex: 8,
+            flex: isMobile ? 4 : 9,
+            resizable: !isMobile,
+            filter: true,
             cellRenderer: (row: { value: string; data: TableItem }) => (
               <Link href={row.value} isExternal>
                 {row.value || "Без назви"}

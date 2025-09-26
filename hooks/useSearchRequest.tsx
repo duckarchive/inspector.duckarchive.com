@@ -1,24 +1,21 @@
 import useSWRMutation from "swr/mutation";
-import { fetcher } from "@/lib/fetcher";
+import { postFetcher } from "@/lib/api";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 
 const useSearchRequest = () => {
-  const { data, error, trigger, isMutating } = useSWRMutation<SearchResponse, Error, string, SearchRequest>(`/api/search`, (url, { arg }) => fetcher(url, {
-    method: 'POST',
-    body: JSON.stringify(arg),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }));
+  const { data, error, trigger, isMutating } = useSWRMutation<SearchResponse, Error, string, SearchRequest>(
+    `/api/search`,
+    postFetcher
+  );
 
   const isLoading = isMutating;
- 
+
   return {
     searchResults: data,
     isLoading,
     isError: error,
-    trigger
-  }
-}
+    trigger,
+  };
+};
 
 export default useSearchRequest;

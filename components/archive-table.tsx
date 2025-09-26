@@ -9,6 +9,7 @@ import PagePanel from "./page-panel";
 import useArchive from "@/hooks/useArchive";
 import { sortByCode } from "@/lib/table";
 import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
+import { getYearsString } from "@/lib/text";
 
 type TableItem = GetArchiveResponse["funds"][number];
 
@@ -89,15 +90,18 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
           {
             field: "title",
             headerName: "Назва фонду",
-            flex: 9,
+            flex: isMobile ? 4 : 9,
+            resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${code}/${row.data.code}`}>{row.value || `Фонд ${row.data.code}`}</Link>
             ),
           },
           {
-            colId: "sync",
-            headerName: "Описи",
+            field: "years",
+            headerName: "Роки",
+            valueGetter: (params) => params.data ? getYearsString(params.data.years) : '',
+            filter: true,
             hide: isMobile,
           },
         ]}

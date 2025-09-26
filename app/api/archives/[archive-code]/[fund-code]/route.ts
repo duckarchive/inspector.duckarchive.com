@@ -12,6 +12,7 @@ export type GetFundResponse =
             id: true;
             code: true;
             title: true;
+            years: true;
             matches: {
               select: {
                 updated_at: true;
@@ -55,6 +56,7 @@ export async function GET(_req: NextRequest, props: GetFundParams): Promise<Next
           id: true,
           code: true,
           title: true,
+          years: true,
           matches: {
             where: {
               case_id: null,

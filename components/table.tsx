@@ -7,6 +7,7 @@ import ResourceBadge from "./resource-badge";
 import { getSyncAtLabel, sortByMatches } from "@/lib/table";
 import { Match, Resource } from "@/generated/prisma/client";
 import { useTheme } from "next-themes";
+import useIsMobile from "@/hooks/useIsMobile";
 
 const INSPECTOR_FILTERS = [
   {
@@ -61,6 +62,7 @@ const InspectorDuckTable = <T,>({
   isLoading,
   loadingPage,
 }: DuckTableProps<T>) => {
+  const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const [activeQuickFilter, setActiveQuickFilter] = useState<string>();
@@ -102,43 +104,51 @@ const InspectorDuckTable = <T,>({
       columns={[
         {
           headerName: "Індекс",
-          flex: 1,
-          resizable: false,
+          flex: isMobile ? 2 : 1,
+          resizable: isMobile ? true : false,
           filter: true,
           comparator: sortCode,
           ...firstColumn,
         },
         ...middleColumns,
         {
-          type: "numericColumn",
-          flex: 2,
-          minWidth: 200,
           resizable: false,
-          comparator: sortByMatches,
-          cellRenderer: (row: IRowNode<{ id: string; matches: Match[] }>) => (
-            <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
-              {row.data?.matches?.map(
-                ({ updated_at, children_count, resource_id }) =>
-                  Boolean(children_count) &&
-                  resources && (
-                    <ResourceBadge
-                      key={`${row.data?.id}_match_${resource_id}`}
-                      resources={resources}
-                      resourceId={resource_id}
-                      tooltip={getSyncAtLabel(updated_at)}
-                    >
-                      {children_count}
-                    </ResourceBadge>
-                  )
-              )}
-            </div>
-          ),
           ...lastColumn,
-        },
+        }
+        // {
+        //   type: "numericColumn",
+        //   flex: 2,
+        //   minWidth: 200,
+        //   resizable: false,
+        //   comparator: sortByMatches,
+        //   cellRenderer: (row: IRowNode<{ id: string; matches: Match[] }>) => (
+        //     <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
+        //       {row.data?.matches?.map(
+        //         ({ updated_at, children_count, resource_id }) =>
+        //           Boolean(children_count) &&
+        //           resources && (
+        //             <ResourceBadge
+        //               key={`${row.data?.id}_match_${resource_id}`}
+        //               resources={resources}
+        //               resourceId={resource_id}
+        //               tooltip={getSyncAtLabel(updated_at)}
+        //             >
+        //               {children_count}
+        //             </ResourceBadge>
+        //           )
+        //       )}
+        //     </div>
+        //   ),
+        //   ...lastColumn,
+        // },
       ]}
       rows={rows}
       isLoading={isLoading}
       loadingPage={loadingPage}
+      defaultColDef={{
+        wrapText: true,
+        autoHeight: true,
+      }}
     />
   );
 };

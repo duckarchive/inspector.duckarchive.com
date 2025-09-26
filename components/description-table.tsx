@@ -65,7 +65,8 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
           {
             field: "title",
             headerName: "Назва справи",
-            flex: 9,
+            flex: isMobile ? 4 : 9,
+            resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${archiveCode}/${fundCode}/${code}/${row.data.code}`}>
@@ -74,8 +75,10 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
             ),
           },
           {
-            colId: "sync",
-            headerName: "Файли",
+            field: "years",
+            headerName: "Роки",
+            valueGetter: (params) => (params.data ? getYearsString(params.data.years) : ""),
+            filter: true,
             hide: isMobile,
           },
         ]}

@@ -17,6 +17,7 @@ export type GetDescriptionResponse =
             id: true;
             code: true;
             title: true;
+            years: true;
             matches: {
               select: {
                 updated_at: true;
@@ -91,6 +92,7 @@ export async function GET(
       id: true,
       code: true,
       title: true,
+      years: true,
       matches: {
         select: {
           updated_at: true,

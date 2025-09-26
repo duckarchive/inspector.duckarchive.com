@@ -11,6 +11,7 @@ export type GetArchiveResponse =
             id: true;
             code: true;
             title: true;
+            years: true;
             matches: {
               select: {
                 updated_at: true;
@@ -47,6 +48,7 @@ export async function GET(_req: NextRequest, props: GetArchiveParams): Promise<N
           id: true,
           code: true,
           title: true,
+          years: true,
           matches: {
             where: {
               description_id: null,

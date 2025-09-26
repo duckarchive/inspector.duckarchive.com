@@ -20,9 +20,7 @@ const Details: React.FC<{
     {fund?.info && <p>{fund.info}</p>}
     {fund?.years.length ? (
       <ul className="list-disc list-inside py-2">
-        <li>
-          Роки: {getYearsString(fund.years)}
-        </li>
+        {fund?.years.length ? <li>Роки: {getYearsString(fund.years)}</li> : null}
       </ul>
     ) : null}
   </div>
@@ -59,7 +57,8 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
           {
             field: "title",
             headerName: "Назва опису",
-            flex: 9,
+            flex: isMobile ? 4 : 9,
+            resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <Link href={`/archives/${archiveCode}/${code}/${row.data.code}`}>
@@ -68,8 +67,10 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
             ),
           },
           {
-            colId: "sync",
-            headerName: "Справи",
+            field: "years",
+            headerName: "Роки",
+            valueGetter: (params) => (params.data ? getYearsString(params.data.years) : ""),
+            filter: true,
             hide: isMobile,
           },
         ]}

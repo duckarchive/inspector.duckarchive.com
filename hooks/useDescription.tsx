@@ -1,17 +1,13 @@
 "use client";
 
-import { fetcher } from "@/lib/fetcher";
 import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
+import { useGet } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
 
 const useDescription = (archiveCode: string, fundCode: string, code: string) => {
   const [fullData, setFullData] = useState<GetDescriptionResponse>();
   const pageIndex = Math.floor((fullData?.cases.length || 1) / 5000) || 0;
-  const { data, isLoading, error } = useSWR(
-    `/api/archives/${archiveCode}/${fundCode}/${code}?page=${pageIndex}`,
-    fetcher,
-  );
+  const { data, isLoading, error } = useGet<GetDescriptionResponse>(`/api/archives/${archiveCode}/${fundCode}/${code}?page=${pageIndex}`);
 
   useEffect(() => {
     if (!isLoading && data?.cases?.length) {
@@ -27,7 +23,7 @@ const useDescription = (archiveCode: string, fundCode: string, code: string) => 
     description: fullData,
     isLoading,
     isError: error,
-    page: pageIndex + 1
+    page: pageIndex + 1,
   };
 };
 
