@@ -29,7 +29,7 @@ const Details: React.FC<{
     {caseItem?.info && <p>{caseItem.info}</p>}
     {caseItem?.years.length || caseItem?.locations?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
-        {caseItem.locations && (
+        {Boolean(caseItem.locations.length) && (
           <div className="h-64 grow">
             <GeoDuckMap
               key="static-geoduck-map"
@@ -50,14 +50,15 @@ const Details: React.FC<{
               Рік: <span className="text-primary">{getYearsString(caseItem.years)}</span>
             </li>
           )}
-          {Boolean(caseItem.author) && (
+          {Boolean(caseItem.authors.length) && (
             <li>
-              Автор: <span className="text-primary">{caseItem.author}</span>
-            </li>
-          )}
-          {Boolean(caseItem.author_administration) && (
-            <li>
-              Підпорядковано: <span className="text-primary">{caseItem.author_administration}</span>
+              Автори:&nbsp;
+              {caseItem.authors.map(({ author }, index) => (
+                <span key={author.id}>
+                  {index > 0 && ", "}
+                  <span className="text-primary">{author.title} ({author.info})</span>
+                </span>
+              ))}
             </li>
           )}
           {Boolean(caseItem.tags.length) && (

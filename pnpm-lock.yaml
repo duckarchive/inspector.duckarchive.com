@@ -16,7 +16,7 @@ importers:
         version: https://codeload.github.com/duckarchive/map/tar.gz/469f260e5822263fbca98d00c737f77f784a438e(aff50476f28f4ddcd4050db26cbbb5aa)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
-        version: https://codeload.github.com/duckarchive/prisma/tar.gz/17a8bc1bd513716727384969168d3bec321dee2d(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))
+        version: https://codeload.github.com/duckarchive/prisma/tar.gz/fff4d382f7bd4632aba7b110fb69be8b6d112049(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))
       '@heroui/accordion':
         specifier: ^2.2.18
         version: 2.2.23(@heroui/system@2.4.22(@heroui/theme@2.4.22(tailwindcss@3.4.17))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@heroui/theme@2.4.22(tailwindcss@3.4.17))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -310,9 +310,9 @@ packages:
       tailwindcss:
         optional: true
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/17a8bc1bd513716727384969168d3bec321dee2d':
-    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/17a8bc1bd513716727384969168d3bec321dee2d}
-    version: 2.5.4
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/fff4d382f7bd4632aba7b110fb69be8b6d112049':
+    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/fff4d382f7bd4632aba7b110fb69be8b6d112049}
+    version: 2.6.0
     peerDependencies:
       '@prisma/client': '>=5'
       prisma-zod-generator: ^0.8.13
@@ -3731,7 +3731,7 @@ snapshots:
       swr: 2.3.6(react@19.1.1)
       tailwindcss: 3.4.17
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/17a8bc1bd513716727384969168d3bec321dee2d(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))':
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/fff4d382f7bd4632aba7b110fb69be8b6d112049(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))':
     dependencies:
       '@prisma/client': 6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2)
       prisma-zod-generator: 0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2)

@@ -7,6 +7,11 @@ export type GetCaseResponse = Prisma.CaseGetPayload<{
   include: {
     years: true;
     matches: true;
+    authors: {
+      include: {
+        author: true;
+      }
+    };
     locations: {
       select: {
         id: true,
@@ -50,6 +55,11 @@ export async function GET(
     },
     include: {
       years: true,
+      authors: {
+        include: {
+          author: true,
+        },
+      },
       locations: {
         select: {
           id: true,
