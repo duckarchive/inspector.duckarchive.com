@@ -16,7 +16,7 @@ type TableItem = GetFundResponse["descriptions"][number];
 const Details: React.FC<{
   fund?: GetFundResponse;
 }> = ({ fund }) => (
-  <div className="text-sm text-gray-500 max-h-[200px] overflow-y-auto">
+  <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {fund?.info && <p>{fund.info}</p>}
     {fund?.years.length ? (
       <ul className="list-disc list-inside py-2">

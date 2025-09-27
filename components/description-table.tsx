@@ -16,7 +16,7 @@ type TableItem = GetDescriptionResponse["cases"][number];
 const Details: React.FC<{
   description?: GetDescriptionResponse;
 }> = ({ description }) => (
-  <div className="text-sm text-gray-500 max-h-[200px] overflow-y-auto">
+  <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {description?.info && <p>{description.info}</p>}
     {description?.years.length || description?.matches?.length ? (
       <ul className="list-disc list-inside py-2">

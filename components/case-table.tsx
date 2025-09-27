@@ -25,7 +25,7 @@ type TableItem = GetCaseResponse["matches"][number];
 const Details: React.FC<{
   caseItem?: GetCaseResponse;
 }> = ({ caseItem }) => (
-  <div className="text-sm text-gray-500 max-h-[200px] overflow-y-auto">
+  <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {caseItem?.info && <p>{caseItem.info}</p>}
     {caseItem?.years.length || caseItem?.locations?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
