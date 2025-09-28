@@ -15,6 +15,7 @@ import ResourceBadge from "./resource-badge";
 import { GetCaseResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
 import { getYearsString } from "@/lib/text";
 import dynamic from "next/dynamic";
+import { findCenter, prepareLocations } from "@/lib/map";
 
 const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.default), {
   ssr: false,
@@ -27,15 +28,15 @@ const Details: React.FC<{
 }> = ({ caseItem }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {caseItem?.info && <p>{caseItem.info}</p>}
-    {caseItem?.years.length || caseItem?.locations?.length ? (
+    {caseItem?.years.length || caseItem?.locations?.length || caseItem?.authors.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
-        {Boolean(caseItem.locations.length) && (
+        {Boolean(caseItem.locations.length || caseItem?.authors.length) && (
           <div className="h-64 grow">
             <GeoDuckMap
               key="static-geoduck-map"
               className="rounded-lg text-primary"
-              center={[caseItem.locations[0].lat, caseItem.locations[0].lng]}
-              positions={caseItem.locations.map((loc) => [loc.lat, loc.lng, loc.radius_m])}
+              center={findCenter([...caseItem.locations, ...caseItem.authors.map(({ author }) => author)])}
+              positions={prepareLocations([...caseItem.locations, ...caseItem.authors.map(({ author }) => author)])}
               year={caseItem.years[0].start_year || undefined}
               hideLayers={{ searchInput: true, historicalLayers: true }}
               zoom={12}
