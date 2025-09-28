@@ -13,7 +13,7 @@ importers:
         version: https://codeload.github.com/duckarchive/framework/tar.gz/6ff02c7dd0a2320f0221b13f0de647173d8aa0a8(b4f6c1dfc60337db172aa51b12e9ff5c)
       '@duckarchive/map':
         specifier: github:duckarchive/map
-        version: https://codeload.github.com/duckarchive/map/tar.gz/469f260e5822263fbca98d00c737f77f784a438e(aff50476f28f4ddcd4050db26cbbb5aa)
+        version: https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306(aff50476f28f4ddcd4050db26cbbb5aa)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
         version: https://codeload.github.com/duckarchive/prisma/tar.gz/fff4d382f7bd4632aba7b110fb69be8b6d112049(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@0.8.15(prisma@6.16.2(typescript@5.8.2))(typescript@5.8.2))
@@ -273,9 +273,9 @@ packages:
       react: ^19.1.0
       react-icons: ^5.5.0
 
-  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/469f260e5822263fbca98d00c737f77f784a438e':
-    resolution: {tarball: https://codeload.github.com/duckarchive/map/tar.gz/469f260e5822263fbca98d00c737f77f784a438e}
-    version: 1.3.1
+  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306':
+    resolution: {tarball: https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306}
+    version: 1.4.0
     peerDependencies:
       '@heroui/autocomplete': '*'
       '@heroui/button': '*'
@@ -3713,7 +3713,7 @@ snapshots:
       react: 19.1.1
       react-icons: 5.5.0(react@19.1.1)
 
-  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/469f260e5822263fbca98d00c737f77f784a438e(aff50476f28f4ddcd4050db26cbbb5aa)':
+  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306(aff50476f28f4ddcd4050db26cbbb5aa)':
     dependencies:
       leaflet: 1.9.4
       leaflet-geosearch: 4.2.2
