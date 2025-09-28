@@ -15,7 +15,7 @@ export const randomizeCoordinates = (positions: MarkerValue[]): MarkerValue[] =>
 
   const randomizedPositions: MarkerValue[] = [];
 
-  grouped.forEach((group, key) => {
+  grouped.forEach((group) => {
     if (group.length === 1) {
       randomizedPositions.push(group[0]);
     } else {

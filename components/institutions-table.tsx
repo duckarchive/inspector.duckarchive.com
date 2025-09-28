@@ -11,12 +11,6 @@ const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.de
   ssr: false,
 });
 
-const tag2icon: Record<string, string> = {
-  "православ'я": "christChurchIcon",
-  "римо-католицизм": "christChurchIcon",
-  "іудаїзм": "jewChurchIcon"
-};
-
 interface InstitutionsTableProps {
   authors: Author[];
 }
