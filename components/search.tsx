@@ -13,7 +13,6 @@ import { FaSearch } from "react-icons/fa";
 import { IoChevronDown } from "react-icons/io5";
 import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
-import TagChip from "@/components/tag-chip";
 import CoordinatesInput from "@/components/coordinates-input";
 import { Link } from "@heroui/link";
 
@@ -200,7 +199,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             в чаті <Link href="https://t.me/spravnakachka" target="_blank" className="text-sm">@spravnakachka</Link>.
           </p>
           <p>
-            Результати пошуку можуть виглядати "порожніми", через те, що назви та роки не заповнені на 100%, але це не впливає на
+            Результати пошуку можуть виглядати &quot;порожніми&quot;, через те, що назви та роки не заповнені на 100%, але це не впливає на
             основну функцію Інспектора ― пошук посилання на онлайн копію.
           </p>
         </div>
