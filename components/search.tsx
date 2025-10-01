@@ -15,6 +15,7 @@ import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
 import TagChip from "@/components/tag-chip";
 import CoordinatesInput from "@/components/coordinates-input";
+import { Link } from "@heroui/link";
 
 type TableItem = SearchResponse[number];
 
@@ -24,7 +25,7 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ archives, tags }) => {
-  const [defaultValues, setQueryParams] = useSearch();
+  const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
   const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
 
@@ -193,37 +194,53 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         >
           Пошук
         </Button>
+        <div className="w-full text-sm">
+          <p className="text-warning">
+            Нова пошукова форма є експериментальною. Якщо ви помітили некоректну роботу, будь ласка, повідомте
+            в чаті <Link href="https://t.me/spravnakachka" target="_blank" className="text-sm">@spravnakachka</Link>.
+          </p>
+          <p>
+            Результати пошуку можуть виглядати "порожніми", через те, що назви та роки не заповнені на 100%, але це не впливає на
+            основну функцію Інспектора ― пошук посилання на онлайн копію.
+          </p>
+        </div>
       </form>
       <CatalogDuckTable<TableItem>
         isLoading={isMutating}
         columns={[
           {
-            headerName: "Реквізити",
-            colId: "full_code",
-            cellRenderer: (row: { value: number }) => (
-              <a
-                href={`https://inspector.duckarchive.com/search?q=${row.value}`}
-                className="text-blue-600 hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {row.value}
-              </a>
+            headerName: "Назва",
+            field: "title",
+            resizable: true,
+            cellRenderer: (row: { data: TableItem }) => (
+              <Link href={`/archives/${row.data.full_code.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
+                {row.data.title || 'Без назви'}
+              </Link>
             ),
           },
-          { headerName: "Нас.пункт", field: "locations" },
-          { headerName: "Рік", field: "years" },
           {
-            headerName: "Теги",
-            field: "tags",
-            cellRenderer: (row: { value: string[] }) => (
-              <>
-                {row.value.map((tag) => (
-                  <TagChip key={tag} label={tag} />
-                ))}
-              </>
-            ),
+            headerName: "Реквізити",
+            field: "full_code"
           },
+          {
+            headerName: "Рік",
+            field: "years",
+            valueGetter: (row) =>
+              row.data?.years
+                .map((y) => (y.start_year === y.end_year ? y.start_year : `${y.start_year}-${y.end_year}`))
+                .join(", "),
+          },
+          // {
+          //   headerName: "Теги",
+          //   field: "tags",
+          //   cellRenderer: (row: { value: string[] }) => (
+          //     <>
+          //       {row.value.map((tag) => (
+          //         <TagChip key={tag} label={tag} />
+          //       ))}
+          //     </>
+          //   ),
+          // },
         ]}
         rows={searchResults || []}
       />

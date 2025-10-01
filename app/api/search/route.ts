@@ -50,6 +50,7 @@ export async function POST(request: Request) {
       radius_m,
       year,
       tags,
+      archive,
       fund,
       description,
       case: case_number, // 'case' is a reserved keyword
@@ -60,44 +61,43 @@ export async function POST(request: Request) {
 
     // search allowed only by place or by geographical coordinates
     if (place) {
-      whereParts.push(Prisma.sql`i.place ILIKE ${`%${place}%`}`);
+      whereParts.push(Prisma.sql`c.info ILIKE ${`%${place}%`}`);
     } else if (lng && lat) {
       const radiusValue = radius_m || 0;
       whereParts.push(Prisma.sql`
         ST_DWithin(
-          ST_SetSRID(ST_MakePoint(i.lng, i.lat), 4326)::geography,
+          ST_SetSRID(ST_MakePoint(cl.lng, cl.lat), 4326)::geography,
           ST_SetSRID(ST_MakePoint(${+lng}, ${+lat}), 4326)::geography,
-          COALESCE(i.radius_m, 0) + ${+radiusValue}
+          COALESCE(cl.radius_m, 0) + ${+radiusValue}
         )
       `);
     }
 
     if (title) {
-      whereParts.push(Prisma.sql`i.title ILIKE ${`%${title}%`}`);
+      whereParts.push(Prisma.sql`c.title ILIKE ${`%${title}%`}`);
     }
 
     if (author) {
-      whereParts.push(Prisma.sql`i.author ILIKE ${`%${author}%`}`);
+      whereParts.push(Prisma.sql`au.title ILIKE ${`%${author}%`}`);
     }
 
     if (year) {
-      whereParts.push(Prisma.sql`i.year = ${+year}`);
+      whereParts.push(Prisma.sql`${+year} BETWEEN cy.start_year AND cy.end_year`);
     }
 
-    if (fund) {
-      whereParts.push(Prisma.sql`i.fund = ${fund}`);
-    }
-
-    if (description) {
-      whereParts.push(Prisma.sql`i.description = ${description}`);
-    }
-
-    if (case_number) {
-      whereParts.push(Prisma.sql`i.case = ${case_number}`);
+    if (archive || fund || description || case_number) {
+      const isStrict = true; // TODO: make it configurable
+      const _a = archive || "%"; // case sensitive
+      const _f = isStrict ? fund || "%" : `${fund || ""}%`;
+      const _d = isStrict ? description || "%" : `${description || ""}%`;
+      const _c = isStrict ? case_number || "%" : `${case_number || ""}%`;
+      const rest = `${_f}-${_d}-${_c}`.toUpperCase();
+      const full_code = `${_a}-${rest}`;
+      whereParts.push(Prisma.sql`c.full_code LIKE ${full_code}`);
     }
 
     if (tags && tags.length > 0) {
-      whereParts.push(Prisma.sql`i.tags && ARRAY[${Prisma.join(tags)}]::text[]`);
+      whereParts.push(Prisma.sql`c.tags && ARRAY[${Prisma.join(tags)}]::text[]`);
     }
     
     const bodyQuery = whereParts.length > 0
@@ -106,56 +106,37 @@ export async function POST(request: Request) {
 
     const query = Prisma.sql`
       SELECT 
-        i.*,
-        a.id as archive_id,
-        a.title as archive_title
-      FROM "cases" i
-      LEFT JOIN "archives" a ON i.archive_id = a.id
+        c.*,
+        -- years
+        COALESCE(
+          jsonb_agg(
+            DISTINCT jsonb_build_object(
+              'case_id', cy.case_id,
+              'start_year', cy.start_year,
+              'end_year', cy.end_year
+            )
+          ) FILTER (WHERE cy.case_id IS NOT NULL),
+          '[]'
+        ) AS years
+
+      FROM "cases" c
+      LEFT JOIN "descriptions" d ON c.description_id = d.id
+      LEFT JOIN "funds" f ON d.fund_id = f.id
+      LEFT JOIN "archives" a ON f.archive_id = a.id
+      LEFT JOIN "case_authors" ca ON c.id = ca.case_id
+      LEFT JOIN "authors" au ON ca.author_id = au.id
+      LEFT JOIN "case_locations" cl ON c.id = cl.case_id
+      LEFT JOIN "case_years" cy ON c.id = cy.case_id
+
       ${bodyQuery}
+
+      GROUP BY c.id
       LIMIT 50
     `;
 
-    const rawResults = await prisma.$queryRaw<
-      {
-        id: number;
-        title: string;
-        place: string;
-        author: string;
-        lng: number;
-        lat: number;
-        year: number;
-        tags: string[];
-        fund: string;
-        description: string;
-        case: string;
-        archive_id: string;
-        archive_title: string;
-      }[]
-    >(query);
+    const rawResults = await prisma.$queryRaw<SearchResponse>(query);
 
-    // // Transform the results to match the expected structure
-    const items = rawResults.map((row) => ({
-      id: row.id,
-      title: row.title,
-      place: row.place,
-      author: row.author,
-      lng: row.lng,
-      lat: row.lat,
-      year: row.year,
-      tags: row.tags,
-      fund: row.fund,
-      description: row.description,
-      case: row.case,
-      archive_id: row.archive_id,
-      archive: row.archive_id
-        ? {
-            id: row.archive_id,
-            title: row.archive_title,
-          }
-        : null,
-    }));
-
-    return NextResponse.json(items);
+    return NextResponse.json(rawResults);
   } catch (error) {
     console.error("Search API Error:", error);
 
