@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
-import CatalogDuckTable from "@/components/table";
+import InspectorDuckTable from "@/components/table";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Accordion, AccordionItem } from "@heroui/accordion";
@@ -15,6 +15,7 @@ import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
 import CoordinatesInput from "@/components/coordinates-input";
 import { Link } from "@heroui/link";
+import useIsMobile from "@/hooks/useIsMobile";
 
 type TableItem = SearchResponse[number];
 
@@ -24,6 +25,7 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ archives, tags }) => {
+  const isMobile = useIsMobile();
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
   const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
@@ -204,45 +206,56 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
           </p>
         </div>
       </form>
-      <CatalogDuckTable<TableItem>
-        isLoading={isMutating}
-        columns={[
-          {
-            headerName: "Назва",
-            field: "title",
-            resizable: true,
-            cellRenderer: (row: { data: TableItem }) => (
-              <Link href={`/archives/${row.data.full_code.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
-                {row.data.title || 'Без назви'}
-              </Link>
-            ),
-          },
-          {
-            headerName: "Реквізити",
-            field: "full_code"
-          },
-          {
-            headerName: "Рік",
-            field: "years",
-            valueGetter: (row) =>
-              row.data?.years
-                .map((y) => (y.start_year === y.end_year ? y.start_year : `${y.start_year}-${y.end_year}`))
-                .join(", "),
-          },
-          // {
-          //   headerName: "Теги",
-          //   field: "tags",
-          //   cellRenderer: (row: { value: string[] }) => (
-          //     <>
-          //       {row.value.map((tag) => (
-          //         <TagChip key={tag} label={tag} />
-          //       ))}
-          //     </>
-          //   ),
-          // },
-        ]}
-        rows={searchResults || []}
-      />
+      <div className="min-h-[300px]">
+        <InspectorDuckTable<TableItem>
+          isLoading={isMutating}
+          columns={[
+            {
+              headerName: "Назва",
+              field: "title",
+              resizable: true,
+              hide: isMobile,
+              cellRenderer: (row: { data: TableItem }) => (
+                <Link href={`/archives/${row.data.full_code.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
+                  {row.data.title || 'Без назви'}
+                </Link>
+              ),
+            },
+            {
+              headerName: "Реквізити",
+              field: "full_code",
+              flex: isMobile ? 1 : undefined,
+              resizable: !isMobile,
+              cellRenderer: isMobile ? (row: { value: string }) => (
+                <Link href={`/archives/${row.value.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
+                  {row.value}
+                </Link>
+              ) : undefined,
+            },
+            {
+              headerName: "Рік",
+              field: "years",
+              hide: isMobile,
+              valueGetter: (row) =>
+                row.data?.years
+                  .map((y) => (y.start_year === y.end_year ? y.start_year : `${y.start_year}-${y.end_year}`))
+                  .join(", "),
+            },
+            // {
+            //   headerName: "Теги",
+            //   field: "tags",
+            //   cellRenderer: (row: { value: string[] }) => (
+            //     <>
+            //       {row.value.map((tag) => (
+            //         <TagChip key={tag} label={tag} />
+            //       ))}
+            //     </>
+            //   ),
+            // },
+          ]}
+          rows={searchResults || []}
+        />
+      </div>
     </>
   );
 };
