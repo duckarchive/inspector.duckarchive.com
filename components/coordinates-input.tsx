@@ -106,7 +106,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
         {!isOpen && (
           <GeoDuckMap
             key="static-geoduck-map"
-            className="rounded-lg text-primary"
+            className="rounded-lg text-primary z-0"
             positions={[latLng]}
             center={center}
             year={+(year || 0) || undefined}
