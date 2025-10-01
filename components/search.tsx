@@ -1,75 +1,188 @@
 "use client";
+import { useState, useEffect } from "react";
 
-import { Archives } from "@/data/archives";
-import { useEffect, useState } from "react";
-import { SearchRequest, SearchResponse } from "@/app/api/search/route";
+import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
-import { Button } from "@heroui/button";
-import { Checkbox } from "@heroui/checkbox";
+import { SearchRequest, SearchResponse } from "@/app/api/search/route";
+import CatalogDuckTable from "@/components/table";
 import { Input } from "@heroui/input";
-import { Link } from "@heroui/link";
+import { Button } from "@heroui/button";
+import { Accordion, AccordionItem } from "@heroui/accordion";
+import { Select, SelectItem } from "@heroui/select";
 import { FaSearch } from "react-icons/fa";
-import useSearchRequest from "@/hooks/useSearchRequest";
-import InspectorDuckTable from "./table";
-import useIsMobile from "@/hooks/useIsMobile";
-import { sortCode } from "@duckarchive/framework";
-import { sendGAEvent } from "@next/third-parties/google";
-import SelectArchive from "./select-archive";
-import SearchInputGuideModal from "./search-input-guide-modal";
+import { IoChevronDown } from "react-icons/io5";
+import { Archives } from "@/data/archives";
+import SelectArchive from "@/components/select-archive";
+import TagChip from "@/components/tag-chip";
+import CoordinatesInput from "@/components/coordinates-input";
 
-type TableItem = SearchResponse["items"][number];
+type TableItem = SearchResponse[number];
 
 interface SearchProps {
   archives: Archives;
+  tags: string[];
 }
 
-const Search: React.FC<SearchProps> = ({ archives }) => {
-  const isMobile = useIsMobile();
-  const [defaultValues, setQueryParams] = useSearch(archives);
+const Search: React.FC<SearchProps> = ({ archives, tags }) => {
+  const [defaultValues, setQueryParams] = useSearch();
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
-  const { searchResults, isLoading, isError, trigger } = useSearchRequest();
+  const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
 
   useEffect(() => {
     trigger(searchValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    setQueryParams(searchValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValues]);
+
   const handleInputChange = (key: keyof SearchRequest) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^А-ЯҐЄІЇ0-9]/gi, "").toUpperCase();
+    const value = e.target.value;
     setSearchValues({ ...searchValues, [key]: value });
   };
 
-  const handleStrictChange = (value: boolean) => {
-    setSearchValues({ ...searchValues, isStrict: value });
+  const handleYearChange = (value: string) => {
+    setSearchValues({ ...searchValues, year: value || undefined });
+  };
+
+  // const handleGeoChange = (position: [number, number]) => {
+  //   setSearchValues({ ...searchValues, lat: position[0], lng: position[1] });
+  // };
+
+  // const handleLatInputChange = (value: number) => {
+  //   setSearchValues({ ...searchValues, lat: value });
+  // };
+
+  // const handleLngInputChange = (value: number) => {
+  //   setSearchValues({ ...searchValues, lng: value });
+  // };
+
+  // const handleRadiusInputChange = (value: number) => {
+  //   setSearchValues({ ...searchValues, radius_m: value });
+  // };
+
+  const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (searchValues.lat || searchValues.lng) {
+      const isConfirmed = window.confirm("Поля 'Широта' та 'Довгота' будуть очищені. Продовжити?");
+      if (!isConfirmed) {
+        return;
+      }
+    }
+    const value = e.target.value;
+    setSearchValues({ ...searchValues, lat: undefined, lng: undefined, place: value });
+  };
+
+  const handleOpenMap = () => {
+    if (searchValues.place) {
+      const isConfirmed = window.confirm("Поле 'Населений пункт' буде очищено. Продовжити?");
+      if (!isConfirmed) {
+        return;
+      }
+    }
+    setSearchValues({ ...searchValues, place: undefined });
+    // onOpen();
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fullCode = `${searchValues.a}-${searchValues.f}-${searchValues.d}-${searchValues.c}`;
-    sendGAEvent("event", "search-form", { value: fullCode });
-    setQueryParams(searchValues);
     trigger(searchValues);
   };
 
-  const count = searchResults?.items.length || 0;
-  const totalCount = searchResults?.total_count || 0;
-
   return (
     <>
-      <div className="flex justify-between w-full">
-        <h1 className="text-lg font-bold">Пошук справ:</h1>
-        <SearchInputGuideModal />
-      </div>
-      <form className="flex flex-col gap-2 items-center" onSubmit={handleSubmit}>
-        <SelectArchive
-          archives={archives}
-          value={searchValues.a}
-          onChange={(v) => setSearchValues({ ...searchValues, a: v?.toString() || undefined })}
-        />
-        <div className="flex gap-2 w-full">
-          <Input label="Фонд" value={searchValues.f} onChange={handleInputChange("f")} />
-          <Input label="Опис" value={searchValues.d} onChange={handleInputChange("d")} />
-          <Input label="Справа" value={searchValues.c} onChange={handleInputChange("c")} />
+      <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-2 md:flex-row">
+          <div className="flex flex-col gap-2 basis-1/2 shrink-0" onClick={handleOpenMap}>
+            <CoordinatesInput
+              isLoading={isMutating}
+              year={searchValues.year || undefined}
+              value={{
+                lat: searchValues.lat || undefined,
+                lng: searchValues.lng || undefined,
+                radius_m: searchValues.radius_m || undefined,
+              }}
+              onChange={(value) => setSearchValues({ ...searchValues, ...value })}
+            />
+            <Input
+              isClearable
+              value={searchValues.place || ""}
+              onChange={handlePlaceInputChange}
+              onClear={() => setSearchValues({ ...searchValues, place: undefined })}
+              pattern="[\u0400-\u04FF\u0500-\u052F]+"
+              label="Назва населеного пункту"
+              labelPlacement="inside"
+            />
+          </div>
+          <div className="flex flex-col gap-2 basis-1/2">
+            <div className="flex flex-col">
+              <div className="flex gap-2">
+                <Input
+                  label="Заголовок справи"
+                  value={searchValues.title || ""}
+                  onChange={handleInputChange("title")}
+                />
+                <Input
+                  type="number"
+                  className="basis-32 shrink-0"
+                  value={searchValues.year}
+                  onValueChange={handleYearChange}
+                  label="Рік"
+                  labelPlacement="inside"
+                />
+              </div>
+              <Accordion isCompact defaultSelectedKeys={["map-help"]} className="p-0" variant="light">
+                <AccordionItem
+                  key="map-help"
+                  aria-label="Open map to select location"
+                  className="flex flex-col"
+                  classNames={{
+                    trigger: `p-0 gap-1 w-auto`,
+                    content: "p-0 flex flex-col gap-2",
+                    title: "text-xs opacity-50",
+                    indicator: "inline-flex leading-none",
+                  }}
+                  disableIndicatorAnimation
+                  indicator={({ isOpen }) => (
+                    <IoChevronDown className={`${isOpen ? "rotate-180" : ""} transition-transform inline`} />
+                  )}
+                  title="Розгорніть для вводу архівних реквізитів"
+                >
+                  <SelectArchive
+                    archives={archives}
+                    value={searchValues.archive}
+                    onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
+                  />
+                  <div className="flex gap-2">
+                    <Input label="Фонд" value={searchValues.fund || ""} onChange={handleInputChange("fund")} />
+                    <Input
+                      label="Опис"
+                      value={searchValues.description || ""}
+                      onChange={handleInputChange("description")}
+                    />
+                    <Input label="Справа" value={searchValues.case || ""} onChange={handleInputChange("case")} />
+                  </div>
+                </AccordionItem>
+              </Accordion>
+            </div>
+            <Select
+              className="grow-1"
+              label="Теги"
+              selectionMode="multiple"
+              value={searchValues.tags || []}
+              onSelectionChange={(v) =>
+                setSearchValues({
+                  ...searchValues,
+                  tags: Array.from(v as Set<string>),
+                })
+              }
+            >
+              {tags.map((tag) => (
+                <SelectItem key={tag}>{tag}</SelectItem>
+              ))}
+            </Select>
+          </div>
         </div>
         <Button
           type="submit"
@@ -80,124 +193,39 @@ const Search: React.FC<SearchProps> = ({ archives }) => {
         >
           Пошук
         </Button>
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start w-full">
-          {totalCount > 20 ? (
-            <div className="text-warning text-sm basis-1/2">
-              <p>
-                Кількість результатів:&nbsp;
-                <span className="font-bold">
-                  {count}/{totalCount}
-                </span>
-              </p>
-              <p>
-                Зверніть увагу! Нижче показано лише 20 знайдених справ, через обмеження пошуку. Щоб побачити всі
-                результати,&nbsp;
-                <Link href="/archives" className="text-sm" target="_blank">
-                  використовуйте навігацію по архівах
-                </Link>
-                .
-              </p>
-            </div>
-          ) : (
-            <p className="text-sm">
-              Кількість результатів:&nbsp;
-              <span className="font-bold">
-                {count}/{totalCount}
-              </span>
-            </p>
-          )}
-          <Checkbox
-            isSelected={searchValues.isStrict}
-            size="sm"
-            className="flex-row-reverse gap-1 p-0 m-0"
-            onValueChange={handleStrictChange}
-          >
-            Суворий пошук
-          </Checkbox>
-        </div>
       </form>
-      {isError && <p className="text-danger">Щось пішло не так</p>}
-      <InspectorDuckTable<TableItem>
-        isLoading={isLoading}
+      <CatalogDuckTable<TableItem>
+        isLoading={isMutating}
         columns={[
           {
-            field: "archive_code",
-            comparator: undefined,
-            filter: false,
-            headerName: "Архів",
-            flex: 1,
-            resizable: true,
-            hide: isMobile,
-            cellRenderer: (row: { value: TableItem["archive_code"]; data: TableItem }) => (
-              <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm" target="_blank">
-                {row.value}
-              </Link>
-            ),
-          },
-          {
-            field: "fund_code",
-            comparator: sortCode,
-            headerName: "Фонд",
-            flex: 1,
-            hide: isMobile,
-            cellRenderer: (row: { value: TableItem["fund_code"]; data: TableItem }) => (
-              <Link
-                href={`/archives/${row.data.archive_code}/${row.data.fund_code}`}
-                className="text-inherit text-sm"
+            headerName: "Реквізити",
+            colId: "full_code",
+            cellRenderer: (row: { value: number }) => (
+              <a
+                href={`https://inspector.duckarchive.com/search?q=${row.value}`}
+                className="text-blue-600 hover:underline"
                 target="_blank"
+                rel="noreferrer"
               >
                 {row.value}
-              </Link>
+              </a>
             ),
           },
+          { headerName: "Нас.пункт", field: "locations" },
+          { headerName: "Рік", field: "years" },
           {
-            field: "description_code",
-            comparator: sortCode,
-            headerName: "Опис",
-            flex: 1,
-            hide: isMobile,
-            cellRenderer: (row: { value: TableItem["description_code"]; data: TableItem }) => (
-              <Link
-                href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}`}
-                className="text-inherit text-sm"
-                target="_blank"
-              >
-                {row.value}
-              </Link>
-            ),
-          },
-          {
-            field: "case_code",
-            comparator: sortCode,
-            headerName: "Справа",
-            flex: 1,
-            hide: isMobile,
-            cellRenderer: (row: { value: TableItem["case_code"]; data: TableItem }) => (
-              <Link
-                href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}/${row.data.case_code}`}
-                className="text-inherit text-sm"
-                target="_blank"
-              >
-                {row.value}
-              </Link>
-            ),
-          },
-          {
-            field: "url",
-            type: undefined,
-            headerName: "Посилання",
-            resizable: isMobile,
-            minWidth: 400,
-            flex: 4,
-            comparator: undefined,
-            cellRenderer: (row: { value: string; data: TableItem }) => (
-              <Link href={row.value || "#"} isExternal>
-                {row.value || "Щось пішло не так"}
-              </Link>
+            headerName: "Теги",
+            field: "tags",
+            cellRenderer: (row: { value: string[] }) => (
+              <>
+                {row.value.map((tag) => (
+                  <TagChip key={tag} label={tag} />
+                ))}
+              </>
             ),
           },
         ]}
-        rows={searchResults?.items || []}
+        rows={searchResults || []}
       />
     </>
   );
