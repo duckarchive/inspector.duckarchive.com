@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { addToast } from "@heroui/toast";
 import { Link } from "@heroui/link";
 
-const TO_DATE = new Date("2025-10-01T00:00:00Z");
+// const TO_DATE = new Date("2025-10-01T00:00:00Z");
 
 const useNoRussians = () => {
   const router = useRouter();
@@ -54,21 +54,22 @@ const useNoRussians = () => {
         });
       } else if (ukPos > ruPos) {
         // hard ukrainization
-        addToast({
-          title: "🇺🇦 Жорстка українізація!",
-          description: `Ви надаєте перевагу російській мові над українською. Качині проєкти перестануть працювати для вас з ${TO_DATE.toLocaleDateString()}.`,
-          timeout: 20000,
-          hideIcon: true,
-          color: "danger",
-          classNames: {
-            base: "flex-col gap-2 items-start",
-          },
-          endContent: (
-            <Link className="flex" size="sm" isExternal href="https://support.google.com/accounts/answer/32047?hl=uk">
-              Як це виправити?
-            </Link>
-          ),
-        });
+        router.push("/russians-are-not-welcome");
+        // addToast({
+        //   title: "🇺🇦 Жорстка українізація!",
+        //   description: `Ви надаєте перевагу російській мові над українською. Качині проєкти перестануть працювати для вас з ${TO_DATE.toLocaleDateString()}.`,
+        //   timeout: 20000,
+        //   hideIcon: true,
+        //   color: "danger",
+        //   classNames: {
+        //     base: "flex-col gap-2 items-start",
+        //   },
+        //   endContent: (
+        //     <Link className="flex" size="sm" isExternal href="https://support.google.com/accounts/answer/32047?hl=uk">
+        //       Як це виправити?
+        //     </Link>
+        //   ),
+        // });
       }
     }
   }, [pathname, preferredLangs]);
