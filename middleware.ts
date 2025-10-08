@@ -35,7 +35,7 @@ export function middleware(req: NextRequest) {
     headers.set("Access-Control-Allow-Credentials", "true");
 
     if (req.method === "OPTIONS") {
-      return NextResponse.next({ headers });
+      return new NextResponse(null, { status: 204, headers });
     }
 
     return NextResponse.next({ headers });
