@@ -16,6 +16,7 @@ export type SearchRequest = Partial<{
   fund: string;
   description: string;
   case: string;
+  is_online: boolean;
 }>;
 
 export type SearchResponse = Prisma.CaseGetPayload<{
@@ -54,6 +55,7 @@ export async function POST(request: Request) {
       fund,
       description,
       case: case_number, // 'case' is a reserved keyword
+      is_online = true,
     }: SearchRequest = await request.json();
 
     // Build dynamic SQL query parts
@@ -98,6 +100,14 @@ export async function POST(request: Request) {
 
     if (tags && tags.length > 0) {
       whereParts.push(Prisma.sql`c.tags && ARRAY[${Prisma.join(tags)}]::text[]`);
+    }
+
+    if (is_online) {
+      whereParts.push(Prisma.sql`EXISTS (
+        SELECT 1
+        FROM "matches" m
+        WHERE m.case_id = c.id AND m.full_code IS NOT NULL
+      )`);
     }
     
     const bodyQuery = whereParts.length > 0
