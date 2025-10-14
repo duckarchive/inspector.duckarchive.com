@@ -1,6 +1,6 @@
 // import { Match } from "@/generated/prisma/client";
 // import prisma from "@/lib/db";
-import { authorizeGoogle } from "@/lib/auth";
+import { getDuckUser } from "@/lib/user";
 import { ErrorResponse } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,7 +11,7 @@ export type CheckDGSRequest = Partial<{
 export type CheckDGSResponse = boolean;
 
 export async function POST(req: NextRequest): Promise<NextResponse<CheckDGSResponse | ErrorResponse>> {
-  const user = await authorizeGoogle(req);
+  const user = await getDuckUser();
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }

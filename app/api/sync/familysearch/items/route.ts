@@ -1,15 +1,15 @@
 import { FamilySearchItem } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { authorizeGoogle } from "@/lib/auth";
+import { getDuckUser } from "@/lib/user";
 import { ErrorResponse } from "@/types";
 
 export type GetFamilySearchProjectResponse = FamilySearchItem[];
 
 export async function POST(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse | ErrorResponse>> {
   console.time("sync familysearch items");
-  const user = await authorizeGoogle(req, true);
-  if (!user) {
+  const user = await getDuckUser();
+  if (!user || !user.is_admin) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   const items: FamilySearchItem[] = await req.json();

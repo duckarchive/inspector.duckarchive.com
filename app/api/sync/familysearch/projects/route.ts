@@ -1,7 +1,7 @@
 import { Prisma } from "@/generated/prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { authorizeGoogle } from "@/lib/auth";
+import { getDuckUser } from "@/lib/user";
 import { ErrorResponse } from "@/types";
 
 export type GetFamilySearchProjectResponse =
@@ -11,9 +11,9 @@ export type GetFamilySearchProjectResponse =
       };
     }>[];
 
-export async function GET(req: NextRequest): Promise<NextResponse<GetFamilySearchProjectResponse | ErrorResponse>> {
-  const user = await authorizeGoogle(req, true);
-  if (!user) {
+export async function GET(): Promise<NextResponse<GetFamilySearchProjectResponse | ErrorResponse>> {
+  const user = await getDuckUser();
+  if (!user || !user.is_admin) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 

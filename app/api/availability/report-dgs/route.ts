@@ -1,4 +1,4 @@
-import { authorizeGoogle } from "@/lib/auth";
+import { getDuckUser } from "@/lib/user";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
 
@@ -9,7 +9,7 @@ export type ReportDGSRequest = Partial<{
 export type ReportDGSResponse = boolean;
 
 export async function POST(req: NextRequest): Promise<NextResponse<ReportDGSResponse | ErrorResponse>> {
-  const user = await authorizeGoogle(req);
+  const user = await getDuckUser();
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
