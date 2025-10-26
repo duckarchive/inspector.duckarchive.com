@@ -28,7 +28,7 @@ const Details: React.FC<{
 }> = ({ caseItem }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {caseItem?.info && <p>{caseItem.info}</p>}
-    {caseItem?.years.length || caseItem?.locations?.length || caseItem?.authors.length ? (
+    {caseItem?.years?.length || caseItem?.locations?.length || caseItem?.authors?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
         {Boolean(caseItem.locations.length || caseItem?.authors.length) && (
           <div className="h-64 grow">
