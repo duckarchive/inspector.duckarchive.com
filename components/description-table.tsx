@@ -18,13 +18,13 @@ const Details: React.FC<{
 }> = ({ description }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {description?.info && <p>{description.info}</p>}
-    {description?.years.length || description?.matches?.length ? (
+    {description?.years.length || description?.online_copies?.length ? (
       <ul className="list-disc list-inside py-2">
         {Boolean(description.years.length) && <li>Роки: {getYearsString(description.years)}</li>}
-        {(description.matches.filter(match => match.url) as { url: string }[]).map((match) => (
-          <li key={match.url}>
-            <Link href={match.url} target="_blank" className="text-inherit text-sm underline">
-              {match.url}
+        {(description.online_copies.filter(copy => copy.url) as { url: string }[]).map((copy) => (
+          <li key={copy.url}>
+            <Link href={copy.url} target="_blank" className="text-inherit text-sm underline">
+              {copy.url}
             </Link>
           </li>
         ))}

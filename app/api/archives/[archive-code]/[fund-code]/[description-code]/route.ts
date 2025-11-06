@@ -7,11 +7,7 @@ export type GetDescriptionResponse =
   | Prisma.DescriptionGetPayload<{
       include: {
         years: true;
-        matches: {
-          select: {
-            url: true;
-          };
-        };
+        online_copies: true;
         cases: {
           select: {
             id: true;
@@ -69,14 +65,7 @@ export async function GET(
     },
     include: {
       years: true,
-      matches: {
-        where: {
-          case_id: null,
-        },
-        select: {
-          url: true
-        },
-      }
+      online_copies: true,
     }
   });
 
