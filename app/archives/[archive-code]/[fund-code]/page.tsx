@@ -1,8 +1,7 @@
 import FundTable from "@/components/fund-table";
 import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
-import { siteConfig } from "@/config/site";
-import { GetFundResponse } from "@/app/api/archives/[archive-code]/[fund-code]/route";
+import { getFundByCode } from "@/app/api/archives/[archive-code]/[fund-code]/route";
 import { getTranslations } from "next-intl/server";
 
 export interface FundPageProps {
@@ -13,20 +12,21 @@ export interface FundPageProps {
 }
 
 export async function generateMetadata(pageProps: FundPageProps, parent: ResolvingMetadata): Promise<Metadata> {
+  const fallback = {
+    code: "-",
+    title: "Фонд",
+    description: "Деталі фонду",
+  };
   try {
-
     const t = await getTranslations("metadata");
     const params = await pageProps.params;
     const { openGraph } = await parent;
     const archiveCode = decodeURIComponent(params["archive-code"]);
     const code = decodeURIComponent(params["fund-code"]);
-    const fund: GetFundResponse = await fetch(`${siteConfig.url}/api/archives/${archiveCode}/${code}`).then((res) =>
-      res.json()
-    );
-    console.log("fund", fund);
-  
+    const fund = (await getFundByCode(archiveCode, code)) || fallback;
+
     const name = fund.title ? ` (${fund.title})` : "";
-  
+
     return {
       title: `${archiveCode}-${code}`,
       description: t("fund-description", { archiveCode, fundCode: code, fundTitle: name }),
@@ -38,10 +38,7 @@ export async function generateMetadata(pageProps: FundPageProps, parent: Resolvi
     };
   } catch (error) {
     console.log("failed to generate metadata for fund page", error);
-    return {
-      title: "Фонд",
-      description: "Деталі фонду",
-    };
+    return fallback;
   }
 }
 

@@ -1,8 +1,7 @@
 import DescriptionTable from "@/components/description-table";
 import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
-import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
-import { siteConfig } from "@/config/site";
+import { getDescriptionByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
 import { getTranslations } from "next-intl/server";
 
 export interface DescriptionPageProps {
@@ -14,6 +13,11 @@ export interface DescriptionPageProps {
 }
 
 export async function generateMetadata(pageProps: DescriptionPageProps, parent: ResolvingMetadata): Promise<Metadata> {
+  const fallback = {
+    code: "-",
+    title: "Опис",
+    description: "Деталі опису",
+  };
   try {
     const t = await getTranslations("metadata");
     const params = await pageProps.params;
@@ -21,10 +25,7 @@ export async function generateMetadata(pageProps: DescriptionPageProps, parent: 
     const archiveCode = decodeURIComponent(params["archive-code"]);
     const fundCode = decodeURIComponent(params["fund-code"]);
     const code = decodeURIComponent(params["description-code"]);
-    const description: GetDescriptionResponse = await fetch(
-      `${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${code}`
-    ).then((res) => res.json());
-    console.log("description", description);
+    const description = (await getDescriptionByCode(archiveCode, fundCode, code)) || fallback;
 
     const name = description.title ? ` (${description.title})` : "";
 
@@ -44,10 +45,7 @@ export async function generateMetadata(pageProps: DescriptionPageProps, parent: 
     };
   } catch (error) {
     console.log("failed to generate metadata for description page", error);
-    return {
-      title: "Опис",
-      description: "Деталі опису",
-    };
+    return fallback;
   }
 }
 

@@ -3,26 +3,55 @@ import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
 
-export type GetArchiveResponse =
-  | Prisma.ArchiveGetPayload<{
-      include: {
-        funds: {
+export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
+  include: {
+    funds: {
+      select: {
+        id: true;
+        code: true;
+        title: true;
+        years: true;
+        matches: {
           select: {
-            id: true;
-            code: true;
-            title: true;
-            years: true;
-            matches: {
-              select: {
-                updated_at: true;
-                children_count: true;
-                resource_id: true;
-              };
-            };
+            updated_at: true;
+            children_count: true;
+            resource_id: true;
           };
         };
       };
-    }>;
+    };
+  };
+}>;
+
+export const getArchiveByCode = async (archiveCode: string): Promise<GetArchiveResponse | null> => {
+  const archive = await prisma.archive.findFirst({
+    where: {
+      code: archiveCode,
+    },
+    include: {
+      funds: {
+        select: {
+          id: true,
+          code: true,
+          title: true,
+          years: true,
+          matches: {
+            where: {
+              description_id: null,
+              case_id: null,
+            },
+            select: {
+              updated_at: true,
+              children_count: true,
+              resource_id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return archive;
+};
 
 interface GetArchiveParams {
   params: Promise<{
@@ -30,41 +59,20 @@ interface GetArchiveParams {
   }>;
 }
 
-export async function GET(_req: NextRequest, props: GetArchiveParams): Promise<NextResponse<GetArchiveResponse | ErrorResponse>> {
+export async function GET(
+  _req: NextRequest,
+  props: GetArchiveParams
+): Promise<NextResponse<GetArchiveResponse | ErrorResponse>> {
   try {
     const params = await props.params;
     const archiveCode = params["archive-code"];
-  
+
     if (!archiveCode) {
       return NextResponse.json({ message: '"archive-code" query param is required' }, { status: 400 });
     }
-  
-    const archive = await prisma.archive.findFirst({
-      where: {
-        code: archiveCode,
-      },
-      include: {
-        funds: {
-          select: {
-            id: true,
-            code: true,
-            title: true,
-            years: true,
-            matches: {
-              where: {
-                description_id: null,
-                case_id: null,
-              },
-              select: {
-                updated_at: true,
-                children_count: true,
-                resource_id: true,
-              },
-            },
-          },
-        },
-      },
-    });
+
+    const archive = await getArchiveByCode(archiveCode);
+
     if (archive) {
       return NextResponse.json(archive, { status: 200 });
     } else {

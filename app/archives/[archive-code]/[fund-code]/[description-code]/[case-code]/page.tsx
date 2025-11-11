@@ -1,8 +1,7 @@
 import CaseTable from "@/components/case-table";
 import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
-import { siteConfig } from "@/config/site";
-import { GetCaseResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
+import { getCaseByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
 import { getTranslations } from "next-intl/server";
 
 export interface CasePageProps {
@@ -15,6 +14,11 @@ export interface CasePageProps {
 }
 
 export async function generateMetadata(pageProps: CasePageProps, parent: ResolvingMetadata): Promise<Metadata> {
+  const fallback = {
+    code: "-",
+    title: "Справа",
+    description: "Деталі справи",
+  };
   try {
     const t = await getTranslations("metadata");
     const params = await pageProps.params;
@@ -23,10 +27,7 @@ export async function generateMetadata(pageProps: CasePageProps, parent: Resolvi
     const fundCode = decodeURIComponent(params["fund-code"]);
     const descriptionCode = decodeURIComponent(params["description-code"]);
     const code = decodeURIComponent(params["case-code"]);
-    const caseItem: GetCaseResponse = await fetch(
-      `${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`
-    ).then((res) => res.json());
-    console.log("caseItem", caseItem);
+    const caseItem = await getCaseByCode(archiveCode, fundCode, descriptionCode, code) || fallback;
 
     const name = caseItem.title ? ` (${caseItem.title})` : "";
 
@@ -41,10 +42,7 @@ export async function generateMetadata(pageProps: CasePageProps, parent: Resolvi
     };
   } catch (error) {
     console.log("failed to generate metadata for case page", error);
-    return {
-      title: "Справа",
-      description: "Деталі справи",
-    };
+    return fallback;
   }
 }
 

@@ -25,6 +25,56 @@ export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
   };
 }>;
 
+export const getDescriptionByCode = async (
+  archiveCode: string,
+  fundCode: string,
+  descriptionCode: string,
+  page: number = 0
+): Promise<GetDescriptionResponse | null> => {
+  const description = await prisma.description.findFirst({
+    where: {
+      fund: {
+        code: fundCode,
+        archive: {
+          code: archiveCode,
+        },
+      },
+      code: descriptionCode,
+    },
+    include: {
+      years: true,
+      online_copies: true,
+    },
+  });
+
+  if (!description) {
+    return null;
+  }
+
+  const cases = await prisma.case.findMany({
+    where: {
+      description_id: description.id,
+    },
+    select: {
+      id: true,
+      code: true,
+      title: true,
+      years: true,
+      matches: {
+        select: {
+          updated_at: true,
+          children_count: true,
+          resource_id: true,
+        },
+      },
+    },
+    skip: page * 5000,
+    take: 5000,
+  });
+
+  return { ...description, cases };
+};
+
 interface GetDescriptionParams {
   params: Promise<{
     "archive-code": string;
@@ -52,54 +102,13 @@ export async function GET(
       );
     }
 
-    const description = await prisma.description.findFirst({
-      where: {
-        fund: {
-          code: fundCode,
-          archive: {
-            code: archiveCode,
-          },
-        },
-        code: descriptionCode,
-      },
-      include: {
-        years: true,
-        online_copies: true,
-      },
-    });
+    const description = await getDescriptionByCode(archiveCode, fundCode, descriptionCode, page);
 
     if (!description) {
       return NextResponse.json({ message: "Description not found" }, { status: 404 });
     }
 
-    const cases = await prisma.case.findMany({
-      where: {
-        description_id: description.id,
-      },
-      select: {
-        id: true,
-        code: true,
-        title: true,
-        years: true,
-        matches: {
-          select: {
-            updated_at: true,
-            children_count: true,
-            resource_id: true,
-          },
-        },
-      },
-      skip: page * 5000,
-      take: 5000,
-    });
-
-    return NextResponse.json(
-      {
-        ...description,
-        cases,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(description, { status: 200 });
   } catch (error) {
     console.error("Error fetching description:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

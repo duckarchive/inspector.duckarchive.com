@@ -1,8 +1,7 @@
 import ArchiveTable from "@/components/archive-table";
 import { Metadata, NextPage } from "next";
 import { getResources } from "@/data/resources";
-import { siteConfig } from "@/config/site";
-import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
+import { getArchiveByCode } from "@/app/api/archives/[archive-code]/route";
 import { getTranslations } from "next-intl/server";
 
 export interface ArchivePageProps {
@@ -12,13 +11,17 @@ export interface ArchivePageProps {
 }
 
 export async function generateMetadata(pageProps: ArchivePageProps): Promise<Metadata> {
+  const fallback = {
+    code: "-",
+    title: "Архів",
+    description: "Деталі архіву",
+  };
   try {
     const t = await getTranslations("metadata");
     const params = await pageProps.params;
     const code = decodeURIComponent(params["archive-code"]);
-    const archive: GetArchiveResponse = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json());
-    console.log("archive", archive);
-    
+    const archive = (await getArchiveByCode(code)) || fallback;
+
     return {
       title: `${code}`,
       description: t("archive-description", { archiveCode: archive.code, archiveTitle: archive.title || "" }),
@@ -29,10 +32,7 @@ export async function generateMetadata(pageProps: ArchivePageProps): Promise<Met
     };
   } catch (error) {
     console.log("failed to generate metadata for archive page", error);
-    return {
-      title: "Архів",
-      description: "Деталі архіву",
-    };
+    return fallback;
   }
 }
 

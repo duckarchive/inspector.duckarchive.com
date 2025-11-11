@@ -24,6 +24,39 @@ export type GetFundResponse = Prisma.FundGetPayload<{
   };
 }>;
 
+export const getFundByCode = async (archiveCode: string, fundCode: string): Promise<GetFundResponse | null> => {
+  const fund = await prisma.fund.findFirst({
+    where: {
+      archive: {
+        code: archiveCode,
+      },
+      code: fundCode,
+    },
+    include: {
+      years: true,
+      descriptions: {
+        select: {
+          id: true,
+          code: true,
+          title: true,
+          years: true,
+          matches: {
+            where: {
+              case_id: null,
+            },
+            select: {
+              updated_at: true,
+              children_count: true,
+              resource_id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return fund;
+};
+
 interface GetFundParams {
   params: Promise<{
     "archive-code": string;
@@ -44,35 +77,8 @@ export async function GET(
       return NextResponse.json({ message: '"archive-code" and "fund-code" params are required' }, { status: 400 });
     }
 
-    const fund = await prisma.fund.findFirst({
-      where: {
-        archive: {
-          code: archiveCode,
-        },
-        code: fundCode,
-      },
-      include: {
-        years: true,
-        descriptions: {
-          select: {
-            id: true,
-            code: true,
-            title: true,
-            years: true,
-            matches: {
-              where: {
-                case_id: null,
-              },
-              select: {
-                updated_at: true,
-                children_count: true,
-                resource_id: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const fund = await getFundByCode(archiveCode, fundCode);
+
     if (fund) {
       return NextResponse.json(fund, { status: 200 });
     } else {

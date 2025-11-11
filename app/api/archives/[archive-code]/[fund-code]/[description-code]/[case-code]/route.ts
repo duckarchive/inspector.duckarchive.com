@@ -23,6 +23,44 @@ export type GetCaseResponse = Prisma.CaseGetPayload<{
   };
 }>;
 
+export const getCaseByCode = async (
+  archiveCode: string,
+  fundCode: string,
+  descriptionCode: string,
+  caseCode: string
+): Promise<GetCaseResponse | null> => {
+  const caseItem = await prisma.case.findFirst({
+    where: {
+      full_code: `${archiveCode}-${fundCode}-${descriptionCode}-${caseCode}`,
+    },
+    include: {
+      years: true,
+      authors: {
+        include: {
+          author: true,
+        },
+      },
+      locations: {
+        select: {
+          id: true,
+          lat: true,
+          lng: true,
+          radius_m: true,
+        },
+      },
+      matches: {
+        where: {
+          children_count: {
+            gt: 0,
+          },
+        },
+      },
+    },
+  });
+
+  return caseItem;
+};
+
 interface GetCaseParams {
   params: Promise<{
     "archive-code": string;
@@ -50,34 +88,7 @@ export async function GET(
       );
     }
 
-    const caseItem = await prisma.case.findFirst({
-      where: {
-        full_code: `${archiveCode}-${fundCode}-${descriptionCode}-${caseCode}`,
-      },
-      include: {
-        years: true,
-        authors: {
-          include: {
-            author: true,
-          },
-        },
-        locations: {
-          select: {
-            id: true,
-            lat: true,
-            lng: true,
-            radius_m: true,
-          },
-        },
-        matches: {
-          where: {
-            children_count: {
-              gt: 0,
-            },
-          },
-        },
-      },
-    });
+    const caseItem = await getCaseByCode(archiveCode, fundCode, descriptionCode, caseCode);
 
     if (caseItem) {
       return NextResponse.json(caseItem);
