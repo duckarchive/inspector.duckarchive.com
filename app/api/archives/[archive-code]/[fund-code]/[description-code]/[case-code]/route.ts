@@ -10,18 +10,18 @@ export type GetCaseResponse = Prisma.CaseGetPayload<{
     authors: {
       include: {
         author: true;
-      }
+      };
     };
     locations: {
       select: {
-        id: true,
-        lat: true,
-        lng: true,
-        radius_m: true
-      },
-    }
+        id: true;
+        lat: true;
+        lng: true;
+        radius_m: true;
+      };
+    };
   };
-}>
+}>;
 
 interface GetCaseParams {
   params: Promise<{
@@ -34,53 +34,58 @@ interface GetCaseParams {
 
 export async function GET(
   _req: NextRequest,
-  props: GetCaseParams,
+  props: GetCaseParams
 ): Promise<NextResponse<GetCaseResponse | ErrorResponse>> {
-  const params = await props.params;
-  const archiveCode = params["archive-code"];
-  const fundCode = params["fund-code"];
-  const descriptionCode = params["description-code"];
-  const caseCode = params["case-code"];
+  try {
+    const params = await props.params;
+    const archiveCode = params["archive-code"];
+    const fundCode = params["fund-code"];
+    const descriptionCode = params["description-code"];
+    const caseCode = params["case-code"];
 
-  if (!archiveCode || !fundCode || !descriptionCode || !caseCode) {
-    return NextResponse.json(
-      { message: '"archive-code", "fund-code", "description-code" and "case-code" params are required' },
-      { status: 400 },
-    );
-  }
+    if (!archiveCode || !fundCode || !descriptionCode || !caseCode) {
+      return NextResponse.json(
+        { message: '"archive-code", "fund-code", "description-code" and "case-code" params are required' },
+        { status: 400 }
+      );
+    }
 
-  const caseItem = await prisma.case.findFirst({
-    where: {
-      full_code: `${archiveCode}-${fundCode}-${descriptionCode}-${caseCode}`,
-    },
-    include: {
-      years: true,
-      authors: {
-        include: {
-          author: true,
-        },
+    const caseItem = await prisma.case.findFirst({
+      where: {
+        full_code: `${archiveCode}-${fundCode}-${descriptionCode}-${caseCode}`,
       },
-      locations: {
-        select: {
-          id: true,
-          lat: true,
-          lng: true,
-          radius_m: true
+      include: {
+        years: true,
+        authors: {
+          include: {
+            author: true,
+          },
         },
-      },
-      matches: {
-        where: {
-          children_count: {
-            gt: 0,
+        locations: {
+          select: {
+            id: true,
+            lat: true,
+            lng: true,
+            radius_m: true,
+          },
+        },
+        matches: {
+          where: {
+            children_count: {
+              gt: 0,
+            },
           },
         },
       },
-    },
-  });
+    });
 
-  if (caseItem) {
-    return NextResponse.json(caseItem);
-  } else {
-    return NextResponse.json({ message: "Case not found" }, { status: 404 });
+    if (caseItem) {
+      return NextResponse.json(caseItem);
+    } else {
+      return NextResponse.json({ message: "Case not found" }, { status: 404 });
+    }
+  } catch (error) {
+    console.error("Error fetching case:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }

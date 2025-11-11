@@ -31,42 +31,47 @@ interface GetArchiveParams {
 }
 
 export async function GET(_req: NextRequest, props: GetArchiveParams): Promise<NextResponse<GetArchiveResponse | ErrorResponse>> {
-  const params = await props.params;
-  const archiveCode = params["archive-code"];
-
-  if (!archiveCode) {
-    return NextResponse.json({ message: '"archive-code" query param is required' }, { status: 400 });
-  }
-
-  const archive = await prisma.archive.findFirst({
-    where: {
-      code: archiveCode,
-    },
-    include: {
-      funds: {
-        select: {
-          id: true,
-          code: true,
-          title: true,
-          years: true,
-          matches: {
-            where: {
-              description_id: null,
-              case_id: null,
-            },
-            select: {
-              updated_at: true,
-              children_count: true,
-              resource_id: true,
+  try {
+    const params = await props.params;
+    const archiveCode = params["archive-code"];
+  
+    if (!archiveCode) {
+      return NextResponse.json({ message: '"archive-code" query param is required' }, { status: 400 });
+    }
+  
+    const archive = await prisma.archive.findFirst({
+      where: {
+        code: archiveCode,
+      },
+      include: {
+        funds: {
+          select: {
+            id: true,
+            code: true,
+            title: true,
+            years: true,
+            matches: {
+              where: {
+                description_id: null,
+                case_id: null,
+              },
+              select: {
+                updated_at: true,
+                children_count: true,
+                resource_id: true,
+              },
             },
           },
         },
       },
-    },
-  });
-  if (archive) {
-    return NextResponse.json(archive, { status: 200 });
-  } else {
-    return NextResponse.json({ message: "Archive not found" }, { status: 404 });
+    });
+    if (archive) {
+      return NextResponse.json(archive, { status: 200 });
+    } else {
+      return NextResponse.json({ message: "Archive not found" }, { status: 404 });
+    }
+  } catch (error) {
+    console.error("Error fetching archive:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
