@@ -12,20 +12,28 @@ export interface ArchivePageProps {
 }
 
 export async function generateMetadata(pageProps: ArchivePageProps): Promise<Metadata> {
-  const t = await getTranslations("metadata");
-  const params = await pageProps.params;
-  const code = decodeURIComponent(params["archive-code"]);
-  const archive: GetArchiveResponse = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json());
-  console.log("archive", archive);
-
-  return {
-    title: `${code}`,
-    description: t("archive-description", { archiveCode: archive.code, archiveTitle: archive.title || "" }),
-    openGraph: {
-      type: "website",
-      url: `/archives/${code}`,
-    },
-  };
+  try {
+    const t = await getTranslations("metadata");
+    const params = await pageProps.params;
+    const code = decodeURIComponent(params["archive-code"]);
+    const archive: GetArchiveResponse = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json());
+    console.log("archive", archive);
+    
+    return {
+      title: `${code}`,
+      description: t("archive-description", { archiveCode: archive.code, archiveTitle: archive.title || "" }),
+      openGraph: {
+        type: "website",
+        url: `/archives/${code}`,
+      },
+    };
+  } catch (error) {
+    console.log("failed to generate metadata for archive page", error);
+    return {
+      title: "Архів",
+      description: "Деталі архіву",
+    };
+  }
 }
 
 const ArchivePage: NextPage = async () => {

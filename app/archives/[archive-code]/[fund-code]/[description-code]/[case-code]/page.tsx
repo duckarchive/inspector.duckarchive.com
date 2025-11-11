@@ -14,30 +14,37 @@ export interface CasePageProps {
   }>;
 }
 
-export async function generateMetadata(
-  pageProps: CasePageProps,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const t = await getTranslations("metadata");
-  const params  = await pageProps.params;
-  const { openGraph } = await parent;
-  const archiveCode = decodeURIComponent(params["archive-code"]);
-  const fundCode = decodeURIComponent(params["fund-code"]);
-  const descriptionCode = decodeURIComponent(params["description-code"]);
-  const code = decodeURIComponent(params["case-code"]);
-  const caseItem: GetCaseResponse = await fetch(`${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`).then((res) => res.json())
-  console.log("caseItem", caseItem);
-  
-  const name = caseItem.title ? ` (${caseItem.title})`: "";
+export async function generateMetadata(pageProps: CasePageProps, parent: ResolvingMetadata): Promise<Metadata> {
+  try {
+    const t = await getTranslations("metadata");
+    const params = await pageProps.params;
+    const { openGraph } = await parent;
+    const archiveCode = decodeURIComponent(params["archive-code"]);
+    const fundCode = decodeURIComponent(params["fund-code"]);
+    const descriptionCode = decodeURIComponent(params["description-code"]);
+    const code = decodeURIComponent(params["case-code"]);
+    const caseItem: GetCaseResponse = await fetch(
+      `${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`
+    ).then((res) => res.json());
+    console.log("caseItem", caseItem);
 
-  return {
-    title: `${archiveCode}-${fundCode}-${descriptionCode}-${code}`,
-    description:  t("case-description", { archiveCode, fundCode, descriptionCode, caseCode: code, caseTitle: name }),
-    openGraph: {
-      ...openGraph,
-      type: "website",
-      url: `/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`,
-    },
+    const name = caseItem.title ? ` (${caseItem.title})` : "";
+
+    return {
+      title: `${archiveCode}-${fundCode}-${descriptionCode}-${code}`,
+      description: t("case-description", { archiveCode, fundCode, descriptionCode, caseCode: code, caseTitle: name }),
+      openGraph: {
+        ...openGraph,
+        type: "website",
+        url: `/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`,
+      },
+    };
+  } catch (error) {
+    console.log("failed to generate metadata for case page", error);
+    return {
+      title: "Справа",
+      description: "Деталі справи",
+    };
   }
 }
 
