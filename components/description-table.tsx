@@ -45,8 +45,6 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
   const isMobile = useIsMobile();
   const { description, isLoading, page } = useDescription(archiveCode, fundCode, code);
 
-  console.log(description);
-
   // if (isError) return <Error error={} />
   return (
     <>
