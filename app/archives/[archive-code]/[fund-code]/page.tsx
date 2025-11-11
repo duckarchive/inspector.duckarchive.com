@@ -21,6 +21,7 @@ export async function generateMetadata(pageProps: FundPageProps, parent: Resolvi
   const fund: GetFundResponse = await fetch(`${siteConfig.url}/api/archives/${archiveCode}/${code}`).then((res) =>
     res.json()
   );
+  console.log("fund", fund);
 
   const name = fund.title ? ` (${fund.title})` : "";
 

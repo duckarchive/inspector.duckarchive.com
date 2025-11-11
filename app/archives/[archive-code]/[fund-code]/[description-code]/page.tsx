@@ -24,6 +24,7 @@ export async function generateMetadata(pageProps: DescriptionPageProps,
   const description: GetDescriptionResponse = await fetch(
     `${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${code}`,
   ).then((res) => res.json());
+  console.log("description", description);
 
   const name = description.title ? ` (${description.title})` : "";
 

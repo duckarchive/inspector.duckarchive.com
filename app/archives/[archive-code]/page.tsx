@@ -16,6 +16,7 @@ export async function generateMetadata(pageProps: ArchivePageProps): Promise<Met
   const params = await pageProps.params;
   const code = decodeURIComponent(params["archive-code"]);
   const archive: GetArchiveResponse = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json());
+  console.log("archive", archive);
 
   return {
     title: `${code}`,

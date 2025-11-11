@@ -26,6 +26,7 @@ export async function generateMetadata(
   const descriptionCode = decodeURIComponent(params["description-code"]);
   const code = decodeURIComponent(params["case-code"]);
   const caseItem: GetCaseResponse = await fetch(`${siteConfig.url}/api/archives/${archiveCode}/${fundCode}/${descriptionCode}/${code}`).then((res) => res.json())
+  console.log("caseItem", caseItem);
   
   const name = caseItem.title ? ` (${caseItem.title})`: "";
 
