@@ -1,7 +1,7 @@
 import { Prisma } from "@/generated/prisma/client";
-import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { getFundByCode } from "@/app/api/archives/[archive-code]/[fund-code]/data";
 
 export type GetFundResponse = Prisma.FundGetPayload<{
   include: {
@@ -23,39 +23,6 @@ export type GetFundResponse = Prisma.FundGetPayload<{
     };
   };
 }>;
-
-export const getFundByCode = async (archiveCode: string, fundCode: string): Promise<GetFundResponse | null> => {
-  const fund = await prisma.fund.findFirst({
-    where: {
-      archive: {
-        code: archiveCode,
-      },
-      code: fundCode,
-    },
-    include: {
-      years: true,
-      descriptions: {
-        select: {
-          id: true,
-          code: true,
-          title: true,
-          years: true,
-          matches: {
-            where: {
-              case_id: null,
-            },
-            select: {
-              updated_at: true,
-              children_count: true,
-              resource_id: true,
-            },
-          },
-        },
-      },
-    },
-  });
-  return fund;
-};
 
 interface GetFundParams {
   params: Promise<{

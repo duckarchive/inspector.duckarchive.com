@@ -1,7 +1,7 @@
 import ArchiveTable from "@/components/archive-table";
 import { Metadata, NextPage } from "next";
 import { getResources } from "@/data/resources";
-import { getArchiveByCode } from "@/app/api/archives/[archive-code]/route";
+import { getArchiveByCode } from "@/app/api/archives/[archive-code]/data";
 import { getTranslations } from "next-intl/server";
 
 export interface ArchivePageProps {

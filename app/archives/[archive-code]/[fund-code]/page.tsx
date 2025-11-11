@@ -1,7 +1,7 @@
 import FundTable from "@/components/fund-table";
 import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
-import { getFundByCode } from "@/app/api/archives/[archive-code]/[fund-code]/route";
+import { getFundByCode } from "@/app/api/archives/[archive-code]/[fund-code]/data";
 import { getTranslations } from "next-intl/server";
 
 export interface FundPageProps {

@@ -1,7 +1,7 @@
 import DescriptionTable from "@/components/description-table";
 import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
-import { getDescriptionByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
+import { getDescriptionByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/data";
 import { getTranslations } from "next-intl/server";
 
 export interface DescriptionPageProps {

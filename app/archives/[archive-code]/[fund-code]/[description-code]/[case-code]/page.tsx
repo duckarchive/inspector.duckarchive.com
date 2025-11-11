@@ -1,7 +1,7 @@
 import CaseTable from "@/components/case-table";
 import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
-import { getCaseByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
+import { getCaseByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/data";
 import { getTranslations } from "next-intl/server";
 
 export interface CasePageProps {

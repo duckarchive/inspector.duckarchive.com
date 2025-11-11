@@ -1,7 +1,7 @@
 import { Prisma } from "@/generated/prisma/client";
-import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { getDescriptionByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/data";
 
 export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
   include: {
@@ -24,56 +24,6 @@ export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
     };
   };
 }>;
-
-export const getDescriptionByCode = async (
-  archiveCode: string,
-  fundCode: string,
-  descriptionCode: string,
-  page: number = 0
-): Promise<GetDescriptionResponse | null> => {
-  const description = await prisma.description.findFirst({
-    where: {
-      fund: {
-        code: fundCode,
-        archive: {
-          code: archiveCode,
-        },
-      },
-      code: descriptionCode,
-    },
-    include: {
-      years: true,
-      online_copies: true,
-    },
-  });
-
-  if (!description) {
-    return null;
-  }
-
-  const cases = await prisma.case.findMany({
-    where: {
-      description_id: description.id,
-    },
-    select: {
-      id: true,
-      code: true,
-      title: true,
-      years: true,
-      matches: {
-        select: {
-          updated_at: true,
-          children_count: true,
-          resource_id: true,
-        },
-      },
-    },
-    skip: page * 5000,
-    take: 5000,
-  });
-
-  return { ...description, cases };
-};
 
 interface GetDescriptionParams {
   params: Promise<{

@@ -1,7 +1,7 @@
 import { Prisma } from "@/generated/prisma/client";
-import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { getCaseByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/data";
 
 export type GetCaseResponse = Prisma.CaseGetPayload<{
   include: {
@@ -22,44 +22,6 @@ export type GetCaseResponse = Prisma.CaseGetPayload<{
     };
   };
 }>;
-
-export const getCaseByCode = async (
-  archiveCode: string,
-  fundCode: string,
-  descriptionCode: string,
-  caseCode: string
-): Promise<GetCaseResponse | null> => {
-  const caseItem = await prisma.case.findFirst({
-    where: {
-      full_code: `${archiveCode}-${fundCode}-${descriptionCode}-${caseCode}`,
-    },
-    include: {
-      years: true,
-      authors: {
-        include: {
-          author: true,
-        },
-      },
-      locations: {
-        select: {
-          id: true,
-          lat: true,
-          lng: true,
-          radius_m: true,
-        },
-      },
-      matches: {
-        where: {
-          children_count: {
-            gt: 0,
-          },
-        },
-      },
-    },
-  });
-
-  return caseItem;
-};
 
 interface GetCaseParams {
   params: Promise<{

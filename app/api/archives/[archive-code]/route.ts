@@ -1,7 +1,7 @@
 import { Prisma } from "@/generated/prisma/client";
-import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { getArchiveByCode } from "@/app/api/archives/[archive-code]/data";
 
 export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
   include: {
@@ -22,36 +22,6 @@ export type GetArchiveResponse = Prisma.ArchiveGetPayload<{
     };
   };
 }>;
-
-export const getArchiveByCode = async (archiveCode: string): Promise<GetArchiveResponse | null> => {
-  const archive = await prisma.archive.findFirst({
-    where: {
-      code: archiveCode,
-    },
-    include: {
-      funds: {
-        select: {
-          id: true,
-          code: true,
-          title: true,
-          years: true,
-          matches: {
-            where: {
-              description_id: null,
-              case_id: null,
-            },
-            select: {
-              updated_at: true,
-              children_count: true,
-              resource_id: true,
-            },
-          },
-        },
-      },
-    },
-  });
-  return archive;
-};
 
 interface GetArchiveParams {
   params: Promise<{
