@@ -1,6 +1,5 @@
 import { Match, ResourceType } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
-import { parseDBParams } from "@duckarchive/framework";
 
 export interface DGSArchiveListItem extends Pick<Match, "id" | "full_code" | "url" | "api_params"> {}
 
@@ -52,7 +51,7 @@ export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchi
       ...item,
       full_code: item.full_code || `${code}-${item.fund?.code || ""}-${item.description?.code || ""}-${item.case?.code || ""}`.trim(),
       url: item.full_code ? item.url : "",
-      api_params: parseDBParams(item.api_params).dgs,
+      api_params: item.api_params?.split(":")[1] || "",
     };
   });
 };
