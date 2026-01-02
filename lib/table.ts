@@ -31,18 +31,25 @@ interface WithDates {
   created_at: Date | string;
   updated_at?: Date | string | null;
 }
-export const sortByDate = (a: WithDates, b: WithDates) => sortDate(b.updated_at || b.created_at, a.updated_at || a.created_at);
+export const sortByDate = (a: WithDates, b: WithDates) =>
+  sortDate(b.updated_at || b.created_at, a.updated_at || a.created_at);
 
-interface WithMatches {
-  matches: { children_count: number | null }[];
+interface WithOnlineCopies {
+  online_copies: { children_count: number | null }[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const sortByMatches = (_: any, __: any, a: IRowNode<any>, b: IRowNode<any>) => {
+export const sortByOnlineCopies = (_: any, __: any, a: IRowNode<any>, b: IRowNode<any>) => {
   if (!a.data || !b.data) return 0;
   return (
-    b.data.matches.reduce((acc: number, { children_count }: WithMatches['matches'][number]) => acc + (children_count || 0), 0) -
-    a.data.matches.reduce((acc: number, { children_count }: WithMatches['matches'][number]) => acc + (children_count || 0), 0)
+    b.data.online_copies.reduce(
+      (acc: number, { children_count }: WithOnlineCopies["online_copies"][number]) => acc + (children_count || 0),
+      0
+    ) -
+    a.data.online_copies.reduce(
+      (acc: number, { children_count }: WithOnlineCopies["online_copies"][number]) => acc + (children_count || 0),
+      0
+    )
   );
 };
 

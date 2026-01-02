@@ -9,7 +9,7 @@ import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Select, SelectItem } from "@heroui/select";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaWifi } from "react-icons/fa";
 import { IoChevronDown } from "react-icons/io5";
 import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
@@ -87,6 +87,10 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     // onOpen();
   };
 
+  const handleIsOnlineChange = (isSelected: boolean) => {
+    setSearchValues({ ...searchValues, is_online: isSelected });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     trigger(searchValues);
@@ -96,27 +100,6 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     <>
       <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2 md:flex-row">
-          <div className="flex flex-col gap-2 basis-1/2 shrink-0" onClick={handleOpenMap}>
-            <CoordinatesInput
-              isLoading={isMutating}
-              year={searchValues.year || undefined}
-              value={{
-                lat: searchValues.lat || undefined,
-                lng: searchValues.lng || undefined,
-                radius_m: searchValues.radius_m || undefined,
-              }}
-              onChange={(value) => setSearchValues({ ...searchValues, ...value })}
-            />
-            <Input
-              isClearable
-              value={searchValues.place || ""}
-              onChange={handlePlaceInputChange}
-              onClear={() => setSearchValues({ ...searchValues, place: undefined })}
-              pattern="[\u0400-\u04FF\u0500-\u052F]+"
-              label="Назва населеного пункту"
-              labelPlacement="inside"
-            />
-          </div>
           <div className="flex flex-col gap-2 basis-1/2">
             <div className="flex flex-col">
               <div className="flex gap-2">
@@ -168,22 +151,56 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 </AccordionItem>
               </Accordion>
             </div>
-            <Select
-              className="grow-1"
-              label="Теги"
-              selectionMode="multiple"
-              value={searchValues.tags || []}
-              onSelectionChange={(v) =>
-                setSearchValues({
-                  ...searchValues,
-                  tags: Array.from(v as Set<string>),
-                })
-              }
-            >
-              {tags.map((tag) => (
-                <SelectItem key={tag}>{tag}</SelectItem>
-              ))}
-            </Select>
+
+            <div className="flex gap-2">
+              <Button
+                className="h-full w-auto aspect-square"
+                isIconOnly
+                aria-label="Доступні онлайн копії"
+                title="Доступні онлайн копії"
+                color={searchValues.is_online ? "secondary" : "default"}
+                onPress={() => handleIsOnlineChange(!searchValues.is_online)}
+              >
+                <FaWifi />
+              </Button>
+              <Select
+                className="grow-1"
+                label="Теги"
+                selectionMode="multiple"
+                value={searchValues.tags || []}
+                onSelectionChange={(v) =>
+                  setSearchValues({
+                    ...searchValues,
+                    tags: Array.from(v as Set<string>),
+                  })
+                }
+              >
+                {tags.map((tag) => (
+                  <SelectItem key={tag}>{tag}</SelectItem>
+                ))}
+              </Select>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 basis-1/2 shrink-0" onClick={handleOpenMap}>
+            <CoordinatesInput
+              isLoading={isMutating}
+              year={searchValues.year || undefined}
+              value={{
+                lat: searchValues.lat || undefined,
+                lng: searchValues.lng || undefined,
+                radius_m: searchValues.radius_m || undefined,
+              }}
+              onChange={(value) => setSearchValues({ ...searchValues, ...value })}
+            />
+            <Input
+              isClearable
+              value={searchValues.place || ""}
+              onChange={handlePlaceInputChange}
+              onClear={() => setSearchValues({ ...searchValues, place: undefined })}
+              pattern="[\u0400-\u04FF\u0500-\u052F]+"
+              label="Назва населеного пункту"
+              labelPlacement="inside"
+            />
           </div>
         </div>
         <Button
@@ -195,7 +212,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         >
           Пошук
         </Button>
-        <div className="w-full text-sm">
+        {/* <div className="w-full text-sm">
           <p className="text-warning">
             Нова пошукова форма є експериментальною. Якщо ви помітили некоректну роботу, будь ласка, повідомте
             в чаті <Link href="https://t.me/spravnakachka" target="_blank" className="text-sm">@spravnakachka</Link>.
@@ -204,9 +221,9 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             Результати пошуку можуть виглядати &quot;порожніми&quot;, через те, що назви та роки не заповнені на 100%, але це не впливає на
             основну функцію Інспектора ― пошук посилання на онлайн копію.
           </p>
-        </div>
+        </div> */}
       </form>
-      <div className="min-h-[300px]">
+      <div className="min-h-[300px] grow flex flex-col">
         <InspectorDuckTable<TableItem>
           isLoading={isMutating}
           columns={[
@@ -217,7 +234,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               hide: isMobile,
               cellRenderer: (row: { data: TableItem }) => (
                 <Link href={`/archives/${row.data.full_code.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
-                  {row.data.title || 'Без назви'}
+                  {row.data.title || "Без назви"}
                 </Link>
               ),
             },
@@ -226,11 +243,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               field: "full_code",
               flex: isMobile ? 1 : undefined,
               resizable: !isMobile,
-              cellRenderer: isMobile ? (row: { value: string }) => (
-                <Link href={`/archives/${row.value.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
-                  {row.value}
-                </Link>
-              ) : undefined,
+              cellRenderer: isMobile
+                ? (row: { value: string }) => (
+                    <Link href={`/archives/${row.value.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
+                      {row.value}
+                    </Link>
+                  )
+                : undefined,
             },
             {
               headerName: "Рік",

@@ -7,15 +7,8 @@ export type Archives = Prisma.ArchiveGetPayload<{
     code: true;
     title: true;
     url: true;
-    matches: {
-      select: {
-        updated_at: true;
-        children_count: true;
-        resource_id: true;
-      };
-    };
   };
-}>[];;
+}>[];
 
 export const getInstitutions = async () => {
   const authorsDb = await prisma.author.findMany({
@@ -30,7 +23,7 @@ export const getInstitutions = async () => {
     where: {
       lat: { not: null },
       lng: { not: null },
-    }
+    },
   });
 
   return authorsDb;

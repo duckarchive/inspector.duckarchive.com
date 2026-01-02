@@ -2,19 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+.outline-transparent:focus {
+  outline: transparent !important;
+}
+
 .ag-cell {
   display: flex;
   align-items: center;
 }
 
-.ag-cell-wrapper > .ag-cell-value > *, .ag-cell-wrapper > .ag-cell-value {
+.ag-cell-wrapper > .ag-cell-value > *,
+.ag-cell-wrapper > .ag-cell-value {
   font-size: 14px;
   line-height: 1.1;
 }
 
-@media (max-width: theme('screens.md')) {
+@media (max-width: theme("screens.md")) {
   .ag-paging-panel {
-    justify-content: center!important;
+    justify-content: center !important;
   }
   .ag-paging-panel .ag-paging-page-size {
     display: none;

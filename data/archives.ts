@@ -7,15 +7,8 @@ export type Archives = Prisma.ArchiveGetPayload<{
     code: true;
     title: true;
     url: true;
-    matches: {
-      select: {
-        updated_at: true;
-        children_count: true;
-        resource_id: true;
-      };
-    };
   };
-}>[];;
+}>[];
 
 export const getArchives = async () => {
   const archivesDb = await prisma.archive.findMany({
@@ -24,18 +17,6 @@ export const getArchives = async () => {
       code: true,
       title: true,
       url: true,
-      matches: {
-        where: {
-          fund_id: null,
-          description_id: null,
-          case_id: null,
-        },
-        select: {
-          updated_at: true,
-          children_count: true,
-          resource_id: true,
-        },
-      },
     },
     orderBy: {
       code: "asc",

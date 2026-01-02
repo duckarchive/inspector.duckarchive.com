@@ -1,6 +1,5 @@
 import { JSX, PropsWithChildren } from "react";
 import NavigationBreadcrumbs from "./breadcrumbs";
-import { Button } from "@heroui/button";
 
 interface PagePanelProps extends PropsWithChildren {
   title: string;
@@ -24,7 +23,7 @@ const PagePanel: React.FC<PagePanelProps> = ({ title, description, message, chil
         {message}
       </div>
       <div>
-        <Button size="sm" variant="light" color="warning" className="hidden md:block">Повідомити про помилку</Button>
+        {/* <Button size="sm" variant="light" color="warning" className="hidden md:block">Повідомити про помилку</Button> */}
         {children}
       </div>
     </div>

@@ -6,7 +6,7 @@ import { getCaseByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[de
 export type GetCaseResponse = Prisma.CaseGetPayload<{
   include: {
     years: true;
-    matches: true;
+    online_copies: true;
     authors: {
       include: {
         author: true;

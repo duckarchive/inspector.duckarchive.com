@@ -13,13 +13,6 @@ export type GetDescriptionResponse = Prisma.DescriptionGetPayload<{
         code: true;
         title: true;
         years: true;
-        matches: {
-          select: {
-            updated_at: true;
-            children_count: true;
-            resource_id: true;
-          };
-        };
       };
     };
   };

@@ -21,7 +21,7 @@ const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.de
   ssr: false,
 });
 
-type TableItem = GetCaseResponse["matches"][number];
+type TableItem = GetCaseResponse["online_copies"][number];
 
 const Details: React.FC<{
   caseItem?: GetCaseResponse;
@@ -57,7 +57,9 @@ const Details: React.FC<{
               {caseItem.authors.map(({ author }, index) => (
                 <span key={author.id}>
                   {index > 0 && ", "}
-                  <span className="text-primary">{author.title} ({author.info})</span>
+                  <span className="text-primary">
+                    {author.title} ({author.info})
+                  </span>
                 </span>
               ))}
             </li>
@@ -136,7 +138,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
             comparator: undefined,
           },
         ]}
-        rows={caseItem?.matches || []}
+        rows={caseItem?.online_copies || []}
       />
     </>
   );

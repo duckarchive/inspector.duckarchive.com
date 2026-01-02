@@ -105,8 +105,11 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@duckarchive/framework",
+      "@duckarchive/map",
       "@duckarchive/prisma",
       "@heroui/shared-utils",
+      "@parcel/watcher",
       "@prisma/client",
       "@prisma/engines",
       "@swc/core",
