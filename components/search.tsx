@@ -154,16 +154,16 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             </div>
 
             <div className="flex gap-2">
-              <Chip
-                radius="md"
-                className="cursor-pointer h-full pl-3"
+              <Button
+                className="h-full w-auto aspect-square"
+                isIconOnly
+                aria-label="Доступні онлайн копії"
                 title="Доступні онлайн копії"
-                startContent={<FaWifi />}
-                color={searchValues.is_online ? "primary" : "default"}
-                onClick={() => handleIsOnlineChange(!searchValues.is_online)}
+                color={searchValues.is_online ? "secondary" : "default"}
+                onPress={() => handleIsOnlineChange(!searchValues.is_online)}
               >
-                онлайн
-              </Chip>
+                <FaWifi />
+              </Button>
               <Select
                 className="grow-1"
                 label="Теги"
