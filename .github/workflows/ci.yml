@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          version: '9'
-      - uses: actions/setup-node@v2
+          version: latest
+      - uses: actions/setup-node@v6
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: 24
+          cache: "pnpm"
       - run: pnpm install
       - run: pnpm run lint
       # - run: pnpm run test
