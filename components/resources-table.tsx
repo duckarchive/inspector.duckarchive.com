@@ -40,16 +40,14 @@ const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
           filter: true,
         },
         {
-          field: "_count.matches",
+          field: "_count.online_copies",
           flex: 2,
           headerName: "Справ онлайн",
           comparator: undefined,
           cellRenderer: undefined,
         },
       ]}
-      rows={Object.values(resources).sort(
-        (a, b) => b._count.matches - a._count.matches
-      )}
+      rows={Object.values(resources).sort((a, b) => b._count.online_copies - a._count.online_copies)}
     />
   );
 };
