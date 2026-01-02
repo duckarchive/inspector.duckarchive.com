@@ -1,7 +1,6 @@
 import { GetDescriptionResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/route";
 import prisma from "@/lib/db";
 
-
 export const getDescriptionByCode = async (
   archiveCode: string,
   fundCode: string,
@@ -37,13 +36,6 @@ export const getDescriptionByCode = async (
       code: true,
       title: true,
       years: true,
-      matches: {
-        select: {
-          updated_at: true,
-          children_count: true,
-          resource_id: true,
-        },
-      },
     },
     skip: page * 5000,
     take: 5000,

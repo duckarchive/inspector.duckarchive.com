@@ -13,17 +13,6 @@ export const getArchiveByCode = async (archiveCode: string): Promise<GetArchiveR
           code: true,
           title: true,
           years: true,
-          matches: {
-            where: {
-              description_id: null,
-              case_id: null,
-            },
-            select: {
-              updated_at: true,
-              children_count: true,
-              resource_id: true,
-            },
-          },
         },
       },
     },

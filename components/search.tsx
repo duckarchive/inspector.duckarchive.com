@@ -195,7 +195,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         >
           Пошук
         </Button>
-        <div className="w-full text-sm">
+        {/* <div className="w-full text-sm">
           <p className="text-warning">
             Нова пошукова форма є експериментальною. Якщо ви помітили некоректну роботу, будь ласка, повідомте
             в чаті <Link href="https://t.me/spravnakachka" target="_blank" className="text-sm">@spravnakachka</Link>.
@@ -204,9 +204,9 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             Результати пошуку можуть виглядати &quot;порожніми&quot;, через те, що назви та роки не заповнені на 100%, але це не впливає на
             основну функцію Інспектора ― пошук посилання на онлайн копію.
           </p>
-        </div>
+        </div> */}
       </form>
-      <div className="min-h-[300px]">
+      <div className="min-h-[300px] grow flex flex-col">
         <InspectorDuckTable<TableItem>
           isLoading={isMutating}
           columns={[
@@ -217,7 +217,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               hide: isMobile,
               cellRenderer: (row: { data: TableItem }) => (
                 <Link href={`/archives/${row.data.full_code.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
-                  {row.data.title || 'Без назви'}
+                  {row.data.title || "Без назви"}
                 </Link>
               ),
             },
@@ -226,11 +226,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               field: "full_code",
               flex: isMobile ? 1 : undefined,
               resizable: !isMobile,
-              cellRenderer: isMobile ? (row: { value: string }) => (
-                <Link href={`/archives/${row.value.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
-                  {row.value}
-                </Link>
-              ) : undefined,
+              cellRenderer: isMobile
+                ? (row: { value: string }) => (
+                    <Link href={`/archives/${row.value.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
+                      {row.value}
+                    </Link>
+                  )
+                : undefined,
             },
             {
               headerName: "Рік",

@@ -52,13 +52,7 @@ interface DuckTableProps<T> {
   loadingPage?: number;
 }
 
-const InspectorDuckTable = <T,>({
-  columns,
-  rows,
-  isFiltersEnabled,
-  isLoading,
-  loadingPage,
-}: DuckTableProps<T>) => {
+const InspectorDuckTable = <T,>({ columns, rows, isFiltersEnabled, isLoading, loadingPage }: DuckTableProps<T>) => {
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
@@ -111,13 +105,13 @@ const InspectorDuckTable = <T,>({
         {
           resizable: false,
           ...lastColumn,
-        }
+        },
         // {
         //   type: "numericColumn",
         //   flex: 2,
         //   minWidth: 200,
         //   resizable: false,
-        //   comparator: sortByMatches,
+        //   comparator: sortByOnlineCopies,
         //   cellRenderer: (row: IRowNode<{ id: string; matches: Match[] }>) => (
         //     <div className="flex h-10 items-center justify-end gap-1 flex-wrap">
         //       {row.data?.matches?.map(

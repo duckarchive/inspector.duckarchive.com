@@ -26,10 +26,10 @@ export const getCaseByCode = async (
           radius_m: true,
         },
       },
-      matches: {
+      online_copies: {
         where: {
-          children_count: {
-            gt: 0,
+          url: {
+            not: null,
           },
         },
       },

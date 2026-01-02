@@ -120,18 +120,6 @@ paths:
                           type: string
                         title:
                           type: string
-                        matches:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              updated_at:
-                                type: string
-                                format: date-time
-                              children_count:
-                                type: integer
-                              resource_id:
-                                type: string
         "400":
           description: Bad Request
           content:
@@ -192,18 +180,6 @@ paths:
                           type: string
                         title:
                           type: string
-                        matches:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              updated_at:
-                                type: string
-                                format: date-time
-                              children_count:
-                                type: integer
-                              resource_id:
-                                type: string
         "400":
           description: Bad Request
           content:
@@ -277,18 +253,6 @@ paths:
                           type: string
                         title:
                           type: string
-                        matches:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              updated_at:
-                                type: string
-                                format: date-time
-                              children_count:
-                                type: integer
-                              resource_id:
-                                type: string
         "400":
           description: Bad Request
           content:
@@ -346,34 +310,6 @@ paths:
                 properties:
                   title:
                     type: string
-                  matches:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        full_code:
-                          type: string
-                        url:
-                          type: string
-                        updated_at:
-                          type: string
-                          format: date-time
-                        children_count:
-                          type: integer
-                        resource_id:
-                          type: string
-                        api_params:
-                          type: string
-                        archive_id:
-                          type: string
-                        fund_id:
-                          type: string
-                        description_id:
-                          type: string
-                        case_id:
-                          type: string
         "400":
           description: Bad Request
           content:
@@ -396,7 +332,7 @@ paths:
     post:
       security:
         - bearerAuth: []
-      summary:  Get Availability by code
+      summary: Get Availability by code
       description: Перевірка доступності справ за списком реквізитів
       requestBody:
         required: true

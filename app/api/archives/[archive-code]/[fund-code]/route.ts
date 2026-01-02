@@ -12,13 +12,6 @@ export type GetFundResponse = Prisma.FundGetPayload<{
         code: true;
         title: true;
         years: true;
-        matches: {
-          select: {
-            updated_at: true;
-            children_count: true;
-            resource_id: true;
-          };
-        };
       };
     };
   };
