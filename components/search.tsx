@@ -16,7 +16,6 @@ import SelectArchive from "@/components/select-archive";
 import CoordinatesInput from "@/components/coordinates-input";
 import { Link } from "@heroui/link";
 import useIsMobile from "@/hooks/useIsMobile";
-import { Chip } from "@heroui/chip";
 
 type TableItem = SearchResponse[number];
 

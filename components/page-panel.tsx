@@ -1,6 +1,5 @@
 import { JSX, PropsWithChildren } from "react";
 import NavigationBreadcrumbs from "./breadcrumbs";
-import { Button } from "@heroui/button";
 
 interface PagePanelProps extends PropsWithChildren {
   title: string;
