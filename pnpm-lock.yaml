@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@duckarchive/framework':
         specifier: github:duckarchive/framework
-        version: https://codeload.github.com/duckarchive/framework/tar.gz/a7be317a2312dd4b7794d006b62bfa979288a9b5(15d8f23e9037d5e1dbcd0cd7ddcd6e2b)
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/acc1f40582c6f0f48cdb76c0ef2e6df4f8c99758(15d8f23e9037d5e1dbcd0cd7ddcd6e2b)
       '@duckarchive/map':
         specifier: github:duckarchive/map
         version: https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306(ed046f765ef88cded115a345c7145beb)
@@ -260,9 +260,9 @@ packages:
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
     engines: {node: '>=6.9.0'}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/a7be317a2312dd4b7794d006b62bfa979288a9b5':
-    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/a7be317a2312dd4b7794d006b62bfa979288a9b5}
-    version: 0.3.0
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/acc1f40582c6f0f48cdb76c0ef2e6df4f8c99758':
+    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/acc1f40582c6f0f48cdb76c0ef2e6df4f8c99758}
+    version: 0.3.1
     peerDependencies:
       '@heroui/button': ^2.2.21
       '@heroui/divider': ^2.2.19
@@ -3833,8 +3833,8 @@ packages:
   zod@3.24.1:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
 
-  zod@4.2.1:
-    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
+  zod@4.3.4:
+    resolution: {integrity: sha512-Zw/uYiiyF6pUT1qmKbZziChgNPRu+ZRneAsMUDU6IwmXdWt5JwcUfy2bvLOCUtz5UniaN/Zx5aFttZYbYc7O/A==}
 
 snapshots:
 
@@ -3842,7 +3842,7 @@ snapshots:
 
   '@babel/runtime@7.28.4': {}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/a7be317a2312dd4b7794d006b62bfa979288a9b5(15d8f23e9037d5e1dbcd0cd7ddcd6e2b)':
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/acc1f40582c6f0f48cdb76c0ef2e6df4f8c99758(15d8f23e9037d5e1dbcd0cd7ddcd6e2b)':
     dependencies:
       '@heroui/button': 2.2.28(@heroui/system@2.4.24(@heroui/theme@2.4.24(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.23.26(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@heroui/theme@2.4.24(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.23.26(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@heroui/divider': 2.2.21(@heroui/theme@2.4.24(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -7407,7 +7407,7 @@ snapshots:
       '@prisma/internals': 6.19.1(typescript@5.8.2)
       prettier: 3.6.2
       tslib: 2.8.1
-      zod: 4.2.1
+      zod: 4.3.4
     transitivePeerDependencies:
       - magicast
       - prisma
@@ -8030,4 +8030,4 @@ snapshots:
 
   zod@3.24.1: {}
 
-  zod@4.2.1: {}
+  zod@4.3.4: {}
