@@ -8,15 +8,15 @@ import InspectorDuckTable from "@/components/table";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Accordion, AccordionItem } from "@heroui/accordion";
-import { Checkbox } from "@heroui/checkbox";
 import { Select, SelectItem } from "@heroui/select";
-import { FaNetworkWired, FaSearch, FaWifi } from "react-icons/fa";
+import { FaSearch, FaWifi } from "react-icons/fa";
 import { IoChevronDown } from "react-icons/io5";
 import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
 import CoordinatesInput from "@/components/coordinates-input";
 import { Link } from "@heroui/link";
 import useIsMobile from "@/hooks/useIsMobile";
+import { Chip } from "@heroui/chip";
 
 type TableItem = SearchResponse[number];
 
@@ -154,16 +154,16 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             </div>
 
             <div className="flex gap-2">
-              <Checkbox
-                radius="sm"
-                size="lg"
-                className="scale-[2] translate-x-4 mr-2"
-                defaultSelected
-                icon={<FaWifi />}
+              <Chip
+                radius="md"
+                className="cursor-pointer h-full px-4"
                 title="Доступні онлайн копії"
-                isSelected={!!searchValues.is_online}
-                onValueChange={handleIsOnlineChange}
-              />
+                startContent={<FaWifi />}
+                color={searchValues.is_online ? "primary" : "default"}
+                onClick={() => handleIsOnlineChange(!searchValues.is_online)}
+              >
+                онлайн
+              </Chip>
               <Select
                 className="grow-1"
                 label="Теги"
