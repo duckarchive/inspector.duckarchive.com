@@ -8,8 +8,9 @@ import InspectorDuckTable from "@/components/table";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Accordion, AccordionItem } from "@heroui/accordion";
+import { Checkbox } from "@heroui/checkbox";
 import { Select, SelectItem } from "@heroui/select";
-import { FaSearch } from "react-icons/fa";
+import { FaNetworkWired, FaSearch, FaWifi } from "react-icons/fa";
 import { IoChevronDown } from "react-icons/io5";
 import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
@@ -87,6 +88,10 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     // onOpen();
   };
 
+  const handleIsOnlineChange = (isSelected: boolean) => {
+    setSearchValues({ ...searchValues, is_online: isSelected });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     trigger(searchValues);
@@ -96,27 +101,6 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     <>
       <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2 md:flex-row">
-          <div className="flex flex-col gap-2 basis-1/2 shrink-0" onClick={handleOpenMap}>
-            <CoordinatesInput
-              isLoading={isMutating}
-              year={searchValues.year || undefined}
-              value={{
-                lat: searchValues.lat || undefined,
-                lng: searchValues.lng || undefined,
-                radius_m: searchValues.radius_m || undefined,
-              }}
-              onChange={(value) => setSearchValues({ ...searchValues, ...value })}
-            />
-            <Input
-              isClearable
-              value={searchValues.place || ""}
-              onChange={handlePlaceInputChange}
-              onClear={() => setSearchValues({ ...searchValues, place: undefined })}
-              pattern="[\u0400-\u04FF\u0500-\u052F]+"
-              label="Назва населеного пункту"
-              labelPlacement="inside"
-            />
-          </div>
           <div className="flex flex-col gap-2 basis-1/2">
             <div className="flex flex-col">
               <div className="flex gap-2">
@@ -168,22 +152,56 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 </AccordionItem>
               </Accordion>
             </div>
-            <Select
-              className="grow-1"
-              label="Теги"
-              selectionMode="multiple"
-              value={searchValues.tags || []}
-              onSelectionChange={(v) =>
-                setSearchValues({
-                  ...searchValues,
-                  tags: Array.from(v as Set<string>),
-                })
-              }
-            >
-              {tags.map((tag) => (
-                <SelectItem key={tag}>{tag}</SelectItem>
-              ))}
-            </Select>
+
+            <div className="flex gap-2">
+              <Checkbox
+                radius="sm"
+                size="lg"
+                className="scale-[2] translate-x-4 mr-2"
+                defaultSelected
+                icon={<FaWifi />}
+                title="Доступні онлайн копії"
+                isSelected={!!searchValues.is_online}
+                onValueChange={handleIsOnlineChange}
+              />
+              <Select
+                className="grow-1"
+                label="Теги"
+                selectionMode="multiple"
+                value={searchValues.tags || []}
+                onSelectionChange={(v) =>
+                  setSearchValues({
+                    ...searchValues,
+                    tags: Array.from(v as Set<string>),
+                  })
+                }
+              >
+                {tags.map((tag) => (
+                  <SelectItem key={tag}>{tag}</SelectItem>
+                ))}
+              </Select>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 basis-1/2 shrink-0" onClick={handleOpenMap}>
+            <CoordinatesInput
+              isLoading={isMutating}
+              year={searchValues.year || undefined}
+              value={{
+                lat: searchValues.lat || undefined,
+                lng: searchValues.lng || undefined,
+                radius_m: searchValues.radius_m || undefined,
+              }}
+              onChange={(value) => setSearchValues({ ...searchValues, ...value })}
+            />
+            <Input
+              isClearable
+              value={searchValues.place || ""}
+              onChange={handlePlaceInputChange}
+              onClear={() => setSearchValues({ ...searchValues, place: undefined })}
+              pattern="[\u0400-\u04FF\u0500-\u052F]+"
+              label="Назва населеного пункту"
+              labelPlacement="inside"
+            />
           </div>
         </div>
         <Button

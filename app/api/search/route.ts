@@ -22,18 +22,18 @@ export type SearchRequest = Partial<{
 export type SearchResponse = Prisma.CaseGetPayload<{
   include: {
     descriptions: {
-      include: { 
+      include: {
         fund: {
           include: {
             archive: true;
-          }
+          };
         };
-      }
+      };
     };
     authors: {
       include: {
         author: true;
-      }
+      };
     };
     locations: true;
     years: true;
@@ -105,14 +105,12 @@ export async function POST(request: Request) {
     if (is_online) {
       whereParts.push(Prisma.sql`EXISTS (
         SELECT 1
-        FROM "matches" m
-        WHERE m.case_id = c.id AND m.full_code IS NOT NULL
+        FROM "case_online_copies" m
+        WHERE m.case_id = c.id AND m.url IS NOT NULL
       )`);
     }
-    
-    const bodyQuery = whereParts.length > 0
-      ? Prisma.sql`WHERE ${Prisma.join(whereParts, " AND ")}`
-      : Prisma.sql``;
+
+    const bodyQuery = whereParts.length > 0 ? Prisma.sql`WHERE ${Prisma.join(whereParts, " AND ")}` : Prisma.sql``;
 
     const query = Prisma.sql`
       SELECT 
