@@ -8,11 +8,13 @@ interface SelectArchiveProps {
   onChange: (key: Key | null) => void;
   withoutTitle?: boolean;
   className?: string;
+  id?: string;
 }
 
-const SelectArchive: React.FC<SelectArchiveProps> = ({ archives, value, onChange, withoutTitle, className }) => {
+const SelectArchive: React.FC<SelectArchiveProps> = ({ id, archives, value, onChange, withoutTitle, className }) => {
   return (
     <Autocomplete
+      id={id}
       label="Архів"
       isClearable={false}
       selectedKey={value}
