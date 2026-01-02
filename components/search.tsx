@@ -156,7 +156,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             <div className="flex gap-2">
               <Chip
                 radius="md"
-                className="cursor-pointer h-full px-4"
+                className="cursor-pointer h-full pl-3"
                 title="Доступні онлайн копії"
                 startContent={<FaWifi />}
                 color={searchValues.is_online ? "primary" : "default"}
