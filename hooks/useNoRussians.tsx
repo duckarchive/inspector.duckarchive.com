@@ -72,6 +72,7 @@ const useNoRussians = () => {
         // });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, preferredLangs]);
 
   useEffect(() => {

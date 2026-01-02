@@ -1,11 +1,14 @@
 import { Match, ResourceType } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
 
-export interface DGSArchiveListItem extends Pick<Match, "id" | "full_code" | "url" | "api_params"> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface DGSArchiveListItem extends Pick<Match, "id" | "full_code" | "url" | "api_params"> {
+  // additional fields for constructing full_code if missing
+}
 
 export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchiveListItem[]> => {
   const [code, pagination] = archiveCode.split("___");
-  const [page, _total] = pagination ? pagination.split("-") : [undefined, undefined];
+  const [page] = pagination ? pagination.split("-") : [undefined, undefined];
   const dgsList = await prisma.match.findMany({
     where: {
       archive: {
@@ -37,7 +40,7 @@ export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchi
         select: {
           code: true,
         },
-      }
+      },
     },
     take: 50000,
     skip: page ? (parseInt(page, 10) - 1) * 50000 : 0,
@@ -49,7 +52,9 @@ export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchi
   return dgsList.map((item) => {
     return {
       ...item,
-      full_code: item.full_code || `${code}-${item.fund?.code || ""}-${item.description?.code || ""}-${item.case?.code || ""}`.trim(),
+      full_code:
+        item.full_code ||
+        `${code}-${item.fund?.code || ""}-${item.description?.code || ""}-${item.case?.code || ""}`.trim(),
       url: item.full_code ? item.url : "",
       api_params: item.api_params?.split(":")[1] || "",
     };
