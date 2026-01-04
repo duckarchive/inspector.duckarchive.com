@@ -99,7 +99,7 @@ export async function POST(request: Request) {
     }
 
     if (tags && tags.length > 0) {
-      whereParts.push(Prisma.sql`c.tags && ARRAY[${Prisma.join(tags)}]::text[]`);
+      whereParts.push(Prisma.sql`c.tags @> ARRAY[${Prisma.join(tags)}]::text[]`);
     }
 
     if (is_online) {
@@ -141,6 +141,8 @@ export async function POST(request: Request) {
       GROUP BY c.id
       LIMIT 50
     `;
+
+    console.log("Executing search query:", query);
 
     const rawResults = await prisma.$queryRaw<SearchResponse>(query);
 
