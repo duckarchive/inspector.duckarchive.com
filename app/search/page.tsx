@@ -7,11 +7,7 @@ const SearchPage: NextPage = async () => {
   const archives = await getArchives();
   const tags = await getTags();
 
-  return (
-    <div className="flex gap-4 grow">
-      <Search archives={archives} tags={tags} />
-    </div>
-  );
+  return <Search archives={archives} tags={tags} />;
 };
 
 export default SearchPage;
