@@ -9,12 +9,15 @@ import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Checkbox } from "@heroui/checkbox";
 import { Select, SelectItem } from "@heroui/select";
-import { FaFolder, FaMapMarkerAlt, FaSearch, FaWifi } from "react-icons/fa";
+import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch, FaWifi } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
 import CoordinatesInput from "@/components/coordinates-input";
 import { Link } from "@heroui/link";
 import useIsMobile from "@/hooks/useIsMobile";
+import TagsInput from "@/components/tags-input";
+
+const ONLINE_TAG = "доступні онлайн копії";
 
 type TableItem = SearchResponse[number];
 
@@ -86,8 +89,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     // onOpen();
   };
 
-  const handleIsOnlineChange = (isSelected: boolean) => {
-    setSearchValues({ ...searchValues, is_online: isSelected });
+  const handleTagsChange = (values: string[]) => {
+    if (values.includes(ONLINE_TAG)) {
+      values = values.filter((v) => v !== ONLINE_TAG);
+      setSearchValues({ ...searchValues, is_online: true, tags: values.length > 0 ? values : undefined });
+    } else {
+      setSearchValues({ ...searchValues, is_online: false, tags: values.length > 0 ? values : undefined });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -97,7 +105,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   return (
     <>
-      <div className="flex gap-2">
+      <form className="flex gap-2" onSubmit={handleSubmit}>
         <Input
           className="w-full"
           label="Заголовок справи"
@@ -121,30 +129,10 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         >
           Пошук
         </Button>
-      </div>
+      </form>
       <div className="flex grow gap-4 mt-4">
-        <form className="flex flex-col gap-2 basis-1/4 h-full" onSubmit={handleSubmit}>
-          <div className="flex gap-2">
-            <Select
-              label="Теги"
-              selectionMode="multiple"
-              value={searchValues.tags || []}
-              onSelectionChange={(v) =>
-                setSearchValues({
-                  ...searchValues,
-                  tags: Array.from(v as Set<string>),
-                })
-              }
-            >
-              {tags.map((tag) => (
-                <SelectItem key={tag}>{tag}</SelectItem>
-              ))}
-            </Select>
-          </div>
-          <Checkbox icon={<FaWifi />} isSelected={searchValues.is_online} onValueChange={handleIsOnlineChange}>
-            Доступні онлайн копії
-          </Checkbox>
-          <div className="flex flex-col gap-2 mt-4" onClick={handleOpenMap}>
+        <div className="flex flex-col gap-8 pb-8 basis-1/4 h-full">
+          <div className="flex flex-col gap-2" onClick={handleOpenMap}>
             <label htmlFor="coordinates-input" className="font-bold">
               <FaMapMarkerAlt className="inline mr-1" />
               Локація
@@ -170,7 +158,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               onChange={(value) => setSearchValues({ ...searchValues, ...value })}
             />
           </div>
-          <div className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-col gap-2">
             <label htmlFor="select-archive" className="font-bold">
               <FaFolder className="inline mr-1" />
               Реквізити
@@ -187,6 +175,19 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               <Input label="Справа" value={searchValues.case || ""} onChange={handleInputChange("case")} />
             </div>
           </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="select-archive" className="font-bold">
+              <FaListUl className="inline mr-1" />
+              Теги
+            </label>
+            <TagsInput
+              tags={[ONLINE_TAG, ...tags]}
+              value={
+                [searchValues.is_online ? ONLINE_TAG : null, ...(searchValues.tags || [])].filter(Boolean) as string[]
+              }
+              onSelectionChange={handleTagsChange}
+            />
+          </div>
           {/* <div className="w-full text-sm">
             <p className="text-warning">
               Нова пошукова форма є експериментальною. Якщо ви помітили некоректну роботу, будь ласка, повідомте
@@ -197,7 +198,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               основну функцію Інспектора ― пошук посилання на онлайн копію.
             </p>
           </div> */}
-        </form>
+        </div>
         <div className="min-h-[300px] grow flex flex-col">
           <InspectorDuckTable<TableItem>
             isLoading={isMutating}

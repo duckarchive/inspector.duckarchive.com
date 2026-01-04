@@ -20,7 +20,7 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
   const setSearchParams = (search: SearchRequest) => {
     const q = qs.stringify(search, { skipNulls: true });
     if (q !== searchPrams.toString()) {
-      router.replace(`${pathname}?${q}`);
+      router.replace(`${pathname}?${q}`, { scroll: false });
     }
   };
 
@@ -38,11 +38,9 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
     delete raw.q;
     const q = qs.stringify({ ...parsed, ...raw }, { skipNulls: true });
     if (q !== searchPrams.toString()) {
-      router.replace(`${pathname}?${q}`);
+      router.replace(`${pathname}?${q}`, { scroll: false });
     }
   }
-
-
 
   return [{ ...parsed, ...raw }, setSearchParams];
 };
