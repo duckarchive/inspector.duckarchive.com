@@ -2,6 +2,27 @@
 import { useState } from "react";
 import { Input } from "@heroui/input";
 import { Chip } from "@heroui/chip";
+import { FaBaby, FaHeart, FaSkull, FaWifi } from "react-icons/fa";
+import { FaHeartCrack } from "react-icons/fa6";
+
+const tagName2tagIcon: Record<string, React.ReactNode> = {
+  "доступні онлайн копії": <FaWifi />,
+  народження: <FaBaby />,
+  шлюб: <FaHeart />,
+  розлучення: <FaHeartCrack />,
+  смерть: <FaSkull />,
+  // грекокатолицизм
+  // дошлюбні опитування
+  // іудаїзм
+  // лютеранство
+  // православ'я
+  // протестантизм
+  // римокатолицизм
+  // списки парафіян
+  // списки прихожан
+  // сповідальні відомості
+  // шлюбний обшук
+};
 
 interface TagsInputProps {
   tags: string[];
@@ -41,6 +62,7 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags, value, onSelectionChange })
                 color={isIncluded ? "secondary" : "default"}
                 onClick={() => handleSelectionChange(tag)}
                 className="cursor-pointer"
+                startContent={tagName2tagIcon[tag] || null}
               >
                 {tag}
               </Chip>

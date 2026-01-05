@@ -7,8 +7,6 @@ import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import InspectorDuckTable from "@/components/table";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
-import { Checkbox } from "@heroui/checkbox";
-import { Select, SelectItem } from "@heroui/select";
 import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch, FaWifi } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
@@ -208,7 +206,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             </p>
           </div> */}
         </div>
-        <div className="min-h-screen md:min-h-[300px] grow flex flex-col">
+        <div className="min-h-[75vh] md:min-h-[300px] grow flex flex-col">
           <InspectorDuckTable<TableItem>
             isLoading={isMutating}
             columns={[
@@ -223,10 +221,16 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                   <div className="flex flex-col py-2 gap-1">
                     <Link
                       href={`/archives/${row.value.replace(/\-/g, "/")}`}
-                      className="text-lg leading-none font-bold"
+                      className="text-lg leading-none font-bold inline"
                       target="_blank"
                     >
-                      {row.data.title}
+                      {row.data.is_online && (
+                        <FaWifi
+                          className="inline mr-1 text-secondary"
+                          title="Для цієї справи доступні посилання на онлайн копії"
+                        />
+                      )}
+                      {row.data.title || "Без назви"}
                     </Link>
                     {row.value}
                   </div>

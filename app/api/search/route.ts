@@ -19,26 +19,23 @@ export type SearchRequest = Partial<{
   is_online: boolean;
 }>;
 
-export type SearchResponse = Prisma.CaseGetPayload<{
-  include: {
-    descriptions: {
-      include: {
-        fund: {
-          include: {
-            archive: true;
-          };
-        };
-      };
-    };
-    authors: {
-      include: {
-        author: true;
-      };
-    };
-    locations: true;
-    years: true;
-  };
-}>[];
+export type SearchResponse = {
+  id: string;
+  code: string;
+  created_at: string;
+  updated_at: string;
+  title: string;
+  info: string | null;
+  description_id: string | null;
+  full_code: string;
+  tags: string[];
+  is_online: boolean;
+  years: Array<{
+    case_id: string;
+    start_year: number;
+    end_year: number;
+  }>;
+}[];
 
 export async function POST(request: Request) {
   try {
@@ -115,7 +112,11 @@ export async function POST(request: Request) {
     const query = Prisma.sql`
       SELECT 
         c.*,
-        -- years
+        CASE WHEN EXISTS (
+          SELECT 1
+          FROM "case_online_copies" m
+          WHERE m.case_id = c.id AND m.url IS NOT NULL
+        ) THEN TRUE ELSE FALSE END AS is_online,
         COALESCE(
           jsonb_agg(
             DISTINCT jsonb_build_object(
@@ -135,14 +136,13 @@ export async function POST(request: Request) {
       LEFT JOIN "authors" au ON ca.author_id = au.id
       LEFT JOIN "case_locations" cl ON c.id = cl.case_id
       LEFT JOIN "case_years" cy ON c.id = cy.case_id
+      LEFT JOIN "case_online_copies" coc ON c.id = coc.case_id
 
       ${bodyQuery}
 
       GROUP BY c.id
       LIMIT 50
     `;
-
-    console.log("Executing search query:", query);
 
     const rawResults = await prisma.$queryRaw<SearchResponse>(query);
 
