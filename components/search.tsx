@@ -133,11 +133,12 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       <div className="flex grow gap-4 mt-4">
         <div className="flex flex-col gap-8 pb-8 basis-1/4 h-full">
           <div className="flex flex-col gap-2" onClick={handleOpenMap}>
-            <label htmlFor="coordinates-input" className="font-bold">
+            <label htmlFor="coordinates-input" className="font-bold flex items-center">
               <FaMapMarkerAlt className="inline mr-1" />
               Локація
             </label>
             <Input
+              size="sm"
               id="coordinates-input"
               isClearable
               value={searchValues.place || ""}
@@ -159,7 +160,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="select-archive" className="font-bold">
+            <label htmlFor="select-archive" className="font-bold flex items-center">
               <FaFolder className="inline mr-1" />
               Реквізити
             </label>
@@ -170,13 +171,18 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
             />
             <div className="flex gap-2">
-              <Input label="Фонд" value={searchValues.fund || ""} onChange={handleInputChange("fund")} />
-              <Input label="Опис" value={searchValues.description || ""} onChange={handleInputChange("description")} />
-              <Input label="Справа" value={searchValues.case || ""} onChange={handleInputChange("case")} />
+              <Input size="sm" label="Фонд" value={searchValues.fund || ""} onChange={handleInputChange("fund")} />
+              <Input
+                size="sm"
+                label="Опис"
+                value={searchValues.description || ""}
+                onChange={handleInputChange("description")}
+              />
+              <Input size="sm" label="Справа" value={searchValues.case || ""} onChange={handleInputChange("case")} />
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="select-archive" className="font-bold">
+            <label htmlFor="select-archive" className="font-bold flex items-center">
               <FaListUl className="inline mr-1" />
               Теги
             </label>

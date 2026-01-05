@@ -56,7 +56,12 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
   }, [isOpen, debouncedCoordinates]);
 
   const handleGeoChange = (position: MarkerValue) => {
-    setCoordinates({ ...coordinates, lat: position[0].toString(), lng: position[1].toString(), radius_m: position[2] || 0 });
+    setCoordinates({
+      ...coordinates,
+      lat: position[0].toString(),
+      lng: position[1].toString(),
+      radius_m: position[2] || 0,
+    });
   };
 
   const handleLatChange = (lat: string) => {
@@ -94,12 +99,16 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
     }
   };
 
-  const latLng: MarkerValue = [+(coordinates.lat || UKRAINE_CENTER[0]), +(coordinates.lng || UKRAINE_CENTER[1]), coordinates.radius_m || 0];
+  const latLng: MarkerValue = [
+    +(coordinates.lat || UKRAINE_CENTER[0]),
+    +(coordinates.lng || UKRAINE_CENTER[1]),
+    coordinates.radius_m || 0,
+  ];
   const center = latLng.slice(0, 2) as [number, number];
   const title =
     coordinates.lat && coordinates.lng
       ? `${coordinates.lat},${coordinates.lng}${coordinates.radius_m ? ` ±${coordinates.radius_m}м` : ""}`
-      : "Оберіть місце на карті";
+      : "Ввести координати вручну";
   return (
     <div className="h-64 flex flex-col gap-0">
       <div className="h-full" onClick={onOpen}>
@@ -131,8 +140,9 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
           )}
           title={title}
         >
-          <fieldset aria-label="Ручне введення координат" className="flex gap-2">
+          <fieldset aria-label="Ручне введення координат" className="flex flex-col gap-2">
             <Input
+              size="sm"
               isDisabled={isLoading}
               isInvalid={!!formErrors.lat}
               errorMessage={formErrors.lat}
@@ -145,6 +155,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
               pattern="^-?\d+(\.\d+)?$"
             />
             <Input
+              size="sm"
               isDisabled={isLoading}
               isInvalid={!!formErrors.lng}
               errorMessage={formErrors.lng}
@@ -157,6 +168,8 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
               pattern="^-?\d+(\.\d+)?$"
             />
             <NumberInput
+              hideStepper
+              size="sm"
               className="basis-1/4 shrink-0"
               isDisabled={isLoading}
               isInvalid={!!formErrors.radius_m}

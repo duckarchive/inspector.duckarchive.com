@@ -15,6 +15,7 @@ const SelectArchive: React.FC<SelectArchiveProps> = ({ id, archives, value, onCh
   return (
     <Autocomplete
       id={id}
+      size="sm"
       label="Архів"
       isClearable={false}
       selectedKey={value}

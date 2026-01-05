@@ -23,6 +23,7 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags, value, onSelectionChange })
     <div className="flex flex-col gap-2">
       <Input
         isClearable
+        size="sm"
         label="Шукати тег"
         value={filterValue}
         onValueChange={setFilterValue}
