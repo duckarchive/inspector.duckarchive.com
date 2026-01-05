@@ -112,25 +112,28 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
           value={searchValues.title || ""}
           onChange={handleInputChange("title")}
         />
-        <Input
-          type="number"
-          className="basis-1/4 shrink-0"
-          value={searchValues.year}
-          onValueChange={handleYearChange}
-          label="Рік"
-          labelPlacement="inside"
-        />
+        {isMobile ? null : (
+          <Input
+            type="number"
+            className="basis-1/6 shrink-0"
+            value={searchValues.year}
+            onValueChange={handleYearChange}
+            label="Рік"
+            labelPlacement="inside"
+          />
+        )}
         <Button
           type="submit"
           color="primary"
           size="lg"
           className="basis-1/4 h-full font-bold text-lg"
           startContent={<FaSearch />}
+          isIconOnly={isMobile}
         >
-          Пошук
+          {isMobile ? undefined : "Пошук"}
         </Button>
       </form>
-      <div className="flex grow gap-4 mt-4">
+      <div className="flex md:flex-row flex-col grow gap-4 mt-4">
         <div className="flex flex-col gap-8 pb-8 basis-1/4 h-full">
           <div className="flex flex-col gap-2" onClick={handleOpenMap}>
             <label htmlFor="coordinates-input" className="font-bold flex items-center">
@@ -205,47 +208,45 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             </p>
           </div> */}
         </div>
-        <div className="min-h-[300px] grow flex flex-col">
+        <div className="min-h-screen md:min-h-[300px] grow flex flex-col">
           <InspectorDuckTable<TableItem>
             isLoading={isMutating}
             columns={[
               {
-                headerName: "Назва",
-                field: "title",
-                resizable: true,
-                hide: isMobile,
-                cellRenderer: (row: { data: TableItem }) => (
-                  <Link
-                    href={`/archives/${row.data.full_code.replace(/\-/g, "/")}`}
-                    className="text-sm"
-                    target="_blank"
-                  >
-                    {row.data.title || "Без назви"}
-                  </Link>
+                headerName: "Результати",
+                field: "full_code",
+                flex: 1,
+                sortable: false,
+                filter: false,
+                resizable: false,
+                cellRenderer: (row: { value: string; data: TableItem }) => (
+                  <div className="flex flex-col py-2 gap-1">
+                    <Link
+                      href={`/archives/${row.value.replace(/\-/g, "/")}`}
+                      className="text-lg leading-none font-bold"
+                      target="_blank"
+                    >
+                      {row.data.title}
+                    </Link>
+                    {row.value}
+                  </div>
                 ),
               },
-              {
-                headerName: "Реквізити",
-                field: "full_code",
-                flex: isMobile ? 1 : undefined,
-                resizable: !isMobile,
-                cellRenderer: isMobile
-                  ? (row: { value: string }) => (
-                      <Link href={`/archives/${row.value.replace(/\-/g, "/")}`} className="text-sm" target="_blank">
-                        {row.value}
-                      </Link>
-                    )
-                  : undefined,
-              },
-              {
-                headerName: "Рік",
-                field: "years",
-                hide: isMobile,
-                valueGetter: (row) =>
-                  row.data?.years
-                    .map((y) => (y.start_year === y.end_year ? y.start_year : `${y.start_year}-${y.end_year}`))
-                    .join(", "),
-              },
+              // {
+              //   headerName: "Назва",
+              //   field: "title",
+              //   resizable: true,
+              //   flex: 3,
+              // },
+              // {
+              //   headerName: "Рік",
+              //   field: "years",
+              //   hide: isMobile,
+              //   valueGetter: (row) =>
+              //     row.data?.years
+              //       .map((y) => (y.start_year === y.end_year ? y.start_year : `${y.start_year}-${y.end_year}`))
+              //       .join(", "),
+              // },
               // {
               //   headerName: "Теги",
               //   field: "tags",

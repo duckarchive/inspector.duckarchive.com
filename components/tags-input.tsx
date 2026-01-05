@@ -38,7 +38,7 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags, value, onSelectionChange })
               <Chip
                 key={tag}
                 variant={isIncluded ? "solid" : "flat"}
-                color={isIncluded ? "primary" : "default"}
+                color={isIncluded ? "secondary" : "default"}
                 onClick={() => handleSelectionChange(tag)}
                 className="cursor-pointer"
               >
