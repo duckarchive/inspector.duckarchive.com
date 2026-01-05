@@ -60,7 +60,7 @@ const InspectorDuckTable = <T,>({ columns, rows, isFiltersEnabled, isLoading, lo
 
   const firstColumn = columns[0];
   const middleColumns = columns.slice(1, -1);
-  const lastColumn = columns[columns.length - 1];
+  const lastColumn = columns.length === 1 ? null : columns[columns.length - 1];
 
   // useEffect(() => {
   //   setTimeout(() => {
@@ -102,10 +102,14 @@ const InspectorDuckTable = <T,>({ columns, rows, isFiltersEnabled, isLoading, lo
           ...firstColumn,
         },
         ...middleColumns,
-        {
-          resizable: false,
-          ...lastColumn,
-        },
+        ...(lastColumn
+          ? [
+              {
+                resizable: false,
+                ...lastColumn,
+              },
+            ]
+          : []),
         // {
         //   type: "numericColumn",
         //   flex: 2,

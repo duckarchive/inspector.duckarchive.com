@@ -7,9 +7,7 @@ const SearchPage: NextPage = async () => {
   const archives = await getArchives();
   const tags = await getTags();
 
-  return (
-    <Search archives={archives} tags={tags} />
-  );
+  return <Search archives={archives} tags={tags} />;
 };
 
 export default SearchPage;
