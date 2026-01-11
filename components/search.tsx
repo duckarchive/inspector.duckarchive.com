@@ -103,7 +103,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   return (
     <>
-      <form className="flex gap-2" onSubmit={handleSubmit}>
+      <form id="search-form" className="flex gap-2" onSubmit={handleSubmit}>
         <Input
           className="w-full"
           label="Заголовок справи"
@@ -140,6 +140,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             </label>
             <Input
               size="sm"
+              form="search-form"
               id="coordinates-input"
               isClearable
               value={searchValues.place || ""}
@@ -167,19 +168,33 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             </label>
             <SelectArchive
               id="select-archive"
+              form="search-form"
               archives={archives}
               value={searchValues.archive}
               onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
             />
             <div className="flex gap-2">
-              <Input size="sm" label="Фонд" value={searchValues.fund || ""} onChange={handleInputChange("fund")} />
+              <Input
+                size="sm"
+                label="Фонд"
+                form="search-form"
+                value={searchValues.fund || ""}
+                onChange={handleInputChange("fund")}
+              />
               <Input
                 size="sm"
                 label="Опис"
+                form="search-form"
                 value={searchValues.description || ""}
                 onChange={handleInputChange("description")}
               />
-              <Input size="sm" label="Справа" value={searchValues.case || ""} onChange={handleInputChange("case")} />
+              <Input
+                size="sm"
+                label="Справа"
+                form="search-form"
+                value={searchValues.case || ""}
+                onChange={handleInputChange("case")}
+              />
             </div>
           </div>
           <div className="flex flex-col gap-2">

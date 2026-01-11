@@ -9,9 +9,18 @@ interface SelectArchiveProps {
   withoutTitle?: boolean;
   className?: string;
   id?: string;
+  form?: string;
 }
 
-const SelectArchive: React.FC<SelectArchiveProps> = ({ id, archives, value, onChange, withoutTitle, className }) => {
+const SelectArchive: React.FC<SelectArchiveProps> = ({
+  id,
+  archives,
+  value,
+  onChange,
+  withoutTitle,
+  className,
+  form,
+}) => {
   return (
     <Autocomplete
       id={id}
@@ -21,6 +30,7 @@ const SelectArchive: React.FC<SelectArchiveProps> = ({ id, archives, value, onCh
       selectedKey={value}
       onSelectionChange={onChange}
       className={className}
+      inputProps={{ form }}
     >
       {archives.map((archive) => (
         <AutocompleteItem key={archive.code} textValue={archive.code}>
