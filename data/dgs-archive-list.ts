@@ -9,45 +9,47 @@ export interface DGSArchiveListItem extends Pick<Match, "id" | "full_code" | "ur
 export const getDGSListByArchive = async (archiveCode: string): Promise<DGSArchiveListItem[]> => {
   const [code, pagination] = archiveCode.split("___");
   const [page] = pagination ? pagination.split("-") : [undefined, undefined];
-  const dgsList = await prisma.match.findMany({
-    where: {
-      archive: {
-        code,
-      },
-      resource: {
-        type: ResourceType.FAMILY_SEARCH,
-      },
-      case_id: {
-        not: null,
-      },
-    },
-    select: {
-      id: true,
-      full_code: true,
-      url: true,
-      api_params: true,
-      fund: {
-        select: {
-          code: true,
-        },
-      },
-      description: {
-        select: {
-          code: true,
-        },
-      },
-      case: {
-        select: {
-          code: true,
-        },
-      },
-    },
-    take: 50000,
-    skip: page ? (parseInt(page, 10) - 1) * 50000 : 0,
-    orderBy: {
-      api_params: "asc",
-    },
-  });
+  // const dgsList = await prisma.match.findMany({
+  //   where: {
+  //     archive: {
+  //       code,
+  //     },
+  //     resource: {
+  //       type: ResourceType.FAMILY_SEARCH,
+  //     },
+  //     case_id: {
+  //       not: null,
+  //     },
+  //   },
+  //   select: {
+  //     id: true,
+  //     full_code: true,
+  //     url: true,
+  //     api_params: true,
+  //     fund: {
+  //       select: {
+  //         code: true,
+  //       },
+  //     },
+  //     description: {
+  //       select: {
+  //         code: true,
+  //       },
+  //     },
+  //     case: {
+  //       select: {
+  //         code: true,
+  //       },
+  //     },
+  //   },
+  //   take: 50000,
+  //   skip: page ? (parseInt(page, 10) - 1) * 50000 : 0,
+  //   orderBy: {
+  //     api_params: "asc",
+  //   },
+  // });
+
+  const dgsList: any[] = [];
 
   return dgsList.map((item) => {
     return {

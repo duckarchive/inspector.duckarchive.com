@@ -2,7 +2,7 @@ import DGSArchiveTable from "@/components/dgs-archive-table";
 import { NextPage } from "next";
 import prisma from "@/lib/db";
 import { getDGSListByArchive } from "@/data/dgs-archive-list";
-import { ResourceType } from "@/generated/prisma/client";
+// import { ResourceType } from "@/generated/prisma/client";
 import { Snippet } from "@heroui/snippet";
 
 export const dynamic = "force-static";
@@ -51,19 +51,20 @@ const DGSArchivePage: NextPage<DGSArchivePageProps> = async ({ params }) => {
   const archiveCode = decodeURIComponent(p["archive-code"]);
 
   if (!archiveCode.includes(DELIMITER)) {
-    const count = await prisma.match.count({
-      where: {
-        archive: {
-          code: archiveCode.split(DELIMITER)[0],
-        },
-        resource: {
-          type: ResourceType.FAMILY_SEARCH,
-        },
-        case_id: {
-          not: null,
-        },
-      },
-    });
+    // const count = await prisma.match.count({
+    //   where: {
+    //     archive: {
+    //       code: archiveCode.split(DELIMITER)[0],
+    //     },
+    //     resource: {
+    //       type: ResourceType.FAMILY_SEARCH,
+    //     },
+    //     case_id: {
+    //       not: null,
+    //     },
+    //   },
+    // });
+    const count = 1;
     const total = Math.ceil(count / PAGE_SIZE);
     return (
       <div className="flex flex-col gap-6">

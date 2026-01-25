@@ -33,59 +33,61 @@ export const getYesterdayReport = async (): Promise<[Report, ReportSummary]> => 
   startOfYesterday.setHours(0, 0, 0, 0);
   const from = startOfYesterday.toISOString();
 
-  const updatedMatches = await prisma.match.findMany({
-    where: {
-      case_id: {
-        not: null,
-      },
-      updated_at: {
-        gte: from,
-      },
-      OR: [
-        {
-          prev_children_count: {
-            not: null,
-          },
-          children_count: {
-            gt: prisma.match.fields.prev_children_count,
-          },
-        },
-        {
-          prev_children_count: null,
-          children_count: {
-            gt: 0,
-          },
-        }
-      ],
-    },
-    select: {
-      id: true,
-      updated_at: true,
-      resource_id: true,
-      archive: {
-        select: {
-          code: true,
-        },
-      },
-      fund: {
-        select: {
-          code: true,
-        },
-      },
-      description: {
-        select: {
-          code: true,
-        },
-      },
-      case: {
-        select: {
-          code: true,
-        },
-      },
-      children_count: true,
-      url: true,
-    },
-  });
+  // const updatedMatches = await prisma.match.findMany({
+  //   where: {
+  //     case_id: {
+  //       not: null,
+  //     },
+  //     updated_at: {
+  //       gte: from,
+  //     },
+  //     OR: [
+  //       {
+  //         prev_children_count: {
+  //           not: null,
+  //         },
+  //         children_count: {
+  //           gt: prisma.match.fields.prev_children_count,
+  //         },
+  //       },
+  //       {
+  //         prev_children_count: null,
+  //         children_count: {
+  //           gt: 0,
+  //         },
+  //       }
+  //     ],
+  //   },
+  //   select: {
+  //     id: true,
+  //     updated_at: true,
+  //     resource_id: true,
+  //     archive: {
+  //       select: {
+  //         code: true,
+  //       },
+  //     },
+  //     fund: {
+  //       select: {
+  //         code: true,
+  //       },
+  //     },
+  //     description: {
+  //       select: {
+  //         code: true,
+  //       },
+  //     },
+  //     case: {
+  //       select: {
+  //         code: true,
+  //       },
+  //     },
+  //     children_count: true,
+  //     url: true,
+  //   },
+  // });
+
+  const updatedMatches: any[] = [];
 
   const report: Report = updatedMatches.map((match) => ({
     id: match.id,
