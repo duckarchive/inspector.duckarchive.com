@@ -105,6 +105,7 @@ const CaseTable: React.FC<CaseTableProps> = ({ resources }) => {
         message={<Details caseItem={caseItem} />}
       />
       <InspectorDuckTable<TableItem>
+        id="case-table"
         resources={resources}
         isLoading={isLoading}
         columns={[

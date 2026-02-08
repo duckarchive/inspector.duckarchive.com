@@ -15,6 +15,7 @@ interface ResourceTableProps {
 const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
   return (
     <InspectorDuckTable<TableItem>
+      id="resources-table"
       resources={resources}
       columns={[
         {

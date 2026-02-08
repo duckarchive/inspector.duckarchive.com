@@ -18,6 +18,7 @@ interface ReportTableProps {
 const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
   return (
     <InspectorDuckTable<TableItem>
+      id="report-table"
       resources={resources}
       columns={[
         {
@@ -30,11 +31,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           filter: false,
           cellRenderer: (row: { value: TableItem["resource_id"]; data: TableItem }) => (
             <div className="flex h-10 w-full items-center justify-center">
-              <ResourceBadge
-                resourceId={row.value}
-                resources={resources}
-                tooltip={getSyncAtLabel(row.data.updated_at)}
-              >
+              <ResourceBadge resourceId={row.value} resources={resources} tooltip={getSyncAtLabel(row.data.updated_at)}>
                 &nbsp;
               </ResourceBadge>
             </div>

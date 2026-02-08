@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@duckarchive/framework':
         specifier: github:duckarchive/framework
-        version: https://codeload.github.com/duckarchive/framework/tar.gz/45d22c141f63be328922b94d3eca096cabeb16e0(aa2d7eb5db313e8c3f0be40ab3303911)
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/38882f22d9cd81c3a11393aa52aa650fa49ca73d(aa2d7eb5db313e8c3f0be40ab3303911)
       '@duckarchive/map':
         specifier: github:duckarchive/map
         version: https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306(bb5f7aba05b6ba54ef8a9d929b768b31)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
-        version: https://codeload.github.com/duckarchive/prisma/tar.gz/f60dd6d20588e8006980769d0737a017b9b49c08(@prisma/adapter-pg@7.3.0)(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.1.2(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2)(zod@4.3.6))
+        version: https://codeload.github.com/duckarchive/prisma/tar.gz/d0d58cfaddae9704200b31b47b7d00b128574290(@prisma/adapter-pg@7.3.0)(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.1.2(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2)(zod@4.3.6))
       '@heroui/accordion':
         specifier: ^2.2.25
         version: 2.2.26(@heroui/system@2.4.25(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -278,9 +278,9 @@ packages:
   '@chevrotain/utils@10.5.0':
     resolution: {integrity: sha512-hBzuU5+JjB2cqNZyszkDHZgOSrUUT8V3dhgRl8Q9Gp6dAj/H5+KILGjbhDpc3Iy9qmqlm/akuOI2ut9VUtzJxQ==}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/45d22c141f63be328922b94d3eca096cabeb16e0':
-    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/45d22c141f63be328922b94d3eca096cabeb16e0}
-    version: 0.3.3
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/38882f22d9cd81c3a11393aa52aa650fa49ca73d':
+    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/38882f22d9cd81c3a11393aa52aa650fa49ca73d}
+    version: 0.3.5
     peerDependencies:
       '@heroui/button': ^2.2.21
       '@heroui/divider': ^2.2.19
@@ -340,9 +340,9 @@ packages:
       tailwindcss:
         optional: true
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/f60dd6d20588e8006980769d0737a017b9b49c08':
-    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/f60dd6d20588e8006980769d0737a017b9b49c08}
-    version: 3.2.0
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/d0d58cfaddae9704200b31b47b7d00b128574290':
+    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/d0d58cfaddae9704200b31b47b7d00b128574290}
+    version: 3.2.1
     peerDependencies:
       '@prisma/adapter-pg': ^7.2.0
       '@prisma/client': ^7.2.0
@@ -4335,7 +4335,7 @@ snapshots:
 
   '@chevrotain/utils@10.5.0': {}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/45d22c141f63be328922b94d3eca096cabeb16e0(aa2d7eb5db313e8c3f0be40ab3303911)':
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/38882f22d9cd81c3a11393aa52aa650fa49ca73d(aa2d7eb5db313e8c3f0be40ab3303911)':
     dependencies:
       '@heroui/button': 2.2.29(@heroui/system@2.4.25(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@heroui/divider': 2.2.21(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -4377,7 +4377,7 @@ snapshots:
       swr: 2.3.8(react@19.2.3)
       tailwindcss: 3.4.19(tsx@4.21.0)(yaml@2.8.1)
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/f60dd6d20588e8006980769d0737a017b9b49c08(@prisma/adapter-pg@7.3.0)(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.1.2(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2)(zod@4.3.6))':
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/d0d58cfaddae9704200b31b47b7d00b128574290(@prisma/adapter-pg@7.3.0)(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.1.2(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2)(zod@4.3.6))':
     dependencies:
       '@prisma/adapter-pg': 7.3.0
       '@prisma/client': 7.3.0(prisma@7.3.0(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2)

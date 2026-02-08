@@ -44,6 +44,7 @@ const INSPECTOR_FILTERS = [
 ];
 
 interface DuckTableProps<T> {
+  id: string;
   resources?: Record<Resource["id"], Resource>;
   columns: ColDef<T>[];
   rows: T[];
@@ -52,7 +53,7 @@ interface DuckTableProps<T> {
   loadingPage?: number;
 }
 
-const InspectorDuckTable = <T,>({ columns, rows, isFiltersEnabled, isLoading, loadingPage }: DuckTableProps<T>) => {
+const InspectorDuckTable = <T,>({ id, columns, rows, isFiltersEnabled, isLoading, loadingPage }: DuckTableProps<T>) => {
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
@@ -88,6 +89,7 @@ const InspectorDuckTable = <T,>({ columns, rows, isFiltersEnabled, isLoading, lo
 
   return (
     <DuckTable<T>
+      id={id}
       appTheme={theme}
       filters={isFiltersEnabled ? INSPECTOR_FILTERS : []}
       activeFilterId={activeQuickFilter}

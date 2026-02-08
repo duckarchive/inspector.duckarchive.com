@@ -80,6 +80,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
         message={<Details archive={archive} />}
       />
       <InspectorDuckTable<TableItem>
+        id="archive-table"
         resources={resources}
         isLoading={isLoading}
         isFiltersEnabled
@@ -100,7 +101,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
           {
             field: "years",
             headerName: "Роки",
-            valueGetter: (params) => params.data ? getYearsString(params.data.years) : '',
+            valueGetter: (params) => (params.data ? getYearsString(params.data.years) : ""),
             filter: true,
             hide: isMobile,
           },

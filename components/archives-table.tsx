@@ -20,6 +20,7 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
 
   return (
     <InspectorDuckTable<TableItem>
+      id="archives-table"
       resources={resources}
       columns={[
         {
@@ -33,9 +34,7 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
           filter: true,
           comparator: sortText,
           cellRenderer: (row: { value: number; data: TableItem }) => (
-            <Link href={`archives/${row.data.code}`}>
-              {row.value || `${row.data.code}`}
-            </Link>
+            <Link href={`archives/${row.data.code}`}>{row.value || `${row.data.code}`}</Link>
           ),
         },
       ]}

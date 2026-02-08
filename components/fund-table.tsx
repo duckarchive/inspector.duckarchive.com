@@ -48,6 +48,7 @@ const FundTable: React.FC<FundTableProps> = ({ resources }) => {
         message={<Details fund={fund} />}
       />
       <InspectorDuckTable<TableItem>
+        id="fund-table"
         resources={resources}
         isLoading={isLoading}
         columns={[

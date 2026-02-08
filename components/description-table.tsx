@@ -21,7 +21,7 @@ const Details: React.FC<{
     {description?.years.length || description?.online_copies?.length ? (
       <ul className="list-disc list-inside py-2">
         {Boolean(description.years.length) && <li>Роки: {getYearsString(description.years)}</li>}
-        {(description.online_copies.filter(copy => copy.url) as { url: string }[]).map((copy) => (
+        {(description.online_copies.filter((copy) => copy.url) as { url: string }[]).map((copy) => (
           <li key={copy.url}>
             <Link href={copy.url} target="_blank" className="text-inherit text-sm underline">
               {copy.url}
@@ -55,6 +55,7 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ resources }) => {
         message={<Details description={description} />}
       />
       <InspectorDuckTable<TableItem>
+        id="description-table"
         resources={resources}
         isLoading={isLoading}
         loadingPage={page}

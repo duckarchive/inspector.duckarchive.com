@@ -223,6 +223,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         </div>
         <div className="min-h-[75vh] md:min-h-[300px] grow flex flex-col">
           <InspectorDuckTable<TableItem>
+            id="search-table"
             isLoading={isMutating}
             columns={[
               {
