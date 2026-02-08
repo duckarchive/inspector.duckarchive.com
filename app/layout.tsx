@@ -11,25 +11,48 @@ import { PropsWithChildren, Suspense } from "react";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { DuckLoader, DuckNav } from "@duckarchive/framework";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@/i18n/request";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
+  const locale = await getLocale();
+  const baseUrl = siteConfig.url || "";
+
+  // Generate hreflang links for all supported languages
+  const hreflangs = SUPPORTED_LOCALES.map((loc) => ({
+    hrefLang: loc,
+    href: loc === DEFAULT_LOCALE ? baseUrl : `${baseUrl}/${loc}`,
+  }));
+
+  // Generate canonical URL
+  let canonicalUrl = "/";
+  if (locale && locale !== DEFAULT_LOCALE) {
+    canonicalUrl = `/${locale}`;
+  }
+
   return {
-    metadataBase: new URL(siteConfig.url || ""),
+    metadataBase: new URL(baseUrl || ""),
     alternates: {
-      canonical: "/",
+      canonical: canonicalUrl,
+      languages: hreflangs.reduce(
+        (acc, hreflang) => {
+          acc[hreflang.hrefLang] = hreflang.href;
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
     },
     openGraph: {
       images: "/og-image.jpg",
       type: "website",
-      url: "/",
+      url: canonicalUrl,
     },
     title: {
       default: t("title"),
       template: `%s | ${t("title")}`,
     },
     description: t("description"),
-  }
+  };
 }
 
 export const viewport: Viewport = {
@@ -53,7 +76,9 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
             <NextIntlClientProvider locale={locale} messages={messages}>
               <Suspense fallback={<DuckLoader />}>
                 <DuckNav siteUrl={siteConfig.url} />
-                <main className="container mx-auto max-w-7xl py-3 px-6 flex-grow flex flex-col min-h-[calc(100vh-4rem)]">{children}</main>
+                <main className="container mx-auto max-w-7xl py-3 px-6 flex-grow flex flex-col min-h-[calc(100vh-4rem)]">
+                  {children}
+                </main>
               </Suspense>
             </NextIntlClientProvider>
           </div>

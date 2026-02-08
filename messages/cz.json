@@ -1,0 +1,38 @@
+{
+  "home-page": {
+    "title": "Vyhledávejte archivní spisy online snadno!",
+    "description": "Duck Inspector je vyhledávací služba, která vám umožňuje vyhledávat archivní spisy online. Stačí zadat údaje o archivu, fondu, popisu a spisu a získáte odkaz na zdroj."
+  },
+  "daily-updates-page": {
+    "title": "Denní Zpráva",
+    "description": "Seznam nových archivních spisů nalezených online v posledních 24 hodinách.",
+    "limit-note": "Maximální počet výsledků je omezen na 25 000."
+  },
+  "search-input": {
+    "label": "Zadejte údaje o spisu:",
+    "archive-label": "Archiv",
+    "fund-label": "Fond",
+    "description-label": "Popis",
+    "case-label": "Spis",
+    "submit-button": "Hledat"
+  },
+  "navigation": {
+    "logo": "Inspektor",
+    "main": "Domů",
+    "resources": "Zdroje",
+    "inspector": "Inspektor",
+    "search": "Vyhledávání",
+    "archives": "Archivy",
+    "daily-updates": "Denní zpráva",
+    "stats": "Statistika",
+    "docs": "Dokumentace"
+  },
+  "metadata": {
+    "title": "Duck Inspector — vyhledávání archivních spisů online",
+    "description": "Služba pro vyhledávání archivních spisů dostupných online. Zadejte údaje o spisu v jednoduchém vyhledávacím okně a získejte odkaz na zdroj.",
+    "archive-description": "Vyhledávejte spisy online v archivu {archiveCode} ({archiveTitle})",
+    "fund-description": "Vyhledávejte spisy online ve fondu {archiveCode}-{fundCode}{fundTitle} / archiv {archiveCode} fond {fundCode} / {archiveCode} f.{fundCode}",
+    "description-description": "Vyhledávejte spisy online v popisu {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archiv {archiveCode} fond {fundCode} popis {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
+    "case-description": "Spis online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archiv {archiveCode} fond {fundCode} popis {descriptionCode} spis {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  }
+}

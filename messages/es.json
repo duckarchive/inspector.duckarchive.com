@@ -1,0 +1,38 @@
+{
+  "home-page": {
+    "title": "¡Encuentra expedientes de archivo en línea fácilmente!",
+    "description": "Duck Inspector es un servicio de búsqueda que te permite encontrar expedientes de archivo en línea. Simplemente ingresa los detalles del archivo, fondo, descripción y expediente para obtener un enlace a la fuente."
+  },
+  "daily-updates-page": {
+    "title": "Reporte Diario",
+    "description": "Una lista de nuevos expedientes de archivo encontrados en línea en las últimas 24 horas.",
+    "limit-note": "El número máximo de hallazgos está limitado a 25,000."
+  },
+  "search-input": {
+    "label": "Ingrese los detalles del expediente:",
+    "archive-label": "Archivo",
+    "fund-label": "Fondo",
+    "description-label": "Descripción",
+    "case-label": "Expediente",
+    "submit-button": "Buscar"
+  },
+  "navigation": {
+    "logo": "Inspector",
+    "main": "Inicio",
+    "resources": "Recursos",
+    "inspector": "Inspector",
+    "search": "Búsqueda",
+    "archives": "Archivos",
+    "daily-updates": "Reporte diario",
+    "stats": "Estadísticas",
+    "docs": "Documentación"
+  },
+  "metadata": {
+    "title": "Duck Inspector — búsqueda de expedientes de archivo en línea",
+    "description": "Un servicio para buscar expedientes de archivo disponibles en línea. Ingresa los detalles del expediente en una ventana de búsqueda simple y obtén un enlace a la fuente.",
+    "archive-description": "Buscar expedientes en línea en el archivo {archiveCode} ({archiveTitle})",
+    "fund-description": "Buscar expedientes en línea en el fondo {archiveCode}-{fundCode}{fundTitle} / archivo {archiveCode} fondo {fundCode} / {archiveCode} f.{fundCode}",
+    "description-description": "Buscar expedientes en línea en la descripción {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archivo {archiveCode} fondo {fundCode} descripción {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
+    "case-description": "Expediente en línea {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archivo {archiveCode} fondo {fundCode} descripción {descriptionCode} expediente {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  }
+}

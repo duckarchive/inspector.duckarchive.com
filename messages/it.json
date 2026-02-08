@@ -1,0 +1,38 @@
+{
+  "home-page": {
+    "title": "Trova file d'archivio online facilmente!",
+    "description": "Duck Inspector è un servizio di ricerca che ti permette di trovare file d'archivio online. Inserisci semplicemente i dettagli dell'archivio, fondo, descrizione e fascicolo per ottenere un collegamento alla fonte."
+  },
+  "daily-updates-page": {
+    "title": "Rapporto Giornaliero",
+    "description": "Un elenco di nuovi file d'archivio trovati online nelle ultime 24 ore.",
+    "limit-note": "Il numero massimo di risultati è limitato a 25.000."
+  },
+  "search-input": {
+    "label": "Inserisci i dettagli del fascicolo:",
+    "archive-label": "Archivio",
+    "fund-label": "Fondo",
+    "description-label": "Descrizione",
+    "case-label": "Fascicolo",
+    "submit-button": "Cerca"
+  },
+  "navigation": {
+    "logo": "Inspector",
+    "main": "Home",
+    "resources": "Risorse",
+    "inspector": "Inspector",
+    "search": "Ricerca",
+    "archives": "Archivi",
+    "daily-updates": "Rapporto giornaliero",
+    "stats": "Statistiche",
+    "docs": "Documentazione"
+  },
+  "metadata": {
+    "title": "Duck Inspector — ricerca di file d'archivio online",
+    "description": "Un servizio per cercare file d'archivio disponibili online. Inserisci i dettagli del fascicolo in una semplice finestra di ricerca e ottieni un collegamento alla fonte.",
+    "archive-description": "Cerca fascicoli online nell'archivio {archiveCode} ({archiveTitle})",
+    "fund-description": "Cerca fascicoli online nel fondo {archiveCode}-{fundCode}{fundTitle} / archivio {archiveCode} fondo {fundCode} / {archiveCode} f.{fundCode}",
+    "description-description": "Cerca fascicoli online nella descrizione {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archivio {archiveCode} fondo {fundCode} descrizione {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
+    "case-description": "Fascicolo online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archivio {archiveCode} fondo {fundCode} descrizione {descriptionCode} fascicolo {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  }
+}
