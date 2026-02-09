@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "./i18n/request";
+import { routing } from "@/i18n/routing";
 
 const CORS_ALLOWED_ORIGINS = [
   "https://duckarchive.com",
@@ -11,14 +11,7 @@ const CORS_ALLOWED_ORIGINS = [
 ];
 
 // Create next-intl middleware for locale routing
-const intlMiddleware = createMiddleware({
-  locales: SUPPORTED_LOCALES,
-  defaultLocale: DEFAULT_LOCALE,
-  localePrefix: "as-needed", // Ukrainian (default) doesn't get prefix, others get /en/, /es/, etc.
-  pathnames: {
-    // Optional: Add custom path patterns for specific routes if needed
-  },
-});
+const intlMiddleware = createMiddleware(routing);
 
 function corsMiddleware(req: NextRequest) {
   const origin = req.headers.get("origin") || req.nextUrl.origin;

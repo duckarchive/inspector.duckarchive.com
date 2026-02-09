@@ -1,9 +1,17 @@
-import { ReactNode } from "react";
+import { routing } from "@/i18n/routing";
+import { hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
 
-interface LocaleLayoutProps {
-  children: ReactNode;
+interface LocaleLayoutProps extends React.PropsWithChildren {
+  params: Promise<{ locale: string }>;
 }
 
-export default function LocaleLayout({ children }: LocaleLayoutProps) {
+const LocaleLayout: React.FC<LocaleLayoutProps> = async ({ children, params }) => {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
   return <>{children}</>;
-}
+};
+
+export default LocaleLayout;
