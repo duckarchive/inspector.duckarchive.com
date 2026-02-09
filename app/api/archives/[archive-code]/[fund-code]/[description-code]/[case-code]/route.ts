@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
 import { getCaseByCode } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/data";
@@ -34,7 +34,7 @@ interface GetCaseParams {
 
 export async function GET(
   _req: NextRequest,
-  props: GetCaseParams
+  props: GetCaseParams,
 ): Promise<NextResponse<GetCaseResponse | ErrorResponse>> {
   try {
     const params = await props.params;
@@ -46,7 +46,7 @@ export async function GET(
     if (!archiveCode || !fundCode || !descriptionCode || !caseCode) {
       return NextResponse.json(
         { message: '"archive-code", "fund-code", "description-code" and "case-code" params are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 

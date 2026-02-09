@@ -68,7 +68,8 @@
     "react-icons": "^5.5.0",
     "react-leaflet": "^5.0.0",
     "sharp": "^0.33.5",
-    "swr": "^2.3.7"
+    "swr": "^2.3.7",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",

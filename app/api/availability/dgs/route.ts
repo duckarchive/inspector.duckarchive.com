@@ -1,4 +1,3 @@
-// import { Match } from "@/generated/prisma/client";
 // import prisma from "@/lib/db";
 import { getDuckUser } from "@/lib/user";
 import { ErrorResponse } from "@/types";

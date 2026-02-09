@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { Resource, ResourceType } from "@/generated/prisma/client";
 import { PropsWithChildren } from "react";
 import { Chip } from "@heroui/chip";
 import { Tooltip } from "@heroui/tooltip";
+import { ResourceType } from "@generated/prisma/client/enums";
+import { Resource } from "@generated/prisma/client/client";
 
 export const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.ARCHIUM]: "warning",
@@ -29,13 +30,19 @@ interface ResourceBadgeProps {
   tooltip?: string;
 }
 
-const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({ resources, resourceId, children, tooltip, ...rest }) => {
+const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({
+  resources,
+  resourceId,
+  children,
+  tooltip,
+  ...rest
+}) => {
   const resource = resources[resourceId]?.type;
   const prettyResource = resource && TYPE_LABEL[resource];
   const content = children !== undefined ? children : prettyResource;
   const inner = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Chip color={resource ? TYPE_COLORS[resource] as any : "default"} size="sm" variant="solid">
+    <Chip color={resource ? (TYPE_COLORS[resource] as any) : "default"} size="sm" variant="solid">
       {content || "Невідомий ресурс"}
     </Chip>
   );

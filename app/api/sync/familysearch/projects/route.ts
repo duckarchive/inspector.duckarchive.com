@@ -1,15 +1,14 @@
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@generated/prisma/client/client";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getDuckUser } from "@/lib/user";
 import { ErrorResponse } from "@/types";
 
-export type GetFamilySearchProjectResponse =
-  | Prisma.FamilySearchProjectGetPayload<{
-      include: {
-        archive: true;
-      };
-    }>[];
+export type GetFamilySearchProjectResponse = Prisma.FamilySearchProjectGetPayload<{
+  include: {
+    archive: true;
+  };
+}>[];
 
 export async function GET(): Promise<NextResponse<GetFamilySearchProjectResponse | ErrorResponse>> {
   const user = await getDuckUser();

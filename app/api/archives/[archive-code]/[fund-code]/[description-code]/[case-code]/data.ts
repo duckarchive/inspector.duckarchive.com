@@ -1,11 +1,12 @@
 import type { GetCaseResponse } from "@/app/api/archives/[archive-code]/[fund-code]/[description-code]/[case-code]/route";
+import { Availability } from "@/generated/prisma/client/enums";
 import prisma from "@/lib/db";
 
 export const getCaseByCode = async (
   archiveCode: string,
   fundCode: string,
   descriptionCode: string,
-  caseCode: string
+  caseCode: string,
 ): Promise<GetCaseResponse | null> => {
   const caseItem = await prisma.case.findFirst({
     where: {
@@ -28,9 +29,7 @@ export const getCaseByCode = async (
       },
       online_copies: {
         where: {
-          url: {
-            not: null,
-          },
+          availability: Availability.PUBLIC,
         },
       },
     },

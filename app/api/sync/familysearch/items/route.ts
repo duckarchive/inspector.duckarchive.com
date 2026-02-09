@@ -1,4 +1,4 @@
-import { FamilySearchItem } from "@/generated/prisma/client";
+import { FamilySearchItem } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getDuckUser } from "@/lib/user";

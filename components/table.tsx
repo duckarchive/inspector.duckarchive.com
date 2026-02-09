@@ -3,7 +3,7 @@
 import { DuckTable, sortCode } from "@duckarchive/framework";
 import { ColDef } from "ag-grid-community";
 import { useEffect, useState } from "react";
-import { Resource } from "@/generated/prisma/client";
+import { Resource } from "@generated/prisma/client/client";
 import { useTheme } from "next-themes";
 import useIsMobile from "@/hooks/useIsMobile";
 

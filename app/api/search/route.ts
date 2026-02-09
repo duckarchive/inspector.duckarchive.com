@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-
-import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/db";
+import { Prisma } from "@generated/prisma/client/client";
 
 export type SearchRequest = Partial<{
   lat: string;

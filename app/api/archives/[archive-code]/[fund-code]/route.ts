@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
 import { getFundByCode } from "@/app/api/archives/[archive-code]/[fund-code]/data";
@@ -26,7 +26,7 @@ interface GetFundParams {
 
 export async function GET(
   _req: NextRequest,
-  props: GetFundParams
+  props: GetFundParams,
 ): Promise<NextResponse<GetFundResponse | ErrorResponse>> {
   try {
     const params = await props.params;
