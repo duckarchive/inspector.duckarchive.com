@@ -2,7 +2,6 @@ import DGSArchiveTable from "@/components/dgs-archive-table";
 import { NextPage } from "next";
 import prisma from "@/lib/db";
 import { getDGSListByArchive } from "@/data/dgs-archive-list";
-// import { ResourceType } from "@/generated/prisma/client";
 import { Snippet } from "@heroui/snippet";
 
 export const dynamic = "force-static";

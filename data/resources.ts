@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { Resource } from "@/generated/prisma/client";
+import { Availability, Resource } from "@generated/prisma/client/client";
 
 export type Resources = Record<Resource["id"], Resource & { _count: { online_copies: number } }>;
 
@@ -10,16 +10,12 @@ export const getResources = async () => {
         select: {
           case_online_copies: {
             where: {
-              url: {
-                not: null,
-              },
+              availability: Availability.PUBLIC,
             },
           },
           description_online_copies: {
             where: {
-              url: {
-                not: null,
-              },
+              availability: Availability.PUBLIC,
             },
           },
         },

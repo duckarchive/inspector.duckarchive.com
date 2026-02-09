@@ -11,7 +11,7 @@ import { IoChevronDown } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { Input } from "@heroui/input";
 import { parseMapLinkUrl } from "@/lib/map";
-import { MarkerValue } from "@duckarchive/map/dist/LocationMarker";
+import type { GeoDuckMapProps } from "@duckarchive/map";
 
 const UKRAINE_CENTER: [number, number] = [49.0139, 31.2858];
 
@@ -55,7 +55,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, debouncedCoordinates]);
 
-  const handleGeoChange = (position: MarkerValue) => {
+  const handleGeoChange = (position: GeoDuckMapProps["positions"][number]) => {
     setCoordinates({
       ...coordinates,
       lat: position[0].toString(),
@@ -99,7 +99,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
     }
   };
 
-  const latLng: MarkerValue = [
+  const latLng: GeoDuckMapProps["positions"][number] = [
     +(coordinates.lat || UKRAINE_CENTER[0]),
     +(coordinates.lng || UKRAINE_CENTER[1]),
     coordinates.radius_m || 0,

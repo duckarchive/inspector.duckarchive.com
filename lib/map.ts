@@ -1,9 +1,9 @@
-import { Author, CaseLocation } from "@/generated/prisma/client";
-import { MarkerValue } from "@duckarchive/map/dist/LocationMarker";
+import { Author, CaseLocation } from "@generated/prisma/client/client";
+import type { GeoDuckMapProps } from "@duckarchive/map";
 
 // Function to slightly randomize coordinates if overlap found
-export const randomizeCoordinates = (positions: MarkerValue[]): MarkerValue[] => {
-  const grouped = new Map<string, MarkerValue[]>();
+export const randomizeCoordinates = (positions: GeoDuckMapProps["positions"]): GeoDuckMapProps["positions"] => {
+  const grouped = new Map<string, GeoDuckMapProps["positions"]>();
 
   // Group positions by identical coordinates
   positions.forEach((pos) => {
@@ -13,7 +13,7 @@ export const randomizeCoordinates = (positions: MarkerValue[]): MarkerValue[] =>
     grouped.get(key)!.push(pos);
   });
 
-  const randomizedPositions: MarkerValue[] = [];
+  const randomizedPositions: GeoDuckMapProps["positions"] = [];
 
   grouped.forEach((group) => {
     if (group.length === 1) {
@@ -26,7 +26,7 @@ export const randomizeCoordinates = (positions: MarkerValue[]): MarkerValue[] =>
         const angle = (2 * Math.PI * i) / group.length;
         const newLat = lat + radius * Math.cos(angle);
         const newLng = lng + radius * Math.sin(angle);
-        randomizedPositions.push([newLat, newLng, ...pos.slice(2)] as MarkerValue);
+        randomizedPositions.push([newLat, newLng, ...pos.slice(2)] as GeoDuckMapProps["positions"][number]);
       });
     }
   });
@@ -41,9 +41,9 @@ const tag2icon: Record<string, string> = {
 };
 
 export const prepareLocations = (
-  locations: (Pick<Author, "lat" | "lng" | "title" | "tags"> | Pick<CaseLocation, "lat" | "lng" | "radius_m">)[]
-): MarkerValue[] => {
-  const markers: MarkerValue[] = locations.map(({ lat, lng, ...rest }) => {
+  locations: (Pick<Author, "lat" | "lng" | "title" | "tags"> | Pick<CaseLocation, "lat" | "lng" | "radius_m">)[],
+): GeoDuckMapProps["positions"] => {
+  const markers: GeoDuckMapProps["positions"] = locations.map(({ lat, lng, ...rest }) => {
     const latitude = lat || 0;
     const longitude = lng || 0;
     const radius = "radius_m" in rest ? rest.radius_m : 0;
@@ -59,7 +59,7 @@ export const prepareLocations = (
 };
 
 export const findCenter = (
-  locations: (Pick<Author, "lat" | "lng"> | Pick<CaseLocation, "lat" | "lng">)[]
+  locations: (Pick<Author, "lat" | "lng"> | Pick<CaseLocation, "lat" | "lng">)[],
 ): [number, number] => {
   if (locations.length === 0) return [0, 0];
   const validLocations = locations.filter((loc) => loc.lat !== null && loc.lng !== null);
@@ -133,7 +133,7 @@ export const parseMapLinkUrl = (url: string) => {
       return { lat, lng };
     }
     return null;
-  } catch(err) {
+  } catch (err) {
     console.error("Failed to parse map link URL:", err);
     return null;
   }

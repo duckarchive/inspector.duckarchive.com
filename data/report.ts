@@ -1,22 +1,23 @@
 import fs from "fs/promises";
 import groupBy from "lodash/groupBy.js";
 import prisma from "@/lib/db";
-import { Archive, Case, DailyStat, Description, Fund, Match } from "@/generated/prisma/client";
+import { Archive, Case, DailyStat, Description, Fund } from "@generated/prisma/client/client";
 
 process.env.TZ = "UTC";
 
-export type Report = {
-  id: Match["id"];
-  updated_at: Match["updated_at"];
-  resource_id: Match["resource_id"];
-  archive_code: Archive["code"];
-  fund_code: Fund["code"];
-  description_code: Description["code"];
-  case_code: Case["code"];
-  children_count: Match["children_count"];
-  url: Match["url"];
-  is_online: boolean;
-}[];
+export type Report = any[];
+// export type Report = {
+//   id: Match["id"];
+//   updated_at: Match["updated_at"];
+//   resource_id: Match["resource_id"];
+//   archive_code: Archive["code"];
+//   fund_code: Fund["code"];
+//   description_code: Description["code"];
+//   case_code: Case["code"];
+//   children_count: Match["children_count"];
+//   url: Match["url"];
+//   is_online: boolean;
+// }[];
 
 export type ReportSummary = {
   archive_code: Archive["code"];

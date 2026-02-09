@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
 import { getArchiveByCode } from "@/app/api/archives/[archive-code]/data";
@@ -24,7 +24,7 @@ interface GetArchiveParams {
 
 export async function GET(
   _req: NextRequest,
-  props: GetArchiveParams
+  props: GetArchiveParams,
 ): Promise<NextResponse<GetArchiveResponse | ErrorResponse>> {
   try {
     const params = await props.params;

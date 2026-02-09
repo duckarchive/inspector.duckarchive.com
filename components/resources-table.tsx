@@ -3,7 +3,7 @@
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import ResourceBadge from "./resource-badge";
-import { Resource } from "@/generated/prisma/client";
+import { Resource } from "@generated/prisma/client/client";
 import { Link } from "@heroui/link";
 
 type TableItem = Resources[number];

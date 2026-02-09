@@ -10,7 +10,7 @@
     "notify:tg": "tsx -r dotenv/config scripts/notification.ts",
     "cache:purge": "tsx -r dotenv/config scripts/purge-cache.ts",
     "lint": "eslint . --ext .ts,.tsx --fix",
-    "prisma:generate": "PRISMA_CLIENT_OUTPUT=\"$(pwd)/generated/prisma/client\" prisma generate",
+    "prisma:generate": "PRISMA_CLIENT_OUTPUT=\"$(pwd)/generated/prisma/client\" PRISMA_ZOD_OUTPUT=\"$(pwd)/generated/prisma/zod\" prisma generate",
     "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
@@ -68,7 +68,8 @@
     "react-icons": "^5.5.0",
     "react-leaflet": "^5.0.0",
     "sharp": "^0.33.5",
-    "swr": "^2.3.7"
+    "swr": "^2.3.7",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
@@ -117,6 +118,7 @@
       "@swc/core",
       "esbuild",
       "prisma",
+      "prisma-zod-generator",
       "sharp",
       "unrs-resolver"
     ],

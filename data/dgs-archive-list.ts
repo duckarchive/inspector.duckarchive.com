@@ -1,8 +1,5 @@
-import { Match, ResourceType } from "@/generated/prisma/client";
-import prisma from "@/lib/db";
-
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface DGSArchiveListItem extends Pick<Match, "id" | "full_code" | "url" | "api_params"> {
+export interface DGSArchiveListItem extends Pick<any, "id" | "full_code" | "url" | "api_params"> {
   // additional fields for constructing full_code if missing
 }
 
