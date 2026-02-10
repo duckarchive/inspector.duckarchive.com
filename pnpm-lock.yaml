@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@duckarchive/framework':
         specifier: github:duckarchive/framework
-        version: https://codeload.github.com/duckarchive/framework/tar.gz/b74ec9348634cff3c116cc636e9c232499278fda(20b00c82bcd3574c555b7888f31d965a)
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/9710f4439736ff06d83ab205061fae45cd3d262e(20b00c82bcd3574c555b7888f31d965a)
       '@duckarchive/map':
         specifier: github:duckarchive/map
         version: https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306(bb5f7aba05b6ba54ef8a9d929b768b31)
@@ -281,9 +281,9 @@ packages:
   '@chevrotain/utils@10.5.0':
     resolution: {integrity: sha512-hBzuU5+JjB2cqNZyszkDHZgOSrUUT8V3dhgRl8Q9Gp6dAj/H5+KILGjbhDpc3Iy9qmqlm/akuOI2ut9VUtzJxQ==}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/b74ec9348634cff3c116cc636e9c232499278fda':
-    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/b74ec9348634cff3c116cc636e9c232499278fda}
-    version: 0.3.10
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/9710f4439736ff06d83ab205061fae45cd3d262e':
+    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/9710f4439736ff06d83ab205061fae45cd3d262e}
+    version: 0.3.11
     peerDependencies:
       '@heroui/avatar': ^2.2.25
       '@heroui/button': ^2.2.21
@@ -4340,7 +4340,7 @@ snapshots:
 
   '@chevrotain/utils@10.5.0': {}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/b74ec9348634cff3c116cc636e9c232499278fda(20b00c82bcd3574c555b7888f31d965a)':
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/9710f4439736ff06d83ab205061fae45cd3d262e(20b00c82bcd3574c555b7888f31d965a)':
     dependencies:
       '@heroui/avatar': 2.2.24(@heroui/system@2.4.25(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@heroui/button': 2.2.29(@heroui/system@2.4.25(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@heroui/theme@2.4.25(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.1)))(framer-motion@12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
