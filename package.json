@@ -103,9 +103,6 @@
   "browserslist": [
     "firefox 115"
   ],
-  "prisma": {
-    "schema": "node_modules/@duckarchive/prisma/prisma/inspector/schema.prisma"
-  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@duckarchive/framework",
@@ -121,7 +118,6 @@
       "prisma-zod-generator",
       "sharp",
       "unrs-resolver"
-    ],
-    "overrides": {}
+    ]
   }
 }
