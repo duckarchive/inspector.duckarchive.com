@@ -136,12 +136,12 @@ const SearchInput: React.FC = () => {
     <>
       <form className="flex flex-wrap gap-2" onSubmit={handleSearch}>
         <div className="flex justify-between w-full">
-          <p className="font-bold md:text-xl">{t('label')}</p>
+          <p className="font-bold md:text-xl">{t("label")}</p>
           <SearchInputGuideModal />
         </div>
         <div className="flex justify-between items-end w-full py-2 border-2 rounded-xl overflow-hidden">
           <div className="flex flex-col items-center flex-shrink-0 basis-1/4">
-            <span className="text-gray-500">{t('archive-label')}</span>
+            <span className="text-gray-500">{t("archive-label")}</span>
             <input
               ref={aInputRef}
               type="text"
@@ -154,7 +154,7 @@ const SearchInput: React.FC = () => {
           </div>
           <span className="text-xl md:text-4xl">-</span>
           <div className="flex flex-col items-center flex-grow basis-1/4">
-            <span className="text-gray-500">{t('fund-label')}</span>
+            <span className="text-gray-500">{t("fund-label")}</span>
             <input
               ref={fInputRef}
               type="text"
@@ -168,7 +168,7 @@ const SearchInput: React.FC = () => {
           </div>
           <span className="text-xl md:text-4xl">-</span>
           <div className="flex flex-col items-center flex-grow basis-1/4">
-            <span className="text-gray-500">{t('description-label')}</span>
+            <span className="text-gray-500">{t("description-label")}</span>
             <input
               ref={dInputRef}
               type="text"
@@ -182,7 +182,7 @@ const SearchInput: React.FC = () => {
           </div>
           <span className="text-xl md:text-4xl">-</span>
           <div className="flex flex-col items-center flex-grow basis-1/4">
-            <span className="text-gray-500">{t('case-label')}</span>
+            <span className="text-gray-500">{t("case-label")}</span>
             <input
               ref={cInputRef}
               type="text"
@@ -202,7 +202,7 @@ const SearchInput: React.FC = () => {
           className="w-full mt-2 font-bold text-lg"
           startContent={<FaSearch />}
         >
-          {t('submit-button')}
+          {t("submit-button")}
         </Button>
       </form>
     </>
