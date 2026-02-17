@@ -1,7 +1,13 @@
 {
   "home-page": {
     "title": "Find an archival case online ― easily!",
-    "description": "Duck Inspector is a search service that allows you to find an archive case online. Just enter the details of the archive, fund, description, and case and get a link to the source."
+    "description": "Duck Inspector is a search service that allows you to find an archive case online. Just enter the details of the archive, fund, description, and case and get a link to the source.",
+    "how-to": {
+      "title": "Quick guide",
+      "step1": "Enter the case details in the search field.",
+      "step2": "Click the search button.",
+      "step3": "Get a link to the source if the case is found online."
+    }
   },
   "daily-updates-page": {
     "title": "Daily Report",
