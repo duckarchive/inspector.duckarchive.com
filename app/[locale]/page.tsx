@@ -7,7 +7,7 @@ const WelcomePage: NextPage = () => {
   const t = useTranslations("home-page");
 
   return (
-    <section className="flex items-center justify-between gap-4 grow">
+    <section className="flex items-center justify-between flex-col md:flex-row gap-4 grow">
       <div className="inline-block md:basis-1/2 justify-center">
         <h1 className="text-4xl md:text-6xl font-light">{t("title")}</h1>
         <p className="mt-4">{t("description")}</p>
@@ -15,7 +15,7 @@ const WelcomePage: NextPage = () => {
           <SearchInput />
         </div>
       </div>
-      <div className="basis-1/2 justify-center hidden md:inline-flex">
+      <div className="basis-1/2 flex justify-center items-center">
         <FollowingEye />
       </div>
     </section>

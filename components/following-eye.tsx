@@ -2,30 +2,42 @@
 
 import { useEffect, useRef } from "react";
 import InspectorSrc from "@/public/images/inspector.png";
-import Image from "next/image";
 
 export default function FollowingEye() {
-  const eyeRef = useRef<HTMLDivElement>(null);
-  const pupilRef = useRef<HTMLDivElement>(null);
+  const eye1Ref = useRef<HTMLDivElement>(null);
+  const pupil1Ref = useRef<HTMLDivElement>(null);
+  const eye2Ref = useRef<HTMLDivElement>(null);
+  const pupil2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!eyeRef.current || !pupilRef.current) return;
+      // Handle first eye
+      if (eye1Ref.current && pupil1Ref.current) {
+        const rect = eye1Ref.current.getBoundingClientRect();
+        const eyeX = rect.left + rect.width / 2;
+        const eyeY = rect.top + rect.height / 2;
 
-      // Get the center of the eye
-      const rect = eyeRef.current.getBoundingClientRect();
-      const eyeX = rect.left + rect.width / 2;
-      const eyeY = rect.top + rect.height / 2;
+        const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+        const distance = 5;
+        const moveX = Math.cos(angle) * distance;
+        const moveY = Math.sin(angle) * distance;
 
-      // Calculate angle between mouse and eye center
-      const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+        pupil1Ref.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      }
 
-      // Distance the pupil should move (keep it inside the eye)
-      const distance = 20;
-      const moveX = Math.cos(angle) * distance;
-      const moveY = Math.sin(angle) * distance;
+      // Handle second eye
+      if (eye2Ref.current && pupil2Ref.current) {
+        const rect = eye2Ref.current.getBoundingClientRect();
+        const eyeX = rect.left + rect.width / 2;
+        const eyeY = rect.top + rect.height / 2;
 
-      pupilRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
+        const distance = 5;
+        const moveX = Math.cos(angle) * distance;
+        const moveY = Math.sin(angle) * distance;
+
+        pupil2Ref.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      }
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -36,14 +48,54 @@ export default function FollowingEye() {
   }, []);
 
   return (
-    <div className="relative aspect-square w-full">
-      {/* <div
-        ref={eyeRef}
-        className="absolute w-[10%] h-[12%] top-[45%] left-[25%] bg-white rounded-full relative flex items-center justify-center border-2 border-black"
+    <div
+      className="relative"
+      style={{
+        width: "300px",
+        height: "300px",
+        backgroundImage: `url(${InspectorSrc.src})`,
+        backgroundSize: "auto 100%",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* First eye */}
+      <div
+        ref={eye1Ref}
+        className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
+        style={{
+          width: "12px",
+          height: "21px",
+          top: "53px",
+          left: "120px",
+          borderRadius: "80% 50% 90% 50%",
+        }}
       >
-        <div ref={pupilRef} className="w-[10%] h-[10%] bg-black rounded-full absolute" />
-      </div> */}
-      <Image src={InspectorSrc} width={300} height={300} alt="inspector" />
+        <div
+          ref={pupil1Ref}
+          className="bg-black rounded-full absolute"
+          style={{ width: "10px", height: "10px", transform: "translate(4.18986px, 2.72856px)" }}
+        />
+      </div>
+
+      {/* Second eye */}
+      <div
+        ref={eye2Ref}
+        className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
+        style={{
+          width: "18px",
+          height: "21px",
+          top: "33px",
+          left: "146px",
+          borderRadius: "80% 50% 90% 50%",
+        }}
+      >
+        <div
+          ref={pupil2Ref}
+          className="bg-black rounded-full absolute"
+          style={{ width: "10px", height: "10px", transform: "translate(4.18986px, 2.72856px)" }}
+        />
+      </div>
     </div>
   );
 }
