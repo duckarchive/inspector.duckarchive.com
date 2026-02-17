@@ -2,12 +2,14 @@
   "home-page": {
     "title": "Find an archival case online ― easily!",
     "description": "Duck Inspector is a search service that allows you to find an archive case online. Just enter the details of the archive, fund, description, and case and get a link to the source.",
-    "how-to": {
-      "title": "About project",
-      "step1": "Everyday database updates",
-      "step2": "24/7 monitoring for online copies",
-      "step3": "Direct link to online copy",
-      "step4": "Aggregated data from all archives in one place"
+    "about": {
+      "title": "Duck Inspector is:",
+      "one-place": "aggregated data from archival resources in one place",
+      "extended-data": "extended info with coordinates and dates",
+      "form": "simple search form to find what you need in seconds",
+      "direct-link": "24/7 monitoring for links to online copies",
+      "free": "community driven and free to use",
+      "universe": "integrated with tools of Duck Universe and other friendly services"
     }
   },
   "daily-updates-page": {

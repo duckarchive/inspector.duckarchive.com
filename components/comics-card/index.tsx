@@ -1,7 +1,7 @@
 import { StaticImageData } from "next/image";
 import MessageBubble from "./message-bubble";
 
-interface ComicsCardProps {
+export interface ComicsCardProps {
   image: StaticImageData | string;
   message: string;
   type?: "speech" | "whisper" | "electric";

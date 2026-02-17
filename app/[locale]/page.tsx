@@ -2,30 +2,47 @@ import { NextPage } from "next";
 import { useTranslations } from "next-intl";
 import SearchInput from "@/components/search-input";
 import FollowingEye from "@/components/following-eye";
-import ComicsCard from "@/components/comics-card";
+import ComicsCard, { ComicsCardProps } from "@/components/comics-card";
 import ResearchImg from "@/public/images/home/research.jpg";
 import ScrapImg from "@/public/images/home/scrap.jpg";
 import LinkImg from "@/public/images/home/link.jpg";
 import ResourcesImg from "@/public/images/home/resources.jpg";
+import SupportImg from "@/public/images/home/support.jpg";
+import UniverseImg from "@/public/images/home/universe.jpg";
 
-const HOW_TO_STEPS = [
+const HOW_TO_STEPS: ComicsCardProps[] = [
   {
-    image: ResearchImg,
-    message: "how-to.step1",
-  },
-  {
-    image: ResourcesImg,
-    message: "how-to.step4",
+    image: ScrapImg,
+    message: "about.form",
     va: "top",
     ha: "left",
   },
   {
-    image: ScrapImg,
-    message: "how-to.step2",
+    image: ResourcesImg,
+    message: "about.one-place",
+    va: "top",
+    ha: "left",
+  },
+  {
+    image: ResearchImg,
+    message: "about.extended-data",
+    ha: "left",
+  },
+  {
+    image: SupportImg,
+    message: "about.free",
+    va: "top",
+  },
+  {
+    image: UniverseImg,
+    message: "about.universe",
+    va: "top",
+    ha: "left",
   },
   {
     image: LinkImg,
-    message: "how-to.step3",
+    message: "about.direct-link",
+    ha: "left",
   },
 ];
 
@@ -47,7 +64,7 @@ const WelcomePage: NextPage = () => {
         </div>
       </section>
       <section className="grow min-h-[80vh]">
-        <h2 className="text-2xl md:text-4xl font-light mb-4">{t("how-to.title")}</h2>
+        <h2 className="text-2xl md:text-4xl font-light mb-4">{t("about.title")}</h2>
         <ol className="flex list-inside md:flex-row flex-col flex-wrap">
           {HOW_TO_STEPS.map((step, index) => (
             <li key={index} className="md:basis-1/3 h-full p-1">
