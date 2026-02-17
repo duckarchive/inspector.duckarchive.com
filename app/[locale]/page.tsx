@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useTranslations } from "next-intl";
 import SearchInput from "@/components/search-input";
-import FollowingEye from "@/components/following-eye";
+import DuckInspectorBanner from "@/components/duck-inspector-banner";
 import ComicsCard, { ComicsCardProps } from "@/components/comics-card";
 import ResearchImg from "@/public/images/home/research.jpg";
 import ScrapImg from "@/public/images/home/scrap.jpg";
@@ -9,13 +9,91 @@ import LinkImg from "@/public/images/home/link.jpg";
 import ResourcesImg from "@/public/images/home/resources.jpg";
 import SupportImg from "@/public/images/home/support.jpg";
 import UniverseImg from "@/public/images/home/universe.jpg";
+import Book1Img from "@/public/images/book-1.png";
+import Book2Img from "@/public/images/book-2.png";
+import CameraImg from "@/public/images/camera.png";
+import CertificateImg from "@/public/images/certificate.png";
+import DocsImg from "@/public/images/docs.png";
+import FeatherImg from "@/public/images/feather.png";
+import LicenseImg from "@/public/images/license.png";
+import NewspaperImg from "@/public/images/newspaper.png";
+import OldImageImg from "@/public/images/old-image.png";
+import PapirusImg from "@/public/images/papirus.png";
+import PCImg from "@/public/images/pc.png";
+import SandClockImg from "@/public/images/sandclock.png";
+import Image from "next/image";
+import { Tooltip } from "@heroui/tooltip";
+
+const SIZE = 100;
+
+const ICONS = [
+  {
+    src: DocsImg,
+    alt: "objects.docs",
+    position: [20, -5],
+  },
+  {
+    src: FeatherImg,
+    alt: "objects.feather",
+    position: [10, 15],
+  },
+  {
+    src: LicenseImg,
+    alt: "objects.license",
+    position: [17, 35],
+  },
+  {
+    src: NewspaperImg,
+    alt: "objects.newspaper",
+    position: [10, 55],
+  },
+  {
+    src: OldImageImg,
+    alt: "objects.old-image",
+    position: [20, 75],
+  },
+  {
+    src: PapirusImg,
+    alt: "objects.papirus",
+    position: [30, 95],
+  },
+  {
+    src: SandClockImg,
+    alt: "objects.sand-clock",
+    position: [70, -5],
+  },
+  {
+    src: PCImg,
+    alt: "objects.pc",
+    position: [85, 15],
+  },
+  {
+    src: CameraImg,
+    alt: "objects.camera",
+    position: [75, 35],
+  },
+  {
+    src: Book2Img,
+    alt: "objects.book2",
+    position: [80, 55],
+  },
+  {
+    src: Book1Img,
+    alt: "objects.book1",
+    position: [90, 75],
+  },
+  {
+    src: CertificateImg,
+    alt: "objects.certificate",
+    position: [80, 95],
+  },
+];
 
 const HOW_TO_STEPS: ComicsCardProps[] = [
   {
     image: ScrapImg,
     message: "about.form",
-    va: "top",
-    ha: "left",
+    va: "bottom",
   },
   {
     image: ResourcesImg,
@@ -34,14 +112,14 @@ const HOW_TO_STEPS: ComicsCardProps[] = [
     va: "top",
   },
   {
-    image: UniverseImg,
-    message: "about.universe",
-    va: "top",
+    image: LinkImg,
+    message: "about.direct-link",
     ha: "left",
   },
   {
-    image: LinkImg,
-    message: "about.direct-link",
+    image: UniverseImg,
+    message: "about.universe",
+    va: "top",
     ha: "left",
   },
 ];
@@ -51,7 +129,22 @@ const WelcomePage: NextPage = () => {
 
   return (
     <>
-      <section className="flex items-center justify-between flex-col md:flex-row gap-4 grow min-h-[80vh]">
+      <section className="flex items-center justify-center flex-col md:flex-row gap-4 grow min-h-[80vh]">
+        {ICONS.map((icon) => (
+          <Image
+            key={icon.alt}
+            src={icon.src}
+            alt={icon.alt}
+            aria-hidden="true"
+            width={SIZE}
+            height={SIZE}
+            className="absolute w-[50px] md:w-[100px] cursor-help opacity-30 z-10 hover:opacity-40 transition-opacity"
+            style={{
+              top: `${icon.position[0]}%`,
+              left: `${icon.position[1]}%`,
+            }}
+          />
+        ))}
         <div className="inline-block md:basis-1/2 justify-center">
           <h1 className="text-4xl md:text-6xl font-light">{t("title")}</h1>
           <p className="mt-4">{t("description")}</p>
@@ -59,11 +152,11 @@ const WelcomePage: NextPage = () => {
             <SearchInput />
           </div>
         </div>
-        <div className="basis-1/2 flex justify-center items-center">
-          <FollowingEye />
+        <div className="basis-1/2 h-full justify-center items-center hidden md:flex">
+          <DuckInspectorBanner />
         </div>
       </section>
-      <section className="grow min-h-[80vh]">
+      <section className="grow py-16">
         <h2 className="text-2xl md:text-4xl font-light mb-4">{t("about.title")}</h2>
         <ol className="flex list-inside md:flex-row flex-col flex-wrap">
           {HOW_TO_STEPS.map((step, index) => (

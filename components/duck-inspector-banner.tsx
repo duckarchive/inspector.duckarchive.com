@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import InspectorSrc from "@/public/images/inspector.png";
 
-export default function FollowingEye() {
+const DuckInspectorBanner: React.FC = () => {
   const eye1Ref = useRef<HTMLDivElement>(null);
   const pupil1Ref = useRef<HTMLDivElement>(null);
   const eye2Ref = useRef<HTMLDivElement>(null);
@@ -46,56 +46,59 @@ export default function FollowingEye() {
       document.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
-
   return (
-    <div
-      className="relative"
-      style={{
-        width: "300px",
-        height: "300px",
-        backgroundImage: `url(${InspectorSrc.src})`,
-        backgroundSize: "auto 100%",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* First eye */}
+    <>
       <div
-        ref={eye1Ref}
-        className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
+        className="relative"
         style={{
-          width: "12px",
-          height: "21px",
-          top: "53px",
-          left: "120px",
-          borderRadius: "80% 50% 90% 50%",
+          width: "300px",
+          height: "300px",
+          backgroundImage: `url(${InspectorSrc.src})`,
+          backgroundSize: "auto 100%",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
         }}
       >
+        {/* First eye */}
         <div
-          ref={pupil1Ref}
-          className="bg-black rounded-full absolute"
-          style={{ width: "10px", height: "10px", transform: "translate(4px, 2px)" }}
-        />
-      </div>
+          ref={eye1Ref}
+          className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
+          style={{
+            width: "12px",
+            height: "21px",
+            top: "53px",
+            left: "120px",
+            borderRadius: "80% 50% 90% 50%",
+          }}
+        >
+          <div
+            ref={pupil1Ref}
+            className="bg-black rounded-full absolute"
+            style={{ width: "10px", height: "10px", transform: "translate(4px, 2px)" }}
+          />
+        </div>
 
-      {/* Second eye */}
-      <div
-        ref={eye2Ref}
-        className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
-        style={{
-          width: "18px",
-          height: "21px",
-          top: "33px",
-          left: "146px",
-          borderRadius: "80% 50% 90% 50%",
-        }}
-      >
+        {/* Second eye */}
         <div
-          ref={pupil2Ref}
-          className="bg-black rounded-full absolute"
-          style={{ width: "10px", height: "10px", transform: "translate(4px, 2px)" }}
-        />
+          ref={eye2Ref}
+          className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
+          style={{
+            width: "18px",
+            height: "21px",
+            top: "33px",
+            left: "146px",
+            borderRadius: "80% 50% 90% 50%",
+          }}
+        >
+          <div
+            ref={pupil2Ref}
+            className="bg-black rounded-full absolute"
+            style={{ width: "10px", height: "10px", transform: "translate(4px, 2px)" }}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
-}
+};
+
+export default DuckInspectorBanner;

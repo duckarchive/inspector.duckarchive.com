@@ -139,7 +139,7 @@ const SearchInput: React.FC = () => {
           <p className="font-bold md:text-xl">{t("label")}</p>
           <SearchInputGuideModal />
         </div>
-        <div className="flex justify-between items-end w-full py-2 border-2 rounded-xl overflow-hidden">
+        <div className="flex justify-between items-end w-full py-2 border-2 rounded-xl overflow-hidden bg-background">
           <div className="flex flex-col items-center flex-shrink-0 basis-1/4">
             <span className="text-gray-500">{t("archive-label")}</span>
             <input
