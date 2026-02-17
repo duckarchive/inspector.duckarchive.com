@@ -4,11 +4,28 @@ import SearchInput from "@/components/search-input";
 import FollowingEye from "@/components/following-eye";
 import ComicsCard from "@/components/comics-card";
 import ResearchImg from "@/public/images/home/research.jpg";
+import ScrapImg from "@/public/images/home/scrap.jpg";
+import LinkImg from "@/public/images/home/link.jpg";
+import ResourcesImg from "@/public/images/home/resources.jpg";
 
 const HOW_TO_STEPS = [
   {
     image: ResearchImg,
     message: "how-to.step1",
+  },
+  {
+    image: ResourcesImg,
+    message: "how-to.step4",
+    va: "top",
+    ha: "left",
+  },
+  {
+    image: ScrapImg,
+    message: "how-to.step2",
+  },
+  {
+    image: LinkImg,
+    message: "how-to.step3",
   },
 ];
 
@@ -31,10 +48,10 @@ const WelcomePage: NextPage = () => {
       </section>
       <section className="grow min-h-[80vh]">
         <h2 className="text-2xl md:text-4xl font-light mb-4">{t("how-to.title")}</h2>
-        <ol className="flex gap-4 list-inside md:flex-row flex-col">
+        <ol className="flex list-inside md:flex-row flex-col flex-wrap">
           {HOW_TO_STEPS.map((step, index) => (
-            <li key={index} className="md:basis-1/3 h-full">
-              <ComicsCard image={step.image} message={t(step.message)} />
+            <li key={index} className="md:basis-1/3 h-full p-1">
+              <ComicsCard image={step.image} message={t(step.message)} va={step.va} ha={step.ha} />
             </li>
           ))}
         </ol>

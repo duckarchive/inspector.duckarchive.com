@@ -14,10 +14,14 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech",
 
   return (
     <div
-      className="absolute -top-4 -left-4 flex items-center justify-center min-h-36 pb-[15%] px-8"
+      className="absolute flex items-center justify-center pt-[10%] pb-[25%] px-8"
       style={{
         backgroundImage: bubbleStyles[type],
         transform: `scale(${ha === "left" ? 1 : -1}, ${va === "bottom" ? 1 : -1})`,
+        top: va === "top" ? undefined : "-4%",
+        left: ha === "left" ? undefined : "-4%",
+        bottom: va === "bottom" ? undefined : "-4%",
+        right: ha === "right" ? undefined : "-4%",
       }}
     >
       <p
