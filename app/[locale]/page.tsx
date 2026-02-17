@@ -5,7 +5,12 @@ import FollowingEye from "@/components/following-eye";
 import ComicsCard from "@/components/comics-card";
 import ResearchImg from "@/public/images/home/research.jpg";
 
-const HOW_TO_STEPS = [ResearchImg];
+const HOW_TO_STEPS = [
+  {
+    image: ResearchImg,
+    message: "how-to.step1",
+  },
+];
 
 const WelcomePage: NextPage = () => {
   const t = useTranslations("home-page");
@@ -24,12 +29,12 @@ const WelcomePage: NextPage = () => {
           <FollowingEye />
         </div>
       </section>
-      <section className="grow">
-        <h2 className="text-2xl md:text-4xl font-light">{t("how-to.title")}</h2>
-        <ol className="flex gap-4 items-center list-inside">
-          {[t("how-to.step1"), t("how-to.step2"), t("how-to.step3")].map((step: string, index: number) => (
-            <li key={index} className="basis-1/3 h-full">
-              <ComicsCard image={HOW_TO_STEPS[index]} message={step} title={`Step ${index + 1}`} />
+      <section className="grow min-h-[80vh]">
+        <h2 className="text-2xl md:text-4xl font-light mb-4">{t("how-to.title")}</h2>
+        <ol className="flex gap-4 list-inside md:flex-row flex-col">
+          {HOW_TO_STEPS.map((step, index) => (
+            <li key={index} className="md:basis-1/3 h-full">
+              <ComicsCard image={step.image} message={t(step.message)} />
             </li>
           ))}
         </ol>
