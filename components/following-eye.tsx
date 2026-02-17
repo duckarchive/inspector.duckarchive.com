@@ -74,7 +74,7 @@ export default function FollowingEye() {
         <div
           ref={pupil1Ref}
           className="bg-black rounded-full absolute"
-          style={{ width: "10px", height: "10px", transform: "translate(4.18986px, 2.72856px)" }}
+          style={{ width: "10px", height: "10px", transform: "translate(4px, 2px)" }}
         />
       </div>
 
@@ -93,7 +93,7 @@ export default function FollowingEye() {
         <div
           ref={pupil2Ref}
           className="bg-black rounded-full absolute"
-          style={{ width: "10px", height: "10px", transform: "translate(4.18986px, 2.72856px)" }}
+          style={{ width: "10px", height: "10px", transform: "translate(4px, 2px)" }}
         />
       </div>
     </div>
