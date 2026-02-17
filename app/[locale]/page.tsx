@@ -34,7 +34,7 @@ const ICONS = [
   {
     src: FeatherImg,
     alt: "objects.feather",
-    position: [10, 15],
+    position: [10, 10],
   },
   {
     src: LicenseImg,
@@ -49,7 +49,7 @@ const ICONS = [
   {
     src: OldImageImg,
     alt: "objects.old-image",
-    position: [20, 75],
+    position: [20, 80],
   },
   {
     src: PapirusImg,
@@ -69,12 +69,12 @@ const ICONS = [
   {
     src: CameraImg,
     alt: "objects.camera",
-    position: [75, 35],
+    position: [75, 30],
   },
   {
     src: Book2Img,
     alt: "objects.book2",
-    position: [80, 55],
+    position: [80, 50],
   },
   {
     src: Book1Img,
