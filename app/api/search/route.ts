@@ -102,7 +102,7 @@ export async function POST(request: Request) {
       whereParts.push(Prisma.sql`EXISTS (
         SELECT 1
         FROM "case_online_copies" m
-        WHERE m.case_id = c.id AND m.url IS NOT NULL
+        WHERE m.case_id = c.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
       )`);
     }
 
@@ -114,7 +114,7 @@ export async function POST(request: Request) {
         CASE WHEN EXISTS (
           SELECT 1
           FROM "case_online_copies" m
-          WHERE m.case_id = c.id AND m.url IS NOT NULL
+          WHERE m.case_id = c.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
         ) THEN TRUE ELSE FALSE END AS is_online,
         COALESCE(
           jsonb_agg(
