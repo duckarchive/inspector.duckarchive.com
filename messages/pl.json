@@ -1,0 +1,47 @@
+{
+  "home-page": {
+    "title": "Znajdź przypadki archiwalne online łatwo!",
+    "description": "Duck Inspector to serwis wyszukiwarki, który pozwala znaleźć archiwalne przypadki online. Wystarczy wpisać dane dotyczące archiwum, funduszu, opisu i przypadku, aby uzyskać link do źródła.",
+    "about": {
+      "title": "Duck Inspector to:",
+      "one-place": "zagregowane dane z zasobów archiwalnych w jednym miejscu",
+      "extended-data": "rozszerzone informacje ze współrzędnymi i datami",
+      "form": "prosty formularz wyszukiwania umożliwiający znalezienie potrzebnej sprawy w kilka sekund",
+      "direct-link": "monitorowanie 24/7 linków do kopii online",
+      "free": "napędzane przez społeczność i bezpłatne w użyciu",
+      "universe": "zintegrowane z narzędziami Duck Universe i innymi przyjaznymi usługami"
+    }
+  },
+  "daily-updates-page": {
+    "title": "Raport Dzienny",
+    "description": "Lista nowych przypadków archiwalnych znalezionych online w ciągu ostatnich 24 godzin.",
+    "limit-note": "Maksymalna liczba wyników wynosi 25 000."
+  },
+  "search-input": {
+    "label": "Wpisz dane dotyczące przypadku:",
+    "archive-label": "Archiwum",
+    "fund-label": "Fundusz",
+    "description-label": "Opis",
+    "case-label": "Przypadek",
+    "submit-button": "Szukaj"
+  },
+  "navigation": {
+    "logo": "Inspektor",
+    "main": "Strona główna",
+    "resources": "Zasoby",
+    "inspector": "Inspektor",
+    "search": "Wyszukiwanie",
+    "archives": "Archiwa",
+    "daily-updates": "Raport dzienny",
+    "stats": "Statystyka",
+    "docs": "Dokumentacja"
+  },
+  "metadata": {
+    "title": "Duck Inspector — wyszukiwanie archiwów online",
+    "description": "Usługa wyszukiwania archiwalnych przypadków dostępnych online. Wpisz dane dotyczące przypadku w prostym oknie wyszukiwania i uzyskaj link do źródła.",
+    "archive-description": "Szukaj przypadków online w archiwum {archiveCode} ({archiveTitle})",
+    "fund-description": "Szukaj przypadków online w funduszu {archiveCode}-{fundCode}{fundTitle} / archiwum {archiveCode} fundusz {fundCode} / {archiveCode} f.{fundCode}",
+    "description-description": "Szukaj przypadków online w opisie {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archiwum {archiveCode} fundusz {fundCode} opis {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
+    "case-description": "Przypadek online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archiwum {archiveCode} fundusz {fundCode} opis {descriptionCode} przypadek {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  }
+}

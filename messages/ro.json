@@ -1,0 +1,47 @@
+{
+  "home-page": {
+    "title": "Găsește dosarele de arhivă online ușor!",
+    "description": "Duck Inspector este un serviciu de căutare care vă permite să găsiți dosarele de arhivă online. Introduceți pur și simplu detaliile din arhivă, fond, descriere și dosar pentru a obține un link către sursă.",
+    "about": {
+      "title": "Duck Inspector este:",
+      "one-place": "date agregate din resurse de arhivă într-un singur loc",
+      "extended-data": "informații extinse cu coordonate și date",
+      "form": "formular de căutare simplu pentru a găsi dosarul de care ai nevoie în câteva secunde",
+      "direct-link": "monitorizare 24/7 pentru linkurile la copiile online",
+      "free": "condus de comunitate și gratuit de utilizat",
+      "universe": "integrat cu instrumente din cadrul Duck Universe și alte servicii prietenoase"
+    }
+  },
+  "daily-updates-page": {
+    "title": "Raport Zilnic",
+    "description": "O listă de noi dosare de arhivă găsite online în ultimele 24 de ore.",
+    "limit-note": "Numărul maxim de rezultate este limitat la 25.000."
+  },
+  "search-input": {
+    "label": "Introduceți detaliile dosarului:",
+    "archive-label": "Arhivă",
+    "fund-label": "Fond",
+    "description-label": "Descriere",
+    "case-label": "Dosar",
+    "submit-button": "Cauta"
+  },
+  "navigation": {
+    "logo": "Inspector",
+    "main": "Acasă",
+    "resources": "Resurse",
+    "inspector": "Inspector",
+    "search": "Căutare",
+    "archives": "Arhive",
+    "daily-updates": "Raport zilnic",
+    "stats": "Statistici",
+    "docs": "Documentație"
+  },
+  "metadata": {
+    "title": "Duck Inspector — căutare de dosare de arhivă online",
+    "description": "Un serviciu pentru căutarea dosarelor de arhivă disponibile online. Introduceți detaliile dosarului într-o fereastră de căutare simplă și obțineți un link către sursă.",
+    "archive-description": "Căutați dosarele online în arhiva {archiveCode} ({archiveTitle})",
+    "fund-description": "Căutați dosarele online în fondul {archiveCode}-{fundCode}{fundTitle} / arhivă {archiveCode} fond {fundCode} / {archiveCode} f.{fundCode}",
+    "description-description": "Căutați dosarele online în descrierea {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / arhivă {archiveCode} fond {fundCode} descriere {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
+    "case-description": "Dosar online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / arhivă {archiveCode} fond {fundCode} descriere {descriptionCode} dosar {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  }
+}

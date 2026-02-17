@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "@/i18n/routing";
 
 const CORS_ALLOWED_ORIGINS = [
   "https://duckarchive.com",
@@ -8,7 +10,10 @@ const CORS_ALLOWED_ORIGINS = [
   "chrome-extension://gldlgeliohimejlfpgihbplkchibadim",
 ];
 
-export function middleware(req: NextRequest) {
+// Create next-intl middleware for locale routing
+const intlMiddleware = createMiddleware(routing);
+
+function corsMiddleware(req: NextRequest) {
   const origin = req.headers.get("origin") || req.nextUrl.origin;
   if (CORS_ALLOWED_ORIGINS.includes(origin)) {
     const headers = new Headers();
@@ -30,7 +35,7 @@ export function middleware(req: NextRequest) {
         "X-Api-Version",
         "X-CSRF-Token",
         "X-Requested-With",
-      ].join(", ")
+      ].join(", "),
     );
     headers.set("Access-Control-Allow-Credentials", "true");
 
@@ -40,4 +45,24 @@ export function middleware(req: NextRequest) {
 
     return NextResponse.next({ headers });
   }
+
+  return null;
 }
+
+export function middleware(req: NextRequest) {
+  // Apply CORS first
+  const corsResponse = corsMiddleware(req);
+  if (corsResponse) {
+    return corsResponse;
+  }
+
+  // Apply next-intl locale routing
+  return intlMiddleware(req);
+}
+
+export const config = {
+  matcher: [
+    // Skip all internal paths (_next, api, etc.)
+    "/((?!_next|api|.*\\..*|monitoring|health).*)",
+  ],
+};

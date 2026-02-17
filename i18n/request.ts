@@ -1,16 +1,11 @@
 import { getRequestConfig } from "next-intl/server";
-// import { cookies } from "next/headers";
+import { hasLocale } from "next-intl";
+import { routing } from "./routing";
 
-export const SUPPORTED_LOCALES = ["en", "uk"];
-
-export default getRequestConfig(async () => {
-  // const c = cookies();
-  // const cookieLocale = c.get("NEXT_LOCALE")?.value || c.get("locale")?.value;
-  const cookieLocale = "uk";
-
-  const localeWithRegion = cookieLocale;
-  const raw = localeWithRegion?.split("-")[0] || "uk";
-  const locale = SUPPORTED_LOCALES.includes(raw) ? raw : "uk";
+export default getRequestConfig(async ({ requestLocale }) => {
+  // Typically corresponds to the `[locale]` segment
+  const requested = await requestLocale;
+  const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
 
   return {
     locale,
