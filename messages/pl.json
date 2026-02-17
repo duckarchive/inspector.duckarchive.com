@@ -1,7 +1,16 @@
 {
   "home-page": {
     "title": "Znajdź przypadki archiwalne online łatwo!",
-    "description": "Duck Inspector to serwis wyszukiwarki, który pozwala znaleźć archiwalne przypadki online. Wystarczy wpisać dane dotyczące archiwum, funduszu, opisu i przypadku, aby uzyskać link do źródła."
+    "description": "Duck Inspector to serwis wyszukiwarki, który pozwala znaleźć archiwalne przypadki online. Wystarczy wpisać dane dotyczące archiwum, funduszu, opisu i przypadku, aby uzyskać link do źródła.",
+    "about": {
+      "title": "Duck Inspector to:",
+      "one-place": "zagregowane dane z zasobów archiwalnych w jednym miejscu",
+      "extended-data": "rozszerzone informacje ze współrzędnymi i datami",
+      "form": "prosty formularz wyszukiwania umożliwiający znalezienie potrzebnej sprawy w kilka sekund",
+      "direct-link": "monitorowanie 24/7 linków do kopii online",
+      "free": "napędzane przez społeczność i bezpłatne w użyciu",
+      "universe": "zintegrowane z narzędziami Duck Universe i innymi przyjaznymi usługami"
+    }
   },
   "daily-updates-page": {
     "title": "Raport Dzienny",

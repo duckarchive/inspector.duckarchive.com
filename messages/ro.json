@@ -1,7 +1,16 @@
 {
   "home-page": {
     "title": "Găsește dosarele de arhivă online ușor!",
-    "description": "Duck Inspector este un serviciu de căutare care vă permite să găsiți dosarele de arhivă online. Introduceți pur și simplu detaliile din arhivă, fond, descriere și dosar pentru a obține un link către sursă."
+    "description": "Duck Inspector este un serviciu de căutare care vă permite să găsiți dosarele de arhivă online. Introduceți pur și simplu detaliile din arhivă, fond, descriere și dosar pentru a obține un link către sursă.",
+    "about": {
+      "title": "Duck Inspector este:",
+      "one-place": "date agregate din resurse de arhivă într-un singur loc",
+      "extended-data": "informații extinse cu coordonate și date",
+      "form": "formular de căutare simplu pentru a găsi dosarul de care ai nevoie în câteva secunde",
+      "direct-link": "monitorizare 24/7 pentru linkurile la copiile online",
+      "free": "condus de comunitate și gratuit de utilizat",
+      "universe": "integrat cu instrumente din cadrul Duck Universe și alte servicii prietenoase"
+    }
   },
   "daily-updates-page": {
     "title": "Raport Zilnic",

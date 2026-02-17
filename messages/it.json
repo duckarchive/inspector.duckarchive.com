@@ -1,7 +1,16 @@
 {
   "home-page": {
     "title": "Trova file d'archivio online facilmente!",
-    "description": "Duck Inspector è un servizio di ricerca che ti permette di trovare file d'archivio online. Inserisci semplicemente i dettagli dell'archivio, fondo, descrizione e fascicolo per ottenere un collegamento alla fonte."
+    "description": "Duck Inspector è un servizio di ricerca che ti permette di trovare file d'archivio online. Inserisci semplicemente i dettagli dell'archivio, fondo, descrizione e fascicolo per ottenere un collegamento alla fonte.",
+    "about": {
+      "title": "Duck Inspector è:",
+      "one-place": "dati aggregati da risorse di archivio in un unico luogo",
+      "extended-data": "informazioni estese con coordinate e date",
+      "form": "modulo di ricerca semplice per trovare il fascicolo di cui hai bisogno in pochi secondi",
+      "direct-link": "monitoraggio 24/7 per i link alle copie online",
+      "free": "guidato dalla comunità e gratuito da usare",
+      "universe": "integrato con gli strumenti di Duck Universe e altri servizi amici"
+    }
   },
   "daily-updates-page": {
     "title": "Rapporto Giornaliero",
