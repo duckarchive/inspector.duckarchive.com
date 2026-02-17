@@ -22,7 +22,6 @@ import PapirusImg from "@/public/images/papirus.png";
 import PCImg from "@/public/images/pc.png";
 import SandClockImg from "@/public/images/sandclock.png";
 import Image from "next/image";
-import { Tooltip } from "@heroui/tooltip";
 
 const SIZE = 100;
 

@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { Button } from "@heroui/button";
 import { Avatar } from "@heroui/avatar";
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@/i18n/request";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@/i18n/constants";
 
 const LOCALE2FLAG: Record<string, string> = {
   uk: "ua",
