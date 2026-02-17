@@ -10,59 +10,55 @@ const CORS_ALLOWED_ORIGINS = [
   "chrome-extension://gldlgeliohimejlfpgihbplkchibadim",
 ];
 
-// Create next-intl middleware for locale routing
 const intlMiddleware = createMiddleware(routing);
 
-function corsMiddleware(req: NextRequest) {
-  const origin = req.headers.get("origin") || req.nextUrl.origin;
-  if (CORS_ALLOWED_ORIGINS.includes(origin)) {
-    const headers = new Headers();
-    headers.set("Access-Control-Allow-Origin", origin);
-    headers.set("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS");
-    headers.set(
-      "Access-Control-Allow-Headers",
-      [
-        "Accept-Version",
-        "Accept",
-        "Authorization",
-        "Cache-Control",
-        "Content-Length",
-        "Content-MD5",
-        "Content-Type",
-        "Date",
-        "Pragma",
-        "Priority",
-        "X-Api-Version",
-        "X-CSRF-Token",
-        "X-Requested-With",
-      ].join(", "),
-    );
-    headers.set("Access-Control-Allow-Credentials", "true");
-
-    if (req.method === "OPTIONS") {
-      return new NextResponse(null, { status: 204, headers });
-    }
-
-    return NextResponse.next({ headers });
-  }
-
-  return null;
-}
-
 export function middleware(req: NextRequest) {
-  // Apply CORS first
-  const corsResponse = corsMiddleware(req);
-  if (corsResponse) {
-    return corsResponse;
+  const { pathname } = req.nextUrl;
+
+  // 1. Handle CORS for ALL matched routes (including API)
+  const origin = req.headers.get("origin");
+
+  if (origin && CORS_ALLOWED_ORIGINS.includes(origin)) {
+    // For OPTIONS requests, return 204 immediately
+    if (req.method === "OPTIONS") {
+      return new NextResponse(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": origin,
+          "Access-Control-Allow-Methods": "GET,POST,PATCH,OPTIONS",
+          "Access-Control-Allow-Headers":
+            "Accept-Version, Accept, Authorization, Cache-Control, Content-Length, Content-MD5, Content-Type, Date, Pragma, Priority, X-Api-Version, X-CSRF-Token, X-Requested-With",
+          "Access-Control-Allow-Credentials": "true",
+        },
+      });
+    }
   }
 
-  // Apply next-intl locale routing
-  return intlMiddleware(req);
+  // 2. Logic Split: If it's an API route, don't run i18n
+  if (pathname.startsWith("/api")) {
+    const response = NextResponse.next();
+    if (origin && CORS_ALLOWED_ORIGINS.includes(origin)) {
+      response.headers.set("Access-Control-Allow-Origin", origin);
+      response.headers.set("Access-Control-Allow-Credentials", "true");
+    }
+    return response;
+  }
+
+  // 3. For everything else (pages), run i18n middleware
+  const response = intlMiddleware(req);
+
+  // Apply CORS headers to i18n response if needed
+  if (origin && CORS_ALLOWED_ORIGINS.includes(origin)) {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+  }
+
+  return response;
 }
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next, api, etc.)
-    "/((?!_next|api|.*\\..*|monitoring|health).*)",
+    // Match all paths except static files and internal Next.js paths
+    "/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)",
   ],
 };
