@@ -70,7 +70,12 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
     <html suppressHydrationWarning lang={locale} className="overflow-y-hidden">
       <head />
       <GoogleAnalytics />
-      <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+      <body
+        className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}
+        style={{
+          backgroundImage: "url(/images/bg-paper-noise.png)",
+        }}
+      >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen overflow-y-scroll">
             <NextIntlClientProvider locale={locale} messages={messages}>
