@@ -144,14 +144,14 @@ const WelcomePage: NextPage = () => {
             }}
           />
         ))}
-        <div className="inline-block md:basis-1/2 justify-center">
+        <div className="inline-block xl:basis-1/2 justify-center">
           <h1 className="text-4xl md:text-6xl font-light">{t("title")}</h1>
           <p className="mt-4">{t("description")}</p>
           <div className="mt-8 w-full">
             <SearchInput />
           </div>
         </div>
-        <div className="basis-1/2 h-full justify-center items-center hidden md:flex">
+        <div className="basis-1/2 h-full justify-center items-center hidden xl:flex">
           <DuckInspectorBanner />
         </div>
       </section>
