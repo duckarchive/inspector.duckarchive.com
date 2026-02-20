@@ -24,7 +24,7 @@ interface ProvidersProps {
   session?: Session;
 }
 
-export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ children, themeProps, session }) => {
+export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ children, session }) => {
   const router = useRouter();
   useEffect(() => {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
@@ -38,7 +38,7 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
   return (
     <SessionProvider session={session} refetchOnWindowFocus={false}>
       <HeroUIProvider navigate={router.push}>
-        <NextThemesProvider {...themeProps}>
+        <NextThemesProvider defaultTheme="dark">
           <DonationProvider>
             <ToastProvider />
             <ForeignUserProvider>{children}</ForeignUserProvider>

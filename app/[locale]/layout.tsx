@@ -20,9 +20,7 @@ const LocaleLayout: React.FC<LocaleLayoutProps> = async ({ children, params }) =
   return (
     <>
       <DuckNav siteUrl={siteConfig.url} locales={routing.locales} items={getNav(t)} />
-      <main className="container mx-auto max-w-7xl py-3 px-6 flex-grow flex flex-col min-h-[calc(100vh-4rem)]">
-        {children}
-      </main>
+      <main className="container mx-auto max-w-7xl py-3 px-6 flex-grow flex flex-col">{children}</main>
     </>
   );
 };

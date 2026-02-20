@@ -76,7 +76,7 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
           backgroundImage: "url(/images/bg-paper-noise.png)",
         }}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+        <Providers>
           <div className="relative flex flex-col h-screen overflow-y-scroll">
             <NextIntlClientProvider locale={locale} messages={messages}>
               <Suspense fallback={<DuckLoader />}>{children}</Suspense>
