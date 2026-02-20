@@ -1,4 +1,4 @@
-import { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/image";
 import MessageBubble from "./message-bubble";
 
 export interface ComicsCardProps {
@@ -11,21 +11,15 @@ export interface ComicsCardProps {
 
 export default function ComicsCard({ image, message, type = "speech", va = "bottom", ha = "right" }: ComicsCardProps) {
   return (
-    <div className="relative w-full max-w-md bg-white rounded-2xl border-[16px] border-white shadow-lg">
-      <div
-        className="relative p-6 from-sky-300 to-sky-200 min-h-96 flex flex-col justify-between border-4 border-black rounded-sm"
-        style={{
-          backgroundImage: `url(${typeof image === "string" ? image : image?.src})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <MessageBubble message={message} type={type} ha={ha} va={va} />
-      </div>
-
-      {/* <div className="bg-white px-6 py-4">
-        <h3 className="font-bold text-xl text-gray-900">{title}</h3>
-      </div> */}
+    <div className="relative w-full max-w-md flex border-[16px] border-transparent min-h-96 ">
+      <Image
+        className="relative border-4 border-black rounded-sm aspect-square object-cover"
+        src={typeof image === "string" ? image : image.src}
+        alt={message}
+        width={400}
+        height={400}
+      />
+      <MessageBubble message={message} type={type} ha={ha} va={va} />
     </div>
   );
 }

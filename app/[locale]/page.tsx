@@ -21,7 +21,7 @@ import UniverseImg from "@/public/images/home/universe.jpg";
 // import PCImg from "@/public/images/pc.png";
 // import SandClockImg from "@/public/images/sandclock.png";
 import HomeBanner from "@/components/home/banner";
-import HalftonePattern from "@/components/home/halftone-pattern";
+import PaperNoiseBg from "@/public/images/bg-paper-noise.png";
 
 // const SIZE = 100;
 
@@ -153,11 +153,16 @@ const WelcomePage: NextPage = () => {
           </div>
         </div>
       </section>
-      <section className="grow py-32">
-        <h2 className="text-2xl md:text-4xl font-light mb-4">{t("about.title")}</h2>
-        <ol className="flex list-inside md:flex-row flex-col flex-wrap">
+      <section
+        className="grow my-32 shadow-md bg-warning-200 hover:shadow-2xl transition"
+        style={{
+          backgroundImage: `url(${PaperNoiseBg.src})`,
+        }}
+      >
+        <h2 className="text-2xl md:text-4xl p-4 md:p-8 md:pb-0 font-black italic uppercase">{t("about.title")}</h2>
+        <ol className="flex list-inside md:flex-row flex-col flex-wrap p-4 md:p-8 w-full">
           {HOW_TO_STEPS.map((step, index) => (
-            <li key={index} className="md:basis-1/3 h-full p-1">
+            <li key={index} className="lg:basis-1/3 h-full">
               <ComicsCard image={step.image} message={t(step.message)} va={step.va} ha={step.ha} />
             </li>
           ))}

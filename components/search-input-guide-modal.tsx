@@ -18,7 +18,7 @@ const SearchInputGuideModal: React.FC<SearchInputGuideModalProps> = ({ withoutTi
   return (
     <>
       <div
-        className="flex justify-between gap-2 items-center cursor-pointer text-default-400 hover:text-default-800 cursor-pointer"
+        className="flex justify-between gap-2 items-center cursor-pointer opacity-70 hover:opacity-100 hover:text-default-800"
         aria-label="Відкрити інструкцію"
         onClick={handleInfoClick}
       >

@@ -20,7 +20,6 @@ const ForeignUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 };
 
 interface ProvidersProps {
-  themeProps?: ThemeProviderProps;
   session?: Session;
 }
 
@@ -38,7 +37,7 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
   return (
     <SessionProvider session={session} refetchOnWindowFocus={false}>
       <HeroUIProvider navigate={router.push}>
-        <NextThemesProvider defaultTheme="dark">
+        <NextThemesProvider defaultTheme="dark" attribute="class">
           <DonationProvider>
             <ToastProvider />
             <ForeignUserProvider>{children}</ForeignUserProvider>
