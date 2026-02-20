@@ -128,7 +128,7 @@ const WelcomePage: NextPage = () => {
 
   return (
     <>
-      <section className="flex items-center justify-center gap-4 h-[calc(100vh-4rem)]">
+      <section className="flex items-center justify-start gap-4 h-[calc(100vh-4rem)]">
         <HomeBanner />
         {/* {ICONS.map((icon) => (
           <Image
@@ -145,21 +145,15 @@ const WelcomePage: NextPage = () => {
             }}
           />
         ))} */}
-        <div className="inline-block xl:basis-1/2 justify-center z-10">
+        <div className="inline-block xl:basis-1/2 justify-center z-10 backdrop-blur-lg backdrop-saturate-150 bg-background/50 p-8 rounded-lg">
           <h1 className="text-4xl md:text-6xl font-light">{t("title")}</h1>
           <p className="mt-4">{t("description")}</p>
           <div className="mt-8 w-full">
             <SearchInput />
           </div>
         </div>
-        <div className="basis-1/2 h-full justify-center items-center hidden xl:flex">
-          {/* <DuckInspectorBanner /> */}
-        </div>
       </section>
       <section className="grow py-32">
-        <div className="absolute top-[100vh] left-0 w-screen h-32 opacity-70">
-          <HalftonePattern />
-        </div>
         <h2 className="text-2xl md:text-4xl font-light mb-4">{t("about.title")}</h2>
         <ol className="flex list-inside md:flex-row flex-col flex-wrap">
           {HOW_TO_STEPS.map((step, index) => (
