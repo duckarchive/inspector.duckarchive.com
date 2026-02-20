@@ -68,11 +68,11 @@ const DuckInspectorBanner: React.FC = () => {
           ref={eye1Ref}
           className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
           style={{
-            width: "17px",
-            height: "27px",
+            width: "21px",
+            height: "25px",
             top: "150px",
             left: "291px",
-            borderRadius: "15% 70% 40% 60%",
+            borderRadius: "15% 70% 60% 60%",
           }}
         >
           <div
@@ -88,7 +88,7 @@ const DuckInspectorBanner: React.FC = () => {
           className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
           style={{
             width: "37px",
-            height: "34px",
+            height: "37px",
             top: "115px",
             left: "328px",
             borderRadius: "110% 30% 80% 60%",
