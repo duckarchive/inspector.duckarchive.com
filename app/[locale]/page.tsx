@@ -127,7 +127,7 @@ const WelcomePage: NextPage = () => {
 
   return (
     <>
-      <section className="flex items-center justify-center flex-col md:flex-row gap-4 h-screen">
+      <section className="flex items-center justify-center flex-col md:flex-row gap-4 h-[calc(100vh-4rem-0.75rem)]">
         <HomeBanner />
         {/* {ICONS.map((icon) => (
           <Image
@@ -155,7 +155,18 @@ const WelcomePage: NextPage = () => {
           {/* <DuckInspectorBanner /> */}
         </div>
       </section>
-      <section className="grow py-16">
+      <section
+        className="grow py-32"
+        style={{
+          "--s": "74px",
+          "--c1": "#1d1d1d",
+          "--c2": "#4e4f51",
+          "--c3": "#3c3c3c",
+          background:
+            "repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 50%) calc(var(--s)/2) calc(var(--s)*tan(30deg)/2), repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 50%)",
+          backgroundSize: "var(--s) calc(var(--s)*tan(30deg))",
+        }}
+      >
         <h2 className="text-2xl md:text-4xl font-light mb-4">{t("about.title")}</h2>
         <ol className="flex list-inside md:flex-row flex-col flex-wrap">
           {HOW_TO_STEPS.map((step, index) => (

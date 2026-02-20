@@ -18,7 +18,7 @@ const HomeBanner: React.FC = () => {
 
   return (
     <div
-      className="absolute top-0 left-0 w-screen h-screen opacity-90 z-0"
+      className="absolute top-0 left-0 w-screen h-screen opacity-90 z-0  shadow-lg"
       style={{
         backgroundImage: `url(${theme === "dark" ? RoomNightSrc.src : RoomDaySrc.src})`,
         backgroundSize: "cover",
