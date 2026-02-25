@@ -62,7 +62,7 @@ const HomeBanner: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[103vh] opacity-90 z-0  shadow-lg">
+      <div className="absolute top-0 left-0 w-full h-[103vh] opacity-90 z-0">
         {/* left eye */}
         <div
           ref={eye1Ref}
