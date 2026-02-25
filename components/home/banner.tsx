@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import RoomDaySrc from "@/public/images/home/inspector-fullroom-day.webp";
 import RoomNightSrc from "@/public/images/home/inspector-fullroom-night.webp";
+import HatSrc from "@/public/images/home/hat.webp";
 import HalftonePatternImg from "@/public/images/home/halftone-pattern.png";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 const HomeBanner: React.FC = () => {
   const [mounted, setMounted] = useState(false);
@@ -62,11 +64,11 @@ const HomeBanner: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[103vh] opacity-90 z-0">
+      <div className="absolute top-0 left-0 w-full h-[103vh] z-0">
         {/* left eye */}
         <div
           ref={eye1Ref}
-          className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
+          className="absolute bg-white relative flex items-center justify-center overflow-hidden"
           style={{
             width: 30,
             height: 45,
@@ -86,7 +88,7 @@ const HomeBanner: React.FC = () => {
         {/* right eye */}
         <div
           ref={eye2Ref}
-          className="absolute bg-white relative flex items-center justify-center border-2 border-black overflow-hidden"
+          className="absolute bg-white relative flex items-center justify-center overflow-hidden"
           style={{
             width: 70,
             height: 70,
@@ -103,7 +105,7 @@ const HomeBanner: React.FC = () => {
           />
         </div>
         <div
-          className="absolute top-0 left-0 w-full h-full"
+          className="absolute top-0 left-0 w-full h-full opacity-90"
           style={{
             backgroundImage: `url(${theme === "dark" ? RoomNightSrc.src : RoomDaySrc.src})`,
             backgroundSize: "cover",
@@ -111,6 +113,17 @@ const HomeBanner: React.FC = () => {
             backgroundPosition: "center",
             backgroundBlendMode: "overlay",
             maskImage: "linear-gradient(to bottom, black 100vh, transparent 103vh)",
+          }}
+        />
+        <Image
+          src={HatSrc}
+          alt="Hat"
+          className="absolute opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-help"
+          style={{
+            width: "315px",
+            height: "auto",
+            top: "calc(-317px + 50vh)",
+            left: "calc(528px + 50vw)",
           }}
         />
       </div>
