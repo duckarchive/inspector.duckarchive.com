@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import RoomDaySrc from "@/public/images/home/inspector-fullroom-day.webp";
 import RoomNightSrc from "@/public/images/home/inspector-fullroom-night.webp";
 import HatSrc from "@/public/images/home/hat.webp";
+import PCSrc from "@/public/images/home/pc.webp";
+import TableBooksSrc from "@/public/images/home/table-books.webp";
+import TableNewsPaperSrc from "@/public/images/home/table-newspaper.webp";
+import BoxSrc from "@/public/images/home/box.webp";
 import HalftonePatternImg from "@/public/images/home/halftone-pattern.png";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -111,7 +115,6 @@ const HomeBanner: React.FC = () => {
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            backgroundBlendMode: "overlay",
             maskImage: "linear-gradient(to bottom, black 100vh, transparent 103vh)",
           }}
         />
@@ -120,10 +123,54 @@ const HomeBanner: React.FC = () => {
           alt="Hat"
           className="absolute opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-help"
           style={{
-            width: "315px",
+            width: 314,
             height: "auto",
             top: "calc(-317px + 50vh)",
             left: "calc(528px + 50vw)",
+          }}
+        />
+        <Image
+          src={PCSrc}
+          alt="PC"
+          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
+          style={{
+            width: 369,
+            height: "auto",
+            top: "calc(-278.5px + 50vh)",
+            left: "calc(113px + 50vw)",
+          }}
+        />
+        <Image
+          src={TableBooksSrc}
+          alt="Table Books"
+          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
+          style={{
+            width: 307,
+            height: "auto",
+            top: "calc(70px + 50vh)",
+            left: "calc(17px + 50vw)",
+          }}
+        />
+        <Image
+          src={TableNewsPaperSrc}
+          alt="Table News Paper"
+          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
+          style={{
+            width: 382,
+            height: "auto",
+            top: "calc(201px + 50vh)",
+            left: "calc(175px + 50vw)",
+          }}
+        />
+        <Image
+          src={BoxSrc}
+          alt="Box"
+          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
+          style={{
+            width: 127,
+            height: "auto",
+            top: "calc(-421px + 50vh)",
+            left: "calc(-123px + 50vw)",
           }}
         />
       </div>
