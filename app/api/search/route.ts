@@ -140,6 +140,7 @@ export async function POST(request: Request) {
       ${bodyQuery}
 
       GROUP BY c.id
+      ORDER BY c.full_code ASC
       LIMIT 50
     `;
 
