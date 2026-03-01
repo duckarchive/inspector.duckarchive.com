@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import RoomDaySrc from "@/public/images/home/inspector-fullroom-day.webp";
-import RoomNightSrc from "@/public/images/home/inspector-fullroom-night.webp";
+import RoomDaySrc from "@/public/images/home/day-crop.webp";
+import RoomNightSrc from "@/public/images/home/night-crop.webp";
 import HatSrc from "@/public/images/home/hat.webp";
 import PCSrc from "@/public/images/home/pc.webp";
 import TableBooksSrc from "@/public/images/home/table-books.webp";
 import TableNewsPaperSrc from "@/public/images/home/table-newspaper.webp";
-import BoxSrc from "@/public/images/home/box.webp";
 import HalftonePatternImg from "@/public/images/home/halftone-pattern.png";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -47,7 +46,7 @@ const HomeBanner: React.FC = () => {
         const eyeY = rect.top + rect.height / 2;
 
         const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-        const distance = 15;
+        const distance = 10;
         const moveX = Math.cos(angle) * distance;
         const moveY = Math.sin(angle) * distance;
 
@@ -68,47 +67,45 @@ const HomeBanner: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[103vh] z-0">
-        {/* left eye */}
-        <div
-          ref={eye1Ref}
-          className="absolute bg-white relative flex items-center justify-center overflow-hidden"
-          style={{
-            width: 30,
-            height: 45,
-            top: "calc(-140px + 50vh)",
-            left: "calc(600px + 50vw)",
-            borderRadius: "15% 70% 60% 60%",
-            zIndex: -1,
-          }}
-        >
+      <div className="hidden lg:block absolute top-0 left-0 w-full h-[103vh] z-0">
+        <div id="eyes" className="absolute flex items-end gap-6" style={{
+          bottom: 478,
+          right: 113,
+          height: 55,
+          width: 105,
+          zIndex: -1,
+        }}>
+          {/* left eye */}
           <div
-            ref={pupil1Ref}
-            className="bg-black rounded-full absolute"
-            style={{ width: 18, height: 18, transform: "translate(4px, 2px)" }}
-          />
-        </div>
+            ref={eye1Ref}
+            className="bg-white relative flex w-1/5 h-2/3 mb-1 items-center justify-center overflow-hidden"
+            style={{
+              borderRadius: "15% 70% 60% 60%",
+            }}
+          >
+            <div
+              ref={pupil1Ref}
+              className="bg-black rounded-full absolute"
+              style={{ width: 15, height: 15, transform: "translate(4px, 2px)" }}
+            />
+          </div>
 
-        {/* right eye */}
-        <div
-          ref={eye2Ref}
-          className="absolute bg-white relative flex items-center justify-center overflow-hidden"
-          style={{
-            width: 70,
-            height: 70,
-            top: "calc(-205px + 50vh)",
-            left: "calc(660px + 50vw)",
-            borderRadius: "110% 30% 80% 60%",
-            zIndex: -1,
-          }}
-        >
+          {/* right eye */}
           <div
-            ref={pupil2Ref}
-            className="bg-black rounded-full absolute"
-            style={{ width: 25, height: 25, transform: "translate(4px, 2px)" }}
-          />
+            ref={eye2Ref}
+            className="bg-white relative flex grow-[2] h-full items-center justify-center overflow-hidden"
+            style={{
+              borderRadius: "110% 30% 80% 60%",
+            }}
+          >
+            <div
+              ref={pupil2Ref}
+              className="bg-black rounded-full absolute"
+              style={{ width: 25, height: 25, transform: "translate(4px, 2px)" }}
+            />
+          </div>
         </div>
-        <div
+        {/* <div
           className="absolute top-0 left-0 w-full h-full opacity-90"
           style={{
             backgroundImage: `url(${theme === "dark" ? RoomNightSrc.src : RoomDaySrc.src})`,
@@ -117,16 +114,28 @@ const HomeBanner: React.FC = () => {
             backgroundPosition: "center",
             maskImage: "linear-gradient(to bottom, black 100vh, transparent 103vh)",
           }}
+        /> */}
+        <Image
+          src={theme === "dark" ? RoomNightSrc : RoomDaySrc}
+          alt="Room"
+          className="absolute bottom-0 right-0 w-[800px] h-auto opacity-95"
+          width={800}
+          style={{
+            maskImage: `linear-gradient(to bottom, black), url("${HalftonePatternImg.src}")`,
+            maskSize: "auto 96%, auto 5%",
+            maskRepeat: "no-repeat,repeat-x",
+            maskPosition: "top center, center bottom",
+          }}
         />
         <Image
           src={HatSrc}
           alt="Hat"
           className="absolute opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-help"
           style={{
-            width: 314,
+            width: 250.5,
             height: "auto",
-            top: "calc(-317px + 50vh)",
-            left: "calc(528px + 50vw)",
+            bottom: 523.5,
+            right: 25,
           }}
         />
         <Image
@@ -134,10 +143,10 @@ const HomeBanner: React.FC = () => {
           alt="PC"
           className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
           style={{
-            width: 369,
+            width: 297,
             height: "auto",
-            top: "calc(-278.5px + 50vh)",
-            left: "calc(113px + 50vw)",
+            bottom: 284,
+            right: 313,
           }}
         />
         <Image
@@ -145,10 +154,10 @@ const HomeBanner: React.FC = () => {
           alt="Table Books"
           className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
           style={{
-            width: 307,
+            width: 249,
             height: "auto",
-            top: "calc(70px + 50vh)",
-            left: "calc(17px + 50vw)",
+            bottom: 169,
+            right: 440,
           }}
         />
         <Image
@@ -156,33 +165,13 @@ const HomeBanner: React.FC = () => {
           alt="Table News Paper"
           className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
           style={{
-            width: 382,
+            width: 310,
             height: "auto",
-            top: "calc(201px + 50vh)",
-            left: "calc(175px + 50vw)",
-          }}
-        />
-        <Image
-          src={BoxSrc}
-          alt="Box"
-          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
-          style={{
-            width: 127,
-            height: "auto",
-            top: "calc(-421px + 50vh)",
-            left: "calc(-123px + 50vw)",
+            bottom: 73,
+            right: 252,
           }}
         />
       </div>
-
-      <div
-        className="h-[3vh] top-[100vh] left-0 w-full absolute opacity-70"
-        style={{
-          backgroundImage: `url("${HalftonePatternImg.src}")`,
-          backgroundSize: "auto 100%",
-          backgroundRepeat: "repeat-x",
-        }}
-      />
     </>
   );
 };
