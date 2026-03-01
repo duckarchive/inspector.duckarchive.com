@@ -27,12 +27,13 @@ interface Coordinates {
 
 interface CoordinatesInputProps {
   isLoading?: boolean;
+  isDisabled?: boolean;
   value: Coordinates;
   year?: string;
   onChange: (value: Coordinates) => void;
 }
 
-const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, year, isLoading }) => {
+const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, year, isLoading, isDisabled }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [coordinates, setCoordinates] = useState<Coordinates>(value);
   const [debouncedCoordinates, setDebouncedCoordinates] = useState<Coordinates | undefined>();
@@ -110,8 +111,8 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
       ? `${coordinates.lat},${coordinates.lng}${coordinates.radius_m ? ` ±${coordinates.radius_m}м` : ""}`
       : "Ввести координати вручну";
   return (
-    <div className="h-64 flex flex-col gap-0">
-      <div className="h-full" onClick={onOpen}>
+    <div className={`h-64 flex flex-col gap-0 ${isDisabled ? "cursor-not-allowed" : ""}`}>
+      <div className={`h-full ${isDisabled ? "pointer-events-none opacity-50" : ""}`} onClick={onOpen}>
         {!isOpen && (
           <GeoDuckMap
             key="static-geoduck-map"
@@ -124,7 +125,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
           />
         )}
       </div>
-      <Accordion isCompact className="p-0" variant="light">
+      <Accordion isCompact isDisabled={isDisabled} className="p-0" variant="light">
         <AccordionItem
           key="map-help"
           className="flex flex-col"

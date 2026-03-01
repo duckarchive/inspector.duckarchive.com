@@ -7,7 +7,7 @@ import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import InspectorDuckTable from "@/components/table";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
-import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch, FaWifi } from "react-icons/fa";
+import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import SelectArchive from "@/components/select-archive";
 import CoordinatesInput from "@/components/coordinates-input";
@@ -139,6 +139,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               Локація
             </label>
             <Input
+              isDisabled
               size="sm"
               form="search-form"
               id="coordinates-input"
@@ -151,6 +152,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               labelPlacement="inside"
             />
             <CoordinatesInput
+              isDisabled
               isLoading={isMutating}
               year={searchValues.year || undefined}
               value={{
@@ -198,7 +200,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="select-archive" className="font-bold flex items-center">
+            <label className="font-bold flex items-center">
               <FaListUl className="inline mr-1" />
               Теги
             </label>
@@ -240,15 +242,12 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                       className="text-lg leading-none font-bold inline"
                       target="_blank"
                     >
-                      {row.data.is_online && (
-                        <FaWifi
-                          className="inline mr-1 text-secondary"
-                          title="Для цієї справи доступні посилання на онлайн копії"
-                        />
-                      )}
                       {row.data.title || "Без назви"}
                     </Link>
-                    {row.value}
+                    <div>
+                      {row.value}
+                      {row.data.is_online && <span className="opacity-60"> (доступні онлайн копії)</span>}
+                    </div>
                   </div>
                 ),
               },

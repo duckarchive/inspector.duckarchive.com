@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { Input } from "@heroui/input";
 import { Chip } from "@heroui/chip";
-import { FaBaby, FaHeart, FaSkull, FaWifi } from "react-icons/fa";
+import { FaBaby, FaHeart, FaLink, FaSkull } from "react-icons/fa";
 import { FaHeartCrack } from "react-icons/fa6";
 
 const tagName2tagIcon: Record<string, React.ReactNode> = {
-  "доступні онлайн копії": <FaWifi />,
+  "доступні онлайн копії": <FaLink/>,
   народження: <FaBaby />,
   шлюб: <FaHeart />,
   розлучення: <FaHeartCrack />,
