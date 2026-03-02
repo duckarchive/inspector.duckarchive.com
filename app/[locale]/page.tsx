@@ -8,85 +8,8 @@ import LinkImg from "@/public/images/home/link.jpg";
 import ResourcesImg from "@/public/images/home/resources.jpg";
 import SupportImg from "@/public/images/home/support.jpg";
 import UniverseImg from "@/public/images/home/universe.jpg";
-// import Book1Img from "@/public/images/book-1.png";
-// import Book2Img from "@/public/images/book-2.png";
-// import CameraImg from "@/public/images/camera.png";
-// import CertificateImg from "@/public/images/certificate.png";
-// import DocsImg from "@/public/images/docs.png";
-// import FeatherImg from "@/public/images/feather.png";
-// import LicenseImg from "@/public/images/license.png";
-// import NewspaperImg from "@/public/images/newspaper.png";
-// import OldImageImg from "@/public/images/old-image.png";
-// import PapirusImg from "@/public/images/papirus.png";
-// import PCImg from "@/public/images/pc.png";
-// import SandClockImg from "@/public/images/sandclock.png";
 import HomeBanner from "@/components/home/banner";
 import PaperNoiseBg from "@/public/images/bg-paper-noise.png";
-
-// const SIZE = 100;
-
-// const ICONS = [
-//   {
-//     src: DocsImg,
-//     alt: "objects.docs",
-//     position: [20, -5],
-//   },
-//   {
-//     src: FeatherImg,
-//     alt: "objects.feather",
-//     position: [10, 10],
-//   },
-//   {
-//     src: LicenseImg,
-//     alt: "objects.license",
-//     position: [17, 35],
-//   },
-//   {
-//     src: NewspaperImg,
-//     alt: "objects.newspaper",
-//     position: [10, 55],
-//   },
-//   {
-//     src: OldImageImg,
-//     alt: "objects.old-image",
-//     position: [20, 80],
-//   },
-//   {
-//     src: PapirusImg,
-//     alt: "objects.papirus",
-//     position: [30, 95],
-//   },
-//   {
-//     src: SandClockImg,
-//     alt: "objects.sand-clock",
-//     position: [70, -5],
-//   },
-//   {
-//     src: PCImg,
-//     alt: "objects.pc",
-//     position: [85, 15],
-//   },
-//   {
-//     src: CameraImg,
-//     alt: "objects.camera",
-//     position: [75, 30],
-//   },
-//   {
-//     src: Book2Img,
-//     alt: "objects.book2",
-//     position: [80, 50],
-//   },
-//   {
-//     src: Book1Img,
-//     alt: "objects.book1",
-//     position: [90, 75],
-//   },
-//   {
-//     src: CertificateImg,
-//     alt: "objects.certificate",
-//     position: [80, 95],
-//   },
-// ];
 
 const HOW_TO_STEPS: ComicsCardProps[] = [
   {
@@ -130,22 +53,7 @@ const WelcomePage: NextPage = () => {
     <>
       <section className="flex items-center justify-start gap-4 h-[calc(100vh-4rem)]">
         <HomeBanner />
-        {/* {ICONS.map((icon) => (
-          <Image
-            key={icon.alt}
-            src={icon.src}
-            alt={icon.alt}
-            aria-hidden="true"
-            width={SIZE}
-            height={SIZE}
-            className="absolute w-[50px] md:w-[100px] cursor-help opacity-30 z-10 hover:opacity-40 transition-opacity"
-            style={{
-              top: `${icon.position[0]}%`,
-              left: `${icon.position[1]}%`,
-            }}
-          />
-        ))} */}
-        <div className="inline-block xl:basis-1/2 justify-center z-10 backdrop-blur-lg backdrop-saturate-150 bg-background/50 p-8 rounded-lg">
+        <div className="inline-block xl:basis-2/3 justify-center z-10 backdrop-blur-lg backdrop-saturate-150 bg-background/50 p-0 md:p-8 rounded-lg">
           <h1 className="text-4xl md:text-6xl font-light">{t("title")}</h1>
           <p className="mt-4">{t("description")}</p>
           <div className="mt-8 w-full">
