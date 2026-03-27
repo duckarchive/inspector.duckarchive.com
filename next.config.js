@@ -7,6 +7,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig = {
   staticPageGenerationTimeout: 300,
+  serverExternalPackages: ['ag-grid-community'],
   experimental: {
     staticGenerationMaxConcurrency: 2,
   }
