@@ -30,7 +30,11 @@ const Details: React.FC<{
     {caseItem?.info && <p>{caseItem.info}</p>}
     {caseItem?.years?.length || caseItem?.locations?.length || caseItem?.authors?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
-        {Boolean(caseItem.locations.length || caseItem?.authors.length) && (
+        {Boolean(
+          [...caseItem.locations, ...caseItem.authors.map(({ author }) => author)].some(
+            (loc) => loc.lat !== null && loc.lng !== null,
+          ),
+        ) && (
           <div className="h-64 grow">
             <GeoDuckMap
               key="static-geoduck-map"
