@@ -14,6 +14,7 @@ import CoordinatesInput from "@/components/coordinates-input";
 import { Link } from "@heroui/link";
 import useIsMobile from "@/hooks/useIsMobile";
 import TagsInput from "@/components/tags-input";
+import isEmpty from "lodash/isEmpty.js";
 
 const ONLINE_TAG = "доступні онлайн копії";
 
@@ -31,7 +32,9 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
 
   useEffect(() => {
-    trigger(searchValues);
+    if (!isEmpty(searchValues)) {
+      trigger(searchValues);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
