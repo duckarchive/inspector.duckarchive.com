@@ -51,8 +51,14 @@ export async function POST(request: Request) {
       fund,
       description,
       case: case_number, // 'case' is a reserved keyword
-      is_online = true,
+      is_online,
     }: SearchRequest = await request.json();
+
+    const hasOnlineCopy = Prisma.sql`EXISTS (
+      SELECT 1
+      FROM "case_online_copies" m
+      WHERE m.case_id = c.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
+    )`;
 
     // Build dynamic SQL query parts
     const whereParts: Prisma.Sql[] = [];
@@ -99,23 +105,15 @@ export async function POST(request: Request) {
     }
 
     if (is_online) {
-      whereParts.push(Prisma.sql`EXISTS (
-        SELECT 1
-        FROM "case_online_copies" m
-        WHERE m.case_id = c.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
-      )`);
+      whereParts.push(hasOnlineCopy);
     }
 
     const bodyQuery = whereParts.length > 0 ? Prisma.sql`WHERE ${Prisma.join(whereParts, " AND ")}` : Prisma.sql``;
 
     const query = Prisma.sql`
-      SELECT 
+      SELECT
         c.*,
-        CASE WHEN EXISTS (
-          SELECT 1
-          FROM "case_online_copies" m
-          WHERE m.case_id = c.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
-        ) THEN TRUE ELSE FALSE END AS is_online,
+        ${hasOnlineCopy} AS is_online,
         COALESCE(
           jsonb_agg(
             DISTINCT jsonb_build_object(
@@ -135,7 +133,6 @@ export async function POST(request: Request) {
       LEFT JOIN "authors" au ON ca.author_id = au.id
       LEFT JOIN "case_locations" cl ON c.id = cl.case_id
       LEFT JOIN "case_years" cy ON c.id = cy.case_id
-      LEFT JOIN "case_online_copies" coc ON c.id = coc.case_id
 
       ${bodyQuery}
 
