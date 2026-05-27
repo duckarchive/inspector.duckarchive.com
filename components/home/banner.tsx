@@ -62,7 +62,7 @@ const HomeBanner: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[103vh] z-0">
+      <div className="absolute top-0 left-0 w-full h-[103vh] z-0 overflow-hidden">
         <div id="eyes" className="absolute flex items-end gap-6" style={{
           top: 'calc(50% - 190px)',
           left: 'calc(50% + 665px)',
@@ -108,7 +108,7 @@ const HomeBanner: React.FC = () => {
             backgroundPosition: "center",
             // maskImage: "linear-gradient(to bottom, black 100vh, transparent 103vh)",
             maskImage: `linear-gradient(to bottom, black), url("${HalftonePatternImg.src}")`,
-            maskSize: "auto 97%, auto 4%",
+            maskSize: "auto 97.1%, auto 4%",
             maskRepeat: "no-repeat,repeat-x",
             maskPosition: "top center, center bottom",
           }}
