@@ -1,15 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import RoomDaySrc from "@/public/images/home/day-crop.webp";
-import RoomNightSrc from "@/public/images/home/night-crop.webp";
-import HatSrc from "@/public/images/home/hat.webp";
-import PCSrc from "@/public/images/home/pc.webp";
-import TableBooksSrc from "@/public/images/home/table-books.webp";
-import TableNewsPaperSrc from "@/public/images/home/table-newspaper.webp";
+import RoomDaySrc from "@/public/images/home/day.webp";
+import RoomNightSrc from "@/public/images/home/night.webp";
 import HalftonePatternImg from "@/public/images/home/halftone-pattern.png";
 import { useTheme } from "next-themes";
-import Image from "next/image";
 
 const HomeBanner: React.FC = () => {
   const [mounted, setMounted] = useState(false);
@@ -32,7 +27,7 @@ const HomeBanner: React.FC = () => {
         const eyeY = rect.top + rect.height / 2;
 
         const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-        const distance = 5;
+        const distance = 8;
         const moveX = Math.cos(angle) * distance;
         const moveY = Math.sin(angle) * distance;
 
@@ -67,12 +62,12 @@ const HomeBanner: React.FC = () => {
 
   return (
     <>
-      <div className="hidden lg:block absolute top-0 left-0 w-full h-[103vh] z-0">
+      <div className="absolute top-0 left-0 w-full h-[103vh] z-0">
         <div id="eyes" className="absolute flex items-end gap-6" style={{
-          bottom: 478,
-          right: 113,
-          height: 55,
-          width: 105,
+          top: 'calc(50% - 190px)',
+          left: 'calc(50% + 665px)',
+          height: '80px',
+          width: '135px',
           zIndex: -1,
         }}>
           {/* left eye */}
@@ -105,70 +100,17 @@ const HomeBanner: React.FC = () => {
             />
           </div>
         </div>
-        {/* <div
-          className="absolute top-0 left-0 w-full h-full opacity-90"
+        <div
+          className="absolute top-0 left-0 w-full h-full"
           style={{
             backgroundImage: `url(${theme === "dark" ? RoomNightSrc.src : RoomDaySrc.src})`,
-            backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            maskImage: "linear-gradient(to bottom, black 100vh, transparent 103vh)",
-          }}
-        /> */}
-        <Image
-          src={theme === "dark" ? RoomNightSrc : RoomDaySrc}
-          alt="Room"
-          className="absolute bottom-0 right-0 w-[800px] h-auto opacity-95"
-          width={800}
-          style={{
+            // maskImage: "linear-gradient(to bottom, black 100vh, transparent 103vh)",
             maskImage: `linear-gradient(to bottom, black), url("${HalftonePatternImg.src}")`,
-            maskSize: "auto 96%, auto 5%",
+            maskSize: "auto 97%, auto 4%",
             maskRepeat: "no-repeat,repeat-x",
             maskPosition: "top center, center bottom",
-          }}
-        />
-        <Image
-          src={HatSrc}
-          alt="Hat"
-          className="absolute opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-help"
-          style={{
-            width: 250.5,
-            height: "auto",
-            bottom: 523.5,
-            right: 25,
-          }}
-        />
-        <Image
-          src={PCSrc}
-          alt="PC"
-          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
-          style={{
-            width: 297,
-            height: "auto",
-            bottom: 284,
-            right: 313,
-          }}
-        />
-        <Image
-          src={TableBooksSrc}
-          alt="Table Books"
-          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
-          style={{
-            width: 249,
-            height: "auto",
-            bottom: 169,
-            right: 440,
-          }}
-        />
-        <Image
-          src={TableNewsPaperSrc}
-          alt="Table News Paper"
-          className="absolute opacity-20 hover:opacity-100 transition-opacity duration-300 cursor-help"
-          style={{
-            width: 310,
-            height: "auto",
-            bottom: 73,
-            right: 252,
           }}
         />
       </div>
