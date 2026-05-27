@@ -1,15 +1,7 @@
 import { NextPage } from "next";
 import { useTranslations } from "next-intl";
 import SearchInput from "@/components/search-input";
-import ComicsCard, { ComicsCardProps } from "@/components/comics-card";
-import ResearchImg from "@/public/images/home/research.jpg";
-import ScrapImg from "@/public/images/home/scrap.jpg";
-import LinkImg from "@/public/images/home/link.jpg";
-import ResourcesImg from "@/public/images/home/resources.jpg";
-import SupportImg from "@/public/images/home/support.jpg";
-import UniverseImg from "@/public/images/home/universe.jpg";
 import HomeBanner from "@/components/home/banner";
-import HowToFlipbook from "@/components/how-to-flipbook";
 
 
 
