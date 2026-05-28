@@ -31,17 +31,7 @@ const ComicsCard: React.FC<ComicsCardProps> = ({
         width={400}
         height={400}
       />
-      {variant === "bubble" ? (
-        <MessageBubble message={message} type={type} ha={ha} va={va} />
-      ) : (
-        <div
-          className={`text-background absolute px-3 py-1 bg-white border-2 border-black text-sm ${
-            va === "top" ? "-top-1" : "-bottom-1"
-          } ${ha === "left" ? "-left-2" : "-right-2"} transform -skew-x-12`}
-        >
-          {message}
-        </div>
-      )}
+      <MessageBubble message={message} type={type} variant={variant} ha={ha} va={va} />
     </>
   );
 };
