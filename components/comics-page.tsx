@@ -8,15 +8,18 @@ import ResourcesImg from "@/public/images/home/resources.jpg";
 import SupportImg from "@/public/images/home/support.jpg";
 import UniverseImg from "@/public/images/home/universe.jpg";
 import ComicsCard from "@/components/comics-card";
+import { StaticImageData } from "next/image";
 
-const HOW_TO_STEPS: {
-  image: any;
+interface HowToStep {
+  image: StaticImageData | string;
   message: string;
   va: "top" | "bottom";
   ha: "left" | "right";
   type?: "speech" | "whisper" | "electric";
   variant?: "bubble" | "caption";
-}[] = [
+}
+
+const HOW_TO_STEPS: HowToStep[] = [
   { image: ScrapImg, message: "about.form", va: "top", ha: "left", variant: "caption" },
   { image: ResourcesImg, message: "about.one-place", va: "bottom", ha: "right", variant: "caption" },
   { image: ResearchImg, message: "about.extended-data", va: "top", ha: "right", variant: "caption" },
@@ -25,7 +28,7 @@ const HOW_TO_STEPS: {
   { image: UniverseImg, message: "about.universe", va: "bottom", ha: "left", variant: "bubble" },
 ];
 
-function Panel({ step, index }: { step: any; index: number }) {
+function Panel({ step, index }: { step: HowToStep; index: number }) {
   const basis = (() => {
     switch (index) {
       case 0:
@@ -41,7 +44,7 @@ function Panel({ step, index }: { step: any; index: number }) {
     <div className={`panel relative ${basis} flex-1 overflow-hidden border-2 border-black rounded-sm`}>
       <ComicsCard
         image={step.image}
-        message={step.messageText}
+        message={step.message}
         variant={step.variant}
         type={step.type}
         va={step.va}
@@ -54,7 +57,7 @@ function Panel({ step, index }: { step: any; index: number }) {
 export default function ComicsPage() {
   const t = useTranslations("home-page");
 
-  const steps = HOW_TO_STEPS.map((s) => ({ ...s, messageText: t(s.message) }));
+  const steps = HOW_TO_STEPS.map((s) => ({ ...s, message: t(s.message) }));
 
   return (
     <section className="py-12">
