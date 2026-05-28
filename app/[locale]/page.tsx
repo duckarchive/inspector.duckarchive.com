@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { useTranslations } from "next-intl";
 import SearchInput from "@/components/search-input";
 import HomeBanner from "@/components/home/banner";
+import ComicsPage from "@/components/comics-page";
 
 
 
@@ -20,7 +21,7 @@ const WelcomePage: NextPage = () => {
           </div>
         </div>
       </section>
-      {/* <HowToFlipbook /> */}
+      <ComicsPage />
     </>
   );
 };

@@ -25,7 +25,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech",
       }}
     >
       <p
-        className="font-bold text-lg leading-tight text-gray-900 text-center"
+        className="font-bold text-lg leading-tight text-background text-center"
         style={{
           transform: `scale(${ha === "left" ? 1 : -1}, ${va === "bottom" ? 1 : -1})`,
         }}
