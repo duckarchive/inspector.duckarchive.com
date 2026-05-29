@@ -6,7 +6,6 @@ import DrManhattanImg from "@/public/images/home/dr_manhatten.jpg";
 import FlashImg from "@/public/images/home/flash.jpg";
 import NeoImg from "@/public/images/home/neo.jpg";
 import LokiImg from "@/public/images/home/loki.jpg";
-import GuyFawksImg from "@/public/images/home/guy_fawks.jpg";
 import TeamUpImg from "@/public/images/home/teamup.jpg";
 import ComicsCard from "@/components/comics-card";
 import { StaticImageData } from "next/image";
