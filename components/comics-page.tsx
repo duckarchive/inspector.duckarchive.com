@@ -2,12 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import WhosImg from "@/public/images/home/whos.jpg";
-import ResearchImg from "@/public/images/home/research.jpg";
-import ScrapImg from "@/public/images/home/scrap.jpg";
-import LinkImg from "@/public/images/home/link.jpg";
-import ResourcesImg from "@/public/images/home/resources.jpg";
-import SupportImg from "@/public/images/home/support.jpg";
-import UniverseImg from "@/public/images/home/universe.jpg";
+import DrManhattanImg from "@/public/images/home/dr_manhatten.jpg";
+import FlashImg from "@/public/images/home/flash.jpg";
+import NeoImg from "@/public/images/home/neo.jpg";
+import LokiImg from "@/public/images/home/loki.jpg";
+import GuyFawksImg from "@/public/images/home/guy_fawks.jpg";
+import TeamUpImg from "@/public/images/home/teamup.jpg";
 import ComicsCard from "@/components/comics-card";
 import { StaticImageData } from "next/image";
 
@@ -21,13 +21,13 @@ interface HowToStep {
 }
 
 const HOW_TO_STEPS: HowToStep[] = [
-  { image: WhosImg, message: "about.title", va: "top", ha: "left", variant: "caption" },
-  { image: ScrapImg, message: "about.form", va: "top", ha: "left", variant: "caption" },
-  { image: ResourcesImg, message: "about.one-place", va: "bottom", ha: "right", variant: "caption" },
-  { image: ResearchImg, message: "about.extended-data", va: "top", ha: "right", variant: "caption" },
-  { image: SupportImg, message: "about.free", va: "top", ha: "right", variant: "bubble" },
-  { image: LinkImg, message: "about.direct-link", va: "top", ha: "left", variant: "caption" },
-  { image: UniverseImg, message: "about.universe", va: "bottom", ha: "left", variant: "bubble" },
+  { image: WhosImg, message: "about.title", va: "top", ha: "right", variant: "caption" },
+  { image: FlashImg, message: "about.form", va: "bottom", ha: "right", variant: "bubble" },
+  { image: LokiImg, message: "about.one-place", va: "bottom", ha: "right", variant: "caption" },
+  // { image: GuyFawksImg, message: "about.free", va: "top", ha: "left", variant: "bubble" },
+  { image: TeamUpImg, message: "about.universe", va: "bottom", ha: "right", variant: "caption" },
+  { image: NeoImg, message: "about.direct-link", va: "top", ha: "left", variant: "caption" },
+  { image: DrManhattanImg, message: "about.extended-data", va: "bottom", ha: "left", variant: "caption" },
 ];
 
 function Panel({ step, index }: { step: HowToStep; index: number }) {
@@ -36,6 +36,9 @@ function Panel({ step, index }: { step: HowToStep; index: number }) {
       case 1:
       case 3:
         return "basis-[400px]";
+      case 2:
+      case 7:
+        return "basis-[200px]";
       default:
         return "basis-[300px]";
     }
