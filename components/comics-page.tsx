@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import WhosImg from "@/public/images/home/whos.jpg";
 import ResearchImg from "@/public/images/home/research.jpg";
 import ScrapImg from "@/public/images/home/scrap.jpg";
 import LinkImg from "@/public/images/home/link.jpg";
@@ -20,6 +21,7 @@ interface HowToStep {
 }
 
 const HOW_TO_STEPS: HowToStep[] = [
+  { image: WhosImg, message: "about.title", va: "top", ha: "left", variant: "caption" },
   { image: ScrapImg, message: "about.form", va: "top", ha: "left", variant: "caption" },
   { image: ResourcesImg, message: "about.one-place", va: "bottom", ha: "right", variant: "caption" },
   { image: ResearchImg, message: "about.extended-data", va: "top", ha: "right", variant: "caption" },
@@ -31,12 +33,11 @@ const HOW_TO_STEPS: HowToStep[] = [
 function Panel({ step, index }: { step: HowToStep; index: number }) {
   const basis = (() => {
     switch (index) {
-      case 0:
-      case 2:
+      case 1:
       case 3:
         return "basis-[400px]";
       default:
-        return "basis-[200px]";
+        return "basis-[300px]";
     }
   })();
 
@@ -60,10 +61,8 @@ export default function ComicsPage() {
   const steps = HOW_TO_STEPS.map((s) => ({ ...s, message: t(s.message) }));
 
   return (
-    <section className="py-12">
-      <h2 className="text-2xl md:text-4xl font-black italic uppercase mb-2">{t("about.title")}</h2>
-
-      <div className="comic flex flex-wrap gap-1">
+    <section className="py-48">
+      <div className="comic flex flex-wrap gap-2">
         {steps.map((step, i) => (
           <Panel key={i} step={step} index={i} />
         ))}

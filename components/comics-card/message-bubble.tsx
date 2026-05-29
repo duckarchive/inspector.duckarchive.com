@@ -8,20 +8,20 @@ interface MessageBubbleProps {
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech", variant = "bubble", va, ha }) => {
   const bubbleStyles = {
-    speech: "url(images/message-bubble/default.svg)",
-    whisper: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/whisper.svg)",
-    electric: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/electric.svg)",
+    speech: "images/message-bubble/default.svg",
+    whisper: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/whisper.svg",
+    electric: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/electric.svg",
   };
 
   if (variant === "caption") {
     return (
       <div
-      className="text-black absolute px-3 py-1 bg-white border-2 border-black leading-tight"
-      style={{
-          top: va === "top" ? "-1%" : undefined,
-          bottom: va === "bottom" ? "-1%" : undefined,
-          left: ha === "left" ? "-1%" : undefined,
-          right: ha === "right" ? "-1%" : undefined,
+        className="text-black/70 absolute px-3 py-1 bg-white border-2 border-black font-comic text-sm leading-tight max-w-[70%]"
+        style={{
+          top: va === "top" ? -2 : undefined,
+          bottom: va === "bottom" ? -2 : undefined,
+          left: ha === "left" ? -2 : undefined,
+          right: ha === "right" ? -2 : undefined,
         }}
       >
         {message}
@@ -31,9 +31,8 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech",
 
   return (
     <div
-      className="absolute flex items-center justify-center pt-[10%] pb-[25%] px-8"
+      className="absolute"
       style={{
-        backgroundImage: bubbleStyles[type],
         transform: `scale(${ha === "left" ? 1 : -1}, ${va === "bottom" ? 1 : -1})`,
         top: va === "top" ? undefined : "-2%",
         left: ha === "left" ? undefined : "-2%",
@@ -41,14 +40,17 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech",
         right: ha === "right" ? undefined : "-2%",
       }}
     >
-      <p
-        className="leading-tight text-black text-center"
-        style={{
-          transform: `scale(${ha === "left" ? 1 : -1}, ${va === "bottom" ? 1 : -1})`,
-        }}
-      >
-        {message}
-      </p>
+      <div className="relative w-full h-full flex justify-center">
+        <img src={bubbleStyles[type]} alt="" className="absolute w-full h-[150%]" />
+        <p
+          className="leading-tight text-black text-center p-10 font-comic text-sm"
+          style={{
+            transform: `scale(${ha === "left" ? 1 : -1}, ${va === "bottom" ? 1 : -1})`,
+          }}
+        >
+          {message}
+        </p>
+      </div>
     </div>
   );
 };

@@ -27,7 +27,7 @@ const HomeBanner: React.FC = () => {
         const eyeY = rect.top + rect.height / 2;
 
         const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-        const distance = 8;
+        const distance = 7;
         const moveX = Math.cos(angle) * distance;
         const moveY = Math.sin(angle) * distance;
 
@@ -41,7 +41,7 @@ const HomeBanner: React.FC = () => {
         const eyeY = rect.top + rect.height / 2;
 
         const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-        const distance = 10;
+        const distance = 9;
         const moveX = Math.cos(angle) * distance;
         const moveY = Math.sin(angle) * distance;
 
@@ -67,7 +67,7 @@ const HomeBanner: React.FC = () => {
           top: 'calc(50% - 190px)',
           left: 'calc(50% + 665px)',
           height: '80px',
-          width: '135px',
+          width: '130px',
           zIndex: -1,
         }}>
           {/* left eye */}

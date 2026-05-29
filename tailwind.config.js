@@ -11,7 +11,13 @@ module.exports = {
     "./node_modules/@duckarchive/map/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
+        comic: ["var(--font-comic)", "cursive"],
+      },
+    },
   },
   darkMode: "class",
   plugins: [heroui()],
