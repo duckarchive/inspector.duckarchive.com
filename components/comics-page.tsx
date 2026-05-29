@@ -7,6 +7,9 @@ import FlashImg from "@/public/images/home/flash.jpg";
 import NeoImg from "@/public/images/home/neo.jpg";
 import LokiImg from "@/public/images/home/loki.jpg";
 import TeamUpImg from "@/public/images/home/teamup.jpg";
+import VendettaImg from "@/public/images/home/vendetta.jpg";
+import BatSignalImg from "@/public/images/home/bat_signal.jpg";
+import ImDuckInspectorImg from "@/public/images/home/im_duckinspector.jpg";
 import ComicsCard from "@/components/comics-card";
 import { StaticImageData } from "next/image";
 
@@ -21,12 +24,14 @@ interface HowToStep {
 
 const HOW_TO_STEPS: HowToStep[] = [
   { image: WhosImg, message: "about.title", va: "top", ha: "right", variant: "caption" },
-  { image: FlashImg, message: "about.form", va: "bottom", ha: "right", variant: "bubble" },
-  { image: LokiImg, message: "about.one-place", va: "bottom", ha: "right", variant: "caption" },
-  // { image: GuyFawksImg, message: "about.free", va: "top", ha: "left", variant: "bubble" },
+  { image: FlashImg, message: "about.form", va: "top", ha: "right", variant: "bubble" },
+  { image: LokiImg, message: "about.one-place", va: "bottom", ha: "left", variant: "bubble" },
+  { image: NeoImg, message: "about.direct-link", va: "bottom", ha: "right", variant: "bubble" },
+  { image: VendettaImg, message: "about.free", va: "top", ha: "right", variant: "bubble" },
+  { image: DrManhattanImg, message: "about.extended-data", va: "top", ha: "left", variant: "bubble" },
+  { image: BatSignalImg, message: "about.notifications", va: "top", ha: "left", variant: "caption" },
+  { image: ImDuckInspectorImg, message: "about.open-source", va: "top", ha: "right", variant: "bubble" },
   { image: TeamUpImg, message: "about.universe", va: "bottom", ha: "right", variant: "caption" },
-  { image: NeoImg, message: "about.direct-link", va: "top", ha: "left", variant: "caption" },
-  { image: DrManhattanImg, message: "about.extended-data", va: "bottom", ha: "left", variant: "caption" },
 ];
 
 function Panel({ step, index }: { step: HowToStep; index: number }) {

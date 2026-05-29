@@ -9,7 +9,9 @@
       "form": "prosty formularz wyszukiwania umożliwiający znalezienie potrzebnej sprawy w kilka sekund",
       "direct-link": "monitorowanie 24/7 linków do kopii online",
       "free": "napędzane przez społeczność i bezpłatne w użyciu",
-      "universe": "zintegrowane z narzędziami Duck Universe i innymi przyjaznymi serwisami"
+      "universe": "zintegrowane z narzędziami Duck Universe i innymi przyjaznymi serwisami",
+      "notifications": "regularne powiadomienia o nowych sprawach",
+      "open-source": "otwarty kod i otwarte dane dla wszystkich"
     }
   },
   "daily-updates-page": {

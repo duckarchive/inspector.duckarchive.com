@@ -1,28 +1,30 @@
 {
   "home-page": {
-    "title": "Find an archival case online ― easily!",
-    "description": "Duck Inspector is a search service that allows you to find an archive case online. Just enter the details of the archive, fund, description, and case and get a link to the source.",
+    "title": "Find an archival file online ― easily!",
+    "description": "Duck Inspector is a search service that allows you to find an archive file online. Just enter the details of the archive, fund, description, and file and get a link to the source.",
     "about": {
       "title": "Duck Inspector is:",
       "one-place": "aggregated data from archival resources in one place",
       "extended-data": "extended info with coordinates and dates",
-      "form": "simple search form to find the case you need in seconds",
+      "form": "simple search form to find the file you need in seconds",
       "direct-link": "24/7 monitoring for links to online copies",
       "free": "community driven and free to use",
-      "universe": "integrated with tools of Duck Universe and other friendly services"
+      "universe": "integrated with tools of Duck Universe and other friendly services",
+      "notifications": "regular notifications about new files",
+      "open-source": "open source code and data for everyone"
     }
   },
   "daily-updates-page": {
     "title": "Daily Report",
-    "description": "A list of new archive cases found online in the last 24 hours.",
+    "description": "A list of new archive files found online in the last 24 hours.",
     "limit-note": "The maximum number of findings is limited to 25,000."
   },
   "search-input": {
-    "label": "Enter the case details:",
+    "label": "Enter the file details:",
     "archive-label": "Archive",
     "fund-label": "Fund",
-    "description-label": "Description",
-    "case-label": "Case",
+    "description-label": "Inventory",
+    "case-label": "File",
     "submit-button": "Search"
   },
   "navigation": {
@@ -37,11 +39,11 @@
     "docs": "Documentation"
   },
   "metadata": {
-    "title": "Duck Inspector ― search for Ukrainian archive cases online",
-    "description": "A service for searching Ukrainian archive cases available online. Enter the case details in a simple search window and get a link to the source.",
+    "title": "Duck Inspector ― search for Ukrainian archive files online",
+    "description": "A service for searching Ukrainian archive files available online. Enter the file details in a simple search window and get a link to the source.",
     "archive-description": "Search online in archive {archiveCode} ({archiveTitle})",
-    "fund-description": "Search for cases online in the fund {archiveCode}-{fundCode}{fundTitle} / archive {archiveCode} fund {fundCode} / {archiveCode} f.{fundCode}",
-    "description-description": "Search for cases online in the description {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
-    "case-description": "Case online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} case {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+    "fund-description": "Search for files online in the fund {archiveCode}-{fundCode}{fundTitle} / archive {archiveCode} fund {fundCode} / {archiveCode} f.{fundCode}",
+    "description-description": "Search for files online in the description {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
+    "case-description": "File online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{fileTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} file {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
   }
 }

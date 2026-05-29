@@ -16,7 +16,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech",
   if (variant === "caption") {
     return (
       <div
-        className="text-black/70 absolute px-3 py-1 bg-white border-2 border-black font-comic text-sm leading-tight max-w-[70%]"
+        className="text-black/70 absolute px-3 py-1 bg-white border-2 border-black font-comic text-sm leading-tight max-w-[90%] md:max-w-[70%]"
         style={{
           top: va === "top" ? -2 : undefined,
           bottom: va === "bottom" ? -2 : undefined,
@@ -31,13 +31,13 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech",
 
   return (
     <div
-      className="absolute"
+      className="absolute max-w-[90%] md:max-w-[70%]"
       style={{
         transform: `scale(${ha === "left" ? 1 : -1}, ${va === "bottom" ? 1 : -1})`,
-        top: va === "top" ? undefined : "-2%",
-        left: ha === "left" ? undefined : "-2%",
-        bottom: va === "bottom" ? undefined : "-2%",
-        right: ha === "right" ? undefined : "-2%",
+        top: va === "top" ? undefined : "0%",
+        left: ha === "left" ? undefined : "0%",
+        bottom: va === "bottom" ? undefined : "0%",
+        right: ha === "right" ? undefined : "0%",
       }}
     >
       <div className="relative w-full h-full flex justify-center">
