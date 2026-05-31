@@ -18,7 +18,7 @@ const useNoRussians = () => {
   useEffect(() => {
     if (lang) {
       if (lang.includes("ru")) {
-        router.push("/russians-are-not-welcome");
+        router.push("/friends");
       } else if (!lang.includes("uk")) {
         askForDonation();
       }
@@ -35,7 +35,7 @@ const useNoRussians = () => {
         return;
       } else if (ukPos === -1 && ruPos !== -1) {
         // no ukrainian, only russian
-        router.push("/russians-are-not-welcome");
+        router.push("/friends");
       } else if (ruPos > ukPos) {
         // light ukrainization
         addToast({
@@ -54,7 +54,7 @@ const useNoRussians = () => {
         });
       } else if (ukPos > ruPos) {
         // hard ukrainization
-        router.push("/russians-are-not-welcome");
+        router.push("/friends");
         // addToast({
         //   title: "🇺🇦 Жорстка українізація!",
         //   description: `Ви надаєте перевагу російській мові над українською. Качині проєкти перестануть працювати для вас з ${TO_DATE.toLocaleDateString()}.`,
