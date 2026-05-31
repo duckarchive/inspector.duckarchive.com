@@ -45,5 +45,8 @@
     "fund-description": "Пошук справ онлайн в фонді {archiveCode}-{fundCode}{fundTitle} / архів {archiveCode} фонд {fundCode} / {archiveCode} ф.{fundCode}",
     "description-description": "Пошук справ онлайн в описі {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / архів {archiveCode} фонд {fundCode} опис {descriptionCode} / {archiveCode} ф.{fundCode}, о.{descriptionCode} / {archiveCode} ф.{fundCode}, оп.{descriptionCode}",
     "case-description": "Справа онлайн {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / архів {archiveCode} фонд {fundCode} опис {descriptionCode} справа {caseCode} / {archiveCode} ф.{fundCode}, о.{descriptionCode}, с.{caseCode} / {archiveCode} ф.{fundCode}, оп.{descriptionCode}, спр.{caseCode}"
+  },
+  "not-found": {
+    "title": "404: Сторінку не знайдено"
   }
 }

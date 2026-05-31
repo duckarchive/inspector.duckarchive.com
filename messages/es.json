@@ -45,5 +45,8 @@
     "fund-description": "Buscar expedientes en línea en el fondo {archiveCode}-{fundCode}{fundTitle} / archivo {archiveCode} fondo {fundCode} / {archiveCode} f.{fundCode}",
     "description-description": "Buscar expedientes en línea en la descripción {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archivo {archiveCode} fondo {fundCode} descripción {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
     "case-description": "Expediente en línea {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archivo {archiveCode} fondo {fundCode} descripción {descriptionCode} expediente {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  },
+  "not-found": {
+    "title": "404: Página no encontrada"
   }
 }

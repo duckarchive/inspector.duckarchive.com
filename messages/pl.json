@@ -45,5 +45,8 @@
     "fund-description": "Szukaj spraw online w funduszu {archiveCode}-{fundCode}{fundTitle} / archiwum {archiveCode} fundusz {fundCode} / {archiveCode} f.{fundCode}",
     "description-description": "Szukaj spraw online w opisie {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archiwum {archiveCode} fundusz {fundCode} opis {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
     "case-description": "Sprawa online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archiwum {archiveCode} fundusz {fundCode} opis {descriptionCode} sprawa {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  },
+  "not-found": {
+    "title": "404: Strona nie znaleziona"
   }
 }

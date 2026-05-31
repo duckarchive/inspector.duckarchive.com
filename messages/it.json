@@ -45,5 +45,8 @@
     "fund-description": "Cerca fascicoli online nel fondo {archiveCode}-{fundCode}{fundTitle} / archivio {archiveCode} fondo {fundCode} / {archiveCode} f.{fundCode}",
     "description-description": "Cerca fascicoli online nella descrizione {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archivio {archiveCode} fondo {fundCode} descrizione {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
     "case-description": "Fascicolo online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archivio {archiveCode} fondo {fundCode} descrizione {descriptionCode} fascicolo {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  },
+  "not-found": {
+    "title": "404: Pagina non trovata"
   }
 }

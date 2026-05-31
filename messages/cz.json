@@ -45,5 +45,8 @@
     "fund-description": "Vyhledávejte spisy online ve fondu {archiveCode}-{fundCode}{fundTitle} / archiv {archiveCode} fond {fundCode} / {archiveCode} f.{fundCode}",
     "description-description": "Vyhledávejte spisy online v popisu {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archiv {archiveCode} fond {fundCode} popis {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
     "case-description": "Spis online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archiv {archiveCode} fond {fundCode} popis {descriptionCode} spis {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  },
+  "not-found": {
+    "title": "404: Stránka nenalezena"
   }
 }

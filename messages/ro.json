@@ -45,5 +45,8 @@
     "fund-description": "Căutați dosarele online în fondul {archiveCode}-{fundCode}{fundTitle} / arhivă {archiveCode} fond {fundCode} / {archiveCode} f.{fundCode}",
     "description-description": "Căutați dosarele online în descrierea {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / arhivă {archiveCode} fond {fundCode} descriere {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
     "case-description": "Dosar online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / arhivă {archiveCode} fond {fundCode} descriere {descriptionCode} dosar {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  },
+  "not-found": {
+    "title": "404: Pagina nu a fost găsită"
   }
 }

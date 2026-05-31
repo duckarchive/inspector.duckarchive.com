@@ -45,5 +45,8 @@
     "fund-description": "Search for files online in the fund {archiveCode}-{fundCode}{fundTitle} / archive {archiveCode} fund {fundCode} / {archiveCode} f.{fundCode}",
     "description-description": "Search for files online in the description {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
     "case-description": "File online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{fileTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} file {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+  },
+  "not-found": {
+    "title": "404: Page not found"
   }
 }
