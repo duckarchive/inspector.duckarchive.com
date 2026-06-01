@@ -22,7 +22,7 @@ const ForeignUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 interface ProvidersProps {
   session?: Session;
-  i18nMessages: Record<string, any>;
+  i18nMessages: Record<string, unknown>;
   i18nLocale: string;
 }
 
