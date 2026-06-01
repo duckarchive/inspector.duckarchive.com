@@ -5,7 +5,6 @@ import { routing } from "@/i18n/routing";
 
 const CORS_ALLOWED_ORIGINS = [
   "https://duckarchive.com",
-  "https://index.duckarchive.com",
   "https://inspector.duckarchive.com",
   "chrome-extension://gldlgeliohimejlfpgihbplkchibadim",
 ];
