@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import ErrorDuckSrc from "@/public/images/error-duck.png";
+import ErrorDuckSrc from "@/public/images/error.png";
 import Image from "next/image";
 import { Link } from "@heroui/link";
 
@@ -20,8 +20,7 @@ const ErrorComponent: React.FC<ErrorComponentProps> = ({ error }) => {
         Щось зламалось. Спробуйте перезавантажити сторінку або напишіть:&nbsp;
         <Link href="mailto:admin@duckarchive.com" target="_blank" className="text-lg">admin@duckarchive.com</Link>
       </p>
-      <Image src={ErrorDuckSrc} width={300} height={300} alt="error duck" />
-      <h2 className="text-2xl font-bold">Все полагодимо 🛠️</h2>
+      <Image src={ErrorDuckSrc} width={300} height={150} alt="error duck" className="absolute bottom-0 right-0" />
     </div>
   );
 };
