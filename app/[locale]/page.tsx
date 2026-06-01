@@ -8,7 +8,6 @@ import ComicsPage from "@/components/comics-page";
 
 const WelcomePage: NextPage = () => {
   const t = useTranslations("home-page");
-  throw new Error("Test error boundary");
 
   return (
     <>
