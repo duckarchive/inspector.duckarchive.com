@@ -48,5 +48,11 @@
   },
   "not-found": {
     "title": "404: Stránka nenalezena"
+  },
+  "donation-modal": {
+    "header": "Přátelská prosba",
+    "body-1": "Duck Inspector je dobrovolnický projekt bez jakéhokoli zdroje financování. Vše, co na těchto stránkách vidíte, je uživatelům poskytováno zcela zdarma.",
+    "body-2": "Pravidelné a stabilní dary pomáhají platit služby potřebné k provozu webu.",
+    "cta": "Podpořte projekt"
   }
 }

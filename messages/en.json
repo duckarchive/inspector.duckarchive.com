@@ -48,5 +48,11 @@
   },
   "not-found": {
     "title": "404: Page not found"
+  },
+  "donation-modal": {
+    "header": "A friendly request",
+    "body-1": "Duck Inspector is a volunteer project with no source of funding. Everything you see on this site is provided to users absolutely free of charge.",
+    "body-2": "Regular and steady donations help pay for the services needed to keep the site running.",
+    "cta": "Support the project"
   }
 }

@@ -48,5 +48,11 @@
   },
   "not-found": {
     "title": "404: Pagina nu a fost găsită"
+  },
+  "donation-modal": {
+    "header": "O rugăminte prietenească",
+    "body-1": "Duck Inspector este un proiect de voluntariat care nu are nicio sursă de finanțare. Tot ceea ce vedeți pe acest site este oferit utilizatorilor absolut gratuit.",
+    "body-2": "Donațiile regulate și constante ajută la plata serviciilor necesare pentru funcționarea site-ului.",
+    "cta": "Susțineți proiectul"
   }
 }

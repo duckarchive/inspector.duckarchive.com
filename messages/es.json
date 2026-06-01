@@ -48,5 +48,11 @@
   },
   "not-found": {
     "title": "404: Página no encontrada"
+  },
+  "donation-modal": {
+    "header": "Una petición amistosa",
+    "body-1": "Duck Inspector es un proyecto de voluntariado que no tiene ninguna fuente de financiación. Todo lo que ves en este sitio se ofrece a los usuarios de forma totalmente gratuita.",
+    "body-2": "Las donaciones regulares y estables ayudan a pagar los servicios necesarios para el funcionamiento del sitio.",
+    "cta": "Apoya el proyecto"
   }
 }

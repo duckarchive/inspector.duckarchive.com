@@ -9,7 +9,6 @@ import { fontComic, fontSans } from "@/config/fonts";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
 import { DuckLoader } from "@duckarchive/framework";
 import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@/i18n/constants";
 import BgPaperNoiseImg from "@/public/images/bg-paper-noise.png";
@@ -75,11 +74,9 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
         className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable, fontComic.variable)}
         style={{ backgroundImage: `url(${BgPaperNoiseImg.src})` }}
       >
-        <Providers>
+        <Providers i18nMessages={messages} i18nLocale={locale}>
           <div className="relative flex flex-col h-screen overflow-y-scroll">
-            <NextIntlClientProvider locale={locale} messages={messages}>
-              <Suspense fallback={<DuckLoader />}>{children}</Suspense>
-            </NextIntlClientProvider>
+            <Suspense fallback={<DuckLoader />}>{children}</Suspense>
           </div>
         </Providers>
       </body>

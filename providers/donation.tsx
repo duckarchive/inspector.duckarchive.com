@@ -5,6 +5,7 @@ import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import config from "@duckarchive/framework/components/duck-nav/config.json";
+import { useTranslations } from "next-intl";
 import React, { createContext, useContext, ReactNode } from "react";
 
 const DONATE_KEY = "asked-for-donate-at";
@@ -16,6 +17,7 @@ interface DonationContextProps {
 const DonationContext = createContext<DonationContextProps | undefined>(undefined);
 
 export const DonationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const t = useTranslations("donation-modal");
   const storage = typeof window !== "undefined" ? window.localStorage : null;
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -40,13 +42,10 @@ export const DonationProvider: React.FC<{ children: ReactNode }> = ({ children }
       {children}
       <Modal isOpen={isOpen} onClose={handleClose}>
         <ModalContent>
-          <ModalHeader>Дружнє прохання</ModalHeader>
+          <ModalHeader>{t("header")}</ModalHeader>
           <ModalBody className="max-h-96">
-            <p>
-              Качиний Інспектор ― це волонтерський проєкт, що не має жодного джерела фінансування. Все, що ви бачите на
-              цьому сайті надається користувачам абсолютно безкоштовно.
-            </p>
-            <p>Регулярні та стабільні пожертви допомагають оплачувати сервіси, потрібні для роботи сайту.</p>
+            <p>{t("body-1")}</p>
+            <p>{t("body-2")}</p>
           </ModalBody>
           <ModalFooter>
             <Button
@@ -59,7 +58,7 @@ export const DonationProvider: React.FC<{ children: ReactNode }> = ({ children }
               isExternal
               href={config.links.sponsor}
             >
-              Підтримайте проєкт
+              {t("cta")}
             </Button>
           </ModalFooter>
         </ModalContent>

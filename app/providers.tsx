@@ -10,6 +10,7 @@ import { DonationProvider } from "@/providers/donation";
 import { ToastProvider } from "@heroui/toast";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
+import { NextIntlClientProvider } from "next-intl";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -21,9 +22,11 @@ const ForeignUserProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 interface ProvidersProps {
   session?: Session;
+  i18nMessages: Record<string, any>;
+  i18nLocale: string;
 }
 
-export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ children, session }) => {
+export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ children, session, i18nMessages, i18nLocale }) => {
   const router = useRouter();
   useEffect(() => {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
@@ -38,10 +41,12 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
     <SessionProvider session={session} refetchOnWindowFocus={false}>
       <HeroUIProvider navigate={router.push}>
         <NextThemesProvider defaultTheme="dark" attribute="class">
-          <DonationProvider>
-            <ToastProvider />
-            <ForeignUserProvider>{children}</ForeignUserProvider>
-          </DonationProvider>
+          <NextIntlClientProvider locale={i18nLocale} messages={i18nMessages} timeZone="UTC">
+            <DonationProvider>
+              <ToastProvider />
+              <ForeignUserProvider>{children}</ForeignUserProvider>
+            </DonationProvider>
+          </NextIntlClientProvider>
         </NextThemesProvider>
       </HeroUIProvider>
     </SessionProvider>
