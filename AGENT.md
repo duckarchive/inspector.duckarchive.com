@@ -101,3 +101,8 @@ Scripts load env via `dotenv` (`tsx -r dotenv/config`).
 - `ag-grid-community` must stay in `serverExternalPackages` (next.config.js) or the build breaks.
 - Build uses `staticPageGenerationTimeout: 300` and `staticGenerationMaxConcurrency: 2` — static generation of archive pages is heavy; be careful adding more `generateStaticParams`.
 - README.md is the stale Next.js/NextUI template readme — don't trust it for project info; trust this file.
+
+## In-Progress Work
+
+- **Naming migration:** `fund → description → case` is being renamed to `fond → inventory → file`. The new models (`Fond`, `Inventory`, `File`, `*OnlineCopy`) already exist in the Prisma schema alongside the old ones; Inspector's routes/UI still use the old naming until switchover. New features must use the new structure.
+- **Editor feature:** `editor-feature.md` is the spec for community catalog editing (action queue in `file_actions`/`inventory_actions`, viewer/editor/admin roles, admin-moderated execution). Not implemented yet; the actions tables and the Duck API role field land separately.
