@@ -8,7 +8,6 @@ import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import { Chip } from "@heroui/chip";
-import { FaSearch } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import useIsMobile from "@/hooks/useIsMobile";
 
