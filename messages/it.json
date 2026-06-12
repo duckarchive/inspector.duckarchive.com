@@ -21,10 +21,7 @@
   },
   "search-input": {
     "label": "Inserisci i dettagli del fascicolo:",
-    "archive-label": "Archivio",
-    "fund-label": "Fondo",
-    "description-label": "Descrizione",
-    "case-label": "Fascicolo",
+    "hint": "Usa * per un numero qualsiasi di caratteri e _ per un singolo carattere, ad es. ДАХмО-Р6193-5-1*",
     "submit-button": "Cerca"
   },
   "navigation": {
@@ -32,6 +29,7 @@
     "main": "Home",
     "resources": "Risorse",
     "inspector": "Inspector",
+    "online-copy-search": "Ricerca di copie online",
     "search": "Ricerca",
     "archives": "Archivi",
     "daily-updates": "Rapporto giornaliero",
@@ -54,5 +52,16 @@
     "body-1": "Duck Inspector è un progetto di volontariato privo di qualsiasi fonte di finanziamento. Tutto ciò che vedi su questo sito è fornito agli utenti in modo completamente gratuito.",
     "body-2": "Le donazioni regolari e costanti aiutano a pagare i servizi necessari al funzionamento del sito.",
     "cta": "Sostieni il progetto"
+  },
+  "online-copy-search-page": {
+    "title": "Ricerca di copie online",
+    "hint": "Usa * per un numero qualsiasi di caratteri e _ per un singolo carattere",
+    "search-button": "Cerca",
+    "parsed-column": "Codice",
+    "url-column": "Link",
+    "availability-column": "Disponibilità",
+    "availability-public": "Disponibile",
+    "availability-restricted": "Accesso limitato",
+    "availability-unknown": "Sconosciuto"
   }
 }

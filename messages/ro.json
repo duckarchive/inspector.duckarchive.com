@@ -21,10 +21,7 @@
   },
   "search-input": {
     "label": "Introduceți detaliile dosarului:",
-    "archive-label": "Arhivă",
-    "fund-label": "Fond",
-    "description-label": "Descriere",
-    "case-label": "Dosar",
+    "hint": "Folosiți * pentru orice număr de caractere și _ pentru un singur caracter, de ex. ДАХмО-Р6193-5-1*",
     "submit-button": "Cauta"
   },
   "navigation": {
@@ -32,6 +29,7 @@
     "main": "Acasă",
     "resources": "Resurse",
     "inspector": "Inspector",
+    "online-copy-search": "Căutare copii online",
     "search": "Căutare",
     "archives": "Arhive",
     "daily-updates": "Raport zilnic",
@@ -54,5 +52,16 @@
     "body-1": "Duck Inspector este un proiect de voluntariat care nu are nicio sursă de finanțare. Tot ceea ce vedeți pe acest site este oferit utilizatorilor absolut gratuit.",
     "body-2": "Donațiile regulate și constante ajută la plata serviciilor necesare pentru funcționarea site-ului.",
     "cta": "Susțineți proiectul"
+  },
+  "online-copy-search-page": {
+    "title": "Căutare copii online",
+    "hint": "Folosiți * pentru orice număr de caractere și _ pentru un singur caracter",
+    "search-button": "Caută",
+    "parsed-column": "Cod",
+    "url-column": "Link",
+    "availability-column": "Disponibilitate",
+    "availability-public": "Disponibil",
+    "availability-restricted": "Acces restricționat",
+    "availability-unknown": "Necunoscut"
   }
 }

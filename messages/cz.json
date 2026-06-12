@@ -21,10 +21,7 @@
   },
   "search-input": {
     "label": "Zadejte údaje o spisu:",
-    "archive-label": "Archiv",
-    "fund-label": "Fond",
-    "description-label": "Popis",
-    "case-label": "Spis",
+    "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak, např. ДАХмО-Р6193-5-1*",
     "submit-button": "Hledat"
   },
   "navigation": {
@@ -32,6 +29,7 @@
     "main": "Domů",
     "resources": "Zdroje",
     "inspector": "Inspektor",
+    "online-copy-search": "Vyhledávání online kopií",
     "search": "Vyhledávání",
     "archives": "Archivy",
     "daily-updates": "Denní zpráva",
@@ -54,5 +52,16 @@
     "body-1": "Duck Inspector je dobrovolnický projekt bez jakéhokoli zdroje financování. Vše, co na těchto stránkách vidíte, je uživatelům poskytováno zcela zdarma.",
     "body-2": "Pravidelné a stabilní dary pomáhají platit služby potřebné k provozu webu.",
     "cta": "Podpořte projekt"
+  },
+  "online-copy-search-page": {
+    "title": "Vyhledávání online kopií",
+    "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak",
+    "search-button": "Hledat",
+    "parsed-column": "Signatura",
+    "url-column": "Odkaz",
+    "availability-column": "Dostupnost",
+    "availability-public": "Dostupné",
+    "availability-restricted": "Omezený přístup",
+    "availability-unknown": "Neznámé"
   }
 }
