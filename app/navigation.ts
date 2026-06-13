@@ -7,6 +7,10 @@ export const getNav = (t: _Translator<Record<string, any>, "navigation">) => [
     path: "/online-copy-search",
   },
   {
+    label: t("search"),
+    path: "/search",
+  },
+  {
     label: t("resources"),
     path: "/resources",
   },
