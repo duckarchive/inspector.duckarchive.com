@@ -10,6 +10,8 @@ interface SelectArchiveProps {
   className?: string;
   id?: string;
   form?: string;
+  size?: "sm" | "md" | "lg";
+  isClearable?: boolean;
 }
 
 const SelectArchive: React.FC<SelectArchiveProps> = ({
@@ -20,13 +22,15 @@ const SelectArchive: React.FC<SelectArchiveProps> = ({
   withoutTitle,
   className,
   form,
+  size = "sm",
+  isClearable = false,
 }) => {
   return (
     <Autocomplete
       id={id}
-      size="sm"
+      size={size}
       label="Архів"
-      isClearable={false}
+      isClearable={isClearable}
       selectedKey={value}
       onSelectionChange={onChange}
       className={className}

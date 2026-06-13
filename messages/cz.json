@@ -20,8 +20,8 @@
     "limit-note": "Maximální počet výsledků je omezen na 25 000."
   },
   "search-input": {
-    "label": "Zadejte údaje o spisu:",
-    "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak, např. ДАХмО-Р6193-5-1*",
+    "label": "Vyhledávací dotaz",
+    "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak",
     "submit-button": "Hledat"
   },
   "navigation": {
@@ -54,7 +54,7 @@
     "cta": "Podpořte projekt"
   },
   "online-copy-search-page": {
-    "title": "Vyhledávání online kopií",
+    "title": "Vyhledávací dotaz",
     "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak",
     "search-button": "Hledat",
     "parsed-column": "Signatura",

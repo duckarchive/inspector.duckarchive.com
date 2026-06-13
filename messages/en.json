@@ -20,8 +20,8 @@
     "limit-note": "The maximum number of findings is limited to 25,000."
   },
   "search-input": {
-    "label": "Enter the file details:",
-    "hint": "Use * for any number of characters and _ for a single character, e.g. ДАХмО-Р6193-5-1*",
+    "label": "Search request",
+    "hint": "Use * for any number of characters and _ for a single character",
     "submit-button": "Search"
   },
   "navigation": {
@@ -54,7 +54,7 @@
     "cta": "Support the project"
   },
   "online-copy-search-page": {
-    "title": "Online copy search",
+    "title": "Search request",
     "hint": "Use * for any number of characters and _ for a single character",
     "search-button": "Search",
     "parsed-column": "Code",

@@ -1,13 +1,15 @@
 import { NextPage } from "next";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import SearchInput from "@/components/search-input";
 import HomeBanner from "@/components/home/banner";
 import ComicsPage from "@/components/comics-page";
+import { getArchives } from "@/data/archives";
 
 
 
-const WelcomePage: NextPage = () => {
-  const t = useTranslations("home-page");
+const WelcomePage: NextPage = async () => {
+  const t = await getTranslations("home-page");
+  const archives = await getArchives();
 
   return (
     <>
@@ -17,7 +19,7 @@ const WelcomePage: NextPage = () => {
           <h1 className="text-4xl md:text-6xl font-light">{t("title")}</h1>
           <p className="mt-4">{t("description")}</p>
           <div className="mt-8 w-full">
-            <SearchInput />
+            <SearchInput archives={archives} />
           </div>
         </div>
       </section>

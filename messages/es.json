@@ -20,8 +20,8 @@
     "limit-note": "El número máximo de hallazgos está limitado a 25,000."
   },
   "search-input": {
-    "label": "Ingrese los detalles del expediente:",
-    "hint": "Use * para cualquier número de caracteres y _ para un solo carácter, p. ej. ДАХмО-Р6193-5-1*",
+    "label": "Solicitud de búsqueda",
+    "hint": "Use * para cualquier número de caracteres y _ para un solo carácter",
     "submit-button": "Buscar"
   },
   "navigation": {
@@ -54,7 +54,7 @@
     "cta": "Apoya el proyecto"
   },
   "online-copy-search-page": {
-    "title": "Búsqueda de copias en línea",
+    "title": "Solicitud de búsqueda",
     "hint": "Use * para cualquier número de caracteres y _ para un solo carácter",
     "search-button": "Buscar",
     "parsed-column": "Código",

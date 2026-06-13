@@ -20,8 +20,8 @@
     "limit-note": "Numărul maxim de rezultate este limitat la 25.000."
   },
   "search-input": {
-    "label": "Introduceți detaliile dosarului:",
-    "hint": "Folosiți * pentru orice număr de caractere și _ pentru un singur caracter, de ex. ДАХмО-Р6193-5-1*",
+    "label": "Cerere de căutare",
+    "hint": "Folosiți * pentru orice număr de caractere și _ pentru un singur caracter",
     "submit-button": "Cauta"
   },
   "navigation": {
@@ -54,7 +54,7 @@
     "cta": "Susțineți proiectul"
   },
   "online-copy-search-page": {
-    "title": "Căutare copii online",
+    "title": "Cerere de căutare",
     "hint": "Folosiți * pentru orice număr de caractere și _ pentru un singur caracter",
     "search-button": "Caută",
     "parsed-column": "Cod",

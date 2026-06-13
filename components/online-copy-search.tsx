@@ -10,6 +10,9 @@ import { Link } from "@heroui/link";
 import { Chip } from "@heroui/chip";
 import { useTranslations } from "next-intl";
 import useIsMobile from "@/hooks/useIsMobile";
+import SelectArchive from "@/components/select-archive";
+import { Archives } from "@/data/archives";
+import { buildOnlineCopyQuery, parseOnlineCopyQuery } from "@/lib/online-copy-query";
 
 type TableItem = OnlineCopySearchResponse[number];
 
@@ -20,12 +23,15 @@ const AVAILABILITY_COLORS = {
 
 interface OnlineCopySearchProps {
   defaultQuery: string;
+  archives: Archives;
 }
 
-const OnlineCopySearch: React.FC<OnlineCopySearchProps> = ({ defaultQuery }) => {
+const OnlineCopySearch: React.FC<OnlineCopySearchProps> = ({ defaultQuery, archives }) => {
   const t = useTranslations("online-copy-search-page");
   const isMobile = useIsMobile();
-  const [query, setQuery] = useState(defaultQuery);
+  const parsed = parseOnlineCopyQuery(defaultQuery, archives);
+  const [query, setQuery] = useState(parsed.query);
+  const [archive, setArchive] = useState<string | undefined>(parsed.archive);
   const {
     trigger,
     isMutating,
@@ -42,7 +48,7 @@ const OnlineCopySearch: React.FC<OnlineCopySearchProps> = ({ defaultQuery }) => 
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const q = query.trim();
+    const q = buildOnlineCopyQuery(archive, query.trim());
 
     if (!q) {
       return;
@@ -54,22 +60,32 @@ const OnlineCopySearch: React.FC<OnlineCopySearchProps> = ({ defaultQuery }) => 
 
   return (
     <div className="flex flex-col grow gap-2">
-      <form className="flex gap-2" onSubmit={handleSubmit}>
+      <form className="flex md:flex-row flex-col gap-2 items-stretch" onSubmit={handleSubmit}>
+        <SelectArchive
+          archives={archives}
+          value={archive}
+          onChange={(v) => setArchive(v?.toString() || undefined)}
+          isClearable
+          withoutTitle
+          size="md"
+          className="basis-1/6 shrink-0 min-w-[140px]"
+        />
         <Input
+          className="grow radius-sm text-sm"
           label={t("title")}
-          placeholder="ДАХмО*Р6193*-П____7"
+          size="md"
+          placeholder="Р6193*-П____7"
           value={query}
           onValueChange={setQuery}
         />
         <Button
           type="submit"
           color="primary"
-          size="lg"
-          className="grow h-full font-bold text-lg"
+          size="md"
+          className="shrink md:h-full font-bold text-lg"
           isLoading={isMutating}
-          isIconOnly={isMobile}
         >
-          {isMobile ? undefined : t("search-button")}
+          {t("search-button")}
         </Button>
       </form>
       {error ? (

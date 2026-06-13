@@ -20,8 +20,8 @@
     "limit-note": "Maksymalna liczba wyników wynosi 25 000."
   },
   "search-input": {
-    "label": "Wpisz dane dotyczące sprawy:",
-    "hint": "Użyj * dla dowolnej liczby znaków oraz _ dla pojedynczego znaku, np. ДАХмО-Р6193-5-1*",
+    "label": "Zapytanie wyszukiwania",
+    "hint": "Użyj * dla dowolnej liczby znaków oraz _ dla pojedynczego znaku",
     "submit-button": "Szukaj"
   },
   "navigation": {
@@ -54,7 +54,7 @@
     "cta": "Wesprzyj projekt"
   },
   "online-copy-search-page": {
-    "title": "Wyszukiwanie kopii online",
+    "title": "Zapytanie wyszukiwania",
     "hint": "Użyj * dla dowolnej liczby znaków oraz _ dla pojedynczego znaku",
     "search-button": "Szukaj",
     "parsed-column": "Sygnatura",

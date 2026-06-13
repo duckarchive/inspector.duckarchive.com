@@ -20,8 +20,8 @@
     "limit-note": "Il numero massimo di risultati è limitato a 25.000."
   },
   "search-input": {
-    "label": "Inserisci i dettagli del fascicolo:",
-    "hint": "Usa * per un numero qualsiasi di caratteri e _ per un singolo carattere, ad es. ДАХмО-Р6193-5-1*",
+    "label": "Richiesta di ricerca",
+    "hint": "Usa * per un numero qualsiasi di caratteri e _ per un singolo carattere",
     "submit-button": "Cerca"
   },
   "navigation": {
@@ -54,7 +54,7 @@
     "cta": "Sostieni il progetto"
   },
   "online-copy-search-page": {
-    "title": "Ricerca di copie online",
+    "title": "Richiesta di ricerca",
     "hint": "Usa * per un numero qualsiasi di caratteri e _ per un singolo carattere",
     "search-button": "Cerca",
     "parsed-column": "Codice",
