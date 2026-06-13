@@ -9,7 +9,6 @@ import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import { Chip } from "@heroui/chip";
 import { useTranslations } from "next-intl";
-import useIsMobile from "@/hooks/useIsMobile";
 import SelectArchive from "@/components/select-archive";
 import { Archives } from "@/data/archives";
 import { buildOnlineCopyQuery, parseOnlineCopyQuery } from "@/lib/online-copy-query";
@@ -28,7 +27,6 @@ interface OnlineCopySearchProps {
 
 const OnlineCopySearch: React.FC<OnlineCopySearchProps> = ({ defaultQuery, archives }) => {
   const t = useTranslations("online-copy-search-page");
-  const isMobile = useIsMobile();
   const parsed = parseOnlineCopyQuery(defaultQuery, archives);
   const [query, setQuery] = useState(parsed.query);
   const [archive, setArchive] = useState<string | undefined>(parsed.archive);
