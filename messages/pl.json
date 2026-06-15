@@ -20,7 +20,11 @@
     "limit-note": "Maksymalna liczba wyników wynosi 25 000."
   },
   "search-input": {
-    "label": "Zapytanie wyszukiwania",
+    "label": "Wpisz dane dotyczące sprawy:",
+    "archive-label": "Archiwum",
+    "fund-label": "Fundusz",
+    "description-label": "Opis",
+    "case-label": "Sprawa",
     "hint": "Użyj * dla dowolnej liczby znaków oraz _ dla pojedynczego znaku",
     "submit-button": "Szukaj"
   },
@@ -29,9 +33,10 @@
     "main": "Strona główna",
     "resources": "Zasoby",
     "inspector": "Inspektor",
-    "online-copy-search": "Wyszukiwanie",
-    "search": "Stare wyszukiwanie",
+    "online-copy-search": "🚧Wyszukiwanie",
+    "search": "Wyszukiwanie",
     "archives": "Archiwa",
+    "catalog": "🚧Katalog",
     "daily-updates": "Raport dzienny",
     "stats": "Statystyka",
     "docs": "Dokumentacja"

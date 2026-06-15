@@ -20,7 +20,11 @@
     "limit-note": "Il numero massimo di risultati è limitato a 25.000."
   },
   "search-input": {
-    "label": "Richiesta di ricerca",
+    "label": "Inserisci i dettagli del fascicolo:",
+    "archive-label": "Archivio",
+    "fund-label": "Fondo",
+    "description-label": "Descrizione",
+    "case-label": "Fascicolo",
     "hint": "Usa * per un numero qualsiasi di caratteri e _ per un singolo carattere",
     "submit-button": "Cerca"
   },
@@ -29,9 +33,10 @@
     "main": "Home",
     "resources": "Risorse",
     "inspector": "Inspector",
-    "online-copy-search": "Ricerca",
-    "search": "Vecchia ricerca",
+    "online-copy-search": "🚧Ricerca",
+    "search": "Ricerca",
     "archives": "Archivi",
+    "catalog": "🚧Catalogo",
     "daily-updates": "Rapporto giornaliero",
     "stats": "Statistiche",
     "docs": "Documentazione"

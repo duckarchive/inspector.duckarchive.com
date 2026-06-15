@@ -20,7 +20,11 @@
     "limit-note": "Numărul maxim de rezultate este limitat la 25.000."
   },
   "search-input": {
-    "label": "Cerere de căutare",
+    "label": "Introduceți detaliile dosarului:",
+    "archive-label": "Arhivă",
+    "fund-label": "Fond",
+    "description-label": "Descriere",
+    "case-label": "Dosar",
     "hint": "Folosiți * pentru orice număr de caractere și _ pentru un singur caracter",
     "submit-button": "Cauta"
   },
@@ -29,9 +33,10 @@
     "main": "Acasă",
     "resources": "Resurse",
     "inspector": "Inspector",
-    "online-copy-search": "Căutare",
-    "search": "Căutare veche",
+    "online-copy-search": "🚧Căutare",
+    "search": "Căutare",
     "archives": "Arhive",
+    "catalog": "🚧Catalog",
     "daily-updates": "Raport zilnic",
     "stats": "Statistici",
     "docs": "Documentație"

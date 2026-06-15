@@ -20,7 +20,11 @@
     "limit-note": "El número máximo de hallazgos está limitado a 25,000."
   },
   "search-input": {
-    "label": "Solicitud de búsqueda",
+    "label": "Ingrese los detalles del expediente:",
+    "archive-label": "Archivo",
+    "fund-label": "Fondo",
+    "description-label": "Descripción",
+    "case-label": "Expediente",
     "hint": "Use * para cualquier número de caracteres y _ para un solo carácter",
     "submit-button": "Buscar"
   },
@@ -29,9 +33,10 @@
     "main": "Inicio",
     "resources": "Recursos",
     "inspector": "Inspector",
-    "online-copy-search": "Búsqueda",
-    "search": "Búsqueda antigua",
+    "online-copy-search": "🚧Búsqueda",
+    "search": "Búsqueda",
     "archives": "Archivos",
+    "catalog": "🚧Catálogo",
     "daily-updates": "Reporte diario",
     "stats": "Estadísticas",
     "docs": "Documentación"

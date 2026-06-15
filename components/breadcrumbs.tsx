@@ -6,9 +6,10 @@ import { FaHome } from "react-icons/fa";
 interface NavigationBreadcrumbsProps {
   breadcrumbs: string[];
   title: string;
+  basePath?: string;
 }
 
-const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, title }) => (
+const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, title, basePath = "/archives/" }) => (
   <Breadcrumbs
     separator="/"
     size="lg"
@@ -17,7 +18,7 @@ const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrum
       separator: "text-gray-500/60",
     }}
   >
-    <BreadcrumbItem href="/archives/" aria-label="Повернутись на список архівів">
+    <BreadcrumbItem href={basePath} aria-label="Повернутись на список архівів">
       <FaHome />
     </BreadcrumbItem>
     {breadcrumbs.map((item, index) =>
@@ -26,7 +27,7 @@ const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrum
           <h1>{title}</h1>
         </BreadcrumbItem>
       ) : (
-        <BreadcrumbItem key={`${index}-bradcrumb`} href={`/archives/${breadcrumbs.slice(0, index + 1).join("/")}`}>
+        <BreadcrumbItem key={`${index}-bradcrumb`} href={`${basePath}${breadcrumbs.slice(0, index + 1).join("/")}`}>
           {item}
         </BreadcrumbItem>
       ),

@@ -20,7 +20,11 @@
     "limit-note": "Maximální počet výsledků je omezen na 25 000."
   },
   "search-input": {
-    "label": "Vyhledávací dotaz",
+    "label": "Zadejte údaje o spisu:",
+    "archive-label": "Archiv",
+    "fund-label": "Fond",
+    "description-label": "Popis",
+    "case-label": "Spis",
     "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak",
     "submit-button": "Hledat"
   },
@@ -29,9 +33,10 @@
     "main": "Domů",
     "resources": "Zdroje",
     "inspector": "Inspektor",
-    "online-copy-search": "Vyhledávání",
-    "search": "Staré vyhledávání",
+    "online-copy-search": "🚧Vyhledávání",
+    "search": "Vyhledávání",
     "archives": "Archivy",
+    "catalog": "🚧Katalog",
     "daily-updates": "Denní zpráva",
     "stats": "Statistika",
     "docs": "Dokumentace"

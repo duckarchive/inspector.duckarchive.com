@@ -20,7 +20,11 @@
     "limit-note": "The maximum number of findings is limited to 25,000."
   },
   "search-input": {
-    "label": "Search request",
+    "label": "Enter the file details:",
+    "archive-label": "Archive",
+    "fund-label": "Fund",
+    "description-label": "Inventory",
+    "case-label": "File",
     "hint": "Use * for any number of characters and _ for a single character",
     "submit-button": "Search"
   },
@@ -29,9 +33,10 @@
     "main": "Home",
     "resources": "Resources",
     "inspector": "Inspector",
-    "online-copy-search": "Search",
-    "search": "Old Search",
+    "online-copy-search": "🚧Search",
+    "search": "Search",
     "archives": "Archives",
+    "catalog": "🚧Catalog",
     "daily-updates": "Daily report",
     "stats": "Statistics",
     "docs": "Documentation"

@@ -20,7 +20,11 @@
     "limit-note": "Максимальна кількість знахідок обмежена 25,000."
   },
   "search-input": {
-    "label": "Пошуковий запит",
+    "label": "Введіть реквізити справи:",
+    "archive-label": "Архів",
+    "fund-label": "Фонд",
+    "description-label": "Опис",
+    "case-label": "Справа",
     "hint": "Використовуйте * для будь-якої кількості символів та _ для одного символу",
     "submit-button": "Пошук"
   },
@@ -29,9 +33,10 @@
     "resources": "Джерела",
     "main": "Головна",
     "inspector": "Інспектор",
-    "online-copy-search": "Пошук",
-    "search": "Старий пошук",
+    "online-copy-search": "🚧Пошук",
+    "search": "Пошук",
     "archives": "Архіви",
+    "catalog": "🚧Каталог",
     "daily-updates": "Звіт за день",
     "stats": "Статистика",
     "docs": "Документація"
