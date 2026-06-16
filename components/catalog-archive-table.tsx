@@ -84,7 +84,6 @@ const CatalogArchiveTable: React.FC<CatalogArchiveTableProps> = ({ resources }) 
         id="catalog-archive-table"
         resources={resources}
         isLoading={isLoading}
-        isFiltersEnabled
         columns={[
           {
             field: "code",

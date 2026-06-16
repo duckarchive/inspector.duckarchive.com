@@ -83,7 +83,6 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
         id="archive-table"
         resources={resources}
         isLoading={isLoading}
-        isFiltersEnabled
         columns={[
           {
             field: "code",
