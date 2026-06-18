@@ -43,7 +43,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, type = "speech",
       }}
     >
       <div className="relative w-full h-full flex justify-center">
-        <Image src={bubbleStyles[type]} alt="" className="absolute w-full h-[150%]" />
+        <Image src={bubbleStyles[type]} width={300} height={150} alt="" className="absolute w-full h-[150%]" />
         <p
           className="leading-tight text-black text-center p-10 font-comic text-sm"
           style={{
