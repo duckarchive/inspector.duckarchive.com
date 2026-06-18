@@ -57,7 +57,7 @@ export default function EditorInventoriesPage() {
           isLoading={isLoading}
           rows={inventories ?? []}
           columns={[
-            { field: "code", headerName: "Індекс" },
+            { field: "code", headerName: "Код" },
             { field: "title", headerName: "Назва", flex: 5 },
             { field: "info", headerName: "Опис", flex: 5 },
             {

@@ -88,7 +88,7 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
         <ModalHeader>Редагувати фонд {fond.code}</ModalHeader>
         <ModalBody className="gap-3">
           <SelectArchive archives={archives} value={archiveCode} onChange={(key) => setArchiveCode(String(key ?? ""))} />
-          <Input label="Індекс" value={code} onValueChange={setCode} />
+          <Input label="Код" value={code} onValueChange={setCode} />
           <Input label="Назва" value={title} onValueChange={setTitle} />
           <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
           <YearRangesField value={years} onChange={setYears} />

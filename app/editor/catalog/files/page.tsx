@@ -79,7 +79,7 @@ export default function EditorFilesPage() {
           isLoading={isLoading}
           rows={files ?? []}
           columns={[
-            { field: "code", headerName: "Індекс" },
+            { field: "code", headerName: "Код" },
             { field: "title", headerName: "Назва", flex: 5 },
             {
               headerName: "Автори",

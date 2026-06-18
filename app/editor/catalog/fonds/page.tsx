@@ -32,7 +32,7 @@ export default function EditorFondsPage() {
           isLoading={isLoading}
           rows={fonds ?? []}
           columns={[
-            { field: "code", headerName: "Індекс" },
+            { field: "code", headerName: "Код" },
             { field: "title", headerName: "Назва", flex: 5 },
             { field: "info", headerName: "Опис", flex: 5 },
             {

@@ -117,7 +117,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
       <ModalContent>
         <ModalHeader>Редагувати справу {file.full_code || file.code}</ModalHeader>
         <ModalBody className="gap-3">
-          <Input label="Індекс" value={code} onValueChange={setCode} />
+          <Input label="Код" value={code} onValueChange={setCode} />
           <Input label="Назва" value={title} onValueChange={setTitle} />
           <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
           <YearRangesField value={years} onChange={setYears} />
