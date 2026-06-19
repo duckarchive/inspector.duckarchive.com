@@ -2,7 +2,7 @@
 
 import { Key, useState } from "react";
 import InspectorDuckTable from "@/components/table";
-import SelectArchive from "@/components/select-archive";
+import Select from "@/components/select";
 import EditCell from "@/components/editor/edit-cell";
 import FondEditModal from "@/components/editor/fond-edit-modal";
 import { useGet } from "@/hooks/useApi";
@@ -19,8 +19,17 @@ export default function EditorFondsPage() {
   return (
     <section className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">Фонди</h1>
-      <SelectArchive
-        archives={archives ?? []}
+      <Select
+        items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+        label="Архів"
+        getKey={(a) => a.code}
+        getTextValue={(a) => a.code}
+        renderItem={(a) => (
+          <div>
+            <p>{a.code}</p>
+            <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+          </div>
+        )}
         value={archiveCode}
         onChange={(key: Key | null) => setArchiveCode(String(key ?? ""))}
         className="max-w-xs"
@@ -40,7 +49,9 @@ export default function EditorFondsPage() {
               flex: 2,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               valueGetter: (p: any) =>
-                (p.data?.years ?? []).map((y: { start_year: number; end_year: number }) => `${y.start_year}–${y.end_year}`).join(", "),
+                (p.data?.years ?? [])
+                  .map((y: { start_year: number; end_year: number }) => `${y.start_year}–${y.end_year}`)
+                  .join(", "),
             },
             {
               headerName: "",

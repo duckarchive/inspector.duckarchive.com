@@ -1,12 +1,11 @@
 "use client";
 
 import { Key, useMemo, useState } from "react";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
+import Select from "@/components/select";
 import { useEditorAuthors } from "@/hooks/useEditor";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 
 export interface AuthorOps {
   /** author ids to unlink from the file */
@@ -88,21 +87,17 @@ const AuthorsField: React.FC<AuthorsFieldProps> = ({ linked, ops, onChange }) =>
           </Chip>
         ))}
       </div>
-      <Autocomplete
-        size="sm"
+      <Select
         label="Прив'язати існуючого автора"
+        virtualized
+        items={authors ?? []}
+        getKey={(a) => a.id}
+        getTextValue={(a) => a.title}
+        renderItem={(a) => a.title}
         inputValue={query}
         onInputChange={setQuery}
-        onSelectionChange={connect}
-        items={authors ?? []}
-        {...editorAutocompleteVirtualization}
-      >
-        {(a) => (
-          <AutocompleteItem key={a.id} textValue={a.title} classNames={wrapItemClassNames}>
-            {a.title}
-          </AutocompleteItem>
-        )}
-      </Autocomplete>
+        onChange={connect}
+      />
       <div className="flex items-end gap-2">
         <Input size="sm" label="Додати нового автора" value={newTitle} onValueChange={setNewTitle} />
         <Button size="sm" onPress={addNew} isDisabled={!newTitle.trim()}>

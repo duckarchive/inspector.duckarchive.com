@@ -2,10 +2,9 @@
 
 import { Key, useMemo } from "react";
 import { Chip } from "@heroui/chip";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { Button } from "@heroui/button";
+import Select from "@/components/select";
 import { useEditorOnlineCopies } from "@/hooks/useEditor";
-import { editorAutocompleteVirtualization, wrapUrlItemClassNames } from "@/components/editor/autocomplete";
 import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
 export interface OnlineCopyOps {
@@ -79,22 +78,20 @@ const OnlineCopiesField: React.FC<OnlineCopiesFieldProps> = ({ copies, target, o
           ))}
         </div>
       )}
-      <Autocomplete
-        size="sm"
+      <Select
         label="Прив'язати наявну онлайн-копію"
-        onSelectionChange={connect}
-        defaultItems={unlinked ?? []}
-        {...editorAutocompleteVirtualization}
-      >
-        {(c) => (
-          <AutocompleteItem key={c.id} textValue={`${c.parsed} ${c.url}`} classNames={wrapUrlItemClassNames}>
-            <div className="flex flex-col">
-              {c.parsed && <span className="line-clamp-1">{c.parsed}</span>}
-              <span className={`line-clamp-1 ${c.parsed ? "text-tiny text-default-400" : ""}`}>{c.url}</span>
-            </div>
-          </AutocompleteItem>
+        wrapUrls
+        items={unlinked ?? []}
+        getKey={(c) => c.id}
+        getTextValue={(c) => `${c.parsed} ${c.url}`}
+        renderItem={(c) => (
+          <div className="flex flex-col">
+            {c.parsed && <span className="line-clamp-1">{c.parsed}</span>}
+            <span className={`line-clamp-1 ${c.parsed ? "text-tiny text-default-400" : ""}`}>{c.url}</span>
+          </div>
         )}
-      </Autocomplete>
+        onChange={connect}
+      />
     </div>
   );
 };

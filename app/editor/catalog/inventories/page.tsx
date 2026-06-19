@@ -1,12 +1,10 @@
 "use client";
 
 import { Key, useState } from "react";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import InspectorDuckTable from "@/components/table";
-import SelectArchive from "@/components/select-archive";
+import Select from "@/components/select";
 import EditCell from "@/components/editor/edit-cell";
 import InventoryEditModal from "@/components/editor/inventory-edit-modal";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 import { useGet } from "@/hooks/useApi";
 import { useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
@@ -24,8 +22,17 @@ export default function EditorInventoriesPage() {
     <section className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">Описи</h1>
       <div className="flex flex-wrap gap-3">
-        <SelectArchive
-          archives={archives ?? []}
+        <Select
+          items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+          label="Архів"
+          getKey={(a) => a.code}
+          getTextValue={(a) => a.code}
+          renderItem={(a) => (
+            <div>
+              <p>{a.code}</p>
+              <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+            </div>
+          )}
           value={archiveCode}
           onChange={(key: Key | null) => {
             setArchiveCode(String(key ?? ""));
@@ -33,22 +40,23 @@ export default function EditorInventoriesPage() {
           }}
           className="max-w-xs"
         />
-        <Autocomplete
-          size="sm"
+        <Select
+          items={fonds ?? []}
           label="Фонд"
-          className="max-w-xs"
+          virtualized
           isDisabled={!archiveCode}
-          {...editorAutocompleteVirtualization}
-          selectedKey={fondId || null}
-          onSelectionChange={(key: Key | null) => setFondId(String(key ?? ""))}
-          defaultItems={fonds ?? []}
-        >
-          {(f) => (
-            <AutocompleteItem key={f.id} textValue={`${f.code} ${f.title ?? ""}`} classNames={wrapItemClassNames}>
-              {f.code} {f.title ? `— ${f.title}` : ""}
-            </AutocompleteItem>
+          getKey={(f) => f.id}
+          getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
+          renderItem={(f) => (
+            <div>
+              <p>{f.code}</p>
+              <p className="opacity-70 text-sm text-wrap">{f.title}</p>
+            </div>
           )}
-        </Autocomplete>
+          value={fondId}
+          onChange={(key: Key | null) => setFondId(String(key ?? ""))}
+          className="max-w-xs"
+        />
       </div>
 
       {fondId && (

@@ -1,16 +1,15 @@
 "use client";
 
 import { Key, useState } from "react";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import InspectorDuckTable from "@/components/table";
-import SelectArchive from "@/components/select-archive";
+import Select from "@/components/select";
 import EditCell from "@/components/editor/edit-cell";
 import FileEditModal from "@/components/editor/file-edit-modal";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 import { useGet } from "@/hooks/useApi";
 import { useEditorFiles, useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
+import { sortByCode } from "@/lib/table";
 
 export default function EditorFilesPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -26,8 +25,17 @@ export default function EditorFilesPage() {
     <section className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">Справи</h1>
       <div className="flex flex-wrap gap-3">
-        <SelectArchive
-          archives={archives ?? []}
+        <Select
+          items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+          label="Архів"
+          getKey={(a) => a.code}
+          getTextValue={(a) => a.code}
+          renderItem={(a) => (
+            <div>
+              <p>{a.code}</p>
+              <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+            </div>
+          )}
           value={archiveCode}
           onChange={(key: Key | null) => {
             setArchiveCode(String(key ?? ""));
@@ -36,41 +44,43 @@ export default function EditorFilesPage() {
           }}
           className="max-w-xs"
         />
-        <Autocomplete
-          size="sm"
+        <Select
+          items={(fonds ?? []).sort(sortByCode)}
           label="Фонд"
-          className="max-w-xs"
+          virtualized
           isDisabled={!archiveCode}
-          {...editorAutocompleteVirtualization}
-          selectedKey={fondId || null}
-          onSelectionChange={(key: Key | null) => {
+          getKey={(f) => f.id}
+          getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
+          renderItem={(f) => (
+            <div>
+              <p>{f.code}</p>
+              <p className="opacity-70 text-sm text-wrap">{f.title}</p>
+            </div>
+          )}
+          value={fondId}
+          onChange={(key: Key | null) => {
             setFondId(String(key ?? ""));
             setInventoryId("");
           }}
-          defaultItems={fonds ?? []}
-        >
-          {(f) => (
-            <AutocompleteItem key={f.id} textValue={`${f.code} ${f.title ?? ""}`} classNames={wrapItemClassNames}>
-              {f.code} {f.title ? `— ${f.title}` : ""}
-            </AutocompleteItem>
-          )}
-        </Autocomplete>
-        <Autocomplete
-          size="sm"
-          label="Опис"
           className="max-w-xs"
+        />
+        <Select
+          items={(inventories ?? []).sort(sortByCode)}
+          label="Опис"
+          virtualized
           isDisabled={!fondId}
-          {...editorAutocompleteVirtualization}
-          selectedKey={inventoryId || null}
-          onSelectionChange={(key: Key | null) => setInventoryId(String(key ?? ""))}
-          defaultItems={inventories ?? []}
-        >
-          {(inv) => (
-            <AutocompleteItem key={inv.id} textValue={`${inv.code} ${inv.title ?? ""}`} classNames={wrapItemClassNames}>
-              {inv.code} {inv.title ? `— ${inv.title}` : ""}
-            </AutocompleteItem>
+          getKey={(inv) => inv.id}
+          getTextValue={(inv) => `${inv.code} ${inv.title ?? ""}`}
+          renderItem={(inv) => (
+            <div>
+              <p>{inv.code}</p>
+              <p className="opacity-70 text-sm text-wrap">{inv.title}</p>
+            </div>
           )}
-        </Autocomplete>
+          value={inventoryId}
+          onChange={(key: Key | null) => setInventoryId(String(key ?? ""))}
+          className="max-w-xs"
+        />
       </div>
 
       {inventoryId && (

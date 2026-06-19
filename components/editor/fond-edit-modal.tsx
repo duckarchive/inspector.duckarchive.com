@@ -5,7 +5,7 @@ import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@herou
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
 import { addToast } from "@heroui/toast";
-import SelectArchive from "@/components/select-archive";
+import Select from "@/components/select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
@@ -49,7 +49,11 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
       bodies.push({ type: "change_code", target_id: fond.id, note: encodeNote({ v: 1, field: "code", value: code }) });
     }
     if (title !== (fond.title ?? "")) {
-      bodies.push({ type: "change_title", target_id: fond.id, note: encodeNote({ v: 1, field: "title", value: title }) });
+      bodies.push({
+        type: "change_title",
+        target_id: fond.id,
+        note: encodeNote({ v: 1, field: "title", value: title }),
+      });
     }
     if (info !== (fond.info ?? "")) {
       bodies.push({ type: "change_info", target_id: fond.id, note: encodeNote({ v: 1, field: "info", value: info }) });
@@ -66,10 +70,18 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
     }
 
     for (const removed of fond.years.filter((o) => !years.some((y) => sameYearRange(y, o)))) {
-      bodies.push({ type: "remove_year_range", target_id: fond.id, note: encodeNote({ v: 1, field: "year_range", value: removed }) });
+      bodies.push({
+        type: "remove_year_range",
+        target_id: fond.id,
+        note: encodeNote({ v: 1, field: "year_range", value: removed }),
+      });
     }
     for (const added of years.filter((y) => !fond.years.some((o) => sameYearRange(o, y)))) {
-      bodies.push({ type: "add_year_range", target_id: fond.id, note: encodeNote({ v: 1, field: "year_range", value: added }) });
+      bodies.push({
+        type: "add_year_range",
+        target_id: fond.id,
+        note: encodeNote({ v: 1, field: "year_range", value: added }),
+      });
     }
 
     if (bodies.length === 0) {
@@ -87,7 +99,20 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
       <ModalContent>
         <ModalHeader>Редагувати фонд {fond.code}</ModalHeader>
         <ModalBody className="gap-3">
-          <SelectArchive archives={archives} value={archiveCode} onChange={(key) => setArchiveCode(String(key ?? ""))} />
+          <Select
+            items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+            label="Архів"
+            getKey={(a) => a.code}
+            getTextValue={(a) => a.code}
+            renderItem={(a) => (
+              <div>
+                <p>{a.code}</p>
+                <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+              </div>
+            )}
+            value={archiveCode}
+            onChange={(key) => setArchiveCode(String(key ?? ""))}
+          />
           <Input label="Код" value={code} onValueChange={setCode} />
           <Input label="Назва" value={title} onValueChange={setTitle} />
           <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />

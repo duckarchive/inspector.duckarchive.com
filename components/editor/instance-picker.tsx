@@ -1,9 +1,7 @@
 "use client";
 
 import { Key, useState } from "react";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import SelectArchive from "@/components/select-archive";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
+import Select from "@/components/select";
 import { useGet } from "@/hooks/useApi";
 import { useEditorFiles, useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
@@ -28,8 +26,17 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
 
   return (
     <div className="flex flex-col gap-3">
-      <SelectArchive
-        archives={archives ?? []}
+      <Select
+        items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+        label="Архів"
+        getKey={(a) => a.code}
+        getTextValue={(a) => a.code}
+        renderItem={(a) => (
+          <div>
+            <p>{a.code}</p>
+            <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+          </div>
+        )}
         value={archiveCode}
         onChange={(key: Key | null) => {
           setArchiveCode(String(key ?? ""));
@@ -39,66 +46,69 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           onChange("");
         }}
       />
-      <Autocomplete
-        size="sm"
+      <Select
+        items={fonds ?? []}
         label="Фонд"
+        virtualized
         isDisabled={!archiveCode}
-        {...editorAutocompleteVirtualization}
-        selectedKey={fondId || null}
-        onSelectionChange={(key: Key | null) => {
+        getKey={(f) => f.id}
+        getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
+        renderItem={(f) => (
+          <div>
+            <p>{f.code}</p>
+            <p className="opacity-70 text-sm text-wrap">{f.title}</p>
+          </div>
+        )}
+        value={fondId}
+        onChange={(key: Key | null) => {
           setFondId(String(key ?? ""));
           setInventoryId("");
           setFileId("");
           onChange("");
         }}
-        defaultItems={fonds ?? []}
-      >
-        {(f) => (
-          <AutocompleteItem key={f.id} textValue={`${f.code} ${f.title ?? ""}`} classNames={wrapItemClassNames}>
-            {f.code} {f.title ? `— ${f.title}` : ""}
-          </AutocompleteItem>
-        )}
-      </Autocomplete>
-      <Autocomplete
-        size="sm"
+      />
+      <Select
+        items={inventories ?? []}
         label="Опис"
+        virtualized
         isDisabled={!fondId}
-        {...editorAutocompleteVirtualization}
-        selectedKey={inventoryId || null}
-        onSelectionChange={(key: Key | null) => {
+        getKey={(inv) => inv.id}
+        getTextValue={(inv) => `${inv.code} ${inv.title ?? ""}`}
+        renderItem={(inv) => (
+          <div>
+            <p>{inv.code}</p>
+            <p className="opacity-70 text-sm text-wrap">{inv.title}</p>
+          </div>
+        )}
+        value={inventoryId}
+        onChange={(key: Key | null) => {
           const id = String(key ?? "");
           setInventoryId(id);
           setFileId("");
           onChange(target === "inventory" ? id : "");
         }}
-        defaultItems={inventories ?? []}
-      >
-        {(inv) => (
-          <AutocompleteItem key={inv.id} textValue={`${inv.code} ${inv.title ?? ""}`} classNames={wrapItemClassNames}>
-            {inv.code} {inv.title ? `— ${inv.title}` : ""}
-          </AutocompleteItem>
-        )}
-      </Autocomplete>
+      />
       {target === "file" && (
-        <Autocomplete
-          size="sm"
+        <Select
+          items={files ?? []}
           label="Справа"
+          virtualized
           isDisabled={!inventoryId}
-          {...editorAutocompleteVirtualization}
-          selectedKey={fileId || null}
-          onSelectionChange={(key: Key | null) => {
+          getKey={(file) => file.id}
+          getTextValue={(file) => `${file.code} ${file.title ?? ""}`}
+          renderItem={(file) => (
+            <div>
+              <p>{file.code}</p>
+              <p className="opacity-70 text-sm text-wrap">{file.title}</p>
+            </div>
+          )}
+          value={fileId}
+          onChange={(key: Key | null) => {
             const id = String(key ?? "");
             setFileId(id);
             onChange(id);
           }}
-          defaultItems={files ?? []}
-        >
-          {(file) => (
-            <AutocompleteItem key={file.id} textValue={`${file.code} ${file.title ?? ""}`} classNames={wrapItemClassNames}>
-              {file.code} {file.title ? `— ${file.title}` : ""}
-            </AutocompleteItem>
-          )}
-        </Autocomplete>
+        />
       )}
     </div>
   );

@@ -4,7 +4,7 @@ import { AgCharts } from "ag-charts-react";
 import { DailyStatWithArchive } from "@/data/report";
 import { useEffect, useState } from "react";
 import { Archives } from "@/data/archives";
-import SelectArchive from "./select-archive";
+import Select from "./select";
 import { useTheme } from "next-themes";
 import { TYPE_LABEL } from "./resource-badge";
 import { ResourceType } from "@generated/prisma/client/enums";
@@ -38,8 +38,17 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
 
   return (
     <div className="flex flex-col gap-2 mt-4 h-full">
-      <SelectArchive
-        archives={archives}
+      <Select
+        items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+        label="Архів"
+        getKey={(a) => a.code}
+        getTextValue={(a) => a.code}
+        renderItem={(a) => (
+          <div>
+            <p>{a.code}</p>
+            <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+          </div>
+        )}
         value={selectedArchiveCode}
         onChange={(val) => setSelectedArchiveCode(val?.toString())}
       />
