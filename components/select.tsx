@@ -1,7 +1,6 @@
 import { Key, ReactNode } from "react";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { editorAutocompleteVirtualization, wrapItemClassNames, wrapUrlItemClassNames } from "@/components/editor/autocomplete";
-import { sortByCode } from "@/lib/table";
 
 export interface SelectProps<T extends object> {
   /** Options to render. */

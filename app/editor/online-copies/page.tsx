@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, ButtonGroup } from "@heroui/button";
 import { Chip } from "@heroui/chip";
+import { Input } from "@heroui/input";
 import InspectorDuckTable from "@/components/table";
 import OnlineCopyLinkModal from "@/components/editor/online-copy-link-modal";
 import OnlineCopyAddModal from "@/components/editor/online-copy-add-modal";
@@ -12,10 +13,18 @@ import { EditorOnlineCopy, OnlineCopyTarget } from "@/app/api/editor/online-copi
 
 export default function EditorOnlineCopiesPage() {
   const [target, setTarget] = useState<OnlineCopyTarget>("inventory");
+  const [searchQuery, setSearchQuery] = useState("");
   const { data: copies, isLoading, mutate } = useEditorOnlineCopies(target, true);
   const { submit } = useSubmitAction(target);
   const [selected, setSelected] = useState<EditorOnlineCopy | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+
+  const filteredCopies = useMemo(() => {
+    if (!copies) return [];
+    if (!searchQuery.trim()) return copies;
+    const query = searchQuery.toLowerCase();
+    return copies.filter((copy) => copy.url.toLowerCase().includes(query));
+  }, [copies, searchQuery]);
 
   const handleRemove = async (copy: EditorOnlineCopy) => {
     await submit({ type: "remove_online_copy", online_copy_id: copy.id });
@@ -40,10 +49,19 @@ export default function EditorOnlineCopiesPage() {
         </Button>
       </ButtonGroup>
 
+      <Input
+        isClearable
+        placeholder="Пошук за URL..."
+        value={searchQuery}
+        onValueChange={setSearchQuery}
+        onClear={() => setSearchQuery("")}
+        className="max-w-xs"
+      />
+
       <InspectorDuckTable<EditorOnlineCopy>
         id={`editor-online-copies-${target}`}
         isLoading={isLoading}
-        rows={copies ?? []}
+        rows={filteredCopies}
         columns={[
           { field: "url", headerName: "URL", flex: 8 },
           { field: "availability", headerName: "Доступність", flex: 2 },
