@@ -53,19 +53,29 @@ const statusChip = (data: any) => {
   return <Chip size="sm" color="success" variant="flat">{ACTION_STATUS_LABELS.executed}</Chip>;
 };
 
+const ITEMS_PER_PAGE = 50;
+
 const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
   const [status, setStatus] = useState<ActionStatus | "all">("pending");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [page, setPage] = useState(1);
   const { data: actions, isLoading, mutate } = useEditorActions(entity, status === "all" ? undefined : { status });
   const { resolveMany, isResolving } = useResolveAction(entity);
 
   const rows = useMemo(() => actions ?? [], [actions]);
-  const pendingIds = useMemo(() => rows.filter(isPending).map((r) => r.id), [rows]);
+  const totalPages = useMemo(() => Math.ceil(rows.length / ITEMS_PER_PAGE), [rows.length]);
+  const paginatedRows = useMemo(() => {
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    return rows.slice(start, start + ITEMS_PER_PAGE);
+  }, [rows, page]);
+
+  const pendingIds = useMemo(() => paginatedRows.filter(isPending).map((r) => r.id), [paginatedRows]);
   const allSelected = pendingIds.length > 0 && pendingIds.every((id) => selected.has(id));
 
   const setStatusAndReset = (s: ActionStatus | "all") => {
     setStatus(s);
     setSelected(new Set());
+    setPage(1);
   };
 
   const toggle = (id: string) => {
@@ -136,7 +146,7 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
                 <td colSpan={6} className="p-4 text-center text-default-400">Немає дій</td>
               </tr>
             )}
-            {rows.map((row) => {
+            {paginatedRows.map((row) => {
               const pending = isPending(row);
               return (
                 <tr key={row.id} className="border-t border-default-100 align-top">
@@ -165,6 +175,32 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
           </tbody>
         </table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2">
+          <Button
+            isIconOnly
+            variant="flat"
+            size="sm"
+            isDisabled={page === 1}
+            onPress={() => setPage(page - 1)}
+          >
+            ←
+          </Button>
+          <span className="text-sm text-default-600">
+            {page} / {totalPages}
+          </span>
+          <Button
+            isIconOnly
+            variant="flat"
+            size="sm"
+            isDisabled={page === totalPages}
+            onPress={() => setPage(page + 1)}
+          >
+            →
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

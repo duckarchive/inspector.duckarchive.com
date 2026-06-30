@@ -1,16 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { Divider } from "@heroui/divider";
 import { addToast } from "@heroui/toast";
 import Select from "@/components/select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
+import { useEditorFonds } from "@/hooks/useEditor";
 import { Archives } from "@/data/archives";
+import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 
 interface FondEditModalProps {
   fond: EditorFond | null;
@@ -21,12 +25,16 @@ interface FondEditModalProps {
 }
 
 const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, onClose, onSubmitted }) => {
-  const { submitMany, isMutating } = useSubmitAction("fond");
+  const { submitMany: submitFondActions, isMutating } = useSubmitAction("fond");
+  const { submitBatch: submitInventoryBatch } = useSubmitAction("inventory");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
   const [archiveCode, setArchiveCode] = useState<string>("");
   const [years, setYears] = useState<YearRange[]>([]);
+
+  const [mergeTargetId, setMergeTargetId] = useState<string>("");
+  const { data: mergeCandidates } = useEditorFonds(archiveCode || undefined);
 
   useEffect(() => {
     if (fond) {
@@ -35,6 +43,7 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
       setInfo(fond.info ?? "");
       setArchiveCode(fond.archive.code);
       setYears(fond.years.map((y) => ({ start_year: y.start_year, end_year: y.end_year })));
+      setMergeTargetId("");
     }
   }, [fond]);
 
@@ -89,7 +98,32 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
       return;
     }
 
-    await submitMany(bodies);
+    await submitFondActions(bodies);
+    onSubmitted?.();
+    onClose();
+  };
+
+  const handleMerge = async () => {
+    if (!mergeTargetId || mergeTargetId === fond.id) {
+      return;
+    }
+
+    const sourceInventories = (await fetch(`/api/editor/catalog/inventories?fond=${fond.id}`).then((r) => r.json())) as Array<{
+      id: string;
+    }>;
+    const inventoryBodies: SubmitActionBody[] = [];
+
+    for (const inventory of sourceInventories) {
+      inventoryBodies.push({
+        type: "change_parent",
+        target_id: inventory.id,
+        note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }),
+      });
+    }
+
+    // Submit inventory moves and source fond removal
+    await submitInventoryBatch(inventoryBodies);
+    await submitFondActions([{ type: "remove", target_id: fond.id }]);
     onSubmitted?.();
     onClose();
   };
@@ -117,6 +151,35 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
           <Input label="Назва" value={title} onValueChange={setTitle} />
           <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
           <YearRangesField value={years} onChange={setYears} />
+
+          <Divider className="my-2" />
+
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Об&apos;єднати з іншим фондом</span>
+            <span className="text-xs text-default-500">
+              Усі описи цього фонду буде перепривʼязано до обраного.
+            </span>
+            <Autocomplete
+              size="sm"
+              label="Фонд-приймач"
+              inputValue={mergeTargetId}
+              onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
+              items={(mergeCandidates ?? []).filter((f) => f.id !== fond.id)}
+              {...editorAutocompleteVirtualization}
+            >
+              {(f) => (
+                <AutocompleteItem key={f.id} textValue={f.code} classNames={wrapItemClassNames}>
+                  <div>
+                    <p>{f.code}</p>
+                    <p className="opacity-70 text-sm">{f.title}</p>
+                  </div>
+                </AutocompleteItem>
+              )}
+            </Autocomplete>
+            <Button size="sm" color="warning" variant="flat" onPress={handleMerge} isDisabled={!mergeTargetId} isLoading={isMutating}>
+              Об&apos;єднати
+            </Button>
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={onClose}>

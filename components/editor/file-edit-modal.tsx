@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { Divider } from "@heroui/divider";
 import { addToast } from "@heroui/toast";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import OnlineCopiesField, { emptyOnlineCopyOps, OnlineCopyOps } from "@/components/editor/online-copies-field";
@@ -12,6 +14,8 @@ import LocationsField, { emptyLocationOps, LocationOps } from "@/components/edit
 import useSubmitAction from "@/hooks/useSubmitAction";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
+import { useEditorFiles } from "@/hooks/useEditor";
+import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 
 interface FileEditModalProps {
   file: EditorFile | null;
@@ -21,7 +25,7 @@ interface FileEditModalProps {
 }
 
 const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, onSubmitted }) => {
-  const { submitMany, isMutating } = useSubmitAction("file");
+  const { submitMany, submitBatch, isMutating } = useSubmitAction("file");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
@@ -29,6 +33,9 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   const [copyOps, setCopyOps] = useState<OnlineCopyOps>(emptyOnlineCopyOps());
   const [authorOps, setAuthorOps] = useState<AuthorOps>(emptyAuthorOps());
   const [locationOps, setLocationOps] = useState<LocationOps>(emptyLocationOps());
+
+  const [mergeTargetId, setMergeTargetId] = useState<string>("");
+  const { data: mergeCandidates } = useEditorFiles(file?.inventory_id || undefined);
 
   useEffect(() => {
     if (file) {
@@ -39,6 +46,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
       setCopyOps(emptyOnlineCopyOps());
       setAuthorOps(emptyAuthorOps());
       setLocationOps(emptyLocationOps());
+      setMergeTargetId("");
     }
   }, [file]);
 
@@ -47,6 +55,53 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   }
 
   const linkedAuthors = file.authors.map((fa) => fa.author);
+
+  const handleMerge = async () => {
+    if (!mergeTargetId || mergeTargetId === file.id) {
+      return;
+    }
+
+    const bodies: SubmitActionBody[] = [];
+
+    // Transfer all authors from source to target
+    for (const authorId of file.authors.map((fa) => fa.author.id)) {
+      bodies.push({ type: "disconnect_from_author", target_id: file.id, note: encodeNote({ v: 1, author_id: authorId }) });
+      bodies.push({ type: "connect_to_author", target_id: mergeTargetId, note: encodeNote({ v: 1, author_id: authorId }) });
+    }
+
+    // Transfer all online copies from source to target
+    for (const copyId of file.online_copies.map((c) => c.id)) {
+      bodies.push({ type: "disconnect_from_online_copy", target_id: file.id, online_copy_id: copyId });
+      bodies.push({ type: "connect_to_online_copy", target_id: mergeTargetId, online_copy_id: copyId });
+    }
+
+    // Transfer all locations from source to target
+    for (const loc of file.locations) {
+      bodies.push({
+        type: "remove_location",
+        target_id: file.id,
+        note: encodeNote({ v: 1, field: "location", value: { lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } }),
+      });
+      bodies.push({
+        type: "add_location",
+        target_id: mergeTargetId,
+        note: encodeNote({ v: 1, field: "location", value: { lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } }),
+      });
+    }
+
+    // Remove the source file after transferring all relations
+    bodies.push({ type: "remove", target_id: file.id });
+
+    if (bodies.length === 1) {
+      // Only remove action, nothing to transfer
+      addToast({ title: "Немає чого переносити", color: "default" });
+      return;
+    }
+
+    await submitBatch(bodies);
+    onSubmitted?.();
+    onClose();
+  };
 
   const handleSubmit = async () => {
     const id = file.id;
@@ -124,6 +179,35 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
           <OnlineCopiesField copies={file.online_copies} target="file" ops={copyOps} onChange={setCopyOps} />
           <AuthorsField linked={linkedAuthors} ops={authorOps} onChange={setAuthorOps} />
           <LocationsField locations={file.locations} ops={locationOps} onChange={setLocationOps} />
+
+          <Divider className="my-2" />
+
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Об&apos;єднати з іншою справою</span>
+            <span className="text-xs text-default-500">
+              Усі автори, локації та онлайн-копії цієї справи буде перенесено до обраної.
+            </span>
+            <Autocomplete
+              size="sm"
+              label="Справа-приймач"
+              inputValue={mergeTargetId}
+              onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
+              items={(mergeCandidates ?? []).filter((f) => f.id !== file.id)}
+              {...editorAutocompleteVirtualization}
+            >
+              {(f) => (
+                <AutocompleteItem key={f.id} textValue={f.code} classNames={wrapItemClassNames}>
+                  <div>
+                    <p>{f.code}</p>
+                    <p className="opacity-70 text-sm">{f.title}</p>
+                  </div>
+                </AutocompleteItem>
+              )}
+            </Autocomplete>
+            <Button size="sm" color="warning" variant="flat" onPress={handleMerge} isDisabled={!mergeTargetId} isLoading={isMutating}>
+              Об&apos;єднати
+            </Button>
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={onClose}>

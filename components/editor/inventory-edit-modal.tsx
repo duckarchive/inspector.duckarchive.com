@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { Divider } from "@heroui/divider";
 import { addToast } from "@heroui/toast";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import OnlineCopiesField, { emptyOnlineCopyOps, OnlineCopyOps } from "@/components/editor/online-copies-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
+import { useEditorInventories } from "@/hooks/useEditor";
+import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 
 interface InventoryEditModalProps {
   inventory: EditorInventory | null;
@@ -19,12 +23,16 @@ interface InventoryEditModalProps {
 }
 
 const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOpen, onClose, onSubmitted }) => {
-  const { submitMany, isMutating } = useSubmitAction("inventory");
+  const { submitMany: submitInventoryActions, isMutating } = useSubmitAction("inventory");
+  const { submitBatch: submitFileBatch } = useSubmitAction("file");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
   const [years, setYears] = useState<YearRange[]>([]);
   const [copyOps, setCopyOps] = useState<OnlineCopyOps>(emptyOnlineCopyOps());
+
+  const [mergeTargetId, setMergeTargetId] = useState<string>("");
+  const { data: mergeCandidates } = useEditorInventories(inventory?.fond_id || undefined);
 
   useEffect(() => {
     if (inventory) {
@@ -33,6 +41,7 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
       setInfo(inventory.info ?? "");
       setYears(inventory.years.map((y) => ({ start_year: y.start_year, end_year: y.end_year })));
       setCopyOps(emptyOnlineCopyOps());
+      setMergeTargetId("");
     }
   }, [inventory]);
 
@@ -71,7 +80,32 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
       return;
     }
 
-    await submitMany(bodies);
+    await submitInventoryActions(bodies);
+    onSubmitted?.();
+    onClose();
+  };
+
+  const handleMerge = async () => {
+    if (!mergeTargetId || mergeTargetId === inventory.id) {
+      return;
+    }
+
+    const sourceFiles = (await fetch(`/api/editor/catalog/files?inventory=${inventory.id}`).then((r) => r.json())) as Array<{
+      id: string;
+    }>;
+    const fileBodies: SubmitActionBody[] = [];
+
+    for (const file of sourceFiles) {
+      fileBodies.push({
+        type: "change_parent",
+        target_id: file.id,
+        note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }),
+      });
+    }
+
+    // Submit file moves and source inventory removal
+    await submitFileBatch(fileBodies);
+    await submitInventoryActions([{ type: "remove", target_id: inventory.id }]);
     onSubmitted?.();
     onClose();
   };
@@ -86,6 +120,35 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
           <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
           <YearRangesField value={years} onChange={setYears} />
           <OnlineCopiesField copies={inventory.online_copies} target="inventory" ops={copyOps} onChange={setCopyOps} />
+
+          <Divider className="my-2" />
+
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Об&apos;єднати з іншим описом</span>
+            <span className="text-xs text-default-500">
+              Усі справи цього опису буде перепривʼязано до обраного.
+            </span>
+            <Autocomplete
+              size="sm"
+              label="Опис-приймач"
+              inputValue={mergeTargetId}
+              onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
+              items={(mergeCandidates ?? []).filter((i) => i.id !== inventory.id)}
+              {...editorAutocompleteVirtualization}
+            >
+              {(i) => (
+                <AutocompleteItem key={i.id} textValue={i.code} classNames={wrapItemClassNames}>
+                  <div>
+                    <p>{i.code}</p>
+                    <p className="opacity-70 text-sm">{i.title}</p>
+                  </div>
+                </AutocompleteItem>
+              )}
+            </Autocomplete>
+            <Button size="sm" color="warning" variant="flat" onPress={handleMerge} isDisabled={!mergeTargetId} isLoading={isMutating}>
+              Об&apos;єднати
+            </Button>
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={onClose}>

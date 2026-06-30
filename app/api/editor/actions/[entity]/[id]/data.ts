@@ -97,7 +97,32 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     case "change_parent": {
       if (entity === "fond") await updateTarget({ archive_id: value });
       else if (entity === "inventory") await updateTarget({ fond_id: value });
-      else await updateTarget({ inventory_id: value });
+      else {
+        // For files, update inventory_id and recalculate full_code
+        const fileId = requireTarget();
+        const file = await tx.file.findUnique({
+          where: { id: fileId },
+          select: { code: true },
+        });
+        if (!file) throw new ActionExecutionError("Справа не знайдена");
+
+        // Get the new inventory with its parent chain to build full_code
+        const newInventory = await tx.inventory.findUnique({
+          where: { id: value },
+          select: {
+            code: true,
+            fond: { select: { code: true, archive: { select: { code: true } } } },
+          },
+        });
+        if (!newInventory) throw new ActionExecutionError("Новий опис не знайдений");
+
+        const archiveCode = newInventory.fond.archive.code || "";
+        const fondCode = newInventory.fond.code || "";
+        const inventoryCode = newInventory.code || "";
+        const fullCode = `${archiveCode}-${fondCode}-${inventoryCode}-${file.code}`;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await updateTarget({ inventory_id: value, full_code: fullCode } as any);
+      }
       return null;
     }
 
@@ -216,6 +241,18 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       return null;
     }
 
+    case "remove": {
+      const id = requireTarget();
+      if (entity === "fond") {
+        await tx.fond.delete({ where: { id } });
+      } else if (entity === "inventory") {
+        await tx.inventory.delete({ where: { id } });
+      } else {
+        await tx.file.delete({ where: { id } });
+      }
+      return null;
+    }
+
     default:
       throw new ActionExecutionError(`Виконання дії "${action.type}" не підтримується`);
   }
@@ -249,6 +286,13 @@ export const resolveAction = async (
 
   return prisma.$transaction(async (tx) => {
     let copyId: string | null = null;
+    // For "remove" actions, mark as resolved BEFORE executing (deleting)
+    // to avoid cascade delete of the action record itself
+    if (action.type === "remove" && resolution === "execute") {
+      await resolveActionRow(tx, entity, id, resolvedBy, false, null);
+      await applyMutation(tx, entity, action);
+      return { id };
+    }
     if (resolution === "execute") {
       copyId = await applyMutation(tx, entity, action);
     }

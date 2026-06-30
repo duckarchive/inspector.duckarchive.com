@@ -189,6 +189,7 @@ export const validateSubmitAction = (entity: EditorEntity, body: SubmitActionBod
     case "change_author_info":
     case "change_author_tags":
     case "change_author_location":
+    case "remove":
     case "report":
       return null;
     default:
