@@ -38,7 +38,7 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
   }, []);
 
   return (
-    <SessionProvider session={session} refetchOnWindowFocus={false}>
+    <SessionProvider session={session} refetchOnWindowFocus refetchInterval={5 * 60}>
       <HeroUIProvider navigate={router.push}>
         <NextThemesProvider defaultTheme="dark" attribute="class">
           <NextIntlClientProvider locale={i18nLocale} messages={i18nMessages} timeZone="UTC">
