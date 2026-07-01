@@ -25,7 +25,7 @@ interface FileEditModalProps {
 }
 
 const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, onSubmitted }) => {
-  const { submitMany, submitBatch, isMutating } = useSubmitAction("file");
+  const { submit, submitMany, isMutating } = useSubmitAction("file");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
@@ -60,54 +60,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
     if (!mergeTargetId || mergeTargetId === file.id) {
       return;
     }
-
-    const bodies: SubmitActionBody[] = [];
-
-    // Transfer all authors from source to target
-    for (const authorId of file.authors.map((fa) => fa.author.id)) {
-      bodies.push({ type: "disconnect_from_author", target_id: file.id, note: encodeNote({ v: 1, author_id: authorId }) });
-      bodies.push({ type: "connect_to_author", target_id: mergeTargetId, note: encodeNote({ v: 1, author_id: authorId }) });
-    }
-
-    // Transfer all online copies from source to target
-    for (const copyId of file.online_copies.map((c) => c.id)) {
-      bodies.push({ type: "disconnect_from_online_copy", target_id: file.id, online_copy_id: copyId });
-      bodies.push({ type: "connect_to_online_copy", target_id: mergeTargetId, online_copy_id: copyId });
-    }
-
-    // Transfer all locations from source to target
-    for (const loc of file.locations) {
-      bodies.push({
-        type: "remove_location",
-        target_id: file.id,
-        note: encodeNote({ v: 1, field: "location", value: { lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } }),
-      });
-      bodies.push({
-        type: "add_location",
-        target_id: mergeTargetId,
-        note: encodeNote({ v: 1, field: "location", value: { lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } }),
-      });
-    }
-
-    // Merge year ranges: remove all from source, add only those not already on target
-    const targetYears = mergeCandidates?.find((f) => f.id === mergeTargetId)?.years ?? [];
-    for (const year of file.years) {
-      bodies.push({ type: "remove_year_range", target_id: file.id, note: encodeNote({ v: 1, field: "year_range", value: year }) });
-      if (!targetYears.some((y) => sameYearRange(y, year))) {
-        bodies.push({ type: "add_year_range", target_id: mergeTargetId, note: encodeNote({ v: 1, field: "year_range", value: year }) });
-      }
-    }
-
-    // Remove the source file after transferring all relations
-    bodies.push({ type: "remove", target_id: file.id });
-
-    if (bodies.length === 1) {
-      // Only remove action, nothing to transfer
-      addToast({ title: "Немає чого переносити", color: "default" });
-      return;
-    }
-
-    await submitBatch(bodies);
+    await submit({ type: "merge_to", target_id: file.id, note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }) });
     onSubmitted?.();
     onClose();
   };

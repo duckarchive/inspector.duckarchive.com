@@ -88,9 +88,44 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     case "change_title":
       await updateTarget({ title: value });
       return null;
-    case "change_code":
+    case "change_code": {
       await updateTarget({ code: value });
+      const codeTarget = requireTarget();
+      if (entity === "file") {
+        const file = await tx.file.findUnique({
+          where: { id: codeTarget },
+          select: { inventory: { select: { code: true, fond: { select: { code: true, archive: { select: { code: true } } } } } } },
+        });
+        if (file) {
+          const { code: invCode, fond: { code: fondCode, archive: { code: archCode } } } = file.inventory;
+          await tx.file.update({ where: { id: codeTarget }, data: { full_code: `${archCode}-${fondCode}-${invCode}-${value}` } });
+        }
+      } else if (entity === "inventory") {
+        const inventory = await tx.inventory.findUnique({
+          where: { id: codeTarget },
+          select: { fond: { select: { code: true, archive: { select: { code: true } } } } },
+        });
+        if (inventory) {
+          const { code: fondCode, archive: { code: archCode } } = inventory.fond;
+          const files = await tx.file.findMany({ where: { inventory_id: codeTarget }, select: { id: true, code: true } });
+          for (const file of files) {
+            await tx.file.update({ where: { id: file.id }, data: { full_code: `${archCode}-${fondCode}-${value}-${file.code}` } });
+          }
+        }
+      } else {
+        const fond = await tx.fond.findUnique({ where: { id: codeTarget }, select: { archive: { select: { code: true } } } });
+        if (fond) {
+          const inventories = await tx.inventory.findMany({ where: { fond_id: codeTarget }, select: { id: true, code: true } });
+          for (const inv of inventories) {
+            const files = await tx.file.findMany({ where: { inventory_id: inv.id }, select: { id: true, code: true } });
+            for (const file of files) {
+              await tx.file.update({ where: { id: file.id }, data: { full_code: `${fond.archive.code}-${value}-${inv.code}-${file.code}` } });
+            }
+          }
+        }
+      }
       return null;
+    }
     case "change_info":
       await updateTarget({ info: value });
       return null;
@@ -253,6 +288,83 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       return null;
     }
 
+    case "merge_to": {
+      const sourceId = requireTarget();
+      const targetId = value as string;
+      if (!targetId) throw new ActionExecutionError("Дія не містить цілі для об'єднання");
+      if (sourceId === targetId) throw new ActionExecutionError("Не можна об'єднати запис із самим собою");
+
+      if (entity === "fond") {
+        await tx.inventory.updateMany({ where: { fond_id: sourceId }, data: { fond_id: targetId } });
+        await tx.fond.delete({ where: { id: sourceId } });
+      } else if (entity === "inventory") {
+        const files = await tx.file.findMany({ where: { inventory_id: sourceId }, select: { id: true, code: true } });
+        const newInventory = await tx.inventory.findUnique({
+          where: { id: targetId },
+          select: { code: true, fond: { select: { code: true, archive: { select: { code: true } } } } },
+        });
+        if (!newInventory) throw new ActionExecutionError("Опис-приймач не знайдений");
+        const { code: invCode, fond: { code: fondCode, archive: { code: archCode } } } = newInventory;
+        for (const file of files) {
+          await tx.file.update({
+            where: { id: file.id },
+            data: { inventory_id: targetId, full_code: `${archCode}-${fondCode}-${invCode}-${file.code}` },
+          });
+        }
+        await tx.inventory.delete({ where: { id: sourceId } });
+      } else {
+        const file = await tx.file.findUnique({
+          where: { id: sourceId },
+          select: {
+            authors: { select: { author_id: true } },
+            online_copies: { select: { id: true, resource_id: true, url: true, parsed: true } },
+            locations: { select: { lat: true, lng: true, radius_m: true } },
+            years: { select: { start_year: true, end_year: true } },
+          },
+        });
+        if (!file) throw new ActionExecutionError("Справа не знайдена");
+
+        for (const { author_id } of file.authors) {
+          await tx.fileAuthor.upsert({
+            where: { file_id_author_id: { file_id: targetId, author_id } },
+            create: { file_id: targetId, author_id },
+            update: {},
+          });
+        }
+        await tx.fileAuthor.deleteMany({ where: { file_id: sourceId } });
+
+        for (const copy of file.online_copies) {
+          const duplicate = await tx.fileOnlineCopy.findFirst({
+            where: { file_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
+          });
+          if (duplicate) {
+            await tx.fileOnlineCopy.delete({ where: { id: copy.id } });
+          } else {
+            await tx.fileOnlineCopy.update({ where: { id: copy.id }, data: { file_id: targetId } });
+          }
+        }
+
+        for (const loc of file.locations) {
+          const duplicate = await tx.fileLocation.findFirst({
+            where: { file_id: targetId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m },
+          });
+          if (!duplicate) {
+            await tx.fileLocation.create({ data: { file_id: targetId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } });
+          }
+        }
+
+        const targetYears = await tx.fileYear.findMany({ where: { file_id: targetId }, select: { start_year: true, end_year: true } });
+        for (const year of file.years) {
+          if (!targetYears.some((y) => y.start_year === year.start_year && y.end_year === year.end_year)) {
+            await tx.fileYear.create({ data: { file_id: targetId, start_year: year.start_year, end_year: year.end_year } });
+          }
+        }
+
+        await tx.file.delete({ where: { id: sourceId } });
+      }
+      return null;
+    }
+
     default:
       throw new ActionExecutionError(`Виконання дії "${action.type}" не підтримується`);
   }
@@ -286,9 +398,9 @@ export const resolveAction = async (
 
   return prisma.$transaction(async (tx) => {
     let copyId: string | null = null;
-    // For "remove" actions, mark as resolved BEFORE executing (deleting)
+    // For "remove" and "merge_to", mark as resolved BEFORE executing (deleting)
     // to avoid cascade delete of the action record itself
-    if (action.type === "remove" && resolution === "execute") {
+    if ((action.type === "remove" || action.type === "merge_to") && resolution === "execute") {
       await resolveActionRow(tx, entity, id, resolvedBy, false, null);
       await applyMutation(tx, entity, action);
       return { id };

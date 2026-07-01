@@ -23,8 +23,7 @@ interface InventoryEditModalProps {
 }
 
 const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOpen, onClose, onSubmitted }) => {
-  const { submitMany: submitInventoryActions, isMutating } = useSubmitAction("inventory");
-  const { submitBatch: submitFileBatch } = useSubmitAction("file");
+  const { submit: submitInventoryAction, submitMany: submitInventoryActions, isMutating } = useSubmitAction("inventory");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
@@ -89,23 +88,7 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
     if (!mergeTargetId || mergeTargetId === inventory.id) {
       return;
     }
-
-    const sourceFiles = (await fetch(`/api/editor/catalog/files?inventory=${inventory.id}`).then((r) => r.json())) as Array<{
-      id: string;
-    }>;
-    const fileBodies: SubmitActionBody[] = [];
-
-    for (const file of sourceFiles) {
-      fileBodies.push({
-        type: "change_parent",
-        target_id: file.id,
-        note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }),
-      });
-    }
-
-    // Submit file moves and source inventory removal
-    await submitFileBatch(fileBodies);
-    await submitInventoryActions([{ type: "remove", target_id: inventory.id }]);
+    await submitInventoryAction({ type: "merge_to", target_id: inventory.id, note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }) });
     onSubmitted?.();
     onClose();
   };

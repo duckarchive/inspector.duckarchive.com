@@ -25,8 +25,7 @@ interface FondEditModalProps {
 }
 
 const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, onClose, onSubmitted }) => {
-  const { submitMany: submitFondActions, isMutating } = useSubmitAction("fond");
-  const { submitBatch: submitInventoryBatch } = useSubmitAction("inventory");
+  const { submit: submitFondAction, submitMany: submitFondActions, isMutating } = useSubmitAction("fond");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
@@ -107,23 +106,7 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
     if (!mergeTargetId || mergeTargetId === fond.id) {
       return;
     }
-
-    const sourceInventories = (await fetch(`/api/editor/catalog/inventories?fond=${fond.id}`).then((r) => r.json())) as Array<{
-      id: string;
-    }>;
-    const inventoryBodies: SubmitActionBody[] = [];
-
-    for (const inventory of sourceInventories) {
-      inventoryBodies.push({
-        type: "change_parent",
-        target_id: inventory.id,
-        note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }),
-      });
-    }
-
-    // Submit inventory moves and source fond removal
-    await submitInventoryBatch(inventoryBodies);
-    await submitFondActions([{ type: "remove", target_id: fond.id }]);
+    await submitFondAction({ type: "merge_to", target_id: fond.id, note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }) });
     onSubmitted?.();
     onClose();
   };

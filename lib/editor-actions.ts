@@ -72,6 +72,7 @@ export const ACTION_TYPE_LABELS: Record<ActionType, string> = {
   remove_online_copy: "Видалити онлайн-копію",
   add: "Додати",
   remove: "Видалити",
+  merge_to: "Об'єднати з",
   change_parent: "Змінити батьківський запис",
   change_title: "Змінити назву",
   change_code: "Змінити індекс",
@@ -191,6 +192,10 @@ export const validateSubmitAction = (entity: EditorEntity, body: SubmitActionBod
     case "change_author_location":
     case "remove":
     case "report":
+      return null;
+    case "merge_to":
+      if (!target_id) return `"target_id" обовʼязковий для "${type}"`;
+      if (!note) return `"note" обовʼязковий для "${type}"`;
       return null;
     default:
       return `Тип дії "${type}" не підтримується`;
