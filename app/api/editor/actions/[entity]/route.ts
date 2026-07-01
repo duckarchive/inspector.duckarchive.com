@@ -28,16 +28,18 @@ export async function POST(
   if (user.is_banned) {
     return NextResponse.json({ message: "Banned" }, { status: 403 });
   }
-  // TODO: allow editors once the Duck API exposes is_editor.
-  if (!user.is_admin) {
-    return NextResponse.json({ message: "Forbidden" }, { status: 403 });
-  }
 
   let body: SubmitActionBody;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ message: "Invalid JSON body" }, { status: 422 });
+  }
+
+  // "report" is open to any authenticated user; all other types require admin.
+  // TODO: allow editors once the Duck API exposes is_editor.
+  if (body.type !== "report" && !user.is_admin) {
+    return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
 
   const validationError = validateSubmitAction(entity, body);

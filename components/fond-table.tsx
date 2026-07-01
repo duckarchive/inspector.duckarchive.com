@@ -6,6 +6,7 @@ import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
+import ReportButton from "./report-button";
 import { sortByCode } from "@/lib/table";
 import useFond from "@/hooks/useFond";
 import { GetFondResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/route";
@@ -47,7 +48,9 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
         basePath="/catalog/"
         description={fond?.title || "Без назви"}
         message={<Details fond={fond} />}
-      />
+      >
+        <ReportButton entity="fond" targetId={fond?.id} />
+      </PagePanel>
       <InspectorDuckTable<TableItem>
         id="fond-table"
         resources={resources}
