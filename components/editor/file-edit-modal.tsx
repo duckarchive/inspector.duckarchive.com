@@ -89,6 +89,15 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
       });
     }
 
+    // Merge year ranges: remove all from source, add only those not already on target
+    const targetYears = mergeCandidates?.find((f) => f.id === mergeTargetId)?.years ?? [];
+    for (const year of file.years) {
+      bodies.push({ type: "remove_year_range", target_id: file.id, note: encodeNote({ v: 1, field: "year_range", value: year }) });
+      if (!targetYears.some((y) => sameYearRange(y, year))) {
+        bodies.push({ type: "add_year_range", target_id: mergeTargetId, note: encodeNote({ v: 1, field: "year_range", value: year }) });
+      }
+    }
+
     // Remove the source file after transferring all relations
     bodies.push({ type: "remove", target_id: file.id });
 
@@ -190,9 +199,8 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
             <Autocomplete
               size="sm"
               label="Справа-приймач"
-              inputValue={mergeTargetId}
               onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-              items={(mergeCandidates ?? []).filter((f) => f.id !== file.id)}
+              defaultItems={(mergeCandidates ?? []).filter((f) => f.id !== file.id)}
               {...editorAutocompleteVirtualization}
             >
               {(f) => (

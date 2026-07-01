@@ -162,9 +162,8 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
             <Autocomplete
               size="sm"
               label="Фонд-приймач"
-              inputValue={mergeTargetId}
               onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-              items={(mergeCandidates ?? []).filter((f) => f.id !== fond.id)}
+              defaultItems={(mergeCandidates ?? []).filter((f) => f.id !== fond.id)}
               {...editorAutocompleteVirtualization}
             >
               {(f) => (

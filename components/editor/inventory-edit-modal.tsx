@@ -131,9 +131,8 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
             <Autocomplete
               size="sm"
               label="Опис-приймач"
-              inputValue={mergeTargetId}
               onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-              items={(mergeCandidates ?? []).filter((i) => i.id !== inventory.id)}
+              defaultItems={(mergeCandidates ?? []).filter((i) => i.id !== inventory.id)}
               {...editorAutocompleteVirtualization}
             >
               {(i) => (
