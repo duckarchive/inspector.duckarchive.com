@@ -1,0 +1,18 @@
+kind,level,ref,detail
+sequence-gap,fund,ЦДНТА,88 missing in 17..107: 19-106
+sequence-gap,case,ЦДНТА-Р107-3,"365 missing in 1..2318: 5,14-15,23-26,34,38,40-45,48,50,54-55,61-62,64,72,76,97-99,101-104,106-107,110-111,126,131,165,…"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162314,"parsed ""ЦДНТА-(Р-17-3-9-14+++Р-17-3-9-14+++Р-17-3-9-14)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162316,"parsed ""ЦДНТА-(Р-17-3-9-20+++Р-17-3-9-20+++Р-17-3-9-20)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162321,"parsed ""ЦДНТА-(Р-17-3-9-17+++Р-17-3-9-17+++Р-17-3-9-17)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162329,"parsed ""ЦДНТА-(Р-17-3-9-23+++Р-17-3-9-23+++Р-17-3-9-23)"" does not single out one of 14 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162335,"parsed ""ЦДНТА-(Р-17-3-9-27+++Р-17-3-9-27+++Р-17-3-9-27)"" does not single out one of 18 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162336,"parsed ""ЦДНТА-(Р-17-3-9-28+++Р-17-3-9-28+++Р-17-3-9-28)"" does not single out one of 19 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162327,"parsed ""ЦДНТА-(Р-17-3-9-16+++Р-17-3-9-16+++Р-17-3-9-16)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162353,"parsed ""ЦДНТА-(Р-17-3-9-37+++Р-17-3-9-37+++Р-17-3-9-37)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162324,"parsed ""ЦДНТА-(Р-17-3-9-22+++Р-17-3-9-22+++Р-17-3-9-22)"" does not single out one of 13 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162343,"parsed ""ЦДНТА-(Р-17-3-9-32+++Р-17-3-9-32+++Р-17-3-9-32)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162362,"parsed ""ЦДНТА-(Р-17-3-9-44+++Р-17-3-9-44+++Р-17-3-9-44)"" does not single out one of 35 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162365,"parsed ""ЦДНТА-(Р-17-3-9-47+++Р-17-3-9-47+++Р-17-3-9-47)"" does not single out one of 7 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162411,"parsed ""ЦДНТА-(Р-17-3-9-40+++Р-17-3-9-40+++Р-17-3-9-40)"" does not single out one of 31 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162437,"parsed ""ЦДНТА-(Р-17-3-9-108+++Р-17-3-9-108+++Р-17-3-9-108)"" does not single out one of 60 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=122162368,"parsed ""ЦДНТА-(Р-17-3-9-48+++Р-17-3-9-48+++Р-17-3-9-48)"" does not single out one of 39 candidate files"

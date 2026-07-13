@@ -1,0 +1,5 @@
+kind,level,ref,detail
+sequence-gap,fund,ЦАЗУНР,"4448 missing in 1..4460: 2-580,582-1072,1074-2187,2189-2191,2193-3504,3506-3697,3699-3981,3983-4435,4437-4439,4441-4450,4452-4459"
+sequence-gap,case,ЦАЗУНР-2188-1,"2 missing in 1..287: 130,197"
+sequence-gap,case,ЦАЗУНР-2188-3,"2 missing in 1..60: 46,50"
+sequence-gap,case,ЦАЗУНР-4451-1,17 missing in 1..102: 26-42

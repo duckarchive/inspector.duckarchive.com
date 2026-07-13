@@ -1,0 +1,6 @@
+kind,level,ref,detail
+sequence-gap,fund,ГДАСБУ,"34 missing in 1..70: 14-15,18-19,30,36-41,43-59,62-64,66-67,69"
+sequence-gap,description,ГДАСБУ-2,"441 missing in 1..445: 2-260,263-444"
+sequence-gap,case,ГДАСБУ-6-6,30 missing in 1..66: 31-60
+sequence-gap,case,ГДАСБУ-16-1,"1140 missing in 1..1169: 25-1095,1097-1108,1110-1161,1163,1165-1168"
+sequence-gap,case,ГДАСБУ-11-1,8 missing in 760..769: 761-768

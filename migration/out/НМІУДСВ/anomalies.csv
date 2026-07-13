@@ -1,0 +1,16 @@
+kind,level,ref,detail
+sequence-gap,description,НМІУДСВ-ТФ1,"255 missing in 5149..5517: 5164-5211,5214-5278,5297-5384,5409,5448-5500"
+sequence-gap,case,НМІУДСВ-ТФ1-5445,"29 missing in 1..50: 6,20-23,25-47,49"
+sequence-gap,case,НМІУДСВ-ТФ1-5501,1 missing in 1..14: 11
+sequence-gap,case,НМІУДСВ-ТФ1-5436,1 missing in 1..18: 12
+sequence-gap,case,НМІУДСВ-ТФ1-5503,1 missing in 1..34: 9
+sequence-gap,case,НМІУДСВ-ТФ1-5149,"2 missing in 1..52: 37,39"
+sequence-gap,case,НМІУДСВ-ТФ1-5509,11 missing in 1..30: 19-29
+sequence-gap,case,НМІУДСВ-ТФ1-5286,1 missing in 1..84: 8
+sequence-gap,case,НМІУДСВ-ТФ1-5153,1 missing in 2..19: 3
+sequence-gap,case,НМІУДСВ-ТФ1-5433,2 missing in 1..49: 43-44
+sequence-gap,case,НМІУДСВ-ТФ1-5404,1 missing in 1..10: 6
+sequence-gap,case,НМІУДСВ-ТФ1-5416,4 missing in 1..22: 18-21
+sequence-gap,case,НМІУДСВ-ТФ1-5420,1 missing in 1..20: 17
+sequence-gap,case,НМІУДСВ-ТФ1-5423,"5 missing in 2..32: 6,12-14,16"
+sequence-gap,case,НМІУДСВ-ТФ1-5446,"24 missing in 1..41: 11-12,14-35"

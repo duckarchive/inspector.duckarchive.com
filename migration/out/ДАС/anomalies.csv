@@ -1,0 +1,5 @@
+kind,level,ref,detail
+junk-code,fund,ДАС/КМФ,"irregular shape, migrated as ""КМФ"""
+junk-code,fund,ДАС/ВИДАННЯ,"irregular shape, migrated as ""ВИДАННЯ"""
+sequence-gap,fund,ДАС,"3 missing in 1..35: 14,28-29"
+sequence-gap,description,ДАС-Р9,2 missing in 1..4: 2-3

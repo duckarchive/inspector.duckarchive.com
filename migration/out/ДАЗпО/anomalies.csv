@@ -1,0 +1,188 @@
+kind,level,ref,detail
+sequence-gap,fund,ДАЗпО,"557419 missing in 1..559324: 38,120,125,130,138,144,155,159,164,205,217-218,287,292,294-297,299-302,306-314,319,335-338,341,345,…"
+sequence-gap,description,ДАЗпО-Р5593,2 missing in 1..30: 28-29
+sequence-gap,description,ДАЗпО-21,2 missing in 1..9: 2-3
+sequence-gap,description,ДАЗпО-Р419,1 missing in 1..4: 3
+sequence-gap,case,ДАЗпО-12-2,"99 missing in 25..300: 42-44,46-56,102-129,131-140,142-155,163-164,166,208,213,215-221,223-225,229,231,284-299"
+sequence-gap,case,ДАЗпО-19-1,"160 missing in 1..236: 40-41,45,63-78,80-220"
+sequence-gap,case,ДАЗпО-117-1,"3 missing in 1..21: 9,12-13"
+sequence-gap,case,ДАЗпО-126-1,5 missing in 1..15: 3-7
+sequence-gap,case,ДАЗпО-140-1,"25 missing in 2..51: 3-12,14-16,18-22,24,27,29-30,34,39,49"
+sequence-gap,case,ДАЗпО-145-1,"21 missing in 1..39: 3-5,7,9-11,15,18,23-24,26,28,30,32-38"
+sequence-gap,case,ДАЗпО-147-1,"29 missing in 2..57: 3,14,16-42"
+merge,case,ДАЗпО-148-1/3,merged variants: 3 + 03
+merge,case,ДАЗпО-148-1/4,merged variants: 4 + 04
+sequence-gap,case,ДАЗпО-149-1,"12 missing in 2..53: 3-5,9-10,22,37,39,42-45"
+sequence-gap,case,ДАЗпО-151-1,5 missing in 1..18: 13-17
+sequence-gap,case,ДАЗпО-157-1,19 missing in 1..41: 11-29
+sequence-gap,case,ДАЗпО-169-1,1 missing in 1..23: 15
+sequence-gap,case,ДАЗпО-242-1,1 missing in 1..16: 5
+sequence-gap,case,ДАЗпО-245-1,1 missing in 2..61: 49
+sequence-gap,case,ДАЗпО-246-1,"1665 missing in 1..1859: 4,89,105,120,156,175,200-1858"
+sequence-gap,case,ДАЗпО-255-1,"2 missing in 410..504: 459,464"
+sequence-gap,case,ДАЗпО-Р5593-16,"4 missing in 1..213: 17-18,23,105"
+sequence-gap,case,ДАЗпО-Р5593-17,1 missing in 1..239: 150
+sequence-gap,case,ДАЗпО-Р5593-1,"255 missing in 1..419: 2-15,24-36,46-50,54,56-71,76,106-108,112-115,117-123,136,138-142,151-162,164,166-171,189-190,202,207-208,210-212,222,261-410,…"
+sequence-gap,case,ДАЗпО-Р5593-2,"1285 missing in 1..2211: 2,4,19,26-30,32-33,35-36,38-40,43-45,52-53,55,61-65,72-75,81,86-90,93-95,99,109,114-116,133,136-138,…"
+sequence-gap,case,ДАЗпО-Р5593-3,"2199 missing in 1..2918: 54,65,67-72,84-87,142,153,194-195,222,303-306,315-320,336-337,375,384,419,434,440-443,483,489-491,493-494,496-501,…"
+sequence-gap,case,ДАЗпО-Р5593-4,"6 missing in 1..321: 20,31,51,63,71,79"
+sequence-gap,case,ДАЗпО-Р5593-5,"47 missing in 1..259: 4,7-10,19-20,27-28,31,33-34,37,39-40,42,49,60,63,67,70-71,73,75,81,83,86,91,…"
+sequence-gap,case,ДАЗпО-Р5593-6,"48 missing in 1..202: 2,7-12,15-19,21-23,27-33,37,39-40,43-44,46-52,54,57-61,63,66-67,69,76,80,84-85"
+sequence-gap,case,ДАЗпО-Р5593-7,"67 missing in 2..243: 3-6,8,11,14-17,19,24-26,29-30,32,34,37-39,41-46,49-50,53-54,56,59,61,64-66,68-69,73-77,79,…"
+sequence-gap,case,ДАЗпО-Р5593-8,"24 missing in 1..73: 6,8-11,13-14,16-17,19-20,23-25,27,30,32-34,36,44,46,49-50"
+sequence-gap,case,ДАЗпО-Р5593-9,"44 missing in 1..246: 9,13,16,26,31,37,50,55-56,63-64,67,79,94,96,100,105-107,109-110,112,115-119,121-126,129,…"
+sequence-gap,case,ДАЗпО-Р5593-10,"21 missing in 1..250: 25,27,33,48,59,62,67-69,72-75,80,86,91,93,96,98,115-116"
+sequence-gap,case,ДАЗпО-Р5593-11,"44 missing in 1..239: 3-8,11,13-14,16-17,19,27,29,31-35,45-47,50,53,55-59,61-64,86,88,90,93,98,100-102,104,…"
+sequence-gap,case,ДАЗпО-Р5593-12,"22 missing in 1..178: 3,5,8-9,11-12,14,22,28,30-33,38,40,42-48"
+sequence-gap,case,ДАЗпО-Р5593-13,"49 missing in 1..1132: 15,30,142,213-227,232,237,340,375-376,402-403,441,472-473,504,531,553,560-561,568,606,613,624,626-628,…"
+sequence-gap,case,ДАЗпО-Р5593-14,"60 missing in 1..70: 8-66,69"
+sequence-gap,case,ДАЗпО-Р5593-15,"2 missing in 1..182: 42,58"
+sequence-gap,case,ДАЗпО-Р5593-18,"16 missing in 1..141: 3-8,11-12,18,22,24,26-29,49"
+sequence-gap,case,ДАЗпО-Р5593-20,"20 missing in 4..306: 9-16,18-19,21-22,25,32,38,47,59,72,163,294"
+sequence-gap,case,ДАЗпО-Р5593-21,"4 missing in 1..357: 14,66,69,84"
+sequence-gap,case,ДАЗпО-Р5593-22,"11 missing in 1..217: 5-6,10,13,52,56-60,130"
+sequence-gap,case,ДАЗпО-Р5593-23,"2 missing in 1..231: 11,95"
+sequence-gap,case,ДАЗпО-24-1,"1023 missing in 1..1088: 3,7-28,32-33,36,38-45,48-53,57-60,64-70,74-88,90-91,95-129,134-192,197-205,207,209-253,255-292,294-299,301-303,306-341,343-421,…"
+sequence-gap,case,ДАЗпО-Р5747-3,"2145 missing in 1..11423: 1745,1863,2178,2397,2603,2696,2805-2806,2819,2846-2850,2894,2911,2928,2956,2995-2997,2999,3140,3148,3157,3167,3285,…"
+sequence-gap,case,ДАЗпО-5593-2,"891 missing in 71..984: 72-215,217-485,487-524,526-540,542-574,576-612,614,616-630,632-633,635-712,714-721,723-735,737-739,741-745,747-832,834-888,890-978"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_004_M92W-TK9,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_002_M92W-TKM,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_005_M92W-TKS,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007816580_003_M9K7-33L,"parsed ""ДАЗпО-(Volume 5593-2/575+++Volume 5593-2/575+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_008_M92W-TV1,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_001_M92W-TVB,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_003_M92W-TVT,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_006_M92W-TVY,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814757_001_M92X-561,"parsed ""ДАЗпО-(5593-2-473+++5593-2-473+++5593-2-473)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814757_004_M92X-5X9,"parsed ""ДАЗпО-(5593-2-476+++5593-2-476+++5593-2-476)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814757_003_M92X-5XM,"parsed ""ДАЗпО-(5593-2-475+++5593-2-475+++5593-2-475)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814757_002_M92X-5XS,"parsed ""ДАЗпО-(5593-2-474+++5593-2-474+++5593-2-474)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_004_M92X-G43,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_006_M92X-G47,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_008_M92X-G49,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_003_M92X-G4M,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_001_M92X-G4Q,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_007_M92X-G4S,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_005_M92X-GW1,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814701_002_M92X-GWB,"parsed ""ДАЗпО-(Volume 5593-2/278-285+++Volume 5593-2/278-285+++)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814759_004_M92X-RM5,"parsed ""ДАЗпО-(5593-2-483+++5593-2-483+++5593-2-483)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814717_001_M92X-RM9,"parsed ""ДАЗпО-(Volume 5593-2/365-368+++Volume 5593-2/365-368+++)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814717_003_M92X-RMM,"parsed ""ДАЗпО-(Volume 5593-2/365-368+++Volume 5593-2/365-368+++)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814759_002_M92X-RMP,"parsed ""ДАЗпО-(5593-2-481+++5593-2-481+++5593-2-481)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814759_001_M92X-RMR,"parsed ""ДАЗпО-(5593-2-480+++5593-2-480+++5593-2-480)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814717_002_M92X-RMS,"parsed ""ДАЗпО-(Volume 5593-2/365-368+++Volume 5593-2/365-368+++)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814759_003_M92X-RMT,"parsed ""ДАЗпО-(5593-2-482+++5593-2-482+++5593-2-482)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814717_004_M92X-ZC1,"parsed ""ДАЗпО-(Volume 5593-2/365-368+++Volume 5593-2/365-368+++)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811774,"parsed ""ДАЗпО-(Volume 5593-1/195-199+++Volume 5593-1/195-199+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811779,"parsed ""ДАЗпО-(Volume 5593-1/149; Volume 5593-1/150; Volume 5593-1/163; Volume 5593-1/165+++Volume 5593-1/149+++)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007810975,"parsed ""ДАЗпО-(Volume 5593-1/109-111+++Volume 5593-1/109-111+++)"" does not single out one of 3 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812153,"parsed ""ДАЗпО-(5593-2-130; 5593-2-131; 5593-2-132; 5593-2-134+++5593-2-130+++5593-2-130_1882-1883 
+5593-2-131_1885-1887 
+5593-2-132_1874-1879,1888-1891 
+5593-2-134_1897)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812145,"parsed ""ДАЗпО-(Volume 5593-2/96 96-97+++Volume 5593-2/96 96-97+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812156,"parsed ""ДАЗпО-(Volume 5593-2/143-148+++Volume 5593-2/143-148+++)"" does not single out one of 6 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812401,"parsed ""ДАЗпО-(Volume 5593-2/191-192+++Volume 5593-2/191-192+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811772,"parsed ""ДАЗпО-(Р5593-1-230; Р5593-1-231; Р5593-1-232; Р5593-1-233; Р5593-1-234; Р5593-1-235; Р5593-1-236; Р5593-1-237; Р5593-1-238; Р5593-1-239; Р5593-1-240; Р5593-1-241; Р5593-1-242; Р5593-1-243; Р5593-1-244+++Р5593-1-230+++Р5593-1-230
+Р5593-1-231
+Р5593-1-232
+Р5593-1-233
+Р5593-1-234
+Р5593-1-235
+Р5593-1-236
+Р5593-1-237
+Р5593-1-238
+Р5593-1-239
+Р5593-1-240
+Р5593-1-241
+Р5593-1-242
+Р5593-1-243
+Р5593-1-244)"" does not single out one of 15 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811791,"parsed ""ДАЗпО-(Volume 5593-1/213-216+++Volume 5593-1/213-216+++)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007813386,"parsed ""ДАЗпО-(114-1-1; 114-1-2+++114-1-1+++114-1-1_1824,1815-1835 
+114-1-2_1836-1847)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814700,"parsed ""ДАЗпО-(Volume 5593-2/266-270+++Volume 5593-2/266-270+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814723,"parsed ""ДАЗпО-(Volume 5593-2/402-410+++Volume 5593-2/402-410+++)"" does not single out one of 9 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814747,"parsed ""ДАЗпО-(5593-2-432; 5593-2-433; 5593-2-434; 5593-2-435; 5593-2-436+++5593-2-432+++5593-2-432_1900 
+5593-2-433_1901-1905 
+5593-2-434_1864-1883 
+5593-2-435_1884-1905 
+5593-2-436_1864-1880)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814755,"parsed ""ДАЗпО-(5593-2-465; 5593-2-466; 5593-2-467; 5593-2-468; 5593-2-469+++5593-2-465+++5593-2-465_1881-1882 
+5593-2-466_1883 
+5593-2-467_1884-1885 
+5593-2-468_1886 
+5593-2-469_1888,1898)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814718,"parsed ""ДАЗпО-(Volume 5593-2/369-374+++Volume 5593-2/369-374+++)"" does not single out one of 6 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814762,"parsed ""ДАЗпО-(5593-2-490; 5593-2-491; 5593-2-492+++5593-2-490+++5593-2-490_1871-1874 
+5593-2-491_1885-1888 
+5593-2-492_1893)"" does not single out one of 3 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007815755,"parsed ""ДАЗпО-(Volume 5593-2/530-533+++Volume 5593-2/530-533+++)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007816577,"parsed ""ДАЗпО-(Volume 5593-2/586 (cont; Volume 5593-2/591+++Volume 5593-2/586 (cont+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007817385,"parsed ""ДАЗпО-(5593-2-654; 5593-2-655; 5593-2-656; 5593-2-657+++5593-2-654+++5593-2-654_1895-1896 
+5593-2-655_1897-1898 
+5593-2-656_1899-1900 
+5593-2-657_1901-1903)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007818331,"parsed ""ДАЗпО-(Volume 5593-2/783; Volume 5593-2/785+++Volume 5593-2/783+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007818341,"parsed ""ДАЗпО-(Volume 5593-2/713 (cont+++Volume 5593-2/713 (cont+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007817381,"parsed ""ДАЗпО-(5593-2-634; 5593-2-635; 5593-2-636; 5593-2-637; 5593-2-638; 5593-2-639+++5593-2-634+++5593-2-634_1887-1889 
+5593-2-635_1889 
+5593-2-636_1892 
+5593-2-637_1895-1896 
+5593-2-638_1897-1899 
+5593-2-639_1901-1902)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007820118,"parsed ""ДАЗпО-(5593-3-653; 5593-3-654; 5593-3-655; 5593-3-656+++5593-3-653+++5593-3-653_1911 
+5593-3-654_1912 
+5593-3-655_1913 
+5593-3-656_1914)"" does not single out one of 4 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007820186,"parsed ""ДАЗпО-(5593-2-893; 5593-2-894; 5593-2-895; 5593-2-896; 5593-2-897; 5593-2-898; 5593-2-899; 5593-2-900+++5593-2-893+++5593-2-893_1888 
+5593-2-894_1889 
+5593-2-895_1890 
+5593-2-896_1891 
+5593-2-897_1892 
+5593-2-898_1893 
+5593-2-899_1894 
+5593-2-900_1895)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007820187,"parsed ""ДАЗпО-(5593-2-900; 5593-2-901; 5593-2-902; 5593-2-903; 5593-2-904; 5593-2-905; 5593-2-906; 5593-2-907+++5593-2-900+++5593-2-900_1895 
+5593-2-901_1896 
+5593-2-902_1897 
+5593-2-903_1898 
+5593-2-904_1899 
+5593-2-905_1900 
+5593-2-906_1901 
+5593-2-907_1903)"" does not single out one of 8 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007820221,"parsed ""ДАЗпО-(5593-2-917; 5593-2-918; 5593-2-919; 5593-2-920; 5593-2-921; 5593-2-922+++5593-2-917+++5593-2-917_1896 
+5593-2-918_1897 
+5593-2-919_1898 
+5593-2-920_1900 
+5593-2-921_1902 
+5593-2-922_1904)"" does not single out one of 6 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007818347,"parsed ""ДАЗпО-(Volume 5593-2/740 (cont+++Volume 5593-2/740 (cont+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007821194,"parsed ""ДАЗпО-(Volume 5593-2/722+++Volume 5593-2/722+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007823899,"parsed ""ДАЗпО-(5593-3-373; 5593-3-374; 5593-3-376; 5593-3-377; 5593-3-378+++5593-3-373+++5593-3-373_1902-1908 
+5593-3-374_1909-1914 
+5593-3-376_1885,1908 
+5593-3-377_1907 
+5593-3-378_1909-1910)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=004002476,"parsed ""ДАЗпО-(Volume 5593-2/117-118+++Volume 5593-2/117-118+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812138_001_M924-29S,"parsed ""ДАЗпО-(Volume 5593-2/69-70+++Volume 5593-2/69-70+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812138_006_M924-29W,"parsed ""ДАЗпО-(Volume 5593-2/69-70+++Volume 5593-2/69-70+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812139_002_M92H-362,"parsed ""ДАЗпО-(Volume 5593-2/76-80+++Volume 5593-2/76-80+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812139_005_M92H-36G,"parsed ""ДАЗпО-(Volume 5593-2/76-80+++Volume 5593-2/76-80+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812139_004_M92H-36K,"parsed ""ДАЗпО-(Volume 5593-2/76-80+++Volume 5593-2/76-80+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812139_003_M92H-36L,"parsed ""ДАЗпО-(Volume 5593-2/76-80+++Volume 5593-2/76-80+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007812139_001_M92H-36V,"parsed ""ДАЗпО-(Volume 5593-2/76-80+++Volume 5593-2/76-80+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811801_003_M92K-4N2,"parsed ""ДАЗпО-(Volume 5593-2/20-24+++Volume 5593-2/20-24+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811801_002_M92K-4NG,"parsed ""ДАЗпО-(Volume 5593-2/20-24+++Volume 5593-2/20-24+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811801_005_M92K-4NL,"parsed ""ДАЗпО-(Volume 5593-2/20-24+++Volume 5593-2/20-24+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814708_002_M92V-9T4,"parsed ""ДАЗпО-(Volume 5593-1/251-252+++Volume 5593-1/251-252+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007814708_001_M92V-9TH,"parsed ""ДАЗпО-(Volume 5593-1/251-252+++Volume 5593-1/251-252+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811801_006_M92V-LTK,"parsed ""ДАЗпО-(Volume 5593-2/20-24+++Volume 5593-2/20-24+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811801_001_M92V-LTV,"parsed ""ДАЗпО-(Volume 5593-2/20-24+++Volume 5593-2/20-24+++)"" does not single out one of 5 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811760_008_M92W-1M3,"parsed ""ДАЗпО-(Volume 5593-1/143-149+++Volume 5593-1/143-149+++)"" does not single out one of 7 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811760_003_M92W-1M7,"parsed ""ДАЗпО-(Volume 5593-1/143-149+++Volume 5593-1/143-149+++)"" does not single out one of 7 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811760_006_M92W-1M9,"parsed ""ДАЗпО-(Volume 5593-1/143-149+++Volume 5593-1/143-149+++)"" does not single out one of 7 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811470_003_M92W-BJH,"parsed ""ДАЗпО-(Volume 5593-2/71+++Volume 5593-2/71+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811470_002_M92W-BJW,"parsed ""ДАЗпО-(Volume 5593-2/71+++Volume 5593-2/71+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811470_004_M92W-BJZ,"parsed ""ДАЗпО-(Volume 5593-2/71+++Volume 5593-2/71+++)"" does not single out one of 2 candidate files"
+copy-ambiguous,file,https://www.familysearch.org/en/records/images/search-results?imageGroupNumbers=007811194_007_M92W-TK3,"parsed ""ДАЗпО-(Volume 5593-1/16-23+++Volume 5593-1/16-23+++)"" does not single out one of 8 candidate files"
