@@ -16,7 +16,8 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetEditorOnlin
     return NextResponse.json({ message: '"target" must be "inventory" or "file"' }, { status: 400 });
   }
   const unlinkedOnly = req.nextUrl.searchParams.get("unlinked") !== "false";
+  const query = req.nextUrl.searchParams.get("q")?.trim() || undefined;
 
-  const copies = await getEditorOnlineCopies(target as OnlineCopyTarget, unlinkedOnly);
+  const copies = await getEditorOnlineCopies(target as OnlineCopyTarget, unlinkedOnly, query);
   return NextResponse.json(copies);
 }

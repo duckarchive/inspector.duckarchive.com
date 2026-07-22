@@ -4,6 +4,9 @@ import { useMemo, useState } from "react";
 import { Button, ButtonGroup } from "@heroui/button";
 import { Checkbox } from "@heroui/checkbox";
 import { Chip } from "@heroui/chip";
+import { Link } from "@heroui/link";
+import { FaCheck, FaPen, FaTimes } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import { useEditorActions } from "@/hooks/useEditor";
 import useResolveAction from "@/hooks/useResolveAction";
 import {
@@ -29,8 +32,93 @@ const STATUS_FILTER_LABELS: Record<ActionStatus | "all", string> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const targetLabel = (data: any): string =>
-  data?.fond?.code ?? data?.inventory?.code ?? data?.file?.full_code ?? data?.file?.code ?? "—";
+const catalogTarget = (data: any): { label: string; href: string | null } | null => {
+  const enc = (...segments: (string | undefined)[]): string | null => {
+    if (segments.some((s) => !s)) return null;
+    return `/catalog/${segments.map((s) => encodeURIComponent(s as string)).join("/")}`;
+  };
+  if (data?.fond) {
+    return { label: data.fond.code, href: enc(data.fond.archive?.code, data.fond.code) };
+  }
+  if (data?.inventory) {
+    return {
+      label: data.inventory.code,
+      href: enc(data.inventory.fond?.archive?.code, data.inventory.fond?.code, data.inventory.code),
+    };
+  }
+  if (data?.file) {
+    const inv = data.file.inventory;
+    return {
+      label: data.file.full_code || data.file.code,
+      href: enc(inv?.fond?.archive?.code, inv?.fond?.code, inv?.code, data.file.code),
+    };
+  }
+  return null;
+};
+
+/** Editor catalog page for this entity with the filter cascade + edit modal prefilled. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const editorHref = (entity: EditorEntity, data: any): string | null => {
+  const q = (params: Record<string, string | undefined>): string | null => {
+    if (Object.values(params).some((v) => !v)) return null;
+    return new URLSearchParams(params as Record<string, string>).toString();
+  };
+  if (entity === "fond" && data?.fond) {
+    const query = q({ archive: data.fond.archive?.code, edit: data.fond.id });
+    return query ? `/editor/catalog/fonds?${query}` : null;
+  }
+  if (entity === "inventory" && data?.inventory) {
+    const query = q({
+      archive: data.inventory.fond?.archive?.code,
+      fond: data.inventory.fond?.id,
+      edit: data.inventory.id,
+    });
+    return query ? `/editor/catalog/inventories?${query}` : null;
+  }
+  if (entity === "file" && data?.file) {
+    const inv = data.file.inventory;
+    const query = q({
+      archive: inv?.fond?.archive?.code,
+      fond: inv?.fond?.id,
+      inventory: inv?.id,
+      edit: data.file.id,
+    });
+    return query ? `/editor/catalog/files?${query}` : null;
+  }
+  return null;
+};
+
+const hostLabel = (url: string): string => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "джерело";
+  }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const targetCell = (data: any) => {
+  const target = catalogTarget(data);
+  const copyUrl: string | undefined = data?.online_copy?.url ?? undefined;
+  if (!target && !copyUrl) return "—";
+  return (
+    <div className="flex flex-col gap-0.5">
+      {target &&
+        (target.href ? (
+          <Link href={target.href} size="sm" isExternal>
+            {target.label}
+          </Link>
+        ) : (
+          <span>{target.label}</span>
+        ))}
+      {copyUrl && (
+        <Link href={copyUrl} size="sm" isExternal className="text-default-500">
+          {hostLabel(copyUrl)}
+        </Link>
+      )}
+    </div>
+  );
+};
 
 const noteLabel = (note: string | null): string => {
   const decoded = decodeNote(note);
@@ -61,6 +149,7 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
   const [page, setPage] = useState(1);
   const { data: actions, isLoading, mutate } = useEditorActions(entity, status === "all" ? undefined : { status });
   const { resolveMany, isResolving } = useResolveAction(entity);
+  const router = useRouter();
 
   const rows = useMemo(() => actions ?? [], [actions]);
   const totalPages = useMemo(() => Math.ceil(rows.length / ITEMS_PER_PAGE), [rows.length]);
@@ -154,17 +243,47 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
                     {pending && <Checkbox isSelected={selected.has(row.id)} onValueChange={() => toggle(row.id)} aria-label="Обрати" />}
                   </td>
                   <td className="p-2">{ACTION_TYPE_LABELS[row.type as ActionType] ?? row.type}</td>
-                  <td className="p-2">{targetLabel(row)}</td>
+                  <td className="p-2">{targetCell(row)}</td>
                   <td className="p-2 max-w-xs break-words">{noteLabel(row.note)}</td>
                   <td className="p-2">{statusChip(row)}</td>
                   <td className="p-2">
                     {pending && (
                       <div className="flex gap-1 justify-end">
-                        <Button size="sm" color="success" isLoading={isResolving} onPress={() => resolve([row.id], "execute")}>
-                          Виконати
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          color="success"
+                          title="Виконати"
+                          aria-label="Виконати"
+                          isLoading={isResolving}
+                          onPress={() => resolve([row.id], "execute")}
+                        >
+                          <FaCheck />
                         </Button>
-                        <Button size="sm" color="danger" variant="flat" isLoading={isResolving} onPress={() => resolve([row.id], "reject")}>
-                          Відхилити
+                        {editorHref(entity, row) && (
+                          <Button
+                            isIconOnly
+                            size="sm"
+                            color="primary"
+                            variant="flat"
+                            title="Редагувати вручну"
+                            aria-label="Редагувати вручну"
+                            onPress={() => router.push(editorHref(entity, row) as string)}
+                          >
+                            <FaPen />
+                          </Button>
+                        )}
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          color="danger"
+                          variant="flat"
+                          title="Відхилити"
+                          aria-label="Відхилити"
+                          isLoading={isResolving}
+                          onPress={() => resolve([row.id], "reject")}
+                        >
+                          <FaTimes />
                         </Button>
                       </div>
                     )}

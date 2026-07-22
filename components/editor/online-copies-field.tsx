@@ -1,6 +1,6 @@
 "use client";
 
-import { Key, useMemo } from "react";
+import { Key, useMemo, useRef, useState } from "react";
 import { Chip } from "@heroui/chip";
 import { Button } from "@heroui/button";
 import Select from "@/components/select";
@@ -32,12 +32,14 @@ const toggle = (list: string[], id: string): string[] =>
   list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
 
 const OnlineCopiesField: React.FC<OnlineCopiesFieldProps> = ({ copies, target, ops, onChange }) => {
-  const { data: unlinked } = useEditorOnlineCopies(target, true);
+  const [query, setQuery] = useState("");
+  const { data: unlinked, isLoading } = useEditorOnlineCopies(target, true, query || undefined);
 
+  // accumulate labels across queries so already-picked chips survive a new search
+  const labelCache = useRef(new Map<string, string>());
   const labelById = useMemo(() => {
-    const map = new Map<string, string>();
-    unlinked?.forEach((c) => map.set(c.id, c.parsed || c.url));
-    return map;
+    unlinked?.forEach((c) => labelCache.current.set(c.id, c.parsed || c.url));
+    return labelCache.current;
   }, [unlinked]);
 
   const connect = (key: Key | null) => {
@@ -79,7 +81,7 @@ const OnlineCopiesField: React.FC<OnlineCopiesFieldProps> = ({ copies, target, o
         </div>
       )}
       <Select
-        label="Прив'язати наявну онлайн-копію"
+        label="Прив'язати наявну онлайн-копію (пошук по коду або url)"
         wrapUrls
         items={unlinked ?? []}
         getKey={(c) => c.id}
@@ -90,8 +92,11 @@ const OnlineCopiesField: React.FC<OnlineCopiesFieldProps> = ({ copies, target, o
             <span className={`line-clamp-1 ${c.parsed ? "text-tiny text-default-400" : ""}`}>{c.url}</span>
           </div>
         )}
+        inputValue={query}
+        onInputChange={setQuery}
         onChange={connect}
       />
+      {isLoading && <span className="text-tiny text-default-400">Пошук…</span>}
     </div>
   );
 };

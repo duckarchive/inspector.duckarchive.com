@@ -1,6 +1,6 @@
 "use client";
 
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
 import EditCell from "@/components/editor/edit-cell";
@@ -11,6 +11,7 @@ import { useEditorFonds } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { Button } from "@heroui/button";
+import { syncEditorUrl } from "@/lib/editor-url";
 
 export default function EditorFondsPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -18,6 +19,23 @@ export default function EditorFondsPage() {
   const { data: fonds, isLoading, mutate } = useEditorFonds(archiveCode || undefined);
   const [selected, setSelected] = useState<EditorFond | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [pendingEditId, setPendingEditId] = useState<string | null>(null);
+
+  // deep link from the actions dashboard: ?archive=…&edit=<fond_id>
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("archive")) setArchiveCode(params.get("archive") as string);
+    if (params.get("edit")) setPendingEditId(params.get("edit"));
+  }, []);
+
+  useEffect(() => {
+    if (!pendingEditId || !fonds) return;
+    const fond = fonds.find((f) => f.id === pendingEditId);
+    if (fond) {
+      setSelected(fond);
+      setPendingEditId(null);
+    }
+  }, [pendingEditId, fonds]);
 
   return (
     <section className="flex flex-col gap-4">
@@ -36,7 +54,11 @@ export default function EditorFondsPage() {
             </div>
           )}
           value={archiveCode}
-          onChange={(key: Key | null) => setArchiveCode(String(key ?? ""))}
+          onChange={(key: Key | null) => {
+            const v = String(key ?? "");
+            setArchiveCode(v);
+            syncEditorUrl({ archive: v || null, edit: null });
+          }}
           
         />
 
@@ -67,7 +89,13 @@ export default function EditorFondsPage() {
             flex: 2,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
-              <EditCell hasPending={row.data.has_pending_action} onEdit={() => setSelected(row.data)} />
+              <EditCell
+                hasPending={row.data.has_pending_action}
+                onEdit={() => {
+                  setSelected(row.data);
+                  syncEditorUrl({ edit: row.data.id });
+                }}
+              />
             ),
           },
         ]}
@@ -77,7 +105,10 @@ export default function EditorFondsPage() {
         fond={selected}
         archives={archives ?? []}
         isOpen={Boolean(selected)}
-        onClose={() => setSelected(null)}
+        onClose={() => {
+          setSelected(null);
+          syncEditorUrl({ edit: null });
+        }}
         onSubmitted={mutate}
       />
       <FondAddModal archives={archives ?? []} isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmitted={mutate} />

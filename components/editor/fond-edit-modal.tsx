@@ -114,7 +114,10 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
       <ModalContent>
-        <ModalHeader>Редагувати фонд {fond.code}</ModalHeader>
+        <ModalHeader className="flex flex-col gap-0.5">
+          Редагувати фонд {fond.code}
+          <span className="text-tiny font-normal text-default-400 select-all">{fond.id}</span>
+        </ModalHeader>
         <ModalBody className="gap-3">
           <Select
             items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}

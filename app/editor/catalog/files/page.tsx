@@ -1,6 +1,6 @@
 "use client";
 
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
 import EditCell from "@/components/editor/edit-cell";
@@ -12,6 +12,7 @@ import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { sortByCode } from "@/lib/table";
+import { syncEditorUrl } from "@/lib/editor-url";
 import { Button } from "@heroui/button";
 
 export default function EditorFilesPage() {
@@ -24,6 +25,25 @@ export default function EditorFilesPage() {
   const { data: files, isLoading, mutate } = useEditorFiles(inventoryId || undefined);
   const [selected, setSelected] = useState<EditorFile | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [pendingEditId, setPendingEditId] = useState<string | null>(null);
+
+  // deep link from the actions dashboard: ?archive=…&fond=…&inventory=…&edit=<file_id>
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("archive")) setArchiveCode(params.get("archive") as string);
+    if (params.get("fond")) setFondId(params.get("fond") as string);
+    if (params.get("inventory")) setInventoryId(params.get("inventory") as string);
+    if (params.get("edit")) setPendingEditId(params.get("edit"));
+  }, []);
+
+  useEffect(() => {
+    if (!pendingEditId || !files) return;
+    const file = files.find((f) => f.id === pendingEditId);
+    if (file) {
+      setSelected(file);
+      setPendingEditId(null);
+    }
+  }, [pendingEditId, files]);
 
   const selectedInventory = inventories?.find((i) => i.id === inventoryId) as EditorInventory | undefined;
 
@@ -46,9 +66,11 @@ export default function EditorFilesPage() {
             )}
             value={archiveCode}
             onChange={(key: Key | null) => {
-              setArchiveCode(String(key ?? ""));
+              const v = String(key ?? "");
+              setArchiveCode(v);
               setFondId("");
               setInventoryId("");
+              syncEditorUrl({ archive: v || null, fond: null, inventory: null, edit: null });
             }}
           />
           <Select
@@ -67,8 +89,10 @@ export default function EditorFilesPage() {
             )}
             value={fondId}
             onChange={(key: Key | null) => {
-              setFondId(String(key ?? ""));
+              const v = String(key ?? "");
+              setFondId(v);
               setInventoryId("");
+              syncEditorUrl({ fond: v || null, inventory: null, edit: null });
             }}
           />
           <Select
@@ -86,7 +110,11 @@ export default function EditorFilesPage() {
               </div>
             )}
             value={inventoryId}
-            onChange={(key: Key | null) => setInventoryId(String(key ?? ""))}
+            onChange={(key: Key | null) => {
+              const v = String(key ?? "");
+              setInventoryId(v);
+              syncEditorUrl({ inventory: v || null, edit: null });
+            }}
           />
         </div>
         <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!inventoryId}>
@@ -119,7 +147,13 @@ export default function EditorFilesPage() {
             flex: 2,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
-              <EditCell hasPending={row.data.has_pending_action} onEdit={() => setSelected(row.data)} />
+              <EditCell
+                hasPending={row.data.has_pending_action}
+                onEdit={() => {
+                  setSelected(row.data);
+                  syncEditorUrl({ edit: row.data.id });
+                }}
+              />
             ),
           },
         ]}
@@ -128,7 +162,10 @@ export default function EditorFilesPage() {
       <FileEditModal
         file={selected}
         isOpen={Boolean(selected)}
-        onClose={() => setSelected(null)}
+        onClose={() => {
+          setSelected(null);
+          syncEditorUrl({ edit: null });
+        }}
         onSubmitted={mutate}
       />
       <FileAddModal inventory={selectedInventory ?? null} isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmitted={mutate} />

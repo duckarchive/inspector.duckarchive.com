@@ -132,7 +132,10 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
       <ModalContent>
-        <ModalHeader>Редагувати справу {file.full_code || file.code}</ModalHeader>
+        <ModalHeader className="flex flex-col gap-0.5">
+          Редагувати справу {file.full_code || file.code}
+          <span className="text-tiny font-normal text-default-400 select-all">{file.id}</span>
+        </ModalHeader>
         <ModalBody className="gap-3">
           <Input label="Код" value={code} onValueChange={setCode} />
           <Input label="Назва" value={title} onValueChange={setTitle} />

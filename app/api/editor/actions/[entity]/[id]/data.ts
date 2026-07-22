@@ -58,6 +58,150 @@ const inferResourceId = async (tx: Tx, url: string): Promise<string> => {
 };
 
 /** Apply the catalog mutation described by an action. Returns the created copy id (add_online_copy). */
+// ── merge_to helpers ───────────────────────────────────────────────────────
+// A blind re-parent trips the unique [code, parent_id] when the target already
+// holds a same-code child — such children merge recursively instead. Online
+// copies and year ranges are re-pointed/copied before the source's cascade
+// delete so scraper-owned rows survive the merge.
+
+const mergeFileInto = async (tx: Tx, sourceId: string, targetId: string): Promise<void> => {
+  const file = await tx.file.findUnique({
+    where: { id: sourceId },
+    select: {
+      authors: { select: { author_id: true } },
+      online_copies: { select: { id: true, resource_id: true, url: true, parsed: true } },
+      locations: { select: { lat: true, lng: true, radius_m: true } },
+      years: { select: { start_year: true, end_year: true } },
+    },
+  });
+  if (!file) throw new ActionExecutionError("Справа не знайдена");
+
+  for (const { author_id } of file.authors) {
+    await tx.fileAuthor.upsert({
+      where: { file_id_author_id: { file_id: targetId, author_id } },
+      create: { file_id: targetId, author_id },
+      update: {},
+    });
+  }
+  await tx.fileAuthor.deleteMany({ where: { file_id: sourceId } });
+
+  for (const copy of file.online_copies) {
+    const duplicate = await tx.fileOnlineCopy.findFirst({
+      where: { file_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
+    });
+    if (duplicate) {
+      await tx.fileOnlineCopy.delete({ where: { id: copy.id } });
+    } else {
+      await tx.fileOnlineCopy.update({ where: { id: copy.id }, data: { file_id: targetId } });
+    }
+  }
+
+  for (const loc of file.locations) {
+    const duplicate = await tx.fileLocation.findFirst({
+      where: { file_id: targetId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m },
+    });
+    if (!duplicate) {
+      await tx.fileLocation.create({ data: { file_id: targetId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } });
+    }
+  }
+
+  const targetYears = await tx.fileYear.findMany({ where: { file_id: targetId }, select: { start_year: true, end_year: true } });
+  for (const year of file.years) {
+    if (!targetYears.some((y) => y.start_year === year.start_year && y.end_year === year.end_year)) {
+      await tx.fileYear.create({ data: { file_id: targetId, start_year: year.start_year, end_year: year.end_year } });
+    }
+  }
+
+  await tx.file.delete({ where: { id: sourceId } });
+};
+
+const mergeInventoryInto = async (tx: Tx, sourceId: string, targetId: string): Promise<void> => {
+  const target = await tx.inventory.findUnique({
+    where: { id: targetId },
+    select: { code: true, fond: { select: { code: true, archive: { select: { code: true } } } } },
+  });
+  if (!target) throw new ActionExecutionError("Опис-приймач не знайдений");
+  const prefix = `${target.fond.archive.code}-${target.fond.code}-${target.code}`;
+
+  const files = await tx.file.findMany({ where: { inventory_id: sourceId }, select: { id: true, code: true } });
+  for (const file of files) {
+    const existing = await tx.file.findUnique({
+      where: { code_inventory_id: { code: file.code, inventory_id: targetId } },
+      select: { id: true },
+    });
+    if (existing) {
+      await mergeFileInto(tx, file.id, existing.id);
+    } else {
+      await tx.file.update({
+        where: { id: file.id },
+        data: { inventory_id: targetId, full_code: `${prefix}-${file.code}` },
+      });
+    }
+  }
+
+  const copies = await tx.inventoryOnlineCopy.findMany({
+    where: { inventory_id: sourceId },
+    select: { id: true, resource_id: true, url: true, parsed: true },
+  });
+  for (const copy of copies) {
+    const duplicate = await tx.inventoryOnlineCopy.findFirst({
+      where: { inventory_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
+    });
+    if (duplicate) {
+      await tx.inventoryOnlineCopy.delete({ where: { id: copy.id } });
+    } else {
+      await tx.inventoryOnlineCopy.update({ where: { id: copy.id }, data: { inventory_id: targetId } });
+    }
+  }
+
+  const targetYears = await tx.inventoryYear.findMany({ where: { inventory_id: targetId }, select: { start_year: true, end_year: true } });
+  const sourceYears = await tx.inventoryYear.findMany({ where: { inventory_id: sourceId }, select: { start_year: true, end_year: true } });
+  for (const year of sourceYears) {
+    if (!targetYears.some((y) => y.start_year === year.start_year && y.end_year === year.end_year)) {
+      await tx.inventoryYear.create({ data: { inventory_id: targetId, start_year: year.start_year, end_year: year.end_year } });
+    }
+  }
+
+  await tx.inventory.delete({ where: { id: sourceId } });
+};
+
+const mergeFondInto = async (tx: Tx, sourceId: string, targetId: string): Promise<void> => {
+  const target = await tx.fond.findUnique({
+    where: { id: targetId },
+    select: { code: true, archive: { select: { code: true } } },
+  });
+  if (!target) throw new ActionExecutionError("Фонд-приймач не знайдений");
+
+  const inventories = await tx.inventory.findMany({ where: { fond_id: sourceId }, select: { id: true, code: true } });
+  for (const inventory of inventories) {
+    const existing = await tx.inventory.findUnique({
+      where: { code_fond_id: { code: inventory.code, fond_id: targetId } },
+      select: { id: true },
+    });
+    if (existing) {
+      await mergeInventoryInto(tx, inventory.id, existing.id);
+      continue;
+    }
+    await tx.inventory.update({ where: { id: inventory.id }, data: { fond_id: targetId } });
+    // the fond segment of the files' full_code changes with the new parent
+    const prefix = `${target.archive.code}-${target.code}-${inventory.code}`;
+    const files = await tx.file.findMany({ where: { inventory_id: inventory.id }, select: { id: true, code: true } });
+    for (const file of files) {
+      await tx.file.update({ where: { id: file.id }, data: { full_code: `${prefix}-${file.code}` } });
+    }
+  }
+
+  const targetYears = await tx.fondYear.findMany({ where: { fond_id: targetId }, select: { start_year: true, end_year: true } });
+  const sourceYears = await tx.fondYear.findMany({ where: { fond_id: sourceId }, select: { start_year: true, end_year: true } });
+  for (const year of sourceYears) {
+    if (!targetYears.some((y) => y.start_year === year.start_year && y.end_year === year.end_year)) {
+      await tx.fondYear.create({ data: { fond_id: targetId, start_year: year.start_year, end_year: year.end_year } });
+    }
+  }
+
+  await tx.fond.delete({ where: { id: sourceId } });
+};
+
 const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord): Promise<string | null> => {
   const decoded = decodeNote(action.note);
   const payload = decoded && !("raw" in decoded) ? decoded : null;
@@ -294,74 +438,9 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       if (!targetId) throw new ActionExecutionError("Дія не містить цілі для об'єднання");
       if (sourceId === targetId) throw new ActionExecutionError("Не можна об'єднати запис із самим собою");
 
-      if (entity === "fond") {
-        await tx.inventory.updateMany({ where: { fond_id: sourceId }, data: { fond_id: targetId } });
-        await tx.fond.delete({ where: { id: sourceId } });
-      } else if (entity === "inventory") {
-        const files = await tx.file.findMany({ where: { inventory_id: sourceId }, select: { id: true, code: true } });
-        const newInventory = await tx.inventory.findUnique({
-          where: { id: targetId },
-          select: { code: true, fond: { select: { code: true, archive: { select: { code: true } } } } },
-        });
-        if (!newInventory) throw new ActionExecutionError("Опис-приймач не знайдений");
-        const { code: invCode, fond: { code: fondCode, archive: { code: archCode } } } = newInventory;
-        for (const file of files) {
-          await tx.file.update({
-            where: { id: file.id },
-            data: { inventory_id: targetId, full_code: `${archCode}-${fondCode}-${invCode}-${file.code}` },
-          });
-        }
-        await tx.inventory.delete({ where: { id: sourceId } });
-      } else {
-        const file = await tx.file.findUnique({
-          where: { id: sourceId },
-          select: {
-            authors: { select: { author_id: true } },
-            online_copies: { select: { id: true, resource_id: true, url: true, parsed: true } },
-            locations: { select: { lat: true, lng: true, radius_m: true } },
-            years: { select: { start_year: true, end_year: true } },
-          },
-        });
-        if (!file) throw new ActionExecutionError("Справа не знайдена");
-
-        for (const { author_id } of file.authors) {
-          await tx.fileAuthor.upsert({
-            where: { file_id_author_id: { file_id: targetId, author_id } },
-            create: { file_id: targetId, author_id },
-            update: {},
-          });
-        }
-        await tx.fileAuthor.deleteMany({ where: { file_id: sourceId } });
-
-        for (const copy of file.online_copies) {
-          const duplicate = await tx.fileOnlineCopy.findFirst({
-            where: { file_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
-          });
-          if (duplicate) {
-            await tx.fileOnlineCopy.delete({ where: { id: copy.id } });
-          } else {
-            await tx.fileOnlineCopy.update({ where: { id: copy.id }, data: { file_id: targetId } });
-          }
-        }
-
-        for (const loc of file.locations) {
-          const duplicate = await tx.fileLocation.findFirst({
-            where: { file_id: targetId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m },
-          });
-          if (!duplicate) {
-            await tx.fileLocation.create({ data: { file_id: targetId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } });
-          }
-        }
-
-        const targetYears = await tx.fileYear.findMany({ where: { file_id: targetId }, select: { start_year: true, end_year: true } });
-        for (const year of file.years) {
-          if (!targetYears.some((y) => y.start_year === year.start_year && y.end_year === year.end_year)) {
-            await tx.fileYear.create({ data: { file_id: targetId, start_year: year.start_year, end_year: year.end_year } });
-          }
-        }
-
-        await tx.file.delete({ where: { id: sourceId } });
-      }
+      if (entity === "fond") await mergeFondInto(tx, sourceId, targetId);
+      else if (entity === "inventory") await mergeInventoryInto(tx, sourceId, targetId);
+      else await mergeFileInto(tx, sourceId, targetId);
       return null;
     }
 
@@ -409,5 +488,6 @@ export const resolveAction = async (
       copyId = await applyMutation(tx, entity, action);
     }
     return resolveActionRow(tx, entity, id, resolvedBy, resolution === "reject", copyId);
-  });
+    // fond/inventory merges walk every child row — far beyond the 5s default
+  }, { timeout: 120_000 });
 };

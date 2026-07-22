@@ -78,12 +78,31 @@ export const fondActionInclude = {
 } satisfies Prisma.FondActionsInclude;
 
 export const inventoryActionInclude = {
-  inventory: { select: { id: true, code: true, fond: { select: { code: true } } } },
+  inventory: {
+    select: {
+      id: true,
+      code: true,
+      fond: { select: { id: true, code: true, archive: { select: { code: true } } } },
+    },
+  },
   online_copy: { select: { id: true, url: true } },
 } satisfies Prisma.InventoryActionsInclude;
 
 export const fileActionInclude = {
-  file: { select: { id: true, code: true, full_code: true } },
+  file: {
+    select: {
+      id: true,
+      code: true,
+      full_code: true,
+      inventory: {
+        select: {
+          id: true,
+          code: true,
+          fond: { select: { id: true, code: true, archive: { select: { code: true } } } },
+        },
+      },
+    },
+  },
   online_copy: { select: { id: true, url: true } },
 } satisfies Prisma.FileActionsInclude;
 
@@ -94,7 +113,9 @@ export type ActionRow = FondActionRow | InventoryActionRow | FileActionRow;
 
 export const listActions = async (entity: EditorEntity, filters: ListActionsFilters): Promise<ActionRow[]> => {
   const where = baseWhere(filters);
-  const orderBy = { created_at: "desc" as const };
+  // id as tiebreaker: bulk-inserted actions share one created_at, and without a
+  // stable secondary key their order shuffles between fetches
+  const orderBy = [{ created_at: "desc" as const }, { id: "desc" as const }];
 
   switch (entity) {
     case "fond":

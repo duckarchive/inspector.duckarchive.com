@@ -96,7 +96,10 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
       <ModalContent>
-        <ModalHeader>Редагувати опис {inventory.code}</ModalHeader>
+        <ModalHeader className="flex flex-col gap-0.5">
+          Редагувати опис {inventory.code}
+          <span className="text-tiny font-normal text-default-400 select-all">{inventory.id}</span>
+        </ModalHeader>
         <ModalBody className="gap-3">
           <Input label="Код" value={code} onValueChange={setCode} />
           <Input label="Назва" value={title} onValueChange={setTitle} />

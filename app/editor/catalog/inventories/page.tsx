@@ -1,6 +1,6 @@
 "use client";
 
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
 import EditCell from "@/components/editor/edit-cell";
@@ -12,6 +12,7 @@ import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { Button } from "@heroui/button";
+import { syncEditorUrl } from "@/lib/editor-url";
 
 export default function EditorInventoriesPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -21,6 +22,24 @@ export default function EditorInventoriesPage() {
   const { data: inventories, isLoading, mutate } = useEditorInventories(fondId || undefined);
   const [selected, setSelected] = useState<EditorInventory | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [pendingEditId, setPendingEditId] = useState<string | null>(null);
+
+  // deep link from the actions dashboard: ?archive=…&fond=…&edit=<inventory_id>
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("archive")) setArchiveCode(params.get("archive") as string);
+    if (params.get("fond")) setFondId(params.get("fond") as string);
+    if (params.get("edit")) setPendingEditId(params.get("edit"));
+  }, []);
+
+  useEffect(() => {
+    if (!pendingEditId || !inventories) return;
+    const inventory = inventories.find((i) => i.id === pendingEditId);
+    if (inventory) {
+      setSelected(inventory);
+      setPendingEditId(null);
+    }
+  }, [pendingEditId, inventories]);
 
   const selectedFond = fonds?.find((f) => f.id === fondId) as EditorFond | undefined;
 
@@ -42,10 +61,11 @@ export default function EditorInventoriesPage() {
             )}
             value={archiveCode}
             onChange={(key: Key | null) => {
-              setArchiveCode(String(key ?? ""));
+              const v = String(key ?? "");
+              setArchiveCode(v);
               setFondId("");
+              syncEditorUrl({ archive: v || null, fond: null, edit: null });
             }}
-            
           />
           <Select
             items={fonds ?? []}
@@ -61,7 +81,11 @@ export default function EditorInventoriesPage() {
               </div>
             )}
             value={fondId}
-            onChange={(key: Key | null) => setFondId(String(key ?? ""))}
+            onChange={(key: Key | null) => {
+              const v = String(key ?? "");
+              setFondId(v);
+              syncEditorUrl({ fond: v || null, edit: null });
+            }}
             
           />
         </div>
@@ -89,7 +113,13 @@ export default function EditorInventoriesPage() {
             flex: 2,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
-              <EditCell hasPending={row.data.has_pending_action} onEdit={() => setSelected(row.data)} />
+              <EditCell
+                hasPending={row.data.has_pending_action}
+                onEdit={() => {
+                  setSelected(row.data);
+                  syncEditorUrl({ edit: row.data.id });
+                }}
+              />
             ),
           },
         ]}
@@ -98,7 +128,10 @@ export default function EditorInventoriesPage() {
       <InventoryEditModal
         inventory={selected}
         isOpen={Boolean(selected)}
-        onClose={() => setSelected(null)}
+        onClose={() => {
+          setSelected(null);
+          syncEditorUrl({ edit: null });
+        }}
         onSubmitted={mutate}
       />
       <InventoryAddModal

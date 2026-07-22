@@ -24,8 +24,10 @@ export const useEditorAuthors = (query?: string) =>
 export const useAuthorFiles = (authorId?: string) =>
   useGet<GetAuthorFilesResponse>(authorId ? `/api/editor/authors/${authorId}` : null);
 
-export const useEditorOnlineCopies = (target: OnlineCopyTarget, unlinkedOnly = true) =>
-  useGet<GetEditorOnlineCopiesResponse>(`/api/editor/online-copies?target=${target}&unlinked=${unlinkedOnly}`);
+export const useEditorOnlineCopies = (target: OnlineCopyTarget, unlinkedOnly = true, query?: string) =>
+  useGet<GetEditorOnlineCopiesResponse>(
+    `/api/editor/online-copies?target=${target}&unlinked=${unlinkedOnly}${query ? `&q=${encodeURIComponent(query)}` : ""}`,
+  );
 
 export const useEditorActions = (
   entity: EditorEntity,
