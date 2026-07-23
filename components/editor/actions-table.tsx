@@ -6,7 +6,6 @@ import { Checkbox } from "@heroui/checkbox";
 import { Chip } from "@heroui/chip";
 import { Link } from "@heroui/link";
 import { FaCheck, FaPen, FaTimes } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { useEditorActions } from "@/hooks/useEditor";
 import useResolveAction from "@/hooks/useResolveAction";
 import {
@@ -149,7 +148,6 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
   const [page, setPage] = useState(1);
   const { data: actions, isLoading, mutate } = useEditorActions(entity, status === "all" ? undefined : { status });
   const { resolveMany, isResolving } = useResolveAction(entity);
-  const router = useRouter();
 
   const rows = useMemo(() => actions ?? [], [actions]);
   const totalPages = useMemo(() => Math.ceil(rows.length / ITEMS_PER_PAGE), [rows.length]);
@@ -263,12 +261,15 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
                         {editorHref(entity, row) && (
                           <Button
                             isIconOnly
+                            as="a"
+                            href={editorHref(entity, row) as string}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             size="sm"
                             color="primary"
                             variant="flat"
                             title="Редагувати вручну"
                             aria-label="Редагувати вручну"
-                            onPress={() => router.push(editorHref(entity, row) as string)}
                           >
                             <FaPen />
                           </Button>
