@@ -17,6 +17,7 @@
     "@duckarchive/framework": "github:duckarchive/framework",
     "@duckarchive/map": "github:duckarchive/map",
     "@duckarchive/prisma": "github:duckarchive/prisma",
+    "@google/genai": "^2.13.0",
     "@heroui/accordion": "^2.2.25",
     "@heroui/autocomplete": "^2.3.30",
     "@heroui/avatar": "^2.2.23",
