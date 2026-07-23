@@ -113,28 +113,29 @@ export type ActionRow = FondActionRow | InventoryActionRow | FileActionRow;
 
 export const listActions = async (entity: EditorEntity, filters: ListActionsFilters): Promise<ActionRow[]> => {
   const where = baseWhere(filters);
-  // id as tiebreaker: bulk-inserted actions share one created_at, and without a
-  // stable secondary key their order shuffles between fetches
-  const orderBy = [{ created_at: "desc" as const }, { id: "desc" as const }];
+  // newest first; same-timestamp rows (bulk-loaded batches) group by archive, with
+  // id as the final tiebreaker so the order is stable between fetches
+  const newestFirst = { created_at: "desc" as const };
+  const stableId = { id: "desc" as const };
 
   switch (entity) {
     case "fond":
       return prisma.fondActions.findMany({
         where: { ...where, ...(filters.target_id ? { fond_id: filters.target_id } : {}) },
         include: fondActionInclude,
-        orderBy,
+        orderBy: [newestFirst, { fond: { archive: { code: "asc" } } }, stableId],
       });
     case "inventory":
       return prisma.inventoryActions.findMany({
         where: { ...where, ...(filters.target_id ? { inventory_id: filters.target_id } : {}) },
         include: inventoryActionInclude,
-        orderBy,
+        orderBy: [newestFirst, { inventory: { fond: { archive: { code: "asc" } } } }, stableId],
       });
     case "file":
       return prisma.fileActions.findMany({
         where: { ...where, ...(filters.target_id ? { file_id: filters.target_id } : {}) },
         include: fileActionInclude,
-        orderBy,
+        orderBy: [newestFirst, { file: { inventory: { fond: { archive: { code: "asc" } } } } }, stableId],
       });
   }
 };

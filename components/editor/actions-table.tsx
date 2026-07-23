@@ -123,6 +123,11 @@ const noteLabel = (note: string | null): string => {
   const decoded = decodeNote(note);
   if (!decoded) return "";
   if ("raw" in decoded) return decoded.raw;
+  // "add" payload: the whole new entity rides in value
+  if (decoded.field === "parent" && typeof decoded.value === "object" && decoded.value && "code" in decoded.value) {
+    const v = decoded.value as { code?: string; title?: string };
+    return ["новий запис", v.code, v.title].filter(Boolean).join(" · ");
+  }
   const parts: string[] = [];
   if (decoded.field) parts.push(decoded.field);
   if (decoded.value !== undefined) parts.push(typeof decoded.value === "object" ? JSON.stringify(decoded.value) : String(decoded.value));

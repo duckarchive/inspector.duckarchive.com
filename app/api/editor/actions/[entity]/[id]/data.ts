@@ -420,6 +420,56 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       return null;
     }
 
+    case "add": {
+      const v = value as
+        | { parent_id?: string; code?: string; title?: string; info?: string; years?: { start_year: number; end_year: number }[] }
+        | undefined;
+      if (!v?.parent_id || !v?.code?.trim()) throw new ActionExecutionError("Дія не містить даних для створення");
+      const code = v.code.trim();
+      const base = { code, title: v.title ?? null, info: v.info ?? null };
+      const years = { create: (v.years ?? []).map((y) => ({ start_year: y.start_year, end_year: y.end_year })) };
+
+      if (entity === "fond") {
+        const archive = await tx.archive.findUnique({ where: { id: v.parent_id }, select: { id: true } });
+        if (!archive) throw new ActionExecutionError("Архів не знайдений");
+        const duplicate = await tx.fond.findUnique({
+          where: { code_archive_id: { code, archive_id: v.parent_id } },
+          select: { id: true },
+        });
+        if (duplicate) throw new ActionExecutionError(`Фонд з кодом "${code}" вже існує в цьому архіві`);
+        await tx.fond.create({ data: { ...base, archive_id: v.parent_id, years } });
+      } else if (entity === "inventory") {
+        const fond = await tx.fond.findUnique({ where: { id: v.parent_id }, select: { id: true } });
+        if (!fond) throw new ActionExecutionError("Фонд не знайдений");
+        const duplicate = await tx.inventory.findUnique({
+          where: { code_fond_id: { code, fond_id: v.parent_id } },
+          select: { id: true },
+        });
+        if (duplicate) throw new ActionExecutionError(`Опис з кодом "${code}" вже існує в цьому фонді`);
+        await tx.inventory.create({ data: { ...base, fond_id: v.parent_id, years } });
+      } else {
+        const inventory = await tx.inventory.findUnique({
+          where: { id: v.parent_id },
+          select: { code: true, fond: { select: { code: true, archive: { select: { code: true } } } } },
+        });
+        if (!inventory) throw new ActionExecutionError("Опис не знайдений");
+        const duplicate = await tx.file.findUnique({
+          where: { code_inventory_id: { code, inventory_id: v.parent_id } },
+          select: { id: true },
+        });
+        if (duplicate) throw new ActionExecutionError(`Справа з кодом "${code}" вже існує в цьому описі`);
+        await tx.file.create({
+          data: {
+            ...base,
+            inventory_id: v.parent_id,
+            full_code: `${inventory.fond.archive.code}-${inventory.fond.code}-${inventory.code}-${code}`,
+            years,
+          },
+        });
+      }
+      return null;
+    }
+
     case "remove": {
       const id = requireTarget();
       if (entity === "fond") {

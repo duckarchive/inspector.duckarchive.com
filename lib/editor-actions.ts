@@ -44,6 +44,17 @@ export interface ActionNotePayload {
   text?: string;
 }
 
+/** `value` payload of an "add" action: the new entity, held in the note until the
+ * action is approved (the FK target column stays NULL — the row doesn't exist yet). */
+export interface AddActionValue {
+  /** archive id for a fond, fond id for an inventory, inventory id for a file */
+  parent_id: string;
+  code: string;
+  title?: string;
+  info?: string;
+  years?: YearRange[];
+}
+
 export const encodeNote = (payload: ActionNotePayload): string => JSON.stringify(payload);
 
 export type DecodedNote = ActionNotePayload | { raw: string } | null;
@@ -151,6 +162,15 @@ export const validateSubmitAction = (entity: EditorEntity, body: SubmitActionBod
   }
 
   switch (type) {
+    case "add": {
+      if (target_id) return '"target_id" не використовується для "add" — новий запис ще не існує';
+      const decoded = decodeNote(note);
+      if (!decoded || "raw" in decoded) return '"note" з даними нового запису обовʼязковий';
+      const value = decoded.value as Partial<AddActionValue> | undefined;
+      if (!value?.parent_id) return 'Дія "add" потребує parent_id у note';
+      if (!value.code?.trim()) return 'Дія "add" потребує code у note';
+      return null;
+    }
     case "change_title":
     case "change_code":
     case "change_info":

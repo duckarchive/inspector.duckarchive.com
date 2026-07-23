@@ -7,7 +7,7 @@ import { Input, Textarea } from "@heroui/input";
 import { addToast } from "@heroui/toast";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
-import { encodeNote, SubmitActionBody, YearRange } from "@/lib/editor-actions";
+import { AddActionValue, encodeNote, YearRange } from "@/lib/editor-actions";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 
 interface FileAddModalProps {
@@ -18,7 +18,7 @@ interface FileAddModalProps {
 }
 
 const FileAddModal: React.FC<FileAddModalProps> = ({ inventory, isOpen, onClose, onSubmitted }) => {
-  const { submitMany, isMutating } = useSubmitAction("file");
+  const { submit, isMutating } = useSubmitAction("file");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
@@ -43,38 +43,16 @@ const FileAddModal: React.FC<FileAddModalProps> = ({ inventory, isOpen, onClose,
       return;
     }
 
-    const bodies: SubmitActionBody[] = [
-      {
-        type: "add",
-        target_id: inventory.id,
-        note: encodeNote({ v: 1, field: "code", value: code.trim() }),
-      },
-    ];
-
-    if (title.trim()) {
-      bodies.push({
-        type: "change_title",
-        target_id: inventory.id,
-        note: encodeNote({ v: 1, field: "title", value: title.trim() }),
-      });
-    }
-    if (info.trim()) {
-      bodies.push({
-        type: "change_info",
-        target_id: inventory.id,
-        note: encodeNote({ v: 1, field: "info", value: info.trim() }),
-      });
-    }
-
-    for (const year of years) {
-      bodies.push({
-        type: "add_year_range",
-        target_id: inventory.id,
-        note: encodeNote({ v: 1, field: "year_range", value: year }),
-      });
-    }
-
-    await submitMany(bodies);
+    // the new file doesn't exist yet, so everything rides in the note payload;
+    // the executor creates it (with years) when the action is approved
+    const value: AddActionValue = {
+      parent_id: inventory.id,
+      code: code.trim(),
+      ...(title.trim() ? { title: title.trim() } : {}),
+      ...(info.trim() ? { info: info.trim() } : {}),
+      ...(years.length ? { years } : {}),
+    };
+    await submit({ type: "add", note: encodeNote({ v: 1, field: "parent", value }) });
     onSubmitted?.();
     onClose();
   };
