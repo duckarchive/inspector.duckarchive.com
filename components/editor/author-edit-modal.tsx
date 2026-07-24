@@ -104,15 +104,11 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
     if (!mergeTargetId || mergeTargetId === author.id) {
       return;
     }
-    const sourceFiles = authorFiles?.file_ids ?? [];
-    const bodies: SubmitActionBody[] = [];
-    for (const fileId of sourceFiles) {
-      bodies.push({ type: "disconnect_from_author", target_id: fileId, note: encodeNote({ v: 1, author_id: author.id }) });
-      bodies.push({ type: "connect_to_author", target_id: fileId, note: encodeNote({ v: 1, author_id: mergeTargetId }) });
-    }
-    bodies.push({ type: "remove_author", target_id: sourceFiles[0] ?? null, note: encodeNote({ v: 1, author_id: author.id }) });
-
-    await submitMany(bodies);
+    // one pending action; on approve the executor re-links every file, merges
+    // the author fields and deletes the source — all under the hood
+    await submitMany([
+      { type: "merge_to", note: encodeNote({ v: 1, author_id: author.id, value: mergeTargetId }) },
+    ]);
     onSubmitted?.();
     onClose();
   };

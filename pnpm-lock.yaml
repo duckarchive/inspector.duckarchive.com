@@ -13,7 +13,7 @@ importers:
         version: https://codeload.github.com/duckarchive/framework/tar.gz/f53e584d23fb1ed6b2bc1efefd1888dce5bd9985(92714b40b8347dd2388033eccdeedbca)
       '@duckarchive/map':
         specifier: github:duckarchive/map
-        version: https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306(bb5f7aba05b6ba54ef8a9d929b768b31)
+        version: https://codeload.github.com/duckarchive/map/tar.gz/537213b5877c0d23a208dc136d49389515623889(bb5f7aba05b6ba54ef8a9d929b768b31)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
         version: https://codeload.github.com/duckarchive/prisma/tar.gz/85f014cecd69c00902898e81f1c6e2cade74d2d0(@prisma/adapter-pg@7.8.0)(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.1.4(prisma@7.8.0(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.2))(typescript@5.8.2)(zod@4.3.6))
@@ -306,9 +306,9 @@ packages:
       react: ^19.1.0
       react-icons: ^5.5.0
 
-  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306':
-    resolution: {tarball: https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306}
-    version: 1.4.0
+  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/537213b5877c0d23a208dc136d49389515623889':
+    resolution: {tarball: https://codeload.github.com/duckarchive/map/tar.gz/537213b5877c0d23a208dc136d49389515623889}
+    version: 1.6.0
     peerDependencies:
       '@heroui/autocomplete': '*'
       '@heroui/button': '*'
@@ -4734,7 +4734,7 @@ snapshots:
       react: 19.2.3
       react-icons: 5.5.0(react@19.2.3)
 
-  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/e1aeea97f2e972b1407a3b2d9f57d54c796ca306(bb5f7aba05b6ba54ef8a9d929b768b31)':
+  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/537213b5877c0d23a208dc136d49389515623889(bb5f7aba05b6ba54ef8a9d929b768b31)':
     dependencies:
       leaflet: 1.9.4
       leaflet-geosearch: 4.2.2

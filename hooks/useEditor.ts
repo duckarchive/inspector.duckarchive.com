@@ -1,5 +1,5 @@
 import { useGet } from "@/hooks/useApi";
-import { ActionStatus, EditorEntity } from "@/lib/editor-actions";
+import { ActionStatus, EditorEntity, EditorQueue } from "@/lib/editor-actions";
 import { GetEditorFondsResponse } from "@/app/api/editor/catalog/fonds/route";
 import { GetEditorInventoriesResponse } from "@/app/api/editor/catalog/inventories/route";
 import { GetEditorFilesResponse } from "@/app/api/editor/catalog/files/route";
@@ -30,7 +30,7 @@ export const useEditorOnlineCopies = (target: OnlineCopyTarget, unlinkedOnly = t
   );
 
 export const useEditorActions = (
-  entity: EditorEntity,
+  entity: EditorQueue,
   filters?: { status?: ActionStatus; type?: string; target_id?: string },
 ) => {
   const params = new URLSearchParams();

@@ -8,6 +8,7 @@ export default function EditorDashboardPage() {
       <ActionsTable entity="file" title="Справи" />
       <ActionsTable entity="inventory" title="Описи" />
       <ActionsTable entity="fond" title="Фонди" />
+      <ActionsTable entity="author" title="Автори" />
     </section>
   );
 }

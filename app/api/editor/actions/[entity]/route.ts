@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@generated/prisma/client/client";
 import { resolveDuckUser } from "@/lib/auth";
-import { ActionStatus, isEditorEntity, SubmitActionBody, validateSubmitAction } from "@/lib/editor-actions";
+import { ActionStatus, isEditorEntity, isEditorQueue, SubmitActionBody, validateSubmitAction } from "@/lib/editor-actions";
 import { ErrorResponse } from "@/types";
 import { ActionRow, createAction, listActions, targetExists } from "@/app/api/editor/actions/[entity]/data";
 
@@ -71,7 +71,7 @@ export async function GET(
   { params }: RouteParams,
 ): Promise<NextResponse<ListActionsResponse | ErrorResponse>> {
   const { entity } = await params;
-  if (!isEditorEntity(entity)) {
+  if (!isEditorQueue(entity)) {
     return NextResponse.json({ message: "Invalid entity" }, { status: 404 });
   }
 

@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { ActionStatus, EditorEntity, SubmitActionBody } from "@/lib/editor-actions";
+import { ActionStatus, AUTHOR_TYPES, decodeNote, EditorEntity, EditorQueue, SubmitActionBody } from "@/lib/editor-actions";
 import { ActionType, Prisma } from "@generated/prisma/client/client";
 
 export interface ListActionsFilters {
@@ -109,9 +109,57 @@ export const fileActionInclude = {
 export type FondActionRow = Prisma.FondActionsGetPayload<{ include: typeof fondActionInclude }>;
 export type InventoryActionRow = Prisma.InventoryActionsGetPayload<{ include: typeof inventoryActionInclude }>;
 export type FileActionRow = Prisma.FileActionsGetPayload<{ include: typeof fileActionInclude }>;
-export type ActionRow = FondActionRow | InventoryActionRow | FileActionRow;
+/** Author-queue rows are file actions with the referenced author (and, for merges,
+ * the target author) resolved from the note. */
+export type AuthorActionRow = FileActionRow & {
+  author: { id: string; title: string } | null;
+  merge_target: { id: string; title: string } | null;
+};
+export type ActionRow = FondActionRow | InventoryActionRow | FileActionRow | AuthorActionRow;
 
-export const listActions = async (entity: EditorEntity, filters: ListActionsFilters): Promise<ActionRow[]> => {
+/** Author merges are merge_to file_actions distinguished by the author_id payload. */
+const authorMergeFilter = { type: "merge_to" as ActionType, note: { contains: '"author_id"' } };
+
+const listAuthorActions = async (where: ReturnType<typeof baseWhere>, targetId?: string): Promise<AuthorActionRow[]> => {
+  const { type: _statusType, ...statusWhere } = where;
+  void _statusType;
+  const rows = await prisma.fileActions.findMany({
+    where: {
+      ...statusWhere,
+      OR: [{ type: { in: AUTHOR_TYPES } }, authorMergeFilter],
+      ...(targetId ? { file_id: targetId } : {}),
+    },
+    include: fileActionInclude,
+    orderBy: [{ created_at: "desc" }, { file: { inventory: { fond: { archive: { code: "asc" } } } } }, { id: "desc" }],
+  });
+  const authorIds = new Set<string>();
+  for (const row of rows) {
+    const decoded = decodeNote(row.note);
+    if (decoded && !("raw" in decoded)) {
+      if (decoded.author_id) authorIds.add(decoded.author_id);
+      if (row.type === "merge_to" && typeof decoded.value === "string") authorIds.add(decoded.value);
+    }
+  }
+  const authors = authorIds.size
+    ? await prisma.author.findMany({ where: { id: { in: Array.from(authorIds) } }, select: { id: true, title: true } })
+    : [];
+  const byId = new Map(authors.map((a) => [a.id, a]));
+  return rows.map((row) => {
+    const decoded = decodeNote(row.note);
+    const authorId = decoded && !("raw" in decoded) ? decoded.author_id : undefined;
+    const targetAuthorId =
+      row.type === "merge_to" && decoded && !("raw" in decoded) && typeof decoded.value === "string"
+        ? decoded.value
+        : undefined;
+    return {
+      ...row,
+      author: (authorId && byId.get(authorId)) || null,
+      merge_target: (targetAuthorId && byId.get(targetAuthorId)) || null,
+    };
+  });
+};
+
+export const listActions = async (entity: EditorQueue, filters: ListActionsFilters): Promise<ActionRow[]> => {
   const where = baseWhere(filters);
   // newest first; same-timestamp rows (bulk-loaded batches) group by archive, with
   // id as the final tiebreaker so the order is stable between fetches
@@ -131,9 +179,17 @@ export const listActions = async (entity: EditorEntity, filters: ListActionsFilt
         include: inventoryActionInclude,
         orderBy: [newestFirst, { inventory: { fond: { archive: { code: "asc" } } } }, stableId],
       });
+    case "author":
+      return listAuthorActions(where, filters.target_id);
     case "file":
+      // author-related actions (incl. author merges) have their own queue
       return prisma.fileActions.findMany({
-        where: { ...where, ...(filters.target_id ? { file_id: filters.target_id } : {}) },
+        where: {
+          ...where,
+          type: { notIn: AUTHOR_TYPES },
+          NOT: authorMergeFilter,
+          ...(filters.target_id ? { file_id: filters.target_id } : {}),
+        },
         include: fileActionInclude,
         orderBy: [newestFirst, { file: { inventory: { fond: { archive: { code: "asc" } } } } }, stableId],
       });

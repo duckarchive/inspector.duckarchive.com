@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { resolveDuckUser } from "@/lib/auth";
-import { isEditorEntity } from "@/lib/editor-actions";
+import { isEditorQueue, queueEntity } from "@/lib/editor-actions";
 import { ErrorResponse } from "@/types";
 import { ActionExecutionError, resolveAction } from "@/app/api/editor/actions/[entity]/[id]/data";
 
@@ -14,7 +14,7 @@ interface ResolveBody {
 
 export async function PATCH(req: NextRequest, { params }: RouteParams): Promise<NextResponse<ErrorResponse | { id: string }>> {
   const { entity, id } = await params;
-  if (!isEditorEntity(entity)) {
+  if (!isEditorQueue(entity)) {
     return NextResponse.json({ message: "Invalid entity" }, { status: 404 });
   }
 
@@ -34,7 +34,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams): Promise<
   }
 
   try {
-    const resolved = await resolveAction(entity, id, user.id, body.resolution);
+    const resolved = await resolveAction(queueEntity(entity), id, user.id, body.resolution);
     return NextResponse.json({ id: resolved.id });
   } catch (error) {
     if (error instanceof ActionExecutionError) {

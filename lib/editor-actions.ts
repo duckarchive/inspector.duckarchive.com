@@ -4,6 +4,17 @@ export type EditorEntity = "fond" | "inventory" | "file";
 
 export const EDITOR_ENTITIES: EditorEntity[] = ["fond", "inventory", "file"];
 
+/** Dashboard queues: the three entities plus the virtual "author" queue —
+ * author-related actions live in file_actions but get their own table. */
+export type EditorQueue = EditorEntity | "author";
+
+export const isEditorQueue = (value: string): value is EditorQueue =>
+  value === "author" || isEditorEntity(value);
+
+/** The entity whose actions table actually stores a queue's rows. */
+export const queueEntity = (queue: EditorQueue): EditorEntity =>
+  queue === "author" ? "file" : queue;
+
 export const isEditorEntity = (value: string): value is EditorEntity =>
   (EDITOR_ENTITIES as string[]).includes(value);
 
@@ -114,7 +125,7 @@ const ONLINE_COPY_TYPES: ActionType[] = [
   "add_online_copy",
   "remove_online_copy",
 ];
-const AUTHOR_TYPES: ActionType[] = [
+export const AUTHOR_TYPES: ActionType[] = [
   "connect_to_author",
   "disconnect_from_author",
   "add_author",
@@ -213,10 +224,14 @@ export const validateSubmitAction = (entity: EditorEntity, body: SubmitActionBod
     case "remove":
     case "report":
       return null;
-    case "merge_to":
-      if (!target_id) return `"target_id" обовʼязковий для "${type}"`;
+    case "merge_to": {
       if (!note) return `"note" обовʼязковий для "${type}"`;
+      // author merge: one action, no file target — {author_id: source, value: target author}
+      const decoded = decodeNote(note);
+      const isAuthorMerge = decoded && !("raw" in decoded) && decoded.author_id && decoded.value;
+      if (!isAuthorMerge && !target_id) return `"target_id" обовʼязковий для "${type}"`;
       return null;
+    }
     default:
       return `Тип дії "${type}" не підтримується`;
   }

@@ -13,12 +13,12 @@ import {
   ACTION_TYPE_LABELS,
   ActionStatus,
   decodeNote,
-  EditorEntity,
+  EditorQueue,
 } from "@/lib/editor-actions";
 import { ActionType } from "@generated/prisma/client/client";
 
 interface ActionsTableProps {
-  entity: EditorEntity;
+  entity: EditorQueue;
   title: string;
 }
 
@@ -57,7 +57,8 @@ const catalogTarget = (data: any): { label: string; href: string | null } | null
 
 /** Editor catalog page for this entity with the filter cascade + edit modal prefilled. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const editorHref = (entity: EditorEntity, data: any): string | null => {
+const editorHref = (queue: EditorQueue, data: any): string | null => {
+  const entity = queue === "author" ? "file" : queue; // author actions edit via their справа
   const q = (params: Record<string, string | undefined>): string | null => {
     if (Object.values(params).some((v) => !v)) return null;
     return new URLSearchParams(params as Record<string, string>).toString();
@@ -99,9 +100,17 @@ const hostLabel = (url: string): string => {
 const targetCell = (data: any) => {
   const target = catalogTarget(data);
   const copyUrl: string | undefined = data?.online_copy?.url ?? undefined;
-  if (!target && !copyUrl) return "—";
+  const author: { id: string; title: string } | null = data?.author ?? null;
+  const mergeTarget: { id: string; title: string } | null = data?.merge_target ?? null;
+  if (!target && !copyUrl && !author) return "—";
   return (
     <div className="flex flex-col gap-0.5">
+      {author && (
+        <span className="font-medium">
+          {author.title}
+          {mergeTarget && <span className="text-default-500 font-normal"> → {mergeTarget.title}</span>}
+        </span>
+      )}
       {target &&
         (target.href ? (
           <Link href={target.href} size="sm" isExternal>

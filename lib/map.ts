@@ -35,9 +35,15 @@ export const randomizeCoordinates = (positions: GeoDuckMapProps["positions"]): G
 };
 
 const tag2icon: Record<string, string> = {
-  "православ'я": "christChurchIcon",
-  "римо-католицизм": "christChurchIcon",
-  іудаїзм: "jewChurchIcon",
+  "православ'я": "orthodoxCrossIcon",
+  "римо-католицизм": "latinCrossIcon",
+  "греко-католицизм": "patriarchalCrossIcon",
+  реформаторство: "huguenotCrossIcon",
+  іудаїзм: "davidStarIcon",
+  лютеранство: "lutherRoseIcon",
+  протестантизм: "christianCrossIcon",
+  баптизм: "christianCrossIcon",
+  євангелізм: "christianCrossIcon",
 };
 
 export const prepareLocations = (

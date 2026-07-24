@@ -202,6 +202,36 @@ const mergeFondInto = async (tx: Tx, sourceId: string, targetId: string): Promis
   await tx.fond.delete({ where: { id: sourceId } });
 };
 
+/**
+ * Author merge — ONE approved action does everything under the hood:
+ * every справа of the source re-links to the target (set-based, duplicates
+ * skipped), the target's empty fields fill from the source, tags union,
+ * source author deleted.
+ */
+const mergeAuthorInto = async (tx: Tx, sourceId: string, targetId: string): Promise<void> => {
+  if (sourceId === targetId) throw new ActionExecutionError("Не можна об'єднати автора із самим собою");
+  const source = await tx.author.findUnique({ where: { id: sourceId } });
+  const target = await tx.author.findUnique({ where: { id: targetId } });
+  if (!source) throw new ActionExecutionError("Автор-джерело не знайдений");
+  if (!target) throw new ActionExecutionError("Автор-приймач не знайдений");
+
+  await tx.$executeRaw`INSERT INTO file_authors (file_id, author_id)
+    SELECT file_id, ${targetId}::uuid FROM file_authors WHERE author_id = ${sourceId}::uuid
+    ON CONFLICT DO NOTHING`;
+  await tx.$executeRaw`DELETE FROM file_authors WHERE author_id = ${sourceId}::uuid`;
+
+  await tx.author.update({
+    where: { id: targetId },
+    data: {
+      info: target.info ?? source.info,
+      lat: target.lat ?? source.lat,
+      lng: target.lng ?? source.lng,
+      tags: Array.from(new Set(target.tags.concat(source.tags))),
+    },
+  });
+  await tx.author.delete({ where: { id: sourceId } });
+};
+
 const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord): Promise<string | null> => {
   const decoded = decodeNote(action.note);
   const payload = decoded && !("raw" in decoded) ? decoded : null;
@@ -483,6 +513,11 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     }
 
     case "merge_to": {
+      // author merge: {author_id: source, value: target} — no file target
+      if (payload?.author_id && typeof value === "string" && value) {
+        await mergeAuthorInto(tx, payload.author_id, value);
+        return null;
+      }
       const sourceId = requireTarget();
       const targetId = value as string;
       if (!targetId) throw new ActionExecutionError("Дія не містить цілі для об'єднання");

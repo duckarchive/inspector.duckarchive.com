@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { addToast } from "@heroui/toast";
-import { EditorEntity } from "@/lib/editor-actions";
+import { EditorQueue } from "@/lib/editor-actions";
 
 type Resolution = "execute" | "reject";
 
@@ -13,7 +13,7 @@ interface BatchResolveResponse {
   errors: Array<{ id: string; message: string }>;
 }
 
-const useResolveAction = (entity: EditorEntity) => {
+const useResolveAction = (entity: EditorQueue) => {
   const [isResolving, setIsResolving] = useState(false);
   const [isBatchLoading, setIsBatchLoading] = useState(false);
 
