@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { ActionStatus, AUTHOR_TYPES, decodeNote, EditorEntity, EditorQueue, SubmitActionBody } from "@/lib/editor-actions";
+import { ActionStatus, AUTHOR_DIRECT_TYPES, decodeNote, EditorEntity, EditorQueue, SubmitActionBody } from "@/lib/editor-actions";
 import { ActionType, Prisma } from "@generated/prisma/client/client";
 
 export interface ListActionsFilters {
@@ -120,18 +120,8 @@ export type ActionRow = FondActionRow | InventoryActionRow | FileActionRow | Aut
 /** Author merges are merge_to file_actions distinguished by the author_id payload. */
 const authorMergeFilter = { type: "merge_to" as ActionType, note: { contains: '"author_id"' } };
 
-const listAuthorActions = async (where: ReturnType<typeof baseWhere>, targetId?: string): Promise<AuthorActionRow[]> => {
-  const { type: _statusType, ...statusWhere } = where;
-  void _statusType;
-  const rows = await prisma.fileActions.findMany({
-    where: {
-      ...statusWhere,
-      OR: [{ type: { in: AUTHOR_TYPES } }, authorMergeFilter],
-      ...(targetId ? { file_id: targetId } : {}),
-    },
-    include: fileActionInclude,
-    orderBy: [{ created_at: "desc" }, { file: { inventory: { fond: { archive: { code: "asc" } } } } }, { id: "desc" }],
-  });
+/** Resolve the author (and merge-target author) each note points at. */
+const attachAuthors = async (rows: FileActionRow[]): Promise<AuthorActionRow[]> => {
   const authorIds = new Set<string>();
   for (const row of rows) {
     const decoded = decodeNote(row.note);
@@ -159,6 +149,21 @@ const listAuthorActions = async (where: ReturnType<typeof baseWhere>, targetId?:
   });
 };
 
+const listAuthorActions = async (where: ReturnType<typeof baseWhere>, targetId?: string): Promise<AuthorActionRow[]> => {
+  const { type: _statusType, ...statusWhere } = where;
+  void _statusType;
+  const rows = await prisma.fileActions.findMany({
+    where: {
+      ...statusWhere,
+      OR: [{ type: { in: AUTHOR_DIRECT_TYPES } }, authorMergeFilter],
+      ...(targetId ? { file_id: targetId } : {}),
+    },
+    include: fileActionInclude,
+    orderBy: [{ created_at: "desc" }, { file: { inventory: { fond: { archive: { code: "asc" } } } } }, { id: "desc" }],
+  });
+  return attachAuthors(rows);
+};
+
 export const listActions = async (entity: EditorQueue, filters: ListActionsFilters): Promise<ActionRow[]> => {
   const where = baseWhere(filters);
   // newest first; same-timestamp rows (bulk-loaded batches) group by archive, with
@@ -182,16 +187,20 @@ export const listActions = async (entity: EditorQueue, filters: ListActionsFilte
     case "author":
       return listAuthorActions(where, filters.target_id);
     case "file":
-      // author-related actions (incl. author merges) have their own queue
-      return prisma.fileActions.findMany({
-        where: {
-          ...where,
-          type: { notIn: AUTHOR_TYPES },
-          NOT: authorMergeFilter,
-          ...(filters.target_id ? { file_id: filters.target_id } : {}),
-        },
-        include: fileActionInclude,
-        orderBy: [newestFirst, { file: { inventory: { fond: { archive: { code: "asc" } } } } }, stableId],
-      });
+      // direct author actions (incl. author merges) live in the Автори queue;
+      // link ops (connect/disconnect/add author to a справа) are file operations
+      // and stay here, with the referenced author resolved for display
+      return attachAuthors(
+        await prisma.fileActions.findMany({
+          where: {
+            ...where,
+            type: { notIn: AUTHOR_DIRECT_TYPES },
+            NOT: authorMergeFilter,
+            ...(filters.target_id ? { file_id: filters.target_id } : {}),
+          },
+          include: fileActionInclude,
+          orderBy: [newestFirst, { file: { inventory: { fond: { archive: { code: "asc" } } } } }, stableId],
+        }),
+      );
   }
 };

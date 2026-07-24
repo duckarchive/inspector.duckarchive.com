@@ -135,6 +135,16 @@ export const AUTHOR_TYPES: ActionType[] = [
   "change_author_tags",
   "change_author_location",
 ];
+
+/** Actions on the author entity itself → the Автори dashboard queue. Linking ops
+ * (connect/disconnect/add to a справа) are file operations and stay in Справи. */
+export const AUTHOR_DIRECT_TYPES: ActionType[] = [
+  "remove_author",
+  "change_author_title",
+  "change_author_info",
+  "change_author_tags",
+  "change_author_location",
+];
 const LOCATION_TYPES: ActionType[] = ["add_location", "remove_location"];
 const AUTHOR_ID_TYPES: ActionType[] = [
   "connect_to_author",
