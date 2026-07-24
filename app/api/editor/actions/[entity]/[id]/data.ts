@@ -226,12 +226,21 @@ const mergeAuthorInto = async (tx: Tx, sourceId: string, targetId: string): Prom
     ON CONFLICT DO NOTHING`;
   await tx.$executeRaw`DELETE FROM case_authors WHERE author_id = ${sourceId}::uuid`;
 
+  // fill empty coords as a pair, and only when the resulting (title, lat, lng)
+  // wouldn't collide with another author (exact-title twins may already hold them)
+  let fillCoords = target.lat === null && target.lng === null && source.lat !== null && source.lng !== null;
+  if (fillCoords) {
+    const clash = await tx.author.findFirst({
+      where: { id: { not: targetId }, title: target.title, lat: source.lat, lng: source.lng },
+      select: { id: true },
+    });
+    if (clash) fillCoords = false;
+  }
   await tx.author.update({
     where: { id: targetId },
     data: {
       info: target.info ?? source.info,
-      lat: target.lat ?? source.lat,
-      lng: target.lng ?? source.lng,
+      ...(fillCoords ? { lat: source.lat, lng: source.lng } : {}),
       tags: Array.from(new Set(target.tags.concat(source.tags))),
     },
   });

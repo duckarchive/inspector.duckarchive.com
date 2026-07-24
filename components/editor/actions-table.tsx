@@ -58,7 +58,11 @@ const catalogTarget = (data: any): { label: string; href: string | null } | null
 /** Editor catalog page for this entity with the filter cascade + edit modal prefilled. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const editorHref = (queue: EditorQueue, data: any): string | null => {
-  const entity = queue === "author" ? "file" : queue; // author actions edit via their справа
+  // author queue → the authors editor with search prefilled + edit modal auto-open
+  if (queue === "author" && data?.author) {
+    return `/editor/authors?${new URLSearchParams({ q: data.author.title, edit: data.author.id })}`;
+  }
+  const entity = queue === "author" ? "file" : queue; // authorless author-rows fall back to the справа
   const q = (params: Record<string, string | undefined>): string | null => {
     if (Object.values(params).some((v) => !v)) return null;
     return new URLSearchParams(params as Record<string, string>).toString();
@@ -154,7 +158,7 @@ const statusChip = (data: any) => {
   return <Chip size="sm" color="success" variant="flat">{ACTION_STATUS_LABELS.executed}</Chip>;
 };
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 100;
 
 const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
   const [status, setStatus] = useState<ActionStatus | "all">("pending");
