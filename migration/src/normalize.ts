@@ -27,13 +27,16 @@ export const normalizeBase = (raw: string): string =>
 const TOM = '\u0001';
 const CHAST = '\u0002';
 const DOD = '\u0003';
+const POSH = '\u0004';
 
 /**
  * Canonical v2 form:
  * - digit-Т-digit → ТОМ, digit-Ч-digit → ЧАСТ (all levels)
- * - trailing digit-Д → ДОД, trailing digit-Ч → ЧАСТ (description level only;
- *   at case level trailing letters are alphabet postfixes А,Б,В,Г,Д… — keep)
- * Existing full tokens (ТОМ/ЧАСТ/ДОД) are protected from double-application.
+ * - trailing digit-Д → ДОД, trailing digit-Ч → ЧАСТ, trailing digit-П → ПОШ
+ *   ("пошуковий" — a separate finding-aid опис, not a volume of the base one)
+ *   (description level only; at case level trailing letters are alphabet
+ *   postfixes А,Б,В,Г,Д… — keep)
+ * Existing full tokens (ТОМ/ЧАСТ/ДОД/ПОШ) are protected from double-application.
  */
 export const canonicalizeCode = (raw: string, level: Level): string => {
   let code = normalizeBase(raw)
@@ -45,12 +48,15 @@ export const canonicalizeCode = (raw: string, level: Level): string => {
     code = code
       .replace(/(\d)ДОД$/, `$1${DOD}`)
       .replace(/(\d)Д$/, `$1${DOD}`)
-      .replace(/(\d)Ч$/, `$1${CHAST}`);
+      .replace(/(\d)Ч$/, `$1${CHAST}`)
+      .replace(/(\d)ПОШ$/, `$1${POSH}`)
+      .replace(/(\d)П$/, `$1${POSH}`);
   }
   return code
     .replaceAll(TOM, 'ТОМ')
     .replaceAll(CHAST, 'ЧАСТ')
-    .replaceAll(DOD, 'ДОД');
+    .replaceAll(DOD, 'ДОД')
+    .replaceAll(POSH, 'ПОШ');
 };
 
 /** Codes that are dropped entirely (confirmed): test/service garbage with no archival meaning. */
@@ -146,6 +152,23 @@ export const parseFamilySearchComposite = (parsed: string): string[] | null => {
     codes.add(canon);
   }
   return codes.size ? [...codes] : null;
+};
+
+/**
+ * Volume/part inventory codes group into their base instance: the catalog keeps one
+ * inventory per опис, so ТОМ# / ЧАСТ# / ПР# variants (`1ТОМ16`, `2ПР`) belong to the
+ * base inventory (`1`, `2`). NOT ПОШ (canonical form of trailing П) — "пошуковий" is
+ * a separate finding-aid опис, matched exactly. Applies to the inventory segment
+ * only — case-level trailing letters are alphabet postfixes and stay separate
+ * instances (PLAN.md #5). Input must already be canonical. Returns the
+ * base-inventory full code, or null when the inventory segment carries no marker.
+ */
+export const groupedFullCode = (canonFullCode: string): string | null => {
+  const segs = canonFullCode.split('-');
+  if (segs.length !== 3 && segs.length !== 4) return null;
+  const base = segs[2].replace(/(\d)(ТОМ\d*|ЧАСТ\d*|ПР\d*)$/, '$1');
+  if (base === segs[2]) return null;
+  return [...segs.slice(0, 2), base, ...segs.slice(3)].join('-');
 };
 
 /** Canonicalize a plain "АРХ-Ф-ОП[-СПР]" full_code string for matching. */

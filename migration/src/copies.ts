@@ -1,7 +1,7 @@
 import { PoolClient } from 'pg';
 
 import { ArchiveRow, Stats } from './entities';
-import { canonicalizeFullCode, parseFamilySearchComposite } from './normalize';
+import { canonicalizeFullCode, groupedFullCode, parseFamilySearchComposite } from './normalize';
 import { ArchiveReport } from './report';
 
 const bump = (stats: Stats, key: string, by = 1): void => {
@@ -9,13 +9,27 @@ const bump = (stats: Stats, key: string, by = 1): void => {
 };
 
 /** parsed → canonical full_code(s); FAMILY_SEARCH composites handled separately */
-const canonParsed = (parsed: string, resourceType: string): string | null => {
+export const canonParsed = (parsed: string, resourceType: string): string | null => {
   if (parsed.includes('(')) {
     if (resourceType !== 'FAMILY_SEARCH') return null;
     const codes = parseFamilySearchComposite(parsed);
     return codes && codes.length === 1 ? codes[0] : null; // multi-file image groups stay unmatched
   }
   return canonicalizeFullCode(parsed);
+};
+
+/** Exact canonical match first; else fall back to the base instance when the
+ * inventory segment carries a grouping marker (ТОМ/ЧАСТ/П/ПР — see groupedFullCode). */
+export const lookupByCanon = (
+  byCanon: Map<string, string | null>,
+  canon: string,
+): { id: string; grouped: boolean } | null => {
+  const exact = byCanon.get(canon);
+  if (exact) return { id: exact, grouped: false };
+  if (byCanon.has(canon)) return null; // canonical collision — never guess
+  const grouped = groupedFullCode(canon);
+  const base = grouped ? byCanon.get(grouped) : undefined;
+  return base ? { id: base, grouped: true } : null;
 };
 
 /** Attach fk in chunks; skip any row whose attach would violate the unique
@@ -73,14 +87,18 @@ export const attachFileCopiesByParsed = async (
     WHERE foc.file_id IS NULL AND foc.parsed LIKE $1`, [`${archive.code}-%`]);
   const attachC: [string, string][] = [];
   let unmatched = 0;
+  let grouped = 0;
   for (const row of leftovers.rows) {
     const canon = canonParsed(row.parsed, row.rtype);
-    const fileId = canon ? fileByCanon.get(canon) : undefined;
-    if (fileId) attachC.push([row.id, fileId]);
-    else unmatched += 1;
+    const match = canon ? lookupByCanon(fileByCanon, canon) : null;
+    if (match) {
+      attachC.push([row.id, match.id]);
+      if (match.grouped) grouped += 1;
+    } else unmatched += 1;
   }
   const nC = await batchAttach(client, 'file_online_copies', 'file_id', attachC);
   bump(stats, 'copies_attached_by_parsed', nC);
+  bump(stats, 'copies_attached_grouped', grouped);
   bump(stats, 'copies_attach_skipped_dup', attachC.length - nC);
   bump(stats, 'copies_left_unattached', unmatched);
 };
@@ -105,14 +123,18 @@ export const attachInventoryCopiesByParsed = async (
     WHERE ioc.inventory_id IS NULL AND ioc.parsed LIKE $1`, [`${archive.code}-%`]);
   const attachInv: [string, string][] = [];
   let invUnmatched = 0;
+  let invGrouped = 0;
   for (const row of invLeftovers.rows) {
     const canon = canonParsed(row.parsed, row.rtype);
-    const invId = canon ? invByCanon.get(canon) : undefined;
-    if (invId) attachInv.push([row.id, invId]);
-    else invUnmatched += 1;
+    const match = canon ? lookupByCanon(invByCanon, canon) : null;
+    if (match) {
+      attachInv.push([row.id, match.id]);
+      if (match.grouped) invGrouped += 1;
+    } else invUnmatched += 1;
   }
   const nInv = await batchAttach(client, 'inventory_online_copies', 'inventory_id', attachInv);
   bump(stats, 'inv_copies_attached_by_parsed', nInv);
+  bump(stats, 'inv_copies_attached_grouped', invGrouped);
   bump(stats, 'inv_copies_attach_skipped_dup', attachInv.length - nInv);
   bump(stats, 'inv_copies_left_unattached', invUnmatched);
 };
