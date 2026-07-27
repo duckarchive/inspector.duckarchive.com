@@ -10,11 +10,14 @@ export const editorInventorySelect = {
   fond: { select: { code: true } },
   years: { select: { start_year: true, end_year: true } },
   online_copies: { select: { id: true, url: true, availability: true, resource_id: true } },
-  _count: { select: { actions: { where: { resolved_at: null } } } },
+  _count: { select: { actions: { where: { resolved_at: null } }, files: true } },
 } satisfies Prisma.InventorySelect;
 
 type EditorInventoryRaw = Prisma.InventoryGetPayload<{ select: typeof editorInventorySelect }>;
-export type EditorInventory = Omit<EditorInventoryRaw, "_count"> & { has_pending_action: boolean };
+export type EditorInventory = Omit<EditorInventoryRaw, "_count"> & {
+  has_pending_action: boolean;
+  children_count: number;
+};
 
 export const getEditorInventories = async (fondId: string): Promise<EditorInventory[]> => {
   const rows = await prisma.inventory.findMany({
@@ -22,5 +25,9 @@ export const getEditorInventories = async (fondId: string): Promise<EditorInvent
     select: editorInventorySelect,
     orderBy: { code: "asc" },
   });
-  return rows.map(({ _count, ...rest }) => ({ ...rest, has_pending_action: _count.actions > 0 }));
+  return rows.map(({ _count, ...rest }) => ({
+    ...rest,
+    has_pending_action: _count.actions > 0,
+    children_count: _count.files,
+  }));
 };

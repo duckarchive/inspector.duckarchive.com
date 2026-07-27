@@ -102,6 +102,7 @@ export default function EditorInventoriesPage() {
           { field: "code", headerName: "Код" },
           { field: "title", headerName: "Назва", flex: 5 },
           { field: "info", headerName: "Опис", flex: 5 },
+          { field: "children_count", headerName: "Справи", flex: 2, type: "numericColumn" },
           {
             headerName: "Онлайн-копії",
             flex: 2,

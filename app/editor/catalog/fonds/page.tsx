@@ -75,6 +75,7 @@ export default function EditorFondsPage() {
           { field: "code", headerName: "Код" },
           { field: "title", headerName: "Назва", flex: 5 },
           { field: "info", headerName: "Опис", flex: 5 },
+          { field: "children_count", headerName: "Описи", flex: 2, type: "numericColumn" },
           {
             headerName: "Роки",
             flex: 2,

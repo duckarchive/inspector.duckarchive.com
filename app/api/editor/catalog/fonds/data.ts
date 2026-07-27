@@ -9,11 +9,11 @@ export const editorFondSelect = {
   archive_id: true,
   archive: { select: { code: true } },
   years: { select: { start_year: true, end_year: true } },
-  _count: { select: { actions: { where: { resolved_at: null } } } },
+  _count: { select: { actions: { where: { resolved_at: null } }, inventories: true } },
 } satisfies Prisma.FondSelect;
 
 type EditorFondRaw = Prisma.FondGetPayload<{ select: typeof editorFondSelect }>;
-export type EditorFond = Omit<EditorFondRaw, "_count"> & { has_pending_action: boolean };
+export type EditorFond = Omit<EditorFondRaw, "_count"> & { has_pending_action: boolean; children_count: number };
 
 export const getEditorFonds = async (archiveCode: string): Promise<EditorFond[]> => {
   const rows = await prisma.fond.findMany({
@@ -21,5 +21,9 @@ export const getEditorFonds = async (archiveCode: string): Promise<EditorFond[]>
     select: editorFondSelect,
     orderBy: { code: "asc" },
   });
-  return rows.map(({ _count, ...rest }) => ({ ...rest, has_pending_action: _count.actions > 0 }));
+  return rows.map(({ _count, ...rest }) => ({
+    ...rest,
+    has_pending_action: _count.actions > 0,
+    children_count: _count.inventories,
+  }));
 };
