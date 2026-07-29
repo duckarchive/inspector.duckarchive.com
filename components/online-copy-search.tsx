@@ -9,7 +9,7 @@ import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import { Chip } from "@heroui/chip";
 import { useTranslations } from "next-intl";
-import SelectArchive from "@/components/select-archive";
+import Select from "@/components/select";
 import { Archives } from "@/data/archives";
 import { buildOnlineCopyQuery, parseOnlineCopyQuery } from "@/lib/online-copy-query";
 
@@ -59,12 +59,15 @@ const OnlineCopySearch: React.FC<OnlineCopySearchProps> = ({ defaultQuery, archi
   return (
     <div className="flex flex-col grow gap-2">
       <form className="flex md:flex-row flex-col gap-2 items-stretch" onSubmit={handleSubmit}>
-        <SelectArchive
-          archives={archives}
+        <Select
+          items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+          label="Архів"
+          getKey={(a) => a.code}
+          getTextValue={(a) => a.code}
+          renderItem={(a) => <p>{a.code}</p>}
           value={archive}
           onChange={(v) => setArchive(v?.toString() || undefined)}
           isClearable
-          withoutTitle
           size="md"
           className="basis-1/6 shrink-0 min-w-[140px]"
         />
@@ -102,7 +105,9 @@ const OnlineCopySearch: React.FC<OnlineCopySearchProps> = ({ defaultQuery, archi
               flex: 1,
               cellRenderer: (row: { value: string }) => (
                 <div className="flex flex-col py-2 leading-tight">
-                  {row.value?.split("+++").map((line) => <span key={line}>{line}</span>)}
+                  {row.value?.split("+++").map((line) => (
+                    <span key={line}>{line}</span>
+                  ))}
                 </div>
               ),
             },

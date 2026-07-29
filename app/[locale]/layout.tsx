@@ -1,6 +1,7 @@
 import { getNav } from "@/app/navigation";
 import { siteConfig } from "@/config/site";
 import { routing } from "@/i18n/routing";
+import { getSessionDuckUser } from "@/lib/auth";
 import { DuckNav } from "@duckarchive/framework";
 import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
@@ -17,9 +18,11 @@ const LocaleLayout: React.FC<LocaleLayoutProps> = async ({ children, params }) =
     notFound();
   }
 
+  const user = await getSessionDuckUser();
+
   return (
     <>
-      <DuckNav siteUrl={siteConfig.url} locales={routing.locales} items={getNav(t)} />
+      <DuckNav siteUrl={siteConfig.url} locales={routing.locales} items={getNav(t, Boolean(user?.is_admin))} />
       <main className="container mx-auto max-w-7xl p-6 flex-grow flex flex-col">{children}</main>
     </>
   );

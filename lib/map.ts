@@ -1,11 +1,22 @@
 import { Author, CaseLocation } from "@generated/prisma/client/client";
 import type { GeoDuckMapProps } from "@duckarchive/map";
 
-// Function to slightly randomize coordinates if overlap found
+/** Golden angle ≈ 137.5° — sunflower-seed packing, uniform in every direction. */
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+/** ~35 m between neighbouring markers — separable at max zoom. */
+const SPACING_DEG = 0.00032;
+
+/**
+ * Spread markers that share identical coordinates (e.g. all churches geocoded to
+ * one settlement) over a phyllotaxis disc: point i sits at radius ∝ √i along the
+ * golden-angle spiral, so neighbour spacing stays ~constant however large the
+ * group is — a fixed circle packed N points on its rim and became unreadable.
+ * The first point keeps the exact original position; longitude offsets are
+ * cos(lat)-corrected so the disc stays round.
+ */
 export const randomizeCoordinates = (positions: GeoDuckMapProps["positions"]): GeoDuckMapProps["positions"] => {
   const grouped = new Map<string, GeoDuckMapProps["positions"]>();
 
-  // Group positions by identical coordinates
   positions.forEach((pos) => {
     const [lat, lng] = pos;
     const key = `${lat},${lng}`;
@@ -18,26 +29,32 @@ export const randomizeCoordinates = (positions: GeoDuckMapProps["positions"]): G
   grouped.forEach((group) => {
     if (group.length === 1) {
       randomizedPositions.push(group[0]);
-    } else {
-      // Spread duplicates in a circle
-      const [lat, lng] = group[0];
-      const radius = 0.0005; // adjust for spacing
-      group.forEach((pos, i) => {
-        const angle = (2 * Math.PI * i) / group.length;
-        const newLat = lat + radius * Math.cos(angle);
-        const newLng = lng + radius * Math.sin(angle);
-        randomizedPositions.push([newLat, newLng, ...pos.slice(2)] as GeoDuckMapProps["positions"][number]);
-      });
+      return;
     }
+    const [lat, lng] = group[0];
+    const lngScale = 1 / Math.max(0.2, Math.cos((lat * Math.PI) / 180));
+    group.forEach((pos, i) => {
+      const radius = SPACING_DEG * Math.sqrt(i); // i = 0 → the true location
+      const angle = i * GOLDEN_ANGLE;
+      const newLat = lat + radius * Math.cos(angle);
+      const newLng = lng + radius * Math.sin(angle) * lngScale;
+      randomizedPositions.push([newLat, newLng, ...pos.slice(2)] as GeoDuckMapProps["positions"][number]);
+    });
   });
 
   return randomizedPositions;
 };
 
 const tag2icon: Record<string, string> = {
-  "православ'я": "christChurchIcon",
-  "римо-католицизм": "christChurchIcon",
-  іудаїзм: "jewChurchIcon",
+  "православ'я": "orthodoxCrossIcon",
+  "римо-католицизм": "latinCrossIcon",
+  "греко-католицизм": "patriarchalCrossIcon",
+  реформаторство: "huguenotCrossIcon",
+  іудаїзм: "davidStarIcon",
+  лютеранство: "lutherRoseIcon",
+  протестантизм: "christianCrossIcon",
+  баптизм: "christianCrossIcon",
+  євангелізм: "christianCrossIcon",
 };
 
 export const prepareLocations = (

@@ -1,0 +1,11 @@
+allowBuilds:
+  '@heroui/shared-utils': true
+  '@parcel/watcher': true
+  '@prisma/engines': true
+  '@swc/core': true
+  esbuild: true
+  prisma: true
+  prisma-zod-generator: true
+  sharp: true
+  unrs-resolver: true
+  '@duckarchive/framework': true

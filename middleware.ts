@@ -33,8 +33,8 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  // 2. Logic Split: If it's an API route, don't run i18n
-  if (pathname.startsWith("/api")) {
+  // 2. Logic Split: API and editor routes don't run i18n (editor is uk-only)
+  if (pathname.startsWith("/api") || pathname.startsWith("/editor")) {
     const response = NextResponse.next();
     if (origin && CORS_ALLOWED_ORIGINS.includes(origin)) {
       response.headers.set("Access-Control-Allow-Origin", origin);

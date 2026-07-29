@@ -9,7 +9,7 @@ import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 import { Archives } from "@/data/archives";
-import SelectArchive from "@/components/select-archive";
+import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import { Link } from "@heroui/link";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -171,10 +171,19 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               <FaFolder className="inline mr-1" />
               Реквізити
             </label>
-            <SelectArchive
+            <Select
               id="select-archive"
               form="search-form"
-              archives={archives}
+              items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+              label="Архів"
+              getKey={(a) => a.code}
+              getTextValue={(a) => a.code}
+              renderItem={(a) => (
+                <div>
+                  <p>{a.code}</p>
+                  <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+                </div>
+              )}
               value={searchValues.archive}
               onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
             />

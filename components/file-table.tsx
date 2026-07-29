@@ -9,6 +9,7 @@ import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
+import ReportButton from "./report-button";
 import { getSyncAtLabel } from "@/lib/table";
 import useFile from "@/hooks/useFile";
 import ResourceBadge from "./resource-badge";
@@ -108,7 +109,9 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
         basePath="/catalog/"
         description={file?.title || "Без назви"}
         message={<Details file={file} />}
-      />
+      >
+        <ReportButton entity="file" targetId={file?.id} />
+      </PagePanel>
       <InspectorDuckTable<TableItem>
         id="file-table"
         resources={resources}

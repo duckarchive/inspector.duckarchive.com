@@ -39,6 +39,14 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
   const [debouncedCoordinates, setDebouncedCoordinates] = useState<Coordinates | undefined>();
   const [formErrors, setFormErrors] = useState<Coordinates>({});
 
+  // sync when the parent delivers coordinates after mount (edit modals populate
+  // their state in an effect); content comparison prevents an onChange loop
+  useEffect(() => {
+    setCoordinates((prev) =>
+      prev.lat === value.lat && prev.lng === value.lng && prev.radius_m === value.radius_m ? prev : value,
+    );
+  }, [value]);
+
   // Debounce coordinate changes to avoid excessive updates
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -115,7 +123,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
       <div className={`h-full ${isDisabled ? "pointer-events-none opacity-50" : ""}`} onClick={onOpen}>
         {!isOpen && (
           <GeoDuckMap
-            key="static-geoduck-map"
+            key={`static-geoduck-map-${center.join(",")}`}
             className="rounded-lg text-primary z-0"
             positions={[latLng]}
             center={center}

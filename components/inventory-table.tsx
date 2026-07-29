@@ -6,6 +6,7 @@ import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
+import ReportButton from "./report-button";
 import { sortByCode } from "@/lib/table";
 import useInventory from "@/hooks/useInventory";
 import { GetInventoryResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/route";
@@ -54,7 +55,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
         basePath="/catalog/"
         description={inventory?.title || "Без назви"}
         message={<Details inventory={inventory} />}
-      />
+      >
+        <ReportButton entity="inventory" targetId={inventory?.id} />
+      </PagePanel>
       <InspectorDuckTable<TableItem>
         id="inventory-table"
         resources={resources}
