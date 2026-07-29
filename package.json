@@ -111,6 +111,7 @@
       "@duckarchive/framework",
       "@duckarchive/map",
       "@duckarchive/prisma",
+      "@google/genai",
       "@heroui/shared-utils",
       "@parcel/watcher",
       "@prisma/client",
@@ -119,6 +120,7 @@
       "esbuild",
       "prisma",
       "prisma-zod-generator",
+      "protobufjs",
       "sharp",
       "unrs-resolver"
     ]
