@@ -48,7 +48,7 @@ export default function EditorFilesPage() {
   const selectedInventory = inventories?.find((i) => i.id === inventoryId) as EditorInventory | undefined;
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 h-full">
       <h1 className="text-2xl font-bold">Справи</h1>
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 grow">
@@ -139,12 +139,13 @@ export default function EditorFilesPage() {
           {
             headerName: "Копії",
             flex: 1,
+            type: "numericColumn",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             valueGetter: (p: any) => (p.data?.online_copies ?? []).length,
           },
           {
             headerName: "",
-            flex: 2,
+            flex: 1,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
               <EditCell
@@ -168,7 +169,12 @@ export default function EditorFilesPage() {
         }}
         onSubmitted={mutate}
       />
-      <FileAddModal inventory={selectedInventory ?? null} isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmitted={mutate} />
+      <FileAddModal
+        inventory={selectedInventory ?? null}
+        isOpen={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        onSubmitted={mutate}
+      />
     </section>
   );
 }

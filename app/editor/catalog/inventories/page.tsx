@@ -44,7 +44,7 @@ export default function EditorInventoriesPage() {
   const selectedFond = fonds?.find((f) => f.id === fondId) as EditorFond | undefined;
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 h-full">
       <h1 className="text-2xl font-bold">Описи</h1>
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 grow">
@@ -86,7 +86,6 @@ export default function EditorInventoriesPage() {
               setFondId(v);
               syncEditorUrl({ fond: v || null, edit: null });
             }}
-            
           />
         </div>
         <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!fondId}>
@@ -101,17 +100,18 @@ export default function EditorInventoriesPage() {
         columns={[
           { field: "code", headerName: "Код" },
           { field: "title", headerName: "Назва", flex: 5 },
-          { field: "info", headerName: "Опис", flex: 5 },
-          { field: "children_count", headerName: "Справи", flex: 2, type: "numericColumn" },
+          { field: "info", headerName: "Опис", flex: 4 },
+          { field: "children_count", headerName: "Справи", flex: 1, type: "numericColumn" },
           {
-            headerName: "Онлайн-копії",
-            flex: 2,
+            headerName: "Копії",
+            flex: 1,
+            type: "numericColumn",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             valueGetter: (p: any) => (p.data?.online_copies ?? []).length,
           },
           {
             headerName: "",
-            flex: 2,
+            flex: 1,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
               <EditCell

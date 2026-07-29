@@ -1,12 +1,11 @@
 "use client";
 
 import { Button } from "@heroui/button";
-import { Chip } from "@heroui/chip";
+import { FaClock, FaPen } from "react-icons/fa";
 
 interface EditCellProps {
   hasPending: boolean;
   onEdit: () => void;
-  label?: string;
   color?: "default" | "primary";
 }
 
@@ -15,15 +14,10 @@ interface EditCellProps {
  * the edit button is replaced with a "pending" chip so it cannot be edited
  * until the queued action is resolved.
  */
-const EditCell: React.FC<EditCellProps> = ({ hasPending, onEdit, label = "Редагувати", color = "default" }) =>
-  hasPending ? (
-    <Chip size="sm" color="warning" variant="flat">
-      Очікує дію
-    </Chip>
-  ) : (
-    <Button size="sm" color={color} onPress={onEdit}>
-      {label}
-    </Button>
-  );
+const EditCell: React.FC<EditCellProps> = ({ hasPending, onEdit, color = "default" }) => (
+  <Button isIconOnly size="sm" color={color} onPress={onEdit} disabled={hasPending} isDisabled={hasPending}>
+    {hasPending ? <FaClock /> : <FaPen />}
+  </Button>
+);
 
 export default EditCell;

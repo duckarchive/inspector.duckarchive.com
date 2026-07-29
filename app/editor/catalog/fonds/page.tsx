@@ -38,7 +38,7 @@ export default function EditorFondsPage() {
   }, [pendingEditId, fonds]);
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 h-full">
       <h1 className="text-2xl font-bold">Фонди</h1>
 
       <div className="flex items-center justify-between gap-4">
@@ -59,7 +59,6 @@ export default function EditorFondsPage() {
             setArchiveCode(v);
             syncEditorUrl({ archive: v || null, edit: null });
           }}
-          
         />
 
         <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!archiveCode}>
@@ -74,8 +73,8 @@ export default function EditorFondsPage() {
         columns={[
           { field: "code", headerName: "Код" },
           { field: "title", headerName: "Назва", flex: 5 },
-          { field: "info", headerName: "Опис", flex: 5 },
-          { field: "children_count", headerName: "Описи", flex: 2, type: "numericColumn" },
+          { field: "info", headerName: "Опис", flex: 4 },
+          { field: "children_count", headerName: "Описи", flex: 1, type: "numericColumn" },
           {
             headerName: "Роки",
             flex: 2,
@@ -87,7 +86,8 @@ export default function EditorFondsPage() {
           },
           {
             headerName: "",
-            flex: 2,
+            flex: 1,
+            type: "numericColumn",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
               <EditCell
@@ -112,7 +112,12 @@ export default function EditorFondsPage() {
         }}
         onSubmitted={mutate}
       />
-      <FondAddModal archives={archives ?? []} isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmitted={mutate} />
+      <FondAddModal
+        archives={archives ?? []}
+        isOpen={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        onSubmitted={mutate}
+      />
     </section>
   );
 }

@@ -82,7 +82,7 @@ export default function EditorAuthorsPage() {
           },
           {
             headerName: "",
-            flex: 2,
+            flex: 1,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
               <EditCell
