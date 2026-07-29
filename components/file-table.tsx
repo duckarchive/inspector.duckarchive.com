@@ -106,7 +106,6 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
       <PagePanel
         title={`${code} справа`}
         breadcrumbs={[archiveCode, fondCode, inventoryCode, code]}
-        basePath="/catalog/"
         description={file?.title || "Без назви"}
         message={<Details file={file} />}
       >

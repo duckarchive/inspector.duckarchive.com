@@ -45,7 +45,6 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
       <PagePanel
         title={`${code} фонд`}
         breadcrumbs={[archiveCode, code]}
-        basePath="/catalog/"
         description={fond?.title || "Без назви"}
         message={<Details fond={fond} />}
       >
@@ -66,7 +65,7 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/catalog/${archiveCode}/${code}/${row.data.code}`}>
+              <Link href={`/archives/${archiveCode}/${code}/${row.data.code}`}>
                 {row.value || `Опис ${row.data.code}`}
               </Link>
             ),

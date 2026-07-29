@@ -48,21 +48,23 @@ app/
   layout.tsx, providers.tsx     # root layout, theme/HeroUI providers
   [locale]/                     # all user-facing pages (next-intl)
     page.tsx                    # home
-    archives/[archive-code]/[fund-code]/[description-code]/[case-code]/
-                                # nested archive hierarchy pages (each level has page + loading)
+    archives/[archive-code]/[fond-code]/[inventory-code]/[file-code]/
+                                # nested archive hierarchy pages over the NEW structure (each level has page + loading)
     daily-updates/ friends/ institutions/ reference/ resources/ search/ stats/
     iframe/family-search-dgs-list/[archive-code]/   # embeddable iframe view
   api/
-    archives/...                # REST API mirroring the archive hierarchy; route.ts + data.ts (data logic) per level
+    archives/                   # GET list only (flat Archive[], used by editor pages/instance-picker) — no legacy
+                                # fund/description/case tree anymore
+    catalog/...                 # new-structure REST API (fond/inventory/file); the pages and hooks consume this one
     auth/[...nextauth]/         # NextAuth handler
     availability/dgs/           # DGS availability check + report-dgs
-    search/                     # full-text search
+    search/                     # search over files (requisites, title, author, tags, place, geo-radius)
     sync/familysearch/          # FamilySearch sync endpoints (items, projects)
 components/        # shared React components (tables per hierarchy level, search, modals, comics-card, home/)
 config/            # site.ts (site meta), fonts.ts, i18n.ts
 data/              # static datasets (archives, institutions, resources, tags, FamilySearch, DGS lists)
 generated/prisma/  # GENERATED — never edit by hand (client + zod)
-hooks/             # useApi, useArchive, useFund, useCase, useDescription, useSearch, useCyrillicParams, useIsMobile, useNoRussians
+hooks/             # useApi, useArchive, useFond, useInventory, useFile, useSearch, useCyrillicParams, useIsMobile, useNoRussians
 i18n/              # next-intl routing/request/constants
 lib/               # db.ts (Prisma), api.ts (SWR fetchers), user.ts (Duck API auth), map, table, text, sendNotification
 messages/          # translation JSONs per locale
@@ -102,8 +104,16 @@ Scripts load env via `dotenv` (`tsx -r dotenv/config`).
 - Build uses `staticPageGenerationTimeout: 300` and `staticGenerationMaxConcurrency: 2` — static generation of archive pages is heavy; be careful adding more `generateStaticParams`.
 - README.md is the stale Next.js/NextUI template readme — don't trust it for project info; trust this file.
 
+## Naming Migration (fund→fond) — switchover state
+
+The `fund → description → case` ⇒ `fond → inventory → file` migration is promoted to prod (2026-07-29) and the app switched over:
+
+- **Pages:** `/archives/...` URLs are kept (SEO) but render the new structure: `archives/[archive-code]/[fond-code]/[inventory-code]/[file-code]`. The `/catalog` page tree was deleted outright (no redirect). Components: `archive-table` / `fond-table` / `inventory-table` / `file-table`; hooks: `useArchive` / `useFond` / `useInventory` / `useFile` — all read `/api/catalog/*`.
+- **APIs:** `/api/catalog/*` is the canonical new-structure API and the only one the app itself uses. `/api/archives` (list only, no `[archive-code]`+ tree) is kept because editor pages/`instance-picker` still call it. The legacy fund/description/case-shaped deep endpoints (`/api/archives/[archive-code]`, `.../[fund-code]`, etc.) were deleted — no external consumer needed them preserved.
+- **Search:** `/api/search` queries `files` (+`file_years`, `file_authors`, `authors`, `file_locations`, `file_online_copies`). Request keys are `fond`/`inventory`/`file`; `useSearch` still rewrites inbound legacy `fund`/`description`/`case` query params. Geo-radius search is live: a file matches through its own `file_locations` OR any linked author's coordinates (authors carry the geocoded church/parish points).
+- **Removed:** `/online-copy-search` page + `/api/online-copy-search` + `lib/online-copy-query.ts` (hard 404, no redirect).
+- Legacy `funds`/`descriptions`/`cases` DB tables still exist and hold data, but nothing in the app reads them anymore except `data/report.ts` (daily-updates, largely stubbed).
+
 ## In-Progress Work
 
-- **Naming migration:** `fund → description → case` is being renamed to `fond → inventory → file`. The new models (`Fond`, `Inventory`, `File`, `*OnlineCopy`) already exist in the Prisma schema alongside the old ones; Inspector's routes/UI still use the old naming until switchover. New features must use the new structure.
-  - A parallel new-structure tree lives under `catalog/` (Next.js forbids sibling routes with different slug names, so it cannot share the `archives/[archive-code]` parent). Pages: `app/[locale]/catalog/` (index → list of archives), `catalog/[archive-code]/` (index → list of fonds), then `[fond-code]/[inventory-code]/[file-code]/` (each level has `page` + `loading`); API mirrors it at `app/api/catalog/...` (`route.ts` + `data.ts` per level, including `catalog/[archive-code]` → archive with `fonds`). Components: `catalog-archive-table` / `fond-table` / `inventory-table` / `file-table`; hooks: `useCatalogArchive` / `useFond` / `useInventory` / `useFile`. The catalog index reuses `ArchivesTable` via its `basePath` prop. `PagePanel`/`NavigationBreadcrumbs` take a `basePath` prop (default `/archives/`); the catalog tree passes `/catalog/`. The old `archives/` tree is untouched and will be removed at switchover.
-- **Editor feature:** `editor-feature.md` is the spec for community catalog editing (action queue in `file_actions`/`inventory_actions`, viewer/editor/admin roles, admin-moderated execution). Not implemented yet; the actions tables and the Duck API role field land separately.
+- **Editor feature:** `editor-feature.md` is the spec for community catalog editing (action queue in `file_actions`/`inventory_actions`, viewer/editor/admin roles, admin-moderated execution). Implemented on this branch as admin-only `/editor`; the Duck API `is_editor` role lands separately.

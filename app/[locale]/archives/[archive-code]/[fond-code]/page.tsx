@@ -33,7 +33,7 @@ export async function generateMetadata(pageProps: FondPageProps, parent: Resolvi
       openGraph: {
         ...openGraph,
         type: "website",
-        url: `/catalog/${archiveCode}/${code}`,
+        url: `/archives/${archiveCode}/${code}`,
       },
     };
   } catch (error) {

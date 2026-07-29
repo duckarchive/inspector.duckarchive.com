@@ -5,17 +5,16 @@ interface PagePanelProps extends PropsWithChildren {
   title: string;
   description?: string;
   breadcrumbs?: string[];
-  basePath?: string;
   message?: JSX.Element;
   image?: string | null;
 }
 
-const PagePanel: React.FC<PagePanelProps> = ({ title, description, message, children, breadcrumbs, basePath }) => {
+const PagePanel: React.FC<PagePanelProps> = ({ title, description, message, children, breadcrumbs }) => {
   return (
     <div className="flex-col md:flex-row flex justify-between gap-4 w-full">
       <div className="grow">
         {breadcrumbs ? (
-          <NavigationBreadcrumbs breadcrumbs={breadcrumbs} title={title} basePath={basePath} />
+          <NavigationBreadcrumbs breadcrumbs={breadcrumbs} title={title} />
         ) : (
           <h1 className="text-lg">{title}</h1>
         )}

@@ -40,7 +40,7 @@ export async function generateMetadata(pageProps: InventoryPageProps, parent: Re
       openGraph: {
         ...openGraph,
         type: "website",
-        url: `/catalog/${archiveCode}/${fondCode}/${code}`,
+        url: `/archives/${archiveCode}/${fondCode}/${code}`,
       },
     };
   } catch (error) {

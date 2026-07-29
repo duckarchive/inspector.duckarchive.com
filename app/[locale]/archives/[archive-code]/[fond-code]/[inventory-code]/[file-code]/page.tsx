@@ -43,7 +43,7 @@ export async function generateMetadata(pageProps: FilePageProps, parent: Resolvi
       openGraph: {
         ...openGraph,
         type: "website",
-        url: `/catalog/${archiveCode}/${fondCode}/${inventoryCode}/${code}`,
+        url: `/archives/${archiveCode}/${fondCode}/${inventoryCode}/${code}`,
       },
     };
   } catch (error) {

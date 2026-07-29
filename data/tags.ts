@@ -3,7 +3,7 @@ import prisma from "@/lib/db";
 const getTags = async () => {
   const uniqueTags = await prisma.$queryRaw<Array<{ tag: string }>>`
   SELECT DISTINCT UNNEST("tags") AS tag
-  FROM "cases"
+  FROM "files"
   WHERE cardinality("tags") > 0
   ORDER BY tag;
 `;

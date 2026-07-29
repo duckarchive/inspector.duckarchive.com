@@ -13,10 +13,9 @@ type TableItem = Archives[number];
 interface ArchivesTableProps {
   resources: Resources;
   archives: Archives;
-  basePath?: string;
 }
 
-const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives, basePath = "archives/" }) => {
+const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) => {
   const isMobile = useIsMobile();
 
   return (
@@ -35,7 +34,7 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives, base
           filter: true,
           comparator: sortText,
           cellRenderer: (row: { value: number; data: TableItem }) => (
-            <Link href={`${basePath}${row.data.code}`}>{row.value || `${row.data.code}`}</Link>
+            <Link href={`/archives/${row.data.code}`}>{row.value || `${row.data.code}`}</Link>
           ),
         },
       ]}

@@ -17,14 +17,6 @@ export const getNav = (t: _Translator<Record<string, any>, "navigation">, isAdmi
     path: "/archives",
   },
   {
-    label: t("online-copy-search"),
-    path: "/online-copy-search",
-  },
-  {
-    label: t("catalog"),
-    path: "/catalog",
-  },
-  {
     label: t("resources"),
     path: "/resources",
   },

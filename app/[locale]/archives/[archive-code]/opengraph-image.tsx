@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { readFile } from "node:fs/promises";
 import { ArchivePageProps } from "./page";
 import { siteConfig } from "@/config/site";
-import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
+import { GetCatalogArchiveResponse } from "@/app/api/catalog/[archive-code]/route";
 
 export const alt = "Знайти справу онлайн по реквізитам архіву";
 export const size = {
@@ -17,7 +17,9 @@ export const contentType = "image/png";
 export default async function Image(pageProps: ArchivePageProps) {
   const params = await pageProps.params;
   const code = decodeURIComponent(params["archive-code"]);
-  const archive: GetArchiveResponse = await fetch(`${siteConfig.url}/api/archives/${code}`).then((res) => res.json());
+  const archive: GetCatalogArchiveResponse = await fetch(`${siteConfig.url}/api/catalog/${code}`).then((res) =>
+    res.json(),
+  );
   const archiveLogoPath = join(process.cwd(), "public", archive.logo_url || "images/flags/Flag_of_Ukraine.svg");
   const archiveLogoData = await readFile(archiveLogoPath);
   const archiveLogoBase64 = archiveLogoData.toString("base64");

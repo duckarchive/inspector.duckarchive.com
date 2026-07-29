@@ -33,10 +33,8 @@
     "main": "Inicio",
     "resources": "Recursos",
     "inspector": "Inspector",
-    "online-copy-search": "🚧Búsqueda",
     "search": "Búsqueda",
     "archives": "Archivos",
-    "catalog": "🚧Catálogo",
     "daily-updates": "Reporte diario",
     "stats": "Estadísticas",
     "docs": "Documentación"
@@ -57,16 +55,5 @@
     "body-1": "Duck Inspector es un proyecto de voluntariado que no tiene ninguna fuente de financiación. Todo lo que ves en este sitio se ofrece a los usuarios de forma totalmente gratuita.",
     "body-2": "Las donaciones regulares y estables ayudan a pagar los servicios necesarios para el funcionamiento del sitio.",
     "cta": "Apoya el proyecto"
-  },
-  "online-copy-search-page": {
-    "title": "Solicitud de búsqueda",
-    "hint": "Use * para cualquier número de caracteres y _ para un solo carácter",
-    "search-button": "Buscar",
-    "parsed-column": "Código",
-    "url-column": "Enlace",
-    "availability-column": "Disponibilidad",
-    "availability-public": "Disponible",
-    "availability-restricted": "Acceso restringido",
-    "availability-unknown": "Desconocido"
   }
 }

@@ -52,7 +52,6 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
       <PagePanel
         title={`${code} опис`}
         breadcrumbs={[archiveCode, fondCode, code]}
-        basePath="/catalog/"
         description={inventory?.title || "Без назви"}
         message={<Details inventory={inventory} />}
       >
@@ -74,7 +73,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/catalog/${archiveCode}/${fondCode}/${code}/${row.data.code}`}>
+              <Link href={`/archives/${archiveCode}/${fondCode}/${code}/${row.data.code}`}>
                 {row.value || `Справа ${row.data.code}`}
               </Link>
             ),

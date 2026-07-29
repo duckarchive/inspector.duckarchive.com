@@ -8,13 +8,13 @@ import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import useArchive from "@/hooks/useArchive";
 import { sortByCode } from "@/lib/table";
-import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
+import { GetCatalogArchiveResponse } from "@/app/api/catalog/[archive-code]/route";
 import { getYearsString } from "@/lib/text";
 
-type TableItem = GetArchiveResponse["funds"][number];
+type TableItem = GetCatalogArchiveResponse["fonds"][number];
 
 const Details: React.FC<{
-  archive?: GetArchiveResponse;
+  archive?: GetCatalogArchiveResponse;
 }> = ({ archive }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {archive?.info && <p>{archive.info}</p>}
@@ -105,7 +105,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             hide: isMobile,
           },
         ]}
-        rows={archive?.funds?.sort(sortByCode) || []}
+        rows={archive?.fonds?.sort(sortByCode) || []}
       />
     </>
   );

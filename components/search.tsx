@@ -52,22 +52,6 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     setSearchValues({ ...searchValues, year: value || undefined });
   };
 
-  // const handleGeoChange = (position: [number, number]) => {
-  //   setSearchValues({ ...searchValues, lat: position[0], lng: position[1] });
-  // };
-
-  // const handleLatInputChange = (value: number) => {
-  //   setSearchValues({ ...searchValues, lat: value });
-  // };
-
-  // const handleLngInputChange = (value: number) => {
-  //   setSearchValues({ ...searchValues, lng: value });
-  // };
-
-  // const handleRadiusInputChange = (value: number) => {
-  //   setSearchValues({ ...searchValues, radius_m: value });
-  // };
-
   const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (searchValues.lat || searchValues.lng) {
       const isConfirmed = window.confirm("Поля 'Широта' та 'Довгота' будуть очищені. Продовжити?");
@@ -76,18 +60,14 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       }
     }
     const value = e.target.value;
-    setSearchValues({ ...searchValues, lat: undefined, lng: undefined, place: value });
+    setSearchValues({ ...searchValues, lat: undefined, lng: undefined, radius_m: undefined, place: value });
   };
 
-  const handleOpenMap = () => {
-    if (searchValues.place) {
-      const isConfirmed = window.confirm("Поле 'Населений пункт' буде очищено. Продовжити?");
-      if (!isConfirmed) {
-        return;
-      }
-    }
-    setSearchValues({ ...searchValues, place: undefined });
-    // onOpen();
+  // Place name and coordinates are alternative ways to say the same thing, and the
+  // API honours only one of them — picking a point on the map drops the place name.
+  const handleCoordinatesChange = (value: Pick<SearchRequest, "lat" | "lng" | "radius_m">) => {
+    const hasPoint = Boolean(value.lat && value.lng);
+    setSearchValues((prev) => ({ ...prev, ...value, place: hasPoint ? undefined : prev.place }));
   };
 
   const handleTagsChange = (values: string[]) => {
@@ -136,13 +116,12 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       </form>
       <div className="flex md:flex-row flex-col grow gap-4 mt-4">
         <div className="flex flex-col gap-8 pb-8 basis-1/4 h-full">
-          <div className="flex flex-col gap-2" onClick={handleOpenMap}>
+          <div className="flex flex-col gap-2">
             <label htmlFor="coordinates-input" className="font-bold flex items-center">
               <FaMapMarkerAlt className="inline mr-1" />
               Локація
             </label>
             <Input
-              isDisabled
               size="sm"
               form="search-form"
               id="coordinates-input"
@@ -155,7 +134,6 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               labelPlacement="inside"
             />
             <CoordinatesInput
-              isDisabled
               isLoading={isMutating}
               year={searchValues.year || undefined}
               value={{
@@ -163,7 +141,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 lng: searchValues.lng || undefined,
                 radius_m: searchValues.radius_m || undefined,
               }}
-              onChange={(value) => setSearchValues({ ...searchValues, ...value })}
+              onChange={handleCoordinatesChange}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -192,22 +170,22 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 size="sm"
                 label="Фонд"
                 form="search-form"
-                value={searchValues.fund || ""}
-                onChange={handleInputChange("fund")}
+                value={searchValues.fond || ""}
+                onChange={handleInputChange("fond")}
               />
               <Input
                 size="sm"
                 label="Опис"
                 form="search-form"
-                value={searchValues.description || ""}
-                onChange={handleInputChange("description")}
+                value={searchValues.inventory || ""}
+                onChange={handleInputChange("inventory")}
               />
               <Input
                 size="sm"
                 label="Справа"
                 form="search-form"
-                value={searchValues.case || ""}
-                onChange={handleInputChange("case")}
+                value={searchValues.file || ""}
+                onChange={handleInputChange("file")}
               />
             </div>
           </div>
