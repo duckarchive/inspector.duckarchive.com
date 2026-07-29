@@ -8,6 +8,4 @@ allowBuilds:
   prisma-zod-generator: true
   sharp: true
   unrs-resolver: true
-
-onlyBuiltDependencies:
-  - '@duckarchive/framework'
+  '@duckarchive/framework': true
