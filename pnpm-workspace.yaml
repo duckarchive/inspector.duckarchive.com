@@ -11,4 +11,4 @@ onlyBuiltDependencies:
   - prisma
   - prisma-zod-generator
   - sharp
-  - unrs-resolver"
+  - unrs-resolver
