@@ -1,4 +1,4 @@
-import { Fira_Code } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 export const fontSans = localFont({
@@ -25,8 +25,15 @@ export const fontSans = localFont({
   variable: "--font-sans",
 });
 
-export const fontMono = Fira_Code({
-  subsets: ["latin"],
+// labels, chips, metadata — DESIGN.md `font-label`
+export const fontLabel = Geist({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-label",
+});
+
+// archival codes, tabular data points — DESIGN.md `font-mono`
+export const fontMono = Geist_Mono({
+  subsets: ["latin", "cyrillic"],
   variable: "--font-mono",
 });
 

@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontComic, fontSans } from "@/config/fonts";
+import { fontComic, fontLabel, fontMono, fontSans } from "@/config/fonts";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
@@ -71,7 +71,13 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
       <head />
       <GoogleAnalytics />
       <body
-        className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable, fontComic.variable)}
+        className={clsx(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+          fontLabel.variable,
+          fontMono.variable,
+          fontComic.variable,
+        )}
         style={{ backgroundImage: `url(${BgPaperNoiseImg.src})` }}
       >
         <Providers i18nMessages={messages} i18nLocale={locale}>
