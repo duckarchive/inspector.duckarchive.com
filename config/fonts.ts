@@ -1,7 +1,7 @@
-import { Fira_Code, Inter } from "next/font/google";
+import { Fira_Code, Roboto } from "next/font/google";
 import localFont from 'next/font/local'
 
-export const fontSans = Inter({
+export const fontSans = Roboto({
   subsets: ["latin"],
   variable: "--font-sans",
 });
