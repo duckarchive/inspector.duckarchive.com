@@ -1,14 +1,10 @@
-onlyBuiltDependencies:
-  - "@duckarchive/framework"
-  - "@duckarchive/map"
-  - "@duckarchive/prisma"
-  - "@heroui/shared-utils"
-  - "@parcel/watcher"
-  - "@prisma/client"
-  - "@prisma/engines"
-  - "@swc/core"
-  - esbuild
-  - prisma
-  - prisma-zod-generator
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  '@heroui/shared-utils': true
+  '@parcel/watcher': true
+  '@prisma/engines': true
+  '@swc/core': true
+  esbuild: true
+  prisma: true
+  prisma-zod-generator: true
+  sharp: true
+  unrs-resolver: true
