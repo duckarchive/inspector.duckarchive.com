@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -65,9 +65,9 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/archives/${archiveCode}/${code}/${row.data.code}`}>
+              <NextLink href={`/archives/${archiveCode}/${code}/${row.data.code}`} className="link">
                 {row.value || `Опис ${row.data.code}`}
-              </Link>
+              </NextLink>
             ),
           },
           {

@@ -10,7 +10,7 @@ import { useGet } from "@/hooks/useApi";
 import { useEditorFonds } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
 
 export default function EditorFondsPage() {
@@ -61,7 +61,7 @@ export default function EditorFondsPage() {
           }}
         />
 
-        <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!archiveCode}>
+        <Button variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!archiveCode}>
           Створити
         </Button>
       </div>

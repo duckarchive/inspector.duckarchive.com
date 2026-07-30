@@ -3,7 +3,7 @@
 import "leaflet/dist/leaflet.css";
 import "../node_modules/@duckarchive/map/dist/style.css";
 
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -39,7 +39,7 @@ const Details: React.FC<{
           <div className="h-64 grow">
             <GeoDuckMap
               key="static-geoduck-map"
-              className="rounded-lg text-primary"
+              className="rounded-lg text-accent"
               center={findCenter([...file.locations, ...file.authors.map(({ author }) => author)])}
               positions={prepareLocations([...file.locations, ...file.authors.map(({ author }) => author)])}
               year={file.years[0].start_year || undefined}
@@ -53,7 +53,7 @@ const Details: React.FC<{
         <ul className="list-disc list-inside basis-1/2">
           {Boolean(file.years.length) && (
             <li>
-              Рік: <span className="text-primary">{getYearsString(file.years)}</span>
+              Рік: <span className="text-accent">{getYearsString(file.years)}</span>
             </li>
           )}
           {Boolean(file.authors.length) && (
@@ -62,7 +62,7 @@ const Details: React.FC<{
               {file.authors.map(({ author }, index) => (
                 <span key={author.id}>
                   {index > 0 && ", "}
-                  <span className="text-primary">
+                  <span className="text-accent">
                     {author.title} ({author.info})
                   </span>
                 </span>
@@ -75,7 +75,7 @@ const Details: React.FC<{
               {file.tags.map((tag, index) => (
                 <span key={tag}>
                   {index > 0 && ", "}
-                  <span className="text-primary">{tag}</span>
+                  <span className="text-accent">{tag}</span>
                 </span>
               ))}
             </li>
@@ -132,8 +132,9 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: string; data: TableItem }) => (
-              <Link href={row.value} isExternal>
+              <Link href={row.value} target="_blank" rel="noopener noreferrer">
                 {row.value || "Без назви"}
+                <Link.Icon />
               </Link>
             ),
           },

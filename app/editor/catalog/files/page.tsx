@@ -13,7 +13,7 @@ import { EditorFile } from "@/app/api/editor/catalog/files/data";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { sortByCode } from "@/lib/table";
 import { syncEditorUrl } from "@/lib/editor-url";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 
 export default function EditorFilesPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -117,7 +117,7 @@ export default function EditorFilesPage() {
             }}
           />
         </div>
-        <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!inventoryId}>
+        <Button variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!inventoryId}>
           Створити
         </Button>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Archives } from "@/data/archives";
-import { Link } from "@heroui/link";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import { sortByTitle } from "@/lib/table";
@@ -34,7 +34,9 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
           filter: true,
           comparator: sortText,
           cellRenderer: (row: { value: number; data: TableItem }) => (
-            <Link href={`/archives/${row.data.code}`}>{row.value || `${row.data.code}`}</Link>
+            <NextLink href={`/archives/${row.data.code}`} className="link">
+              {row.value || `${row.data.code}`}
+            </NextLink>
           ),
         },
       ]}

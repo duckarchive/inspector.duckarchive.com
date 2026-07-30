@@ -1,7 +1,7 @@
 "use client";
 
 import { DuckTableSkeleton } from "@duckarchive/framework";
-import { Skeleton } from "@heroui/skeleton";
+import { Skeleton } from "@heroui/react";
 
 export default function Loading() {
   return (

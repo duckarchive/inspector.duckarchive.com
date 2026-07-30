@@ -1,9 +1,7 @@
 "use client";
 
 import { HeartFilledIcon } from "@/components/icons";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Link } from "@heroui/link";
+import { Link, Modal, useOverlayState } from "@heroui/react";
 import config from "@duckarchive/framework/components/duck-nav/config.json";
 import { useTranslations } from "next-intl";
 import React, { createContext, useContext, ReactNode } from "react";
@@ -19,7 +17,7 @@ const DonationContext = createContext<DonationContextProps | undefined>(undefine
 export const DonationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const t = useTranslations("donation-modal");
   const storage = typeof window !== "undefined" ? window.localStorage : null;
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const state = useOverlayState();
 
   const handleOpen = () => {
     const askedAtRaw = storage?.getItem(DONATE_KEY);
@@ -29,39 +27,43 @@ export const DonationProvider: React.FC<{ children: ReactNode }> = ({ children }
     const isNonUk = Boolean(lang && !lang.includes("uk"));
 
     if (isNonUk && (!askedAt || new Date().getTime() - askedAt.getTime() > 1000 * 60 * 60 * 24 * 30)) {
-      onOpen();
+      state.open();
     }
   };
   const handleClose = () => {
     storage?.setItem(DONATE_KEY, new Date().toISOString());
-    onClose();
+    state.close();
   };
 
   return (
     <DonationContext.Provider value={{ askForDonation: handleOpen }}>
       {children}
-      <Modal isOpen={isOpen} onClose={handleClose}>
-        <ModalContent>
-          <ModalHeader>{t("header")}</ModalHeader>
-          <ModalBody className="max-h-96">
-            <p>{t("body-1")}</p>
-            <p>{t("body-2")}</p>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              as={Link}
-              radius="full"
-              color="primary"
-              variant="bordered"
-              className="w-full"
-              startContent={<HeartFilledIcon className="text-danger" />}
-              isExternal
-              href={config.links.sponsor}
-            >
-              {t("cta")}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+      <Modal isOpen={state.isOpen} onOpenChange={(open) => !open && handleClose()}>
+        <Modal.Backdrop>
+          <Modal.Container>
+            <Modal.Dialog>
+              <Modal.CloseTrigger />
+              <Modal.Header>
+                <Modal.Heading>{t("header")}</Modal.Heading>
+              </Modal.Header>
+              <Modal.Body className="max-h-96">
+                <p>{t("body-1")}</p>
+                <p>{t("body-2")}</p>
+              </Modal.Body>
+              <Modal.Footer>
+                <Link
+                  href={config.links.sponsor}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button button--secondary button--md w-full justify-center rounded-full"
+                >
+                  <HeartFilledIcon className="text-danger" />
+                  {t("cta")}
+                </Link>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
     </DonationContext.Provider>
   );

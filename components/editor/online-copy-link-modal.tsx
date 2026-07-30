@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
+import { Button, Modal } from "@heroui/react";
 import InstancePicker from "@/components/editor/instance-picker";
 import useSubmitAction from "@/hooks/useSubmitAction";
+import PendingButton from "@/components/pending-button";
 import { EditorOnlineCopy, OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
 interface OnlineCopyLinkModalProps {
@@ -39,22 +39,29 @@ const OnlineCopyLinkModal: React.FC<OnlineCopyLinkModalProps> = ({ copy, target,
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader>Прив&apos;язати онлайн-копію</ModalHeader>
-        <ModalBody className="gap-3">
-          <p className="text-sm text-default-600 truncate">{copy.url}</p>
-          <InstancePicker target={target} onChange={setTargetId} />
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isDisabled={!targetId} isLoading={isMutating}>
-            Прив&apos;язати
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Прив&apos;язати онлайн-копію</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
+              <p className="text-sm text-muted truncate">{copy.url}</p>
+              <InstancePicker target={target} onChange={setTargetId} />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isDisabled={!targetId} isPending={isMutating}>
+                Прив&apos;язати
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

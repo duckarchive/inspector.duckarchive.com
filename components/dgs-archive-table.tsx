@@ -1,11 +1,10 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import { Button, ButtonGroup, Link } from "@heroui/react";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import { DGSArchiveListItem } from "@/data/dgs-archive-list";
 import { DuckTable, sortCode } from "@duckarchive/framework";
-import { Button, ButtonGroup } from "@heroui/button";
 import { FaDownload } from "react-icons/fa";
 
 type TableItem = DGSArchiveListItem;
@@ -81,11 +80,12 @@ const DGSArchiveTable: React.FC<DGSArchiveTableProps> = ({ items, updatedAt }) =
     <>
       <PagePanel title={`Список DGS кодів на сайті Family Search до справ ${code} (сторінка ${page} з ${total})`} description={`від ${updatedAt}`}>
         <ButtonGroup>
-          <Button size="sm" variant="bordered" color="primary" onPress={handleDownloadJsonClick}>
+          <Button size="sm" onPress={handleDownloadJsonClick}>
             JSON
           </Button>
-          <Button size="sm" variant="bordered" color="primary" endContent={<FaDownload />} onPress={handleDownloadCsvClick}>
+          <Button size="sm" onPress={handleDownloadCsvClick}>
             CSV
+            <FaDownload />
           </Button>
         </ButtonGroup>
       </PagePanel>
@@ -102,7 +102,7 @@ const DGSArchiveTable: React.FC<DGSArchiveTableProps> = ({ items, updatedAt }) =
             minWidth: 120,
             cellRenderer: (row: { value: number; data: TableItem }) =>
               row.data.full_code && row.data.url ? (
-                <Link href={row.data.url} target="_blank" className="text-md">
+                <Link href={row.data.url} target="_blank" rel="noopener noreferrer" className="text-base">
                   {row.value}
                 </Link>
               ) : (
@@ -117,7 +117,7 @@ const DGSArchiveTable: React.FC<DGSArchiveTableProps> = ({ items, updatedAt }) =
             comparator: sortCode,
             cellRenderer: (row: { value: number; data: TableItem }) =>
               row.value ? (
-                <Link href={`/search?q=${row.value}`} target="_blank" className="text-md">
+                <Link href={`/search?q=${row.value}`} target="_blank" rel="noopener noreferrer" className="text-base">
                   {row.value}
                 </Link>
               ) : (

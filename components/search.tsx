@@ -5,13 +5,11 @@ import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import InspectorDuckTable from "@/components/table";
-import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
+import { Button, CloseButton, Input, InputGroup, Label, Link, TextField } from "@heroui/react";
 import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
-import { Link } from "@heroui/link";
 import useIsMobile from "@/hooks/useIsMobile";
 import TagsInput from "@/components/tags-input";
 import isEmpty from "lodash/isEmpty.js";
@@ -43,8 +41,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValues]);
 
-  const handleInputChange = (key: keyof SearchRequest) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleInputChange = (key: keyof SearchRequest) => (value: string) => {
     setSearchValues({ ...searchValues, [key]: value });
   };
 
@@ -52,14 +49,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     setSearchValues({ ...searchValues, year: value || undefined });
   };
 
-  const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePlaceInputChange = (value: string) => {
     if (searchValues.lat || searchValues.lng) {
       const isConfirmed = window.confirm("Поля 'Широта' та 'Довгота' будуть очищені. Продовжити?");
       if (!isConfirmed) {
         return;
       }
     }
-    const value = e.target.value;
     setSearchValues({ ...searchValues, lat: undefined, lng: undefined, radius_m: undefined, place: value });
   };
 
@@ -87,30 +83,22 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   return (
     <>
       <form id="search-form" className="flex gap-2" onSubmit={handleSubmit}>
-        <Input
+        <TextField
           className="w-full"
-          label="Заголовок справи"
           value={searchValues.title || ""}
           onChange={handleInputChange("title")}
-        />
-        {isMobile ? null : (
-          <Input
-            type="number"
-            className="basis-1/6 shrink-0"
-            value={searchValues.year}
-            onValueChange={handleYearChange}
-            label="Рік"
-            labelPlacement="inside"
-          />
-        )}
-        <Button
-          type="submit"
-          color="primary"
-          size="lg"
-          className="basis-1/4 h-full font-bold text-lg"
-          startContent={<FaSearch />}
-          isIconOnly={isMobile}
         >
+          <Label>Заголовок справи</Label>
+          <Input />
+        </TextField>
+        {isMobile ? null : (
+          <TextField type="number" className="basis-1/6 shrink-0" value={searchValues.year || ""} onChange={handleYearChange}>
+            <Label>Рік</Label>
+            <Input />
+          </TextField>
+        )}
+        <Button type="submit" size="lg" className="basis-1/4 h-full font-bold text-lg" isIconOnly={isMobile}>
+          <FaSearch />
           {isMobile ? undefined : "Пошук"}
         </Button>
       </form>
@@ -121,18 +109,20 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               <FaMapMarkerAlt className="inline mr-1" />
               Локація
             </label>
-            <Input
-              size="sm"
-              form="search-form"
-              id="coordinates-input"
-              isClearable
-              value={searchValues.place || ""}
-              onChange={handlePlaceInputChange}
-              onClear={() => setSearchValues({ ...searchValues, place: undefined })}
-              pattern="[\u0400-\u04FF\u0500-\u052F]+"
-              label="Назва населеного пункту"
-              labelPlacement="inside"
-            />
+            <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
+              <Label>Назва населеного пункту</Label>
+              <InputGroup>
+                <InputGroup.Input form="search-form" pattern="[\u0400-\u04FF\u0500-\u052F]+" />
+                {searchValues.place ? (
+                  <InputGroup.Suffix>
+                    <CloseButton
+                      aria-label="Очистити населений пункт"
+                      onPress={() => setSearchValues({ ...searchValues, place: undefined })}
+                    />
+                  </InputGroup.Suffix>
+                ) : null}
+              </InputGroup>
+            </TextField>
             <CoordinatesInput
               isLoading={isMutating}
               year={searchValues.year || undefined}
@@ -166,27 +156,18 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
             />
             <div className="flex gap-2">
-              <Input
-                size="sm"
-                label="Фонд"
-                form="search-form"
-                value={searchValues.fond || ""}
-                onChange={handleInputChange("fond")}
-              />
-              <Input
-                size="sm"
-                label="Опис"
-                form="search-form"
-                value={searchValues.inventory || ""}
-                onChange={handleInputChange("inventory")}
-              />
-              <Input
-                size="sm"
-                label="Справа"
-                form="search-form"
-                value={searchValues.file || ""}
-                onChange={handleInputChange("file")}
-              />
+              <TextField value={searchValues.fond || ""} onChange={handleInputChange("fond")}>
+                <Label>Фонд</Label>
+                <Input form="search-form" />
+              </TextField>
+              <TextField value={searchValues.inventory || ""} onChange={handleInputChange("inventory")}>
+                <Label>Опис</Label>
+                <Input form="search-form" />
+              </TextField>
+              <TextField value={searchValues.file || ""} onChange={handleInputChange("file")}>
+                <Label>Справа</Label>
+                <Input form="search-form" />
+              </TextField>
             </div>
           </div>
           <div className="flex flex-col gap-2">
@@ -231,6 +212,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                       href={`/archives/${row.value.replace(/\-/g, "/")}`}
                       className="text-lg leading-none font-bold inline"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       {row.data.title || "Без назви"}
                     </Link>

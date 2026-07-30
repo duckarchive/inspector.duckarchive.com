@@ -1,13 +1,11 @@
 "use client";
 
 import { Key, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { addToast } from "@heroui/toast";
+import { Button, Input, Label, Modal, TextArea, TextField, toast } from "@heroui/react";
 import Select from "@/components/select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
+import PendingButton from "@/components/pending-button";
 import { AddActionValue, encodeNote, YearRange } from "@/lib/editor-actions";
 import { Archives } from "@/data/archives";
 
@@ -28,17 +26,17 @@ const FondAddModal: React.FC<FondAddModalProps> = ({ archives, isOpen, onClose, 
 
   const handleSubmit = async () => {
     if (!code.trim()) {
-      addToast({ title: "Введіть код фонду", color: "warning" });
+      toast.warning("Введіть код фонду");
       return;
     }
     if (!archiveCode) {
-      addToast({ title: "Виберіть архів", color: "warning" });
+      toast.warning("Виберіть архів");
       return;
     }
 
     const archive = archives.find((a) => a.code === archiveCode);
     if (!archive) {
-      addToast({ title: "Архів не знайдено", color: "danger" });
+      toast.danger("Архів не знайдено");
       return;
     }
 
@@ -66,10 +64,15 @@ const FondAddModal: React.FC<FondAddModalProps> = ({ archives, isOpen, onClose, 
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader>Створити новий фонд</ModalHeader>
-        <ModalBody className="gap-3">
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Створити новий фонд</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
           <Select
             items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
             label="Архів"
@@ -84,20 +87,31 @@ const FondAddModal: React.FC<FondAddModalProps> = ({ archives, isOpen, onClose, 
             value={archiveCode}
             onChange={(key: Key | null) => setArchiveCode(String(key ?? ""))}
           />
-          <Input label="Код" value={code} onValueChange={setCode} autoFocus />
-          <Input label="Назва" value={title} onValueChange={setTitle} />
-          <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
+          <TextField value={code} onChange={setCode} autoFocus>
+            <Label>Код</Label>
+            <Input />
+          </TextField>
+          <TextField value={title} onChange={setTitle}>
+            <Label>Назва</Label>
+            <Input />
+          </TextField>
+          <TextField value={info} onChange={setInfo}>
+            <Label>Опис</Label>
+            <TextArea rows={2} />
+          </TextField>
           <YearRangesField value={years} onChange={setYears} />
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isLoading={isMutating} isDisabled={!code.trim() || !archiveCode}>
-            Створити
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isPending={isMutating} isDisabled={!code.trim() || !archiveCode}>
+                Створити
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

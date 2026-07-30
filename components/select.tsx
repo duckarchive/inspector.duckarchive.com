@@ -1,6 +1,6 @@
 import { Key, ReactNode } from "react";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { editorAutocompleteVirtualization, wrapItemClassNames, wrapUrlItemClassNames } from "@/components/editor/autocomplete";
+import { ComboBox, Input, Label, ListBox } from "@heroui/react";
+import { editorPopoverClassName, wrapItemClassName, wrapUrlItemClassName } from "@/components/editor/autocomplete";
 
 export interface SelectProps<T extends object> {
   /** Options to render. */
@@ -20,9 +20,8 @@ export interface SelectProps<T extends object> {
   form?: string;
   className?: string;
   size?: "sm" | "md" | "lg";
-  isClearable?: boolean;
   isDisabled?: boolean;
-  /** Virtualize long lists with a 2-line clamp (fonds, inventories, files, copies, authors). */
+  /** Clamp long options to 2 lines and cap the popover height (fonds, inventories, files, copies, authors). */
   virtualized?: boolean;
   /** Break long URLs across lines instead of words (online copies). */
   wrapUrls?: boolean;
@@ -31,8 +30,10 @@ export interface SelectProps<T extends object> {
   onInputChange?: (value: string) => void;
 }
 
+const SIZE_CLASS = { sm: "text-sm", md: "text-base", lg: "text-lg" } as const;
+
 /**
- * Universal autocomplete select for archive entities (archive, fond, inventory,
+ * Universal combobox select for archive entities (archive, fond, inventory,
  * file) and editor pickers (online copies, authors). Callers supply the items
  * plus how to key, search, and render them.
  */
@@ -48,7 +49,6 @@ function Select<T extends object>({
   form,
   className,
   size = "sm",
-  isClearable = false,
   isDisabled,
   virtualized = false,
   wrapUrls = false,
@@ -57,30 +57,35 @@ function Select<T extends object>({
 }: SelectProps<T>) {
   // Server-side search drives `items` directly; otherwise let HeroUI filter `defaultItems` by typed text.
   const itemsProp = onInputChange ? { items } : { defaultItems: items };
-  const itemClassNames = wrapUrls ? wrapUrlItemClassNames : virtualized ? wrapItemClassNames : undefined;
+  const itemClassName = wrapUrls ? wrapUrlItemClassName : virtualized ? wrapItemClassName : undefined;
 
   return (
-    <Autocomplete
+    <ComboBox<T>
       id={id}
-      size={size}
-      label={label}
       className={className}
-      isClearable={isClearable}
       isDisabled={isDisabled}
       selectedKey={value ?? undefined}
       onSelectionChange={onChange}
-      inputProps={{ form }}
       inputValue={inputValue}
       onInputChange={onInputChange}
-      {...(virtualized || wrapUrls ? editorAutocompleteVirtualization : {})}
       {...itemsProp}
     >
-      {(item: T) => (
-        <AutocompleteItem key={getKey(item)} textValue={getTextValue(item)} classNames={itemClassNames}>
-          {renderItem(item)}
-        </AutocompleteItem>
-      )}
-    </Autocomplete>
+      <Label>{label}</Label>
+      <ComboBox.InputGroup>
+        <Input form={form} className={SIZE_CLASS[size]} />
+        <ComboBox.Trigger />
+      </ComboBox.InputGroup>
+      <ComboBox.Popover className={virtualized || wrapUrls ? editorPopoverClassName : undefined}>
+        <ListBox<T>>
+          {(item: T) => (
+            <ListBox.Item id={getKey(item)} textValue={getTextValue(item)} className={itemClassName}>
+              {renderItem(item)}
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
+          )}
+        </ListBox>
+      </ComboBox.Popover>
+    </ComboBox>
   );
 }
 

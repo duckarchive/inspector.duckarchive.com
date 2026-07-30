@@ -1,6 +1,7 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -26,7 +27,8 @@ const Details: React.FC<{
             <Link
               href={`https://www.google.com/maps/place/${archive.address.split(/,?\s+/).join("+")}`}
               target="_blank"
-              className="text-primary text-sm"
+              rel="noopener noreferrer"
+              className="text-accent text-sm"
             >
               {archive.address}
             </Link>
@@ -43,7 +45,7 @@ const Details: React.FC<{
         {archive.phone_number && (
           <li>
             Телефон:&nbsp;
-            <Link href={`tel:${archive.phone_number}`} className="text-primary text-sm">
+            <Link href={`tel:${archive.phone_number}`} className="text-accent text-sm">
               {archive.phone_number}
             </Link>
           </li>
@@ -51,7 +53,7 @@ const Details: React.FC<{
         {archive.email && (
           <li>
             Email:&nbsp;
-            <Link href={`mailto:${archive.email}`} className="text-primary text-sm">
+            <Link href={`mailto:${archive.email}`} className="text-accent text-sm">
               {archive.email}
             </Link>
           </li>
@@ -94,7 +96,9 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/archives/${code}/${row.data.code}`}>{row.value || `Фонд ${row.data.code}`}</Link>
+              <NextLink href={`/archives/${code}/${row.data.code}`} className="link">
+                {row.value || `Фонд ${row.data.code}`}
+              </NextLink>
             ),
           },
           {

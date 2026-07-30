@@ -1,6 +1,6 @@
 "use client";
 
-import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
+import { Breadcrumbs, BreadcrumbsItem } from "@heroui/react";
 import { FaHome } from "react-icons/fa";
 
 const BASE_PATH = "/archives/";
@@ -10,27 +10,26 @@ interface NavigationBreadcrumbsProps {
   title: string;
 }
 
+const ITEM_CLASS = "text-gray-500 text-lg aria-[current=page]:font-bold";
+
 const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, title }) => (
-  <Breadcrumbs
-    separator="/"
-    size="lg"
-    itemClasses={{
-      item: "text-gray-500 text-lg data-[current=true]:font-bold",
-      separator: "text-gray-500/60",
-    }}
-  >
-    <BreadcrumbItem href={BASE_PATH} aria-label="Повернутись на список архівів">
+  <Breadcrumbs separator={<span className="text-gray-500/60">/</span>}>
+    <BreadcrumbsItem href={BASE_PATH} aria-label="Повернутись на список архівів" className={ITEM_CLASS}>
       <FaHome />
-    </BreadcrumbItem>
+    </BreadcrumbsItem>
     {breadcrumbs.map((item, index) =>
       index === breadcrumbs.length - 1 ? (
-        <BreadcrumbItem key={`${index}-bradcrumb`}>
+        <BreadcrumbsItem key={`${index}-bradcrumb`} className={ITEM_CLASS}>
           <h1>{title}</h1>
-        </BreadcrumbItem>
+        </BreadcrumbsItem>
       ) : (
-        <BreadcrumbItem key={`${index}-bradcrumb`} href={`${BASE_PATH}${breadcrumbs.slice(0, index + 1).join("/")}`}>
+        <BreadcrumbsItem
+          key={`${index}-bradcrumb`}
+          href={`${BASE_PATH}${breadcrumbs.slice(0, index + 1).join("/")}`}
+          className={ITEM_CLASS}
+        >
           {item}
-        </BreadcrumbItem>
+        </BreadcrumbsItem>
       ),
     )}
   </Breadcrumbs>

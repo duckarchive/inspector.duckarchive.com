@@ -1,21 +1,17 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { Divider } from "@heroui/divider";
-import { addToast } from "@heroui/toast";
+import { Button, Input, Label, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
+import Select from "@/components/select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import OnlineCopiesField, { emptyOnlineCopyOps, OnlineCopyOps } from "@/components/editor/online-copies-field";
 import AuthorsField, { AuthorOps, emptyAuthorOps } from "@/components/editor/authors-field";
 import LocationsField, { emptyLocationOps, LocationOps } from "@/components/editor/locations-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
+import PendingButton from "@/components/pending-button";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
 import { useEditorFiles } from "@/hooks/useEditor";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 
 interface FileEditModalProps {
   file: EditorFile | null;
@@ -120,7 +116,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
     }
 
     if (bodies.length === 0) {
-      addToast({ title: "Немає змін", color: "default" });
+      toast("Немає змін");
       return;
     }
 
@@ -130,58 +126,70 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-0.5">
-          Редагувати справу {file.full_code || file.code}
-          <span className="text-tiny font-normal text-default-400 select-all">{file.id}</span>
-        </ModalHeader>
-        <ModalBody className="gap-3">
-          <Input label="Код" value={code} onValueChange={setCode} />
-          <Input label="Назва" value={title} onValueChange={setTitle} />
-          <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header className="flex flex-col gap-0.5">
+              <Modal.Heading>Редагувати справу {file.full_code || file.code}</Modal.Heading>
+              <span className="text-xs font-normal text-muted select-all">{file.id}</span>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
+          <TextField value={code} onChange={setCode}>
+            <Label>Код</Label>
+            <Input />
+          </TextField>
+          <TextField value={title} onChange={setTitle}>
+            <Label>Назва</Label>
+            <Input />
+          </TextField>
+          <TextField value={info} onChange={setInfo}>
+            <Label>Опис</Label>
+            <TextArea rows={2} />
+          </TextField>
           <YearRangesField value={years} onChange={setYears} />
           <OnlineCopiesField copies={file.online_copies} target="file" ops={copyOps} onChange={setCopyOps} />
           <AuthorsField linked={linkedAuthors} ops={authorOps} onChange={setAuthorOps} />
           <LocationsField locations={file.locations} ops={locationOps} onChange={setLocationOps} />
 
-          <Divider className="my-2" />
+          <Separator className="my-2" />
 
           <div className="flex flex-col gap-2">
             <span className="text-sm font-semibold">Об&apos;єднати з іншою справою</span>
-            <span className="text-xs text-default-500">
+            <span className="text-xs text-muted">
               Усі автори, локації та онлайн-копії цієї справи буде перенесено до обраної.
             </span>
-            <Autocomplete
-              size="sm"
+            <Select
               label="Справа-приймач"
-              onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-              defaultItems={(mergeCandidates ?? []).filter((f) => f.id !== file.id)}
-              {...editorAutocompleteVirtualization}
-            >
-              {(f) => (
-                <AutocompleteItem key={f.id} textValue={f.code} classNames={wrapItemClassNames}>
-                  <div>
-                    <p>{f.code}</p>
-                    <p className="opacity-70 text-sm">{f.title}</p>
-                  </div>
-                </AutocompleteItem>
+              virtualized
+              items={(mergeCandidates ?? []).filter((f) => f.id !== file.id)}
+              getKey={(f) => f.id}
+              getTextValue={(f) => f.code}
+              renderItem={(f) => (
+                <div>
+                  <p>{f.code}</p>
+                  <p className="opacity-70 text-sm">{f.title}</p>
+                </div>
               )}
-            </Autocomplete>
-            <Button size="sm" color="warning" variant="flat" onPress={handleMerge} isDisabled={!mergeTargetId} isLoading={isMutating}>
+              onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
+            />
+            <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
               Об&apos;єднати
-            </Button>
+            </PendingButton>
           </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isLoading={isMutating}>
-            Надіслати на розгляд
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isPending={isMutating}>
+                Надіслати на розгляд
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

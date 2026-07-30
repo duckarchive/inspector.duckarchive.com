@@ -1,21 +1,15 @@
 /**
- * Shared HeroUI Autocomplete config for editor selects.
+ * Shared HeroUI ComboBox config for editor selects.
  *
- * HeroUI auto-enables listbox virtualization past 50 items (fixed row height),
- * which is fast but clips/overlaps multi-line content. Non-virtualized fits
- * content but lags on long lists. We keep virtualization and instead pin a row
- * height + clamp each option to 2 lines so rows always fit — fast AND no overlap.
+ * HeroUI v3 dropped v2's listbox virtualization props (`isVirtualized`,
+ * `itemHeight`, `maxListboxHeight`), so long lists now render in full. We cap
+ * the popover height and clamp each option to 2 lines so rows still line up
+ * and the dropdown stays a sane size.
  */
-export const editorAutocompleteVirtualization = { itemHeight: 56, maxListboxHeight: 320 } as const;
+export const editorPopoverClassName = "max-h-80";
 
-/** Clamp option content to 2 wrapped lines within the fixed row height. */
-export const wrapItemClassNames = {
-  base: "overflow-hidden",
-  title: "whitespace-normal break-words line-clamp-2",
-};
+/** Clamp option content to 2 wrapped lines. */
+export const wrapItemClassName = "overflow-hidden whitespace-normal break-words line-clamp-2";
 
 /** Variant for URL-heavy options (break anywhere). */
-export const wrapUrlItemClassNames = {
-  base: "overflow-hidden",
-  title: "whitespace-normal break-all line-clamp-2",
-};
+export const wrapUrlItemClassName = "overflow-hidden whitespace-normal break-all line-clamp-2";

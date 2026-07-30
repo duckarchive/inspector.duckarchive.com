@@ -1,6 +1,7 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -24,7 +25,7 @@ const Details: React.FC<{
         {Boolean(inventory.years.length) && <li>Роки: {getYearsString(inventory.years)}</li>}
         {(inventory.online_copies.filter((copy) => copy.url) as { url: string }[]).map((copy) => (
           <li key={copy.url}>
-            <Link href={copy.url} target="_blank" className="text-inherit text-sm underline">
+            <Link href={copy.url} target="_blank" rel="noopener noreferrer" className="text-inherit text-sm underline">
               {copy.url}
             </Link>
           </li>
@@ -73,9 +74,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/archives/${archiveCode}/${fondCode}/${code}/${row.data.code}`}>
+              <NextLink href={`/archives/${archiveCode}/${fondCode}/${code}/${row.data.code}`} className="link">
                 {row.value || `Справа ${row.data.code}`}
-              </Link>
+              </NextLink>
             ),
           },
           {

@@ -11,7 +11,7 @@ import { useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
 
 export default function EditorInventoriesPage() {
@@ -88,7 +88,7 @@ export default function EditorInventoriesPage() {
             }}
           />
         </div>
-        <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!fondId}>
+        <Button variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!fondId}>
           Створити
         </Button>
       </div>

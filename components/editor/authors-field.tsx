@@ -1,9 +1,7 @@
 "use client";
 
 import { Key, useMemo, useState } from "react";
-import { Chip } from "@heroui/chip";
-import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
+import { Button, Chip, CloseButton, Input, Label, TextField } from "@heroui/react";
 import Select from "@/components/select";
 import { useEditorAuthors } from "@/hooks/useEditor";
 
@@ -61,29 +59,37 @@ const AuthorsField: React.FC<AuthorsFieldProps> = ({ linked, ops, onChange }) =>
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm text-default-600">Автори</span>
+      <span className="text-sm text-muted">Автори</span>
       <div className="flex flex-wrap gap-1">
         {linked.length === 0 && ops.connect.length === 0 && ops.addNew.length === 0 && (
-          <span className="text-default-400 text-sm">Немає</span>
+          <span className="text-muted text-sm">Немає</span>
         )}
         {linked.map((a) => (
           <Chip
             key={a.id}
-            variant={ops.disconnect.includes(a.id) ? "solid" : "flat"}
+            variant={ops.disconnect.includes(a.id) ? "primary" : "soft"}
             color={ops.disconnect.includes(a.id) ? "danger" : "default"}
-            onClose={() => toggleDisconnect(a.id)}
           >
             {a.title}
+            <CloseButton aria-label="Відв'язати автора" onPress={() => toggleDisconnect(a.id)} />
           </Chip>
         ))}
         {ops.connect.map((id) => (
-          <Chip key={id} color="success" onClose={() => onChange({ ...ops, connect: ops.connect.filter((x) => x !== id) })}>
+          <Chip key={id} color="success" variant="soft">
             {titleById.get(id) ?? id}
+            <CloseButton
+              aria-label="Скасувати прив'язку автора"
+              onPress={() => onChange({ ...ops, connect: ops.connect.filter((x) => x !== id) })}
+            />
           </Chip>
         ))}
         {ops.addNew.map((t, i) => (
-          <Chip key={t} color="success" variant="dot" onClose={() => onChange({ ...ops, addNew: ops.addNew.filter((_, idx) => idx !== i) })}>
+          <Chip key={t} color="success" variant="secondary">
             {t}
+            <CloseButton
+              aria-label="Скасувати нового автора"
+              onPress={() => onChange({ ...ops, addNew: ops.addNew.filter((_, idx) => idx !== i) })}
+            />
           </Chip>
         ))}
       </div>
@@ -99,7 +105,10 @@ const AuthorsField: React.FC<AuthorsFieldProps> = ({ linked, ops, onChange }) =>
         onChange={connect}
       />
       <div className="flex items-end gap-2">
-        <Input size="sm" label="Додати нового автора" value={newTitle} onValueChange={setNewTitle} />
+        <TextField value={newTitle} onChange={setNewTitle}>
+          <Label>Додати нового автора</Label>
+          <Input />
+        </TextField>
         <Button size="sm" onPress={addNew} isDisabled={!newTitle.trim()}>
           Додати
         </Button>

@@ -1,10 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button, ButtonGroup } from "@heroui/button";
-import { Checkbox } from "@heroui/checkbox";
-import { Chip } from "@heroui/chip";
-import { Link } from "@heroui/link";
+import { Button, ButtonGroup, Checkbox, Chip, Link } from "@heroui/react";
+import PendingButton from "@/components/pending-button";
 import { FaCheck, FaPen, FaTimes } from "react-icons/fa";
 import { useEditorActions } from "@/hooks/useEditor";
 import useResolveAction from "@/hooks/useResolveAction";
@@ -112,20 +110,22 @@ const targetCell = (data: any) => {
       {author && (
         <span className="font-medium">
           {author.title}
-          {mergeTarget && <span className="text-default-500 font-normal"> → {mergeTarget.title}</span>}
+          {mergeTarget && <span className="text-muted font-normal"> → {mergeTarget.title}</span>}
         </span>
       )}
       {target &&
         (target.href ? (
-          <Link href={target.href} size="sm" isExternal>
+          <Link href={target.href} target="_blank" rel="noopener noreferrer" className="text-sm">
             {target.label}
+            <Link.Icon />
           </Link>
         ) : (
           <span>{target.label}</span>
         ))}
       {copyUrl && (
-        <Link href={copyUrl} size="sm" isExternal className="text-default-500">
+        <Link href={copyUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-muted">
           {hostLabel(copyUrl)}
+          <Link.Icon />
         </Link>
       )}
     </div>
@@ -153,9 +153,9 @@ const isPending = (data: any): boolean => !data?.resolved_at;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const statusChip = (data: any) => {
-  if (isPending(data)) return <Chip size="sm" color="warning" variant="flat">{ACTION_STATUS_LABELS.pending}</Chip>;
-  if (data.is_rejected) return <Chip size="sm" color="danger" variant="flat">{ACTION_STATUS_LABELS.rejected}</Chip>;
-  return <Chip size="sm" color="success" variant="flat">{ACTION_STATUS_LABELS.executed}</Chip>;
+  if (isPending(data)) return <Chip size="sm" color="warning" variant="soft">{ACTION_STATUS_LABELS.pending}</Chip>;
+  if (data.is_rejected) return <Chip size="sm" color="danger" variant="soft">{ACTION_STATUS_LABELS.rejected}</Chip>;
+  return <Chip size="sm" color="success" variant="soft">{ACTION_STATUS_LABELS.executed}</Chip>;
 };
 
 const ITEMS_PER_PAGE = 100;
@@ -212,26 +212,32 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
         <div className="flex items-center gap-2 flex-wrap">
           <ButtonGroup size="sm">
             {STATUSES.map((s) => (
-              <Button key={s} variant={status === s ? "solid" : "flat"} color={status === s ? "primary" : "default"} onPress={() => setStatusAndReset(s)}>
+              <Button key={s} variant={status === s ? "primary" : "tertiary"} onPress={() => setStatusAndReset(s)}>
                 {STATUS_FILTER_LABELS[s]}
               </Button>
             ))}
           </ButtonGroup>
-          <Button size="sm" color="success" isDisabled={selectedIds.length === 0} isLoading={isResolving} onPress={() => resolve(selectedIds, "execute")}>
+          <PendingButton size="sm" isDisabled={selectedIds.length === 0} isPending={isResolving} onPress={() => resolve(selectedIds, "execute")}>
             Виконати обрані ({selectedIds.length})
-          </Button>
-          <Button size="sm" color="danger" variant="flat" isDisabled={selectedIds.length === 0} isLoading={isResolving} onPress={() => resolve(selectedIds, "reject")}>
+          </PendingButton>
+          <PendingButton size="sm" variant="danger-soft" isDisabled={selectedIds.length === 0} isPending={isResolving} onPress={() => resolve(selectedIds, "reject")}>
             Відхилити обрані ({selectedIds.length})
-          </Button>
+          </PendingButton>
         </div>
       </div>
 
-      <div className="overflow-x-auto border border-default-200 rounded-medium">
+      <div className="overflow-x-auto border border-default rounded-md">
         <table className="w-full text-sm">
-          <thead className="bg-default-100">
+          <thead className="bg-surface-secondary">
             <tr className="text-left">
               <th className="p-2 w-10">
-                <Checkbox isSelected={allSelected} isDisabled={pendingIds.length === 0} onValueChange={toggleAll} aria-label="Обрати всі" />
+                <Checkbox isSelected={allSelected} isDisabled={pendingIds.length === 0} onChange={toggleAll} aria-label="Обрати всі">
+                  <Checkbox.Content>
+                    <Checkbox.Control>
+                      <Checkbox.Indicator />
+                    </Checkbox.Control>
+                  </Checkbox.Content>
+                </Checkbox>
               </th>
               <th className="p-2">Дія</th>
               <th className="p-2">Ціль</th>
@@ -243,20 +249,26 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
           <tbody>
             {isLoading && (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-default-400">Завантаження…</td>
+                <td colSpan={6} className="p-4 text-center text-muted">Завантаження…</td>
               </tr>
             )}
             {!isLoading && rows.length === 0 && (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-default-400">Немає дій</td>
+                <td colSpan={6} className="p-4 text-center text-muted">Немає дій</td>
               </tr>
             )}
             {paginatedRows.map((row) => {
               const pending = isPending(row);
               return (
-                <tr key={row.id} className="border-t border-default-100 align-top">
+                <tr key={row.id} className="border-t border-default align-top">
                   <td className="p-2">
-                    {pending && <Checkbox isSelected={selected.has(row.id)} onValueChange={() => toggle(row.id)} aria-label="Обрати" />}
+                    {pending && <Checkbox isSelected={selected.has(row.id)} onChange={() => toggle(row.id)} aria-label="Обрати">
+                        <Checkbox.Content>
+                          <Checkbox.Control>
+                            <Checkbox.Indicator />
+                          </Checkbox.Control>
+                        </Checkbox.Content>
+                      </Checkbox>}
                   </td>
                   <td className="p-2">{ACTION_TYPE_LABELS[row.type as ActionType] ?? row.type}</td>
                   <td className="p-2">{targetCell(row)}</td>
@@ -265,45 +277,36 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
                   <td className="p-2">
                     {pending && (
                       <div className="flex gap-1 justify-end">
-                        <Button
+                        <PendingButton
                           isIconOnly
                           size="sm"
-                          color="success"
-                          title="Виконати"
                           aria-label="Виконати"
-                          isLoading={isResolving}
+                          isPending={isResolving}
                           onPress={() => resolve([row.id], "execute")}
                         >
                           <FaCheck />
-                        </Button>
+                        </PendingButton>
                         {editorHref(entity, row) && (
-                          <Button
-                            isIconOnly
-                            as="a"
+                          <Link
                             href={editorHref(entity, row) as string}
                             target="_blank"
                             rel="noopener noreferrer"
-                            size="sm"
-                            color="primary"
-                            variant="flat"
-                            title="Редагувати вручну"
                             aria-label="Редагувати вручну"
+                            className="button button--secondary button--sm button--icon-only"
                           >
                             <FaPen />
-                          </Button>
+                          </Link>
                         )}
-                        <Button
+                        <PendingButton
                           isIconOnly
                           size="sm"
-                          color="danger"
-                          variant="flat"
-                          title="Відхилити"
+                          variant="danger-soft"
                           aria-label="Відхилити"
-                          isLoading={isResolving}
+                          isPending={isResolving}
                           onPress={() => resolve([row.id], "reject")}
                         >
                           <FaTimes />
-                        </Button>
+                        </PendingButton>
                       </div>
                     )}
                   </td>
@@ -318,19 +321,19 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
         <div className="flex items-center justify-center gap-2">
           <Button
             isIconOnly
-            variant="flat"
+            variant="tertiary"
             size="sm"
             isDisabled={page === 1}
             onPress={() => setPage(page - 1)}
           >
             ←
           </Button>
-          <span className="text-sm text-default-600">
+          <span className="text-sm text-muted">
             {page} / {totalPages}
           </span>
           <Button
             isIconOnly
-            variant="flat"
+            variant="tertiary"
             size="sm"
             isDisabled={page === totalPages}
             onPress={() => setPage(page + 1)}

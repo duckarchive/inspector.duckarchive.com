@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
-import { Button } from "@heroui/button";
+import { Button, Chip, CloseButton } from "@heroui/react";
 import CoordinatesInput from "@/components/coordinates-input";
 
 export interface LocationValue {
@@ -53,22 +52,26 @@ const LocationsField: React.FC<LocationsFieldProps> = ({ locations, ops, onChang
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm text-default-600">Локації</span>
+      <span className="text-sm text-muted">Локації</span>
       <div className="flex flex-wrap gap-1">
-        {locations.length === 0 && ops.add.length === 0 && <span className="text-default-400 text-sm">Немає</span>}
+        {locations.length === 0 && ops.add.length === 0 && <span className="text-muted text-sm">Немає</span>}
         {locations.map((l) => (
           <Chip
             key={l.id}
-            variant={ops.remove.includes(l.id) ? "solid" : "flat"}
+            variant={ops.remove.includes(l.id) ? "primary" : "soft"}
             color={ops.remove.includes(l.id) ? "danger" : "default"}
-            onClose={() => toggleRemove(l.id)}
           >
             {fmt(l)}
+            <CloseButton aria-label="Видалити локацію" onPress={() => toggleRemove(l.id)} />
           </Chip>
         ))}
         {ops.add.map((l, i) => (
-          <Chip key={`${l.lat}-${l.lng}-${i}`} color="success" onClose={() => onChange({ ...ops, add: ops.add.filter((_, idx) => idx !== i) })}>
+          <Chip key={`${l.lat}-${l.lng}-${i}`} color="success" variant="soft">
             + {fmt(l)}
+            <CloseButton
+              aria-label="Скасувати додавання локації"
+              onPress={() => onChange({ ...ops, add: ops.add.filter((_, idx) => idx !== i) })}
+            />
           </Chip>
         ))}
       </div>

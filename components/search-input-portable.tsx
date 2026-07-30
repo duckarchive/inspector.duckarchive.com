@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@heroui/input";
+import { InputGroup, TextField } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
@@ -18,8 +18,7 @@ const SearchInputPortable: React.FC = () => {
     setSearch("");
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
+  const handleChange = (raw: string) => {
     const withFixedFundCode = raw.replace(/[\/-\s\t](Р|П)[\/-\s\t]/gi, " $1");
     const withDelimiter = withFixedFundCode.replace(/[\s\t\/]/g, "-");
     setSearch(withDelimiter);
@@ -27,23 +26,23 @@ const SearchInputPortable: React.FC = () => {
 
   return (
     <form className="flex flex-wrap" onSubmit={handleSearch}>
-      <Input
-        size="md"
+      <TextField
         name="search-case"
         aria-label="Поле для реквізитів"
-        classNames={{
-          inputWrapper: "bg-default-100 relative",
-          input: "text-sm",
-        }}
+        type="search"
         value={search}
         onChange={handleChange}
-        labelPlacement="outside"
-        placeholder="ДАХмО-Р6193-5-1"
-        startContent={<FaSearch className="text-base text-default-400 pointer-events-none flex-shrink-0" />}
-        endContent={<SearchInputGuideModal withoutTitle />}
-        isClearable={false}
-        type="search"
-      />
+      >
+        <InputGroup variant="secondary">
+          <InputGroup.Prefix>
+            <FaSearch className="text-base text-muted pointer-events-none shrink-0" />
+          </InputGroup.Prefix>
+          <InputGroup.Input className="text-sm" placeholder="ДАХмО-Р6193-5-1" />
+          <InputGroup.Suffix>
+            <SearchInputGuideModal withoutTitle />
+          </InputGroup.Suffix>
+        </InputGroup>
+      </TextField>
     </form>
   );
 };
