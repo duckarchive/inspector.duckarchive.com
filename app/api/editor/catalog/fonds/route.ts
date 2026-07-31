@@ -16,6 +16,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetEditorFonds
     return NextResponse.json({ message: '"archive" query param is required' }, { status: 400 });
   }
 
-  const fonds = await getEditorFonds(archive);
+  const query = req.nextUrl.searchParams.get("q");
+  const fonds = await getEditorFonds(archive, query ?? undefined);
   return NextResponse.json(fonds);
 }

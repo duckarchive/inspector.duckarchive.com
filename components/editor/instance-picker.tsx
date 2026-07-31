@@ -19,10 +19,13 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
   const [fondId, setFondId] = useState("");
   const [inventoryId, setInventoryId] = useState("");
   const [fileId, setFileId] = useState("");
+  const [fondQuery, setFondQuery] = useState("");
+  const [inventoryQuery, setInventoryQuery] = useState("");
+  const [fileQuery, setFileQuery] = useState("");
 
-  const { data: fonds } = useEditorFonds(archiveCode || undefined);
-  const { data: inventories } = useEditorInventories(fondId || undefined);
-  const { data: files } = useEditorFiles(target === "file" ? inventoryId || undefined : undefined);
+  const { data: fonds } = useEditorFonds(archiveCode || undefined, fondQuery || undefined);
+  const { data: inventories } = useEditorInventories(fondId || undefined, inventoryQuery || undefined);
+  const { data: files } = useEditorFiles(target === "file" ? inventoryId || undefined : undefined, fileQuery || undefined);
 
   return (
     <div className="flex flex-col gap-3">
@@ -43,6 +46,9 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           setFondId("");
           setInventoryId("");
           setFileId("");
+          setFondQuery("");
+          setInventoryQuery("");
+          setFileQuery("");
           onChange("");
         }}
       />
@@ -60,10 +66,14 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           </div>
         )}
         value={fondId}
+        inputValue={fondQuery}
+        onInputChange={setFondQuery}
         onChange={(key: Key | null) => {
           setFondId(String(key ?? ""));
           setInventoryId("");
           setFileId("");
+          setInventoryQuery("");
+          setFileQuery("");
           onChange("");
         }}
       />
@@ -81,10 +91,13 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           </div>
         )}
         value={inventoryId}
+        inputValue={inventoryQuery}
+        onInputChange={setInventoryQuery}
         onChange={(key: Key | null) => {
           const id = String(key ?? "");
           setInventoryId(id);
           setFileId("");
+          setFileQuery("");
           onChange(target === "inventory" ? id : "");
         }}
       />
@@ -103,6 +116,8 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
             </div>
           )}
           value={fileId}
+          inputValue={fileQuery}
+          onInputChange={setFileQuery}
           onChange={(key: Key | null) => {
             const id = String(key ?? "");
             setFileId(id);

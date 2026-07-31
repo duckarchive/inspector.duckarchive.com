@@ -16,6 +16,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetEditorInven
     return NextResponse.json({ message: '"fond" query param is required' }, { status: 400 });
   }
 
-  const inventories = await getEditorInventories(fond);
+  const query = req.nextUrl.searchParams.get("q");
+  const inventories = await getEditorInventories(fond, query ?? undefined);
   return NextResponse.json(inventories);
 }

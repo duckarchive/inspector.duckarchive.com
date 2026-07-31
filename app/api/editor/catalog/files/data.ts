@@ -19,11 +19,17 @@ export const editorFileSelect = {
 type EditorFileRaw = Prisma.FileGetPayload<{ select: typeof editorFileSelect }>;
 export type EditorFile = Omit<EditorFileRaw, "_count"> & { has_pending_action: boolean };
 
-export const getEditorFiles = async (inventoryId: string): Promise<EditorFile[]> => {
+export const getEditorFiles = async (inventoryId: string, query?: string): Promise<EditorFile[]> => {
   const rows = await prisma.file.findMany({
-    where: { inventory_id: inventoryId },
+    where: {
+      inventory_id: inventoryId,
+      ...(query
+        ? { OR: [{ code: { contains: query, mode: "insensitive" } }, { title: { contains: query, mode: "insensitive" } }] }
+        : {}),
+    },
     select: editorFileSelect,
     orderBy: { code: "asc" },
+    take: 200,
   });
   return rows.map(({ _count, ...rest }) => ({ ...rest, has_pending_action: _count.actions > 0 }));
 };

@@ -15,11 +15,17 @@ export const editorFondSelect = {
 type EditorFondRaw = Prisma.FondGetPayload<{ select: typeof editorFondSelect }>;
 export type EditorFond = Omit<EditorFondRaw, "_count"> & { has_pending_action: boolean; children_count: number };
 
-export const getEditorFonds = async (archiveCode: string): Promise<EditorFond[]> => {
+export const getEditorFonds = async (archiveCode: string, query?: string): Promise<EditorFond[]> => {
   const rows = await prisma.fond.findMany({
-    where: { archive: { code: archiveCode } },
+    where: {
+      archive: { code: archiveCode },
+      ...(query
+        ? { OR: [{ code: { contains: query, mode: "insensitive" } }, { title: { contains: query, mode: "insensitive" } }] }
+        : {}),
+    },
     select: editorFondSelect,
     orderBy: { code: "asc" },
+    take: 200,
   });
   return rows.map(({ _count, ...rest }) => ({
     ...rest,

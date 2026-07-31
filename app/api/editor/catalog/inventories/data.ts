@@ -19,11 +19,17 @@ export type EditorInventory = Omit<EditorInventoryRaw, "_count"> & {
   children_count: number;
 };
 
-export const getEditorInventories = async (fondId: string): Promise<EditorInventory[]> => {
+export const getEditorInventories = async (fondId: string, query?: string): Promise<EditorInventory[]> => {
   const rows = await prisma.inventory.findMany({
-    where: { fond_id: fondId },
+    where: {
+      fond_id: fondId,
+      ...(query
+        ? { OR: [{ code: { contains: query, mode: "insensitive" } }, { title: { contains: query, mode: "insensitive" } }] }
+        : {}),
+    },
     select: editorInventorySelect,
     orderBy: { code: "asc" },
+    take: 200,
   });
   return rows.map(({ _count, ...rest }) => ({
     ...rest,

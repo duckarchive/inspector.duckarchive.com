@@ -9,14 +9,22 @@ import { GetEditorOnlineCopiesResponse } from "@/app/api/editor/online-copies/ro
 import { ListActionsResponse } from "@/app/api/editor/actions/[entity]/route";
 import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
-export const useEditorFonds = (archiveCode?: string) =>
-  useGet<GetEditorFondsResponse>(archiveCode ? `/api/editor/catalog/fonds?archive=${encodeURIComponent(archiveCode)}` : null);
+export const useEditorFonds = (archiveCode?: string, query?: string) =>
+  useGet<GetEditorFondsResponse>(
+    archiveCode
+      ? `/api/editor/catalog/fonds?archive=${encodeURIComponent(archiveCode)}${query ? `&q=${encodeURIComponent(query)}` : ""}`
+      : null,
+  );
 
-export const useEditorInventories = (fondId?: string) =>
-  useGet<GetEditorInventoriesResponse>(fondId ? `/api/editor/catalog/inventories?fond=${fondId}` : null);
+export const useEditorInventories = (fondId?: string, query?: string) =>
+  useGet<GetEditorInventoriesResponse>(
+    fondId ? `/api/editor/catalog/inventories?fond=${fondId}${query ? `&q=${encodeURIComponent(query)}` : ""}` : null,
+  );
 
-export const useEditorFiles = (inventoryId?: string) =>
-  useGet<GetEditorFilesResponse>(inventoryId ? `/api/editor/catalog/files?inventory=${inventoryId}` : null);
+export const useEditorFiles = (inventoryId?: string, query?: string) =>
+  useGet<GetEditorFilesResponse>(
+    inventoryId ? `/api/editor/catalog/files?inventory=${inventoryId}${query ? `&q=${encodeURIComponent(query)}` : ""}` : null,
+  );
 
 export const useEditorAuthors = (query?: string) =>
   useGet<GetEditorAuthorsResponse>(`/api/editor/authors${query ? `?q=${encodeURIComponent(query)}` : ""}`);
