@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontComic, fontLabel, fontMono, fontSans } from "@/config/fonts";
+import { fontComic, fontLabel, fontMono, fontSans } from "@duckarchive/framework/fonts";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";

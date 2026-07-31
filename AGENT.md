@@ -17,6 +17,7 @@
 - **i18n:** next-intl. Locales: `uk` (default, no URL prefix), `en`, `pl`, `cz`, `ro`, `es`, `it`. Config in `i18n/`, translations in `messages/*.json`. Locale resolution (middleware): URL prefix → `NEXT_LOCALE` cookie (1-year, see `localeCookie` in `i18n/routing.ts`) → `Accept-Language` → `uk`. Manual switches happen in `@duckarchive/framework`'s `DuckNav`/`SelectLocale`, which writes the same `NEXT_LOCALE` cookie client-side (soft navigations bypass the middleware's cookie sync) — keep cookie name/lifetime in sync between the two repos.
 - **Data fetching (client):** SWR with fetchers from `lib/api.ts`
 - **Shared org packages (installed from GitHub):** `@duckarchive/framework`, `@duckarchive/map`, `@duckarchive/prisma`
+- **Typography:** lives in `@duckarchive/framework/fonts` (the package also ships the SF Pro / CCJimLee binaries) and is applied in `app/layout.tsx`. `next/font` is a **compile-time** transform Next skips inside `node_modules`, so `@duckarchive/framework` must stay in `transpilePackages` (next.config.js) or the loaders go untransformed and throw at runtime. Font `src`/option values in that package must stay explicitly written literals — no template strings or shared path constants.
 - **Package manager:** pnpm (see `pnpm.onlyBuiltDependencies` in package.json)
 
 ## Commands
@@ -61,7 +62,7 @@ app/
     search/                     # search over files (requisites, title, author, tags, place, geo-radius)
     sync/familysearch/          # FamilySearch sync endpoints (items, projects)
 components/        # shared React components (tables per hierarchy level, search, modals, comics-card, home/)
-config/            # site.ts (site meta), fonts.ts, i18n.ts
+config/            # site.ts (site meta), i18n.ts
 data/              # static datasets (archives, institutions, resources, tags, FamilySearch, DGS lists)
 generated/prisma/  # GENERATED — never edit by hand (client + zod)
 hooks/             # useApi, useArchive, useFond, useInventory, useFile, useSearch, useCyrillicParams, useIsMobile, useNoRussians
