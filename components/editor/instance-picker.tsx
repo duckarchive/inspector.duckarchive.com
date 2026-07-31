@@ -3,8 +3,12 @@
 import { Key, useState } from "react";
 import Select from "@/components/select";
 import { useGet } from "@/hooks/useApi";
-import { useEditorFiles, useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorFilesEndpoint, editorFondsEndpoint, editorInventoriesEndpoint } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
+import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
+import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
+import { EditorFile } from "@/app/api/editor/catalog/files/data";
 import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
 interface InstancePickerProps {
@@ -13,19 +17,29 @@ interface InstancePickerProps {
   onChange: (id: string) => void;
 }
 
+/** Code over title, matching how archivists read a reference. */
+const codeAndTitle = (item: { code: string; title?: string | null }) => `${item.code} ${item.title ?? ""}`.trim();
+
+const codeAndTitleOption = (item: { code: string; title?: string | null }) => (
+  <div>
+    <p>{item.code}</p>
+    <p className="opacity-70 text-sm text-wrap">{item.title}</p>
+  </div>
+);
+
 const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
   const [archiveCode, setArchiveCode] = useState("");
   const [fondId, setFondId] = useState("");
   const [inventoryId, setInventoryId] = useState("");
   const [fileId, setFileId] = useState("");
-  const [fondQuery, setFondQuery] = useState("");
-  const [inventoryQuery, setInventoryQuery] = useState("");
-  const [fileQuery, setFileQuery] = useState("");
 
-  const { data: fonds } = useEditorFonds(archiveCode || undefined, fondQuery || undefined);
-  const { data: inventories } = useEditorInventories(fondId || undefined, inventoryQuery || undefined);
-  const { data: files } = useEditorFiles(target === "file" ? inventoryId || undefined : undefined, fileQuery || undefined);
+  const fonds = useCatalogPicker<EditorFond>(editorFondsEndpoint(archiveCode), fondId);
+  const inventories = useCatalogPicker<EditorInventory>(editorInventoriesEndpoint(fondId), inventoryId);
+  const files = useCatalogPicker<EditorFile>(
+    editorFilesEndpoint(target === "file" ? inventoryId : ""),
+    fileId,
+  );
 
   return (
     <div className="flex flex-col gap-3">
@@ -46,83 +60,56 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           setFondId("");
           setInventoryId("");
           setFileId("");
-          setFondQuery("");
-          setInventoryQuery("");
-          setFileQuery("");
           onChange("");
         }}
       />
       <Select
-        items={fonds ?? []}
         label="Фонд"
         virtualized
         isDisabled={!archiveCode}
         getKey={(f) => f.id}
-        getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
-        renderItem={(f) => (
-          <div>
-            <p>{f.code}</p>
-            <p className="opacity-70 text-sm text-wrap">{f.title}</p>
-          </div>
-        )}
+        getTextValue={codeAndTitle}
+        renderItem={codeAndTitleOption}
         value={fondId}
-        inputValue={fondQuery}
-        onInputChange={setFondQuery}
         onChange={(key: Key | null) => {
           setFondId(String(key ?? ""));
           setInventoryId("");
           setFileId("");
-          setInventoryQuery("");
-          setFileQuery("");
           onChange("");
         }}
+        {...fonds.selectProps}
       />
       <Select
-        items={inventories ?? []}
         label="Опис"
         virtualized
         isDisabled={!fondId}
         getKey={(inv) => inv.id}
-        getTextValue={(inv) => `${inv.code} ${inv.title ?? ""}`}
-        renderItem={(inv) => (
-          <div>
-            <p>{inv.code}</p>
-            <p className="opacity-70 text-sm text-wrap">{inv.title}</p>
-          </div>
-        )}
+        getTextValue={codeAndTitle}
+        renderItem={codeAndTitleOption}
         value={inventoryId}
-        inputValue={inventoryQuery}
-        onInputChange={setInventoryQuery}
         onChange={(key: Key | null) => {
           const id = String(key ?? "");
           setInventoryId(id);
           setFileId("");
-          setFileQuery("");
           onChange(target === "inventory" ? id : "");
         }}
+        {...inventories.selectProps}
       />
       {target === "file" && (
         <Select
-          items={files ?? []}
           label="Справа"
           virtualized
           isDisabled={!inventoryId}
           getKey={(file) => file.id}
-          getTextValue={(file) => `${file.code} ${file.title ?? ""}`}
-          renderItem={(file) => (
-            <div>
-              <p>{file.code}</p>
-              <p className="opacity-70 text-sm text-wrap">{file.title}</p>
-            </div>
-          )}
+          getTextValue={codeAndTitle}
+          renderItem={codeAndTitleOption}
           value={fileId}
-          inputValue={fileQuery}
-          onInputChange={setFileQuery}
           onChange={(key: Key | null) => {
             const id = String(key ?? "");
             setFileId(id);
             onChange(id);
           }}
+          {...files.selectProps}
         />
       )}
     </div>

@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import { Prisma } from "@generated/prisma/client/client";
+import { CatalogQuery, catalogPaging, catalogSearchWhere } from "@/app/api/editor/catalog/query";
 
 export const editorInventorySelect = {
   id: true,
@@ -19,17 +20,15 @@ export type EditorInventory = Omit<EditorInventoryRaw, "_count"> & {
   children_count: number;
 };
 
-export const getEditorInventories = async (fondId: string, query?: string): Promise<EditorInventory[]> => {
+export const getEditorInventories = async (
+  fondId: string,
+  options: CatalogQuery = {},
+): Promise<EditorInventory[]> => {
   const rows = await prisma.inventory.findMany({
-    where: {
-      fond_id: fondId,
-      ...(query
-        ? { OR: [{ code: { contains: query, mode: "insensitive" } }, { title: { contains: query, mode: "insensitive" } }] }
-        : {}),
-    },
+    where: { fond_id: fondId, ...catalogSearchWhere(options) },
     select: editorInventorySelect,
     orderBy: { code: "asc" },
-    take: 200,
+    ...catalogPaging(options),
   });
   return rows.map(({ _count, ...rest }) => ({
     ...rest,

@@ -7,11 +7,12 @@ import EditCell from "@/components/editor/edit-cell";
 import FileEditModal from "@/components/editor/file-edit-modal";
 import FileAddModal from "@/components/editor/file-add-modal";
 import { useGet } from "@/hooks/useApi";
-import { useEditorFiles, useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorFondsEndpoint, editorInventoriesEndpoint, useEditorFiles } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
+import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
-import { sortByCode } from "@/lib/table";
 import { syncEditorUrl } from "@/lib/editor-url";
 import { Button } from "@heroui/react";
 
@@ -20,8 +21,8 @@ export default function EditorFilesPage() {
   const [archiveCode, setArchiveCode] = useState("");
   const [fondId, setFondId] = useState("");
   const [inventoryId, setInventoryId] = useState("");
-  const { data: fonds } = useEditorFonds(archiveCode || undefined);
-  const { data: inventories } = useEditorInventories(fondId || undefined);
+  const fondPicker = useCatalogPicker<EditorFond>(editorFondsEndpoint(archiveCode), fondId);
+  const inventoryPicker = useCatalogPicker<EditorInventory>(editorInventoriesEndpoint(fondId), inventoryId);
   const { data: files, isLoading, mutate } = useEditorFiles(inventoryId || undefined);
   const [selected, setSelected] = useState<EditorFile | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -45,7 +46,7 @@ export default function EditorFilesPage() {
     }
   }, [pendingEditId, files]);
 
-  const selectedInventory = inventories?.find((i) => i.id === inventoryId) as EditorInventory | undefined;
+  const selectedInventory = inventoryPicker.selected;
 
   return (
     <section className="flex flex-col gap-4 h-full">
@@ -75,7 +76,6 @@ export default function EditorFilesPage() {
           />
           <Select
             size="sm"
-            items={(fonds ?? []).sort(sortByCode)}
             label="Фонд"
             virtualized
             isDisabled={!archiveCode}
@@ -94,10 +94,10 @@ export default function EditorFilesPage() {
               setInventoryId("");
               syncEditorUrl({ fond: v || null, inventory: null, edit: null });
             }}
+            {...fondPicker.selectProps}
           />
           <Select
             size="sm"
-            items={(inventories ?? []).sort(sortByCode)}
             label="Опис"
             virtualized
             isDisabled={!fondId}
@@ -110,6 +110,7 @@ export default function EditorFilesPage() {
               </div>
             )}
             value={inventoryId}
+            {...inventoryPicker.selectProps}
             onChange={(key: Key | null) => {
               const v = String(key ?? "");
               setInventoryId(v);

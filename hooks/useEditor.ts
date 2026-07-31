@@ -1,5 +1,5 @@
 import { useGet } from "@/hooks/useApi";
-import { ActionStatus, EditorEntity, EditorQueue } from "@/lib/editor-actions";
+import { ActionStatus, EditorQueue } from "@/lib/editor-actions";
 import { GetEditorFondsResponse } from "@/app/api/editor/catalog/fonds/route";
 import { GetEditorInventoriesResponse } from "@/app/api/editor/catalog/inventories/route";
 import { GetEditorFilesResponse } from "@/app/api/editor/catalog/files/route";
@@ -9,22 +9,29 @@ import { GetEditorOnlineCopiesResponse } from "@/app/api/editor/online-copies/ro
 import { ListActionsResponse } from "@/app/api/editor/actions/[entity]/route";
 import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
-export const useEditorFonds = (archiveCode?: string, query?: string) =>
-  useGet<GetEditorFondsResponse>(
-    archiveCode
-      ? `/api/editor/catalog/fonds?archive=${encodeURIComponent(archiveCode)}${query ? `&q=${encodeURIComponent(query)}` : ""}`
-      : null,
-  );
+/**
+ * Endpoint builders for the searchable pickers (`useCatalogPicker` adds `q`,
+ * `limit`/`offset` and `id` on top). They return `null` while the parent
+ * selection is empty so nothing is fetched.
+ */
+export const editorFondsEndpoint = (archiveCode?: string) =>
+  archiveCode ? `/api/editor/catalog/fonds?archive=${encodeURIComponent(archiveCode)}` : null;
 
-export const useEditorInventories = (fondId?: string, query?: string) =>
-  useGet<GetEditorInventoriesResponse>(
-    fondId ? `/api/editor/catalog/inventories?fond=${fondId}${query ? `&q=${encodeURIComponent(query)}` : ""}` : null,
-  );
+export const editorInventoriesEndpoint = (fondId?: string) =>
+  fondId ? `/api/editor/catalog/inventories?fond=${encodeURIComponent(fondId)}` : null;
 
-export const useEditorFiles = (inventoryId?: string, query?: string) =>
-  useGet<GetEditorFilesResponse>(
-    inventoryId ? `/api/editor/catalog/files?inventory=${inventoryId}${query ? `&q=${encodeURIComponent(query)}` : ""}` : null,
-  );
+export const editorFilesEndpoint = (inventoryId?: string) =>
+  inventoryId ? `/api/editor/catalog/files?inventory=${encodeURIComponent(inventoryId)}` : null;
+
+/** Unpaged fetches backing the catalog grids, which page client-side. */
+export const useEditorFonds = (archiveCode?: string) =>
+  useGet<GetEditorFondsResponse>(editorFondsEndpoint(archiveCode));
+
+export const useEditorInventories = (fondId?: string) =>
+  useGet<GetEditorInventoriesResponse>(editorInventoriesEndpoint(fondId));
+
+export const useEditorFiles = (inventoryId?: string) =>
+  useGet<GetEditorFilesResponse>(editorFilesEndpoint(inventoryId));
 
 export const useEditorAuthors = (query?: string) =>
   useGet<GetEditorAuthorsResponse>(`/api/editor/authors${query ? `?q=${encodeURIComponent(query)}` : ""}`);

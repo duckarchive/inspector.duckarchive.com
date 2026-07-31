@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import { Prisma } from "@generated/prisma/client/client";
+import { CatalogQuery, catalogPaging, catalogSearchWhere } from "@/app/api/editor/catalog/query";
 
 export const editorFileSelect = {
   id: true,
@@ -19,17 +20,12 @@ export const editorFileSelect = {
 type EditorFileRaw = Prisma.FileGetPayload<{ select: typeof editorFileSelect }>;
 export type EditorFile = Omit<EditorFileRaw, "_count"> & { has_pending_action: boolean };
 
-export const getEditorFiles = async (inventoryId: string, query?: string): Promise<EditorFile[]> => {
+export const getEditorFiles = async (inventoryId: string, options: CatalogQuery = {}): Promise<EditorFile[]> => {
   const rows = await prisma.file.findMany({
-    where: {
-      inventory_id: inventoryId,
-      ...(query
-        ? { OR: [{ code: { contains: query, mode: "insensitive" } }, { title: { contains: query, mode: "insensitive" } }] }
-        : {}),
-    },
+    where: { inventory_id: inventoryId, ...catalogSearchWhere(options) },
     select: editorFileSelect,
     orderBy: { code: "asc" },
-    take: 200,
+    ...catalogPaging(options),
   });
   return rows.map(({ _count, ...rest }) => ({ ...rest, has_pending_action: _count.actions > 0 }));
 };

@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import { Prisma } from "@generated/prisma/client/client";
+import { CatalogQuery, catalogPaging, catalogSearchWhere } from "@/app/api/editor/catalog/query";
 
 export const editorFondSelect = {
   id: true,
@@ -15,17 +16,12 @@ export const editorFondSelect = {
 type EditorFondRaw = Prisma.FondGetPayload<{ select: typeof editorFondSelect }>;
 export type EditorFond = Omit<EditorFondRaw, "_count"> & { has_pending_action: boolean; children_count: number };
 
-export const getEditorFonds = async (archiveCode: string, query?: string): Promise<EditorFond[]> => {
+export const getEditorFonds = async (archiveCode: string, options: CatalogQuery = {}): Promise<EditorFond[]> => {
   const rows = await prisma.fond.findMany({
-    where: {
-      archive: { code: archiveCode },
-      ...(query
-        ? { OR: [{ code: { contains: query, mode: "insensitive" } }, { title: { contains: query, mode: "insensitive" } }] }
-        : {}),
-    },
+    where: { archive: { code: archiveCode }, ...catalogSearchWhere(options) },
     select: editorFondSelect,
     orderBy: { code: "asc" },
-    take: 200,
+    ...catalogPaging(options),
   });
   return rows.map(({ _count, ...rest }) => ({
     ...rest,
