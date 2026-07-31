@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@duckarchive/framework':
         specifier: github:duckarchive/framework
-        version: https://codeload.github.com/duckarchive/framework/tar.gz/96c0d3b10dec941d480a2562ce19fd8d6cd64003(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/react@19.1.0)(ag-grid-community@33.3.2)(ag-grid-react@33.3.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(date-fns@4.4.0)(next-auth@4.24.15(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next-themes@0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-icons@5.7.0(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/9ea46c4ae176215fdcc08591ab48a0198fd37aba(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/react@19.1.0)(ag-grid-community@33.3.2)(ag-grid-react@33.3.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(date-fns@4.4.0)(next-auth@4.24.15(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next-themes@0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-icons@5.7.0(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)
       '@duckarchive/map':
         specifier: github:duckarchive/map
         version: https://codeload.github.com/duckarchive/map/tar.gz/a28de21f84addb9d39f740f2bd78d17ed624c1d4(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@heroui/styles@3.2.2(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(swr@2.4.2(react@19.2.8))(tailwindcss@4.3.3)
@@ -53,9 +53,6 @@ importers:
       dotenv:
         specifier: ^16.6.1
         version: 16.6.1
-      intl-messageformat:
-        specifier: ^10.7.18
-        version: 10.7.18
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
@@ -69,7 +66,7 @@ importers:
         specifier: ^4.24.13
         version: 4.24.15(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       next-intl:
-        specifier: ^4.6.0
+        specifier: ^4.13.4
         version: 4.13.4(@swc/helpers@0.5.23)(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@5.8.2)
       next-themes:
         specifier: ^0.4.6
@@ -209,9 +206,9 @@ packages:
     resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
     engines: {node: '>=6.9.0'}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/96c0d3b10dec941d480a2562ce19fd8d6cd64003':
-    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/96c0d3b10dec941d480a2562ce19fd8d6cd64003}
-    version: 2.0.1
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/9ea46c4ae176215fdcc08591ab48a0198fd37aba':
+    resolution: {tarball: https://codeload.github.com/duckarchive/framework/tar.gz/9ea46c4ae176215fdcc08591ab48a0198fd37aba}
+    version: 2.1.0
     peerDependencies:
       '@heroui/react': ^3.2.2
       '@types/react': ^19.1.8
@@ -3906,7 +3903,7 @@ snapshots:
 
   '@babel/runtime@7.29.7': {}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/96c0d3b10dec941d480a2562ce19fd8d6cd64003(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/react@19.1.0)(ag-grid-community@33.3.2)(ag-grid-react@33.3.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(date-fns@4.4.0)(next-auth@4.24.15(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next-themes@0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-icons@5.7.0(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)':
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/9ea46c4ae176215fdcc08591ab48a0198fd37aba(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/react@19.1.0)(ag-grid-community@33.3.2)(ag-grid-react@33.3.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(date-fns@4.4.0)(next-auth@4.24.15(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next-themes@0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-icons@5.7.0(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)':
     dependencies:
       '@heroui/react': 3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)
       '@types/react': 19.1.0
