@@ -1,14 +1,16 @@
 "use client";
 
-import { Key, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Input, Label, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
 import Select from "@/components/select";
+import CatalogSelect from "@/components/editor/catalog-select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
-import { useEditorFonds } from "@/hooks/useEditor";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorFondsEndpoint } from "@/hooks/useEditor";
 import { Archives } from "@/data/archives";
 
 interface FondEditModalProps {
@@ -28,7 +30,7 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
   const [years, setYears] = useState<YearRange[]>([]);
 
   const [mergeTargetId, setMergeTargetId] = useState<string>("");
-  const { data: mergeCandidates } = useEditorFonds(archiveCode || undefined);
+  const mergePicker = useCatalogPicker<EditorFond>(editorFondsEndpoint(archiveCode), mergeTargetId, fond?.id);
 
   useEffect(() => {
     if (fond) {
@@ -152,20 +154,7 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
             <span className="text-xs text-muted">
               Усі описи цього фонду буде перепривʼязано до обраного.
             </span>
-            <Select
-              label="Фонд-приймач"
-              virtualized
-              items={(mergeCandidates ?? []).filter((f) => f.id !== fond.id)}
-              getKey={(f) => f.id}
-              getTextValue={(f) => f.code}
-              renderItem={(f) => (
-                <div>
-                  <p>{f.code}</p>
-                  <p className="opacity-70 text-sm">{f.title}</p>
-                </div>
-              )}
-              onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-            />
+            <CatalogSelect picker={mergePicker} label="Фонд-приймач" value={mergeTargetId} onChange={setMergeTargetId} />
             <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
               Об&apos;єднати
             </PendingButton>

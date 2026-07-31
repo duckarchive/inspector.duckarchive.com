@@ -4,6 +4,7 @@ import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
 import CatalogSelect from "@/components/editor/catalog-select";
+import CatalogItemLink from "@/components/editor/catalog-item-link";
 import EditCell from "@/components/editor/edit-cell";
 import FileEditModal from "@/components/editor/file-edit-modal";
 import FileAddModal from "@/components/editor/file-add-modal";
@@ -55,6 +56,7 @@ export default function EditorFilesPage() {
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 grow">
           <Select
+            className="grow"
             size="sm"
             items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
             label="Архів"
@@ -76,6 +78,7 @@ export default function EditorFilesPage() {
             }}
           />
           <CatalogSelect
+            className="grow"
             picker={fondPicker}
             label="Фонд"
             isDisabled={!archiveCode}
@@ -87,6 +90,7 @@ export default function EditorFilesPage() {
             }}
           />
           <CatalogSelect
+            className="grow"
             picker={inventoryPicker}
             label="Опис"
             isDisabled={!fondId}
@@ -101,6 +105,7 @@ export default function EditorFilesPage() {
           Створити
         </Button>
       </div>
+      <CatalogItemLink codes={[archiveCode, fondPicker.selected?.code, selectedInventory?.code]} />
 
       <InspectorDuckTable<EditorFile>
         id="editor-files-table"

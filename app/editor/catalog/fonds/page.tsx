@@ -3,6 +3,7 @@
 import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
+import CatalogItemLink from "@/components/editor/catalog-item-link";
 import EditCell from "@/components/editor/edit-cell";
 import FondEditModal from "@/components/editor/fond-edit-modal";
 import FondAddModal from "@/components/editor/fond-add-modal";
@@ -43,6 +44,7 @@ export default function EditorFondsPage() {
 
       <div className="flex items-center justify-between gap-4">
         <Select
+          className="grow"
           items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
           label="Архів"
           getKey={(a) => a.code}
@@ -65,6 +67,7 @@ export default function EditorFondsPage() {
           Створити
         </Button>
       </div>
+      <CatalogItemLink codes={[archiveCode]} />
 
       <InspectorDuckTable<EditorFond>
         id="editor-fonds-table"

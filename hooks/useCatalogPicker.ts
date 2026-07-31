@@ -29,6 +29,9 @@ export interface CatalogPicker<T> {
  * until a parent is picked. `selectedId` stays owned by the caller, which needs
  * it for URL sync and cascade resets.
  *
+ * `excludeId` drops one row from the results — merge-target pickers use it so
+ * the record being edited can't be offered as its own merge target.
+ *
  * Note the input text is left uncontrolled on purpose — React Aria then handles
  * displaying the selected option, closing on select, and reverting on blur. We
  * only listen to it to drive the query; controlling it means every programmatic
@@ -37,14 +40,16 @@ export interface CatalogPicker<T> {
 export const useCatalogPicker = <T extends { id: string }>(
   endpoint: string | null,
   selectedId: string,
+  excludeId?: string,
 ): CatalogPicker<T> => {
   const [text, setText] = useState("");
   const query = useDebouncedValue(text.trim());
   const search = useCatalogSearch<T>(endpoint, query);
+  const items = excludeId ? search.items.filter((item) => item.id !== excludeId) : search.items;
 
   // A selection outside the loaded page (or arriving as a `?fond=…` deep link)
   // still needs a row, both to label the input and to hand to the add modals.
-  const loaded = search.items.find((item) => item.id === selectedId) ?? null;
+  const loaded = items.find((item) => item.id === selectedId) ?? null;
   const { data: resolved } = useGet<T[]>(
     endpoint && selectedId && !loaded ? appendParams(endpoint, { id: selectedId }) : null,
   );
@@ -57,7 +62,7 @@ export const useCatalogPicker = <T extends { id: string }>(
     selectProps: {
       // Keep the selection in the collection so React Aria can render its label
       // even when the current page does not include it.
-      items: loaded || !selected ? search.items : [selected, ...search.items],
+      items: loaded || !selected ? items : [selected, ...items],
       onInputChange: setText,
       hasMore: search.hasMore,
       isLoadingMore: search.isLoadingMore,

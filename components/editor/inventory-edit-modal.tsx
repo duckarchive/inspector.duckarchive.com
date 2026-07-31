@@ -1,15 +1,16 @@
 "use client";
 
-import { Key, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Input, Label, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
-import Select from "@/components/select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import OnlineCopiesField, { emptyOnlineCopyOps, OnlineCopyOps } from "@/components/editor/online-copies-field";
+import CatalogSelect from "@/components/editor/catalog-select";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
-import { useEditorInventories } from "@/hooks/useEditor";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorInventoriesEndpoint } from "@/hooks/useEditor";
 
 interface InventoryEditModalProps {
   inventory: EditorInventory | null;
@@ -27,7 +28,11 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
   const [copyOps, setCopyOps] = useState<OnlineCopyOps>(emptyOnlineCopyOps());
 
   const [mergeTargetId, setMergeTargetId] = useState<string>("");
-  const { data: mergeCandidates } = useEditorInventories(inventory?.fond_id || undefined);
+  const mergePicker = useCatalogPicker<EditorInventory>(
+    editorInventoriesEndpoint(inventory?.fond_id),
+    mergeTargetId,
+    inventory?.id,
+  );
 
   useEffect(() => {
     if (inventory) {
@@ -122,20 +127,7 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
             <span className="text-xs text-muted">
               Усі справи цього опису буде перепривʼязано до обраного.
             </span>
-            <Select
-              label="Опис-приймач"
-              virtualized
-              items={(mergeCandidates ?? []).filter((i) => i.id !== inventory.id)}
-              getKey={(i) => i.id}
-              getTextValue={(i) => i.code}
-              renderItem={(i) => (
-                <div>
-                  <p>{i.code}</p>
-                  <p className="opacity-70 text-sm">{i.title}</p>
-                </div>
-              )}
-              onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-            />
+            <CatalogSelect picker={mergePicker} label="Опис-приймач" value={mergeTargetId} onChange={setMergeTargetId} />
             <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
               Об&apos;єднати
             </PendingButton>

@@ -1,17 +1,18 @@
 "use client";
 
-import { Key, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Input, Label, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
-import Select from "@/components/select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import OnlineCopiesField, { emptyOnlineCopyOps, OnlineCopyOps } from "@/components/editor/online-copies-field";
 import AuthorsField, { AuthorOps, emptyAuthorOps } from "@/components/editor/authors-field";
 import LocationsField, { emptyLocationOps, LocationOps } from "@/components/editor/locations-field";
+import CatalogSelect from "@/components/editor/catalog-select";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
 import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
-import { useEditorFiles } from "@/hooks/useEditor";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorFilesEndpoint } from "@/hooks/useEditor";
 
 interface FileEditModalProps {
   file: EditorFile | null;
@@ -31,7 +32,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   const [locationOps, setLocationOps] = useState<LocationOps>(emptyLocationOps());
 
   const [mergeTargetId, setMergeTargetId] = useState<string>("");
-  const { data: mergeCandidates } = useEditorFiles(file?.inventory_id || undefined);
+  const mergePicker = useCatalogPicker<EditorFile>(editorFilesEndpoint(file?.inventory_id), mergeTargetId, file?.id);
 
   useEffect(() => {
     if (file) {
@@ -160,20 +161,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
             <span className="text-xs text-muted">
               Усі автори, локації та онлайн-копії цієї справи буде перенесено до обраної.
             </span>
-            <Select
-              label="Справа-приймач"
-              virtualized
-              items={(mergeCandidates ?? []).filter((f) => f.id !== file.id)}
-              getKey={(f) => f.id}
-              getTextValue={(f) => f.code}
-              renderItem={(f) => (
-                <div>
-                  <p>{f.code}</p>
-                  <p className="opacity-70 text-sm">{f.title}</p>
-                </div>
-              )}
-              onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-            />
+            <CatalogSelect picker={mergePicker} label="Справа-приймач" value={mergeTargetId} onChange={setMergeTargetId} />
             <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
               Об&apos;єднати
             </PendingButton>

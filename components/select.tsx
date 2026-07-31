@@ -95,7 +95,14 @@ function Select<T extends object>({
       // `selectedKey`/`onSelectionChange` are deprecated since ComboBox gained `selectionMode`;
       // `value`/`onChange` replace them. Single selection never yields an array, but the prop is
       // typed for both modes, so narrow it before handing the key to the caller.
-      value={value ?? null}
+      //
+      // Omitting `value` (not passing it at all) keeps ComboBox uncontrolled — required by
+      // "fire-and-forget" selects (authors, copies, merge-target pickers) that read the pick via
+      // `onChange` and reset elsewhere rather than feeding a `value` back in. Passing `value={null}`
+      // unconditionally would force those into controlled mode with a permanently empty selection:
+      // `onChange` still fires, but the picked option can never stick because every render tells
+      // ComboBox "nothing is selected."
+      {...(value !== undefined ? { value: value || null } : {})}
       onChange={(key) => onChange(Array.isArray(key) ? (key[0] ?? null) : key)}
       inputValue={inputValue}
       onInputChange={onInputChange && handleInputChange}

@@ -3,6 +3,7 @@
 import { Key, useState } from "react";
 import Select from "@/components/select";
 import CatalogSelect from "@/components/editor/catalog-select";
+import CatalogItemLink from "@/components/editor/catalog-item-link";
 import { useGet } from "@/hooks/useApi";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFilesEndpoint, editorFondsEndpoint, editorInventoriesEndpoint } from "@/hooks/useEditor";
@@ -89,6 +90,14 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           }}
         />
       )}
+      <CatalogItemLink
+        codes={[
+          archiveCode,
+          fonds.selected?.code,
+          inventories.selected?.code,
+          target === "file" ? files.selected?.code : undefined,
+        ]}
+      />
     </div>
   );
 };
