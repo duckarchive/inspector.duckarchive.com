@@ -2,6 +2,7 @@
 
 import { Key, useState } from "react";
 import Select from "@/components/select";
+import CatalogSelect from "@/components/editor/catalog-select";
 import { useGet } from "@/hooks/useApi";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFilesEndpoint, editorFondsEndpoint, editorInventoriesEndpoint } from "@/hooks/useEditor";
@@ -16,16 +17,6 @@ interface InstancePickerProps {
   /** Emits the selected instance id (inventory id or file id), or "" when incomplete. */
   onChange: (id: string) => void;
 }
-
-/** Code over title, matching how archivists read a reference. */
-const codeAndTitle = (item: { code: string; title?: string | null }) => `${item.code} ${item.title ?? ""}`.trim();
-
-const codeAndTitleOption = (item: { code: string; title?: string | null }) => (
-  <div>
-    <p>{item.code}</p>
-    <p className="opacity-70 text-sm text-wrap">{item.title}</p>
-  </div>
-);
 
 const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -63,53 +54,39 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           onChange("");
         }}
       />
-      <Select
+      <CatalogSelect
+        picker={fonds}
         label="Фонд"
-        virtualized
         isDisabled={!archiveCode}
-        getKey={(f) => f.id}
-        getTextValue={codeAndTitle}
-        renderItem={codeAndTitleOption}
         value={fondId}
-        onChange={(key: Key | null) => {
-          setFondId(String(key ?? ""));
+        onChange={(id) => {
+          setFondId(id);
           setInventoryId("");
           setFileId("");
           onChange("");
         }}
-        {...fonds.selectProps}
       />
-      <Select
+      <CatalogSelect
+        picker={inventories}
         label="Опис"
-        virtualized
         isDisabled={!fondId}
-        getKey={(inv) => inv.id}
-        getTextValue={codeAndTitle}
-        renderItem={codeAndTitleOption}
         value={inventoryId}
-        onChange={(key: Key | null) => {
-          const id = String(key ?? "");
+        onChange={(id) => {
           setInventoryId(id);
           setFileId("");
           onChange(target === "inventory" ? id : "");
         }}
-        {...inventories.selectProps}
       />
       {target === "file" && (
-        <Select
+        <CatalogSelect
+          picker={files}
           label="Справа"
-          virtualized
           isDisabled={!inventoryId}
-          getKey={(file) => file.id}
-          getTextValue={codeAndTitle}
-          renderItem={codeAndTitleOption}
           value={fileId}
-          onChange={(key: Key | null) => {
-            const id = String(key ?? "");
+          onChange={(id) => {
             setFileId(id);
             onChange(id);
           }}
-          {...files.selectProps}
         />
       )}
     </div>

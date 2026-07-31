@@ -3,6 +3,7 @@
 import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
+import CatalogSelect from "@/components/editor/catalog-select";
 import EditCell from "@/components/editor/edit-cell";
 import InventoryEditModal from "@/components/editor/inventory-edit-modal";
 import InventoryAddModal from "@/components/editor/inventory-add-modal";
@@ -68,25 +69,15 @@ export default function EditorInventoriesPage() {
               syncEditorUrl({ archive: v || null, fond: null, edit: null });
             }}
           />
-          <Select
+          <CatalogSelect
+            picker={fondPicker}
             label="Фонд"
-            virtualized
             isDisabled={!archiveCode}
-            getKey={(f) => f.id}
-            getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
-            renderItem={(f) => (
-              <div>
-                <p>{f.code}</p>
-                <p className="opacity-70 text-sm text-wrap">{f.title}</p>
-              </div>
-            )}
             value={fondId}
-            onChange={(key: Key | null) => {
-              const v = String(key ?? "");
-              setFondId(v);
-              syncEditorUrl({ fond: v || null, edit: null });
+            onChange={(id) => {
+              setFondId(id);
+              syncEditorUrl({ fond: id || null, edit: null });
             }}
-            {...fondPicker.selectProps}
           />
         </div>
         <Button variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!fondId}>

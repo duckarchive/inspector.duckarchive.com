@@ -92,8 +92,11 @@ function Select<T extends object>({
       id={id}
       className={className}
       isDisabled={isDisabled}
-      selectedKey={value ?? undefined}
-      onSelectionChange={onChange}
+      // `selectedKey`/`onSelectionChange` are deprecated since ComboBox gained `selectionMode`;
+      // `value`/`onChange` replace them. Single selection never yields an array, but the prop is
+      // typed for both modes, so narrow it before handing the key to the caller.
+      value={value ?? null}
+      onChange={(key) => onChange(Array.isArray(key) ? (key[0] ?? null) : key)}
       inputValue={inputValue}
       onInputChange={onInputChange && handleInputChange}
       // Server-side search drives the list directly; otherwise HeroUI filters the full list by typed text.

@@ -3,6 +3,7 @@
 import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
+import CatalogSelect from "@/components/editor/catalog-select";
 import EditCell from "@/components/editor/edit-cell";
 import FileEditModal from "@/components/editor/file-edit-modal";
 import FileAddModal from "@/components/editor/file-add-modal";
@@ -74,47 +75,25 @@ export default function EditorFilesPage() {
               syncEditorUrl({ archive: v || null, fond: null, inventory: null, edit: null });
             }}
           />
-          <Select
-            size="sm"
+          <CatalogSelect
+            picker={fondPicker}
             label="Фонд"
-            virtualized
             isDisabled={!archiveCode}
-            getKey={(f) => f.id}
-            getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
-            renderItem={(f) => (
-              <div>
-                <p>{f.code}</p>
-                <p className="opacity-70 text-sm text-wrap">{f.title}</p>
-              </div>
-            )}
             value={fondId}
-            onChange={(key: Key | null) => {
-              const v = String(key ?? "");
-              setFondId(v);
+            onChange={(id) => {
+              setFondId(id);
               setInventoryId("");
-              syncEditorUrl({ fond: v || null, inventory: null, edit: null });
+              syncEditorUrl({ fond: id || null, inventory: null, edit: null });
             }}
-            {...fondPicker.selectProps}
           />
-          <Select
-            size="sm"
+          <CatalogSelect
+            picker={inventoryPicker}
             label="Опис"
-            virtualized
             isDisabled={!fondId}
-            getKey={(inv) => inv.id}
-            getTextValue={(inv) => `${inv.code} ${inv.title ?? ""}`}
-            renderItem={(inv) => (
-              <div>
-                <p>{inv.code}</p>
-                <p className="opacity-70 text-sm text-wrap">{inv.title}</p>
-              </div>
-            )}
             value={inventoryId}
-            {...inventoryPicker.selectProps}
-            onChange={(key: Key | null) => {
-              const v = String(key ?? "");
-              setInventoryId(v);
-              syncEditorUrl({ inventory: v || null, edit: null });
+            onChange={(id) => {
+              setInventoryId(id);
+              syncEditorUrl({ inventory: id || null, edit: null });
             }}
           />
         </div>

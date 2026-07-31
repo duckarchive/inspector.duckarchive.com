@@ -2,8 +2,8 @@ import useSWRInfinite from "swr/infinite";
 
 import { fetcher } from "@/lib/api";
 
-/** Rows per request. Small enough to render instantly, large enough to fill the popover. */
-export const CATALOG_PAGE_SIZE = 50;
+/** Rows per request, including the initial load. Further pages arrive on scroll. */
+export const CATALOG_PAGE_SIZE = 20;
 
 export interface CatalogSearch<T> {
   items: T[];
