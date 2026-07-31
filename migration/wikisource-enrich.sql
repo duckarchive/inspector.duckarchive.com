@@ -43,12 +43,47 @@ DELETE FROM mig_wiki_stage_inv_years y USING t_skip_invs k
 DELETE FROM mig_wiki_stage_invs s USING t_skip_invs k
   WHERE k.arch=s.arch AND k.fond=s.fond AND k.code=s.code;
 
--- 0b. Volume/continuation опис codes (1ТОМ2, 1ПР) fold into the base опис
---     (locked grouping rule; DB-wide том-merge already done): re-point files
---     to the base code, drop the volume опис rows and their years.
+-- 0b. Volume/continuation опис codes fold into the base опис (locked grouping
+--     rule; DB-wide том-merge already done): re-point files to the base code,
+--     drop the volume опис rows and their years.
+--     2026-07-31 hardening (after the first run recreated 2РТ2/1Т16/18Ч2-style
+--     структуры, cleaned by wiki-tom-fix.sql): also match glued short forms
+--     (Т2, Ч2) and letter-bearing bases (2РТ2→2Р, 3ОСТ1→3ОС), and SKIP whole
+--     volume groups that must not fold by code — restart-at-1 numbering
+--     (sibling code collisions) or predominantly junk numeric titles.
 CREATE TEMP TABLE t_vol_invs AS
-SELECT arch, fond, code, regexp_replace(code,'(ТОМ\d+|ПР)$','') AS base
-FROM mig_wiki_stage_invs WHERE code ~ '^\d+(ТОМ\d+|ПР)$';
+SELECT arch, fond, code, regexp_replace(code,'(ТОМ|ЧАСТ|Т|Ч)\d+$','') AS base
+FROM mig_wiki_stage_invs
+WHERE (code ~ '^\d[А-ЯA-Z0-9]*(ТОМ|ЧАСТ|Т|Ч)\d+$' OR code ~ '^\d+ПР$')
+  AND regexp_replace(code,'(ТОМ|ЧАСТ|Т|Ч)\d+$','') ~ '^\d+[А-ЯA-Z]{0,2}$';
+UPDATE t_vol_invs SET base = regexp_replace(code,'ПР$','') WHERE code ~ '^\d+ПР$';
+
+CREATE TEMP TABLE t_vol_skip AS
+SELECT v.arch, v.fond, v.base
+FROM t_vol_invs v JOIN mig_wiki_stage_files f
+  ON f.arch=v.arch AND f.fond=v.fond AND f.inv=v.code
+GROUP BY v.arch, v.fond, v.base
+HAVING count(*) FILTER (WHERE f.title ~ '^\s*/?\d+\s*([-–—]\s*\S+)?/?\s*$')::float
+         / greatest(count(*),1) > 0.5
+    OR count(*) <> count(DISTINCT f.code);
+
+INSERT INTO mig_wikisource_enrich (level, full_code, action)
+SELECT 'inventory', v.arch||'-'||v.fond||'-'||v.code, 'skip-vol-group-'||v.base
+FROM t_vol_invs v JOIN t_vol_skip k ON k.arch=v.arch AND k.fond=v.fond AND k.base=v.base;
+DELETE FROM mig_wiki_stage_files f USING t_vol_invs v, t_vol_skip k
+  WHERE k.arch=v.arch AND k.fond=v.fond AND k.base=v.base
+    AND f.arch=v.arch AND f.fond=v.fond AND f.inv=v.code;
+DELETE FROM mig_wiki_stage_file_years y USING t_vol_invs v, t_vol_skip k
+  WHERE k.arch=v.arch AND k.fond=v.fond AND k.base=v.base
+    AND y.arch=v.arch AND y.fond=v.fond AND y.inv=v.code;
+DELETE FROM mig_wiki_stage_inv_years y USING t_vol_invs v, t_vol_skip k
+  WHERE k.arch=v.arch AND k.fond=v.fond AND k.base=v.base
+    AND y.arch=v.arch AND y.fond=v.fond AND y.code=v.code;
+DELETE FROM mig_wiki_stage_invs s USING t_vol_invs v, t_vol_skip k
+  WHERE k.arch=v.arch AND k.fond=v.fond AND k.base=v.base
+    AND s.arch=v.arch AND s.fond=v.fond AND s.code=v.code;
+DELETE FROM t_vol_invs v USING t_vol_skip k
+  WHERE k.arch=v.arch AND k.fond=v.fond AND k.base=v.base;
 INSERT INTO mig_wikisource_enrich (level, full_code, action)
 SELECT 'inventory', arch||'-'||fond||'-'||code, 'fold-vol-to-'||base FROM t_vol_invs;
 UPDATE mig_wiki_stage_files sf SET inv=v.base
