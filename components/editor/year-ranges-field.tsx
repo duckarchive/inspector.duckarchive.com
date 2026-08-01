@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button, Chip, CloseButton, Label, NumberField } from "@heroui/react";
 import { sameYearRange, YearRange } from "@/lib/editor-actions";
+import { FaPlus } from "react-icons/fa";
 
 interface YearRangesFieldProps {
   value: YearRange[];
@@ -43,20 +44,24 @@ const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange }) =>
         ))}
       </div>
       <div className="flex items-end gap-2">
-        <NumberField value={start} onChange={setStart} formatOptions={{ useGrouping: false }}>
+        <NumberField className="grow" value={start} onChange={setStart} formatOptions={{ useGrouping: false }}>
           <Label>Від</Label>
           <NumberField.Group>
+            <NumberField.DecrementButton />
             <NumberField.Input />
+            <NumberField.IncrementButton />
           </NumberField.Group>
         </NumberField>
-        <NumberField value={end} onChange={setEnd} formatOptions={{ useGrouping: false }}>
+        <NumberField className="grow" value={end} onChange={setEnd} formatOptions={{ useGrouping: false }}>
           <Label>До</Label>
           <NumberField.Group>
+            <NumberField.DecrementButton />
             <NumberField.Input />
+            <NumberField.IncrementButton />
           </NumberField.Group>
         </NumberField>
-        <Button size="sm" onPress={add} isDisabled={start === undefined || end === undefined}>
-          Додати
+        <Button isIconOnly size="sm" onPress={add} isDisabled={start === undefined || end === undefined}>
+          <FaPlus />
         </Button>
       </div>
     </div>
