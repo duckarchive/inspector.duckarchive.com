@@ -13,7 +13,7 @@ interface NavigationBreadcrumbsProps {
 const ITEM_CLASS = "text-gray-500 text-lg aria-[current=page]:font-bold";
 
 const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, title }) => (
-  <Breadcrumbs separator={<span className="text-gray-500/60">/</span>}>
+  <Breadcrumbs separator="/">
     <BreadcrumbsItem href={BASE_PATH} aria-label="Повернутись на список архівів" className={ITEM_CLASS}>
       <FaHome />
     </BreadcrumbsItem>
