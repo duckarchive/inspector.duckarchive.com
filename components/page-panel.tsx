@@ -2,7 +2,7 @@ import { JSX, PropsWithChildren } from "react";
 import NavigationBreadcrumbs from "./breadcrumbs";
 
 interface PagePanelProps extends PropsWithChildren {
-  code: string;
+  code?: string;
   title?: string;
   description?: string;
   breadcrumbs?: string[];
@@ -15,7 +15,7 @@ const PagePanel: React.FC<PagePanelProps> = ({ code, title, description, message
     <div className="flex-col md:flex-row flex justify-between gap-4 w-full">
       <div className="grow">
         {breadcrumbs ? (
-          <NavigationBreadcrumbs breadcrumbs={breadcrumbs} code={code} />
+          <NavigationBreadcrumbs breadcrumbs={breadcrumbs} code={code || "***"} />
         ) : (
           <h2 className="text-lg">{code}</h2>
         )}

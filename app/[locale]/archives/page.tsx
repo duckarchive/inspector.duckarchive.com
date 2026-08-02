@@ -11,8 +11,8 @@ const ArchivesPage: NextPage = async () => {
   return (
     <>
       <PagePanel
-        code="Архіви"
-        title="Список архівів в базі Інспектора"
+        title="Архіви"
+        description="Список архівів в базі Інспектора"
       />
       <ArchivesTable resources={resources} archives={archives} />
     </>
