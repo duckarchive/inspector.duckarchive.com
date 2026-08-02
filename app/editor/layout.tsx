@@ -10,6 +10,7 @@ const MODES = [
   { href: "/editor/catalog/files", label: "Справи" },
   { href: "/editor/authors", label: "Автори" },
   { href: "/editor/online-copies", label: "Онлайн-копії" },
+  { href: "/editor/years", label: "Роки" },
 ];
 
 const LINK_CLASS = "text-base text-foreground underline-offset-4 hover:underline hover:opacity-70";

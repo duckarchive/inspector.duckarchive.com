@@ -8,6 +8,8 @@ import { GetAuthorFilesResponse } from "@/app/api/editor/authors/[id]/route";
 import { GetEditorOnlineCopiesResponse } from "@/app/api/editor/online-copies/route";
 import { ListActionsResponse } from "@/app/api/editor/actions/[entity]/route";
 import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
+import { GetYearOverlapsResponse } from "@/app/api/editor/years/overlaps/route";
+import { GetYearAnomaliesResponse } from "@/app/api/editor/years/anomalies/route";
 
 /**
  * Endpoint builders for the searchable pickers (`useCatalogPicker` adds `q`,
@@ -43,6 +45,14 @@ export const useEditorOnlineCopies = (target: OnlineCopyTarget, unlinkedOnly = t
   useGet<GetEditorOnlineCopiesResponse>(
     `/api/editor/online-copies?target=${target}&unlinked=${unlinkedOnly}${query ? `&q=${encodeURIComponent(query)}` : ""}`,
   );
+
+/** Both analyses are expensive scans over multi-million-row tables, so they only
+ * fetch once the admin presses "Аналізувати" — pass `enabled` from that click. */
+export const useYearOverlaps = (enabled: boolean) =>
+  useGet<GetYearOverlapsResponse>(enabled ? "/api/editor/years/overlaps" : null);
+
+export const useYearAnomalies = (enabled: boolean) =>
+  useGet<GetYearAnomaliesResponse>(enabled ? "/api/editor/years/anomalies" : null);
 
 export const useEditorActions = (
   entity: EditorQueue,
