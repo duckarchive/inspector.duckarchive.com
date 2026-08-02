@@ -18,7 +18,6 @@ const Details: React.FC<{
   archive?: GetCatalogArchiveResponse;
 }> = ({ archive }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {archive?.info && <p>{archive.info}</p>}
     {archive?.url || archive?.address || archive?.phone_number || archive?.email ? (
       <ul className="list-disc list-inside py-2">
         {archive.address && (
@@ -76,9 +75,10 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        title={`${code} архів`}
+        code={`${code} архів`}
         breadcrumbs={[code]}
-        description={archive?.title || "Без назви"}
+        title={archive?.title || undefined}
+        description={archive?.info || undefined}
         message={<Details archive={archive} />}
       />
       <InspectorDuckTable<TableItem>

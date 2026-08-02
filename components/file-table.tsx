@@ -28,7 +28,6 @@ const Details: React.FC<{
   file?: GetFileResponse;
 }> = ({ file }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {file?.info && <p>{file.info}</p>}
     {file?.years?.length || file?.locations?.length || file?.authors?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
         {Boolean(
@@ -104,9 +103,10 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        title={`${code} справа`}
+        code={`${code} справа`}
         breadcrumbs={[archiveCode, fondCode, inventoryCode, code]}
-        description={file?.title || "Без назви"}
+        title={file?.title || undefined}
+        description={file?.info || undefined}
         message={<Details file={file} />}
       >
         <ReportButton entity="file" targetId={file?.id} />

@@ -18,7 +18,6 @@ const Details: React.FC<{
   fond?: GetFondResponse;
 }> = ({ fond }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {fond?.info && <p>{fond.info}</p>}
     {fond?.years.length ? (
       <ul className="list-disc list-inside py-2">
         {fond?.years.length ? <li>Роки: {getYearsString(fond.years)}</li> : null}
@@ -43,9 +42,10 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        title={`${code} фонд`}
+        code={`${code} фонд`}
         breadcrumbs={[archiveCode, code]}
-        description={fond?.title || "Без назви"}
+        title={fond?.title || undefined}
+        description={fond?.info || undefined}
         message={<Details fond={fond} />}
       >
         <ReportButton entity="fond" targetId={fond?.id} />

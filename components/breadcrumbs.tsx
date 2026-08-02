@@ -7,12 +7,12 @@ const BASE_PATH = "/archives/";
 
 interface NavigationBreadcrumbsProps {
   breadcrumbs: string[];
-  title: string;
+  code: string;
 }
 
 const ITEM_CLASS = "text-gray-500 text-lg aria-[current=page]:font-bold";
 
-const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, title }) => (
+const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, code }) => (
   <Breadcrumbs separator="/">
     <BreadcrumbsItem href={BASE_PATH} aria-label="Повернутись на список архівів" className={ITEM_CLASS}>
       <FaHome />
@@ -20,7 +20,7 @@ const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrum
     {breadcrumbs.map((item, index) =>
       index === breadcrumbs.length - 1 ? (
         <BreadcrumbsItem key={`${index}-bradcrumb`} className={ITEM_CLASS}>
-          <h1>{title}</h1>
+          <h2>{code}</h2>
         </BreadcrumbsItem>
       ) : (
         <BreadcrumbsItem
