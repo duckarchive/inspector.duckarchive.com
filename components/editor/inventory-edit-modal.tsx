@@ -118,7 +118,7 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
             <TextArea rows={2} />
           </TextField>
           <YearRangesField value={years} onChange={setYears} />
-          <OnlineCopiesField copies={inventory.online_copies} target="inventory" ops={copyOps} onChange={setCopyOps} />
+          <OnlineCopiesField copies={inventory.online_copies} ops={copyOps} onChange={setCopyOps} />
 
           <Separator className="my-2" />
 

@@ -4,7 +4,6 @@ import { Key, useMemo, useRef, useState } from "react";
 import { Button, Chip, CloseButton } from "@heroui/react";
 import Select from "@/components/select";
 import { useEditorOnlineCopies } from "@/hooks/useEditor";
-import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
 export interface OnlineCopyOps {
   /** existing unlinked copy ids to link to this instance */
@@ -22,7 +21,6 @@ interface ExistingCopy {
 
 interface OnlineCopiesFieldProps {
   copies: ExistingCopy[];
-  target: OnlineCopyTarget;
   ops: OnlineCopyOps;
   onChange: (ops: OnlineCopyOps) => void;
 }
@@ -30,9 +28,9 @@ interface OnlineCopiesFieldProps {
 const toggle = (list: string[], id: string): string[] =>
   list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
 
-const OnlineCopiesField: React.FC<OnlineCopiesFieldProps> = ({ copies, target, ops, onChange }) => {
+const OnlineCopiesField: React.FC<OnlineCopiesFieldProps> = ({ copies, ops, onChange }) => {
   const [query, setQuery] = useState("");
-  const { data: unlinked, isLoading } = useEditorOnlineCopies(target, true, query || undefined);
+  const { data: unlinked, isLoading } = useEditorOnlineCopies(false, query || undefined);
 
   // accumulate labels across queries so already-picked chips survive a new search
   const labelCache = useRef(new Map<string, string>());

@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
     const hasOnlineCopy = Prisma.sql`EXISTS (
       SELECT 1
-      FROM "file_online_copies" m
+      FROM "online_copies" m
       WHERE m.file_id = f.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
     )`;
 

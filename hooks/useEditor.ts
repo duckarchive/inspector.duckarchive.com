@@ -7,7 +7,6 @@ import { GetEditorAuthorsResponse } from "@/app/api/editor/authors/route";
 import { GetAuthorFilesResponse } from "@/app/api/editor/authors/[id]/route";
 import { GetEditorOnlineCopiesResponse } from "@/app/api/editor/online-copies/route";
 import { ListActionsResponse } from "@/app/api/editor/actions/[entity]/route";
-import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 import { GetYearOverlapsResponse } from "@/app/api/editor/years/overlaps/route";
 import { GetYearAnomaliesResponse } from "@/app/api/editor/years/anomalies/route";
 
@@ -41,9 +40,9 @@ export const useEditorAuthors = (query?: string) =>
 export const useAuthorFiles = (authorId?: string) =>
   useGet<GetAuthorFilesResponse>(authorId ? `/api/editor/authors/${authorId}` : null);
 
-export const useEditorOnlineCopies = (target: OnlineCopyTarget, unlinkedOnly = true, query?: string) =>
+export const useEditorOnlineCopies = (unlinkedOnly = true, query?: string) =>
   useGet<GetEditorOnlineCopiesResponse>(
-    `/api/editor/online-copies?target=${target}&unlinked=${unlinkedOnly}${query ? `&q=${encodeURIComponent(query)}` : ""}`,
+    `/api/editor/online-copies?unlinked=${unlinkedOnly}${query ? `&q=${encodeURIComponent(query)}` : ""}`,
   );
 
 /** Both analyses are expensive scans over multi-million-row tables, so they only

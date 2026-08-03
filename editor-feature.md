@@ -6,7 +6,7 @@ Spec for letting the community control catalog values in Inspector: flagging and
 
 We are migrating from `fund → description → case` to `fond → inventory → file` structure. The migration is done at the DB level and in other services; Inspector switches after everything is ready. **This feature is built on the new structure only** — no support for the old naming.
 
-**Terminology:** "instance" means `file` or `inventory`. Every instance can have online copies (`FileOnlineCopy`, `InventoryOnlineCopy`) pointing to digitized materials on external resources.
+**Terminology:** "instance" means `file` or `inventory`. Every instance can have online copies (the shared `OnlineCopy` model with nullable `inventory_id`/`file_id`, at most one set) pointing to digitized materials on external resources.
 
 Prisma schema lives in the separate `@duckarchive/prisma` repo and is updated independently. The `Fond`/`Inventory`/`File`/`*OnlineCopy` models already exist; the actions tables below are added there as well.
 
@@ -56,7 +56,7 @@ State is derived from the row, no separate status column:
 
 `ActionType` enum: `report`, `connect_to_online_copy`, `disconnect_from_online_copy`, `add_online_copy`, `remove_online_copy`.
 
-For each type — required fields on submit, and what admin **execution** does. "Copy" below means `FileOnlineCopy` or `InventoryOnlineCopy` depending on the table.
+For each type — required fields on submit, and what admin **execution** does. "Copy" below means an `OnlineCopy` row, linked via `file_id` or `inventory_id` depending on the instance.
 
 ### `report`
 Flag something wrong with the relation between an instance and an online copy.
@@ -88,7 +88,7 @@ Actions managing the instance itself (rename, dates, etc.) are deliberately **ou
 
 ## Data Model
 
-Managed in the `@duckarchive/prisma` repo (out of this repo's context, updated separately). `file_actions` shown; `inventory_actions` is identical with `inventory_id` / `InventoryOnlineCopy` instead.
+Managed in the `@duckarchive/prisma` repo (out of this repo's context, updated separately). `file_actions` shown; `inventory_actions` is identical with `inventory_id` instead (both reference the shared `OnlineCopy`).
 
 ```prisma
 model FileActions {
@@ -100,7 +100,7 @@ model FileActions {
   note           String?         @db.Text
   is_rejected    Boolean?
   online_copy_id String?         @db.Uuid
-  online_copy    FileOnlineCopy? @relation(fields: [online_copy_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  online_copy    OnlineCopy?     @relation(fields: [online_copy_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   file_id        String?         @db.Uuid
   file           File?           @relation(fields: [file_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
