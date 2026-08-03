@@ -17,9 +17,9 @@ type TableItem = GetCatalogArchiveResponse["fonds"][number];
 const Details: React.FC<{
   archive?: GetCatalogArchiveResponse;
 }> = ({ archive }) => (
-  <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
+  <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto mb-4">
     {archive?.url || archive?.address || archive?.phone_number || archive?.email ? (
-      <ul className="list-disc list-inside py-2">
+      <ul className="list-inside">
         {archive.address && (
           <li>
             Адреса:&nbsp;
@@ -27,7 +27,7 @@ const Details: React.FC<{
               href={`https://www.google.com/maps/place/${archive.address.split(/,?\s+/).join("+")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent text-sm"
+              className="font-mono"
             >
               {archive.address}
             </Link>
@@ -36,7 +36,7 @@ const Details: React.FC<{
         {archive.url && (
           <li>
             Офіційний сайт:&nbsp;
-            <Link href={archive.url} target="_blank" className="text-primary text-sm">
+            <Link href={archive.url} target="_blank" className="font-mono">
               {archive.url}
             </Link>
           </li>
@@ -44,7 +44,7 @@ const Details: React.FC<{
         {archive.phone_number && (
           <li>
             Телефон:&nbsp;
-            <Link href={`tel:${archive.phone_number}`} className="text-accent text-sm">
+            <Link href={`tel:${archive.phone_number}`} className="font-mono">
               {archive.phone_number}
             </Link>
           </li>
@@ -52,7 +52,7 @@ const Details: React.FC<{
         {archive.email && (
           <li>
             Email:&nbsp;
-            <Link href={`mailto:${archive.email}`} className="text-accent text-sm">
+            <Link href={`mailto:${archive.email}`} className="font-mono">
               {archive.email}
             </Link>
           </li>
