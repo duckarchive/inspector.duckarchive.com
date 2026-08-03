@@ -7,6 +7,7 @@ import useNoRussians from "@/hooks/useNoRussians";
 import { DonationProvider } from "@/providers/donation";
 import { Toast } from "@heroui/react";
 import { SessionProvider } from "next-auth/react";
+import { SessionExpiryWatcher } from "@/components/session-expiry-watcher";
 import { Session } from "next-auth";
 import { NextIntlClientProvider } from "next-intl";
 
@@ -36,6 +37,7 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
 
   return (
     <SessionProvider session={session} refetchOnWindowFocus refetchInterval={5 * 60}>
+      <SessionExpiryWatcher />
       <NextThemesProvider defaultTheme="dark" attribute="class">
         <NextIntlClientProvider locale={i18nLocale} messages={i18nMessages} timeZone="UTC">
           <DonationProvider>
