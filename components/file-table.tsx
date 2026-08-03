@@ -4,6 +4,8 @@ import "leaflet/dist/leaflet.css";
 import "../node_modules/@duckarchive/map/dist/style.css";
 
 import { Link } from "@heroui/react";
+import { FaLock } from "react-icons/fa";
+import { Availability } from "@/generated/prisma/client/enums";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -131,12 +133,18 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
             flex: isMobile ? 4 : 9,
             resizable: !isMobile,
             filter: true,
-            cellRenderer: (row: { value: string; data: TableItem }) => (
-              <Link href={row.value} target="_blank" rel="noopener noreferrer">
-                {row.value || "Без назви"}
-                <Link.Icon />
-              </Link>
-            ),
+            cellRenderer: (row: { value: string; data: TableItem }) =>
+              row.data.availability === Availability.PUBLIC ? (
+                <Link href={row.value} target="_blank" rel="noopener noreferrer">
+                  {row.value || "Без назви"}
+                  <Link.Icon />
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 opacity-50">
+                  <FaLock />
+                  {row.value || "Без назви"}
+                </span>
+              ),
           },
           {
             field: "updated_at",
