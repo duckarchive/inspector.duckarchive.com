@@ -32,7 +32,7 @@ const STATUS_FILTER_LABELS: Record<ActionStatus | "all", string> = {
 const catalogTarget = (data: any): { label: string; href: string | null } | null => {
   const enc = (...segments: (string | undefined)[]): string | null => {
     if (segments.some((s) => !s)) return null;
-    return `/catalog/${segments.map((s) => encodeURIComponent(s as string)).join("/")}`;
+    return `/archives/${segments.map((s) => encodeURIComponent(s as string)).join("/")}`;
   };
   if (data?.fond) {
     return { label: data.fond.code, href: enc(data.fond.archive?.code, data.fond.code) };

@@ -55,7 +55,9 @@ const OnlineCopiesField: React.FC<OnlineCopiesFieldProps> = ({ copies, ops, onCh
           const disconnected = ops.disconnect.includes(c.id);
           return (
             <li key={c.id} className="flex items-center gap-2">
-              <span className={`text-sm truncate flex-1 ${disconnected ? "line-through opacity-50" : ""}`}>{c.url}</span>
+              <span className={`text-sm truncate flex-1 ${disconnected ? "line-through opacity-50" : ""}`} title={c.url}>
+                {c.url}
+              </span>
               <Button size="sm" variant={disconnected ? "primary" : "tertiary"} onPress={() => onChange({ ...ops, disconnect: toggle(ops.disconnect, c.id) })}>
                 Відв&apos;язати
               </Button>

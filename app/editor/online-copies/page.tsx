@@ -1,22 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { Button, ButtonGroup, Checkbox, Chip, CloseButton, InputGroup, TextField } from "@heroui/react";
+import { Button, Checkbox, Chip, CloseButton, InputGroup, Link, TextField } from "@heroui/react";
+import { FaLink, FaTimes } from "react-icons/fa";
 import InspectorDuckTable from "@/components/table";
 import OnlineCopyLinkModal from "@/components/editor/online-copy-link-modal";
 import OnlineCopyAddModal from "@/components/editor/online-copy-add-modal";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import { useEditorOnlineCopies } from "@/hooks/useEditor";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { EditorOnlineCopy, OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
+import { EditorOnlineCopy } from "@/app/api/editor/online-copies/data";
 
 export default function EditorOnlineCopiesPage() {
-  const [target, setTarget] = useState<OnlineCopyTarget>("inventory");
   const [searchQuery, setSearchQuery] = useState("");
   const [unlinkedOnly, setUnlinkedOnly] = useState(true);
   const debouncedQuery = useDebouncedValue(searchQuery.trim());
   const { data: copies, isLoading, mutate } = useEditorOnlineCopies(unlinkedOnly, debouncedQuery || undefined);
-  const { submit } = useSubmitAction(target);
+  // remove_online_copy doesn't take a target_id, so the entity here only picks
+  // which actions table the pending removal lands in — either works
+  const { submit } = useSubmitAction("file");
   const [selected, setSelected] = useState<EditorOnlineCopy | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
 
@@ -31,15 +33,6 @@ export default function EditorOnlineCopiesPage() {
         <h1 className="text-2xl font-bold">Онлайн-копії без прив&apos;язки</h1>
         <Button onPress={() => setIsAddOpen(true)}>Додати онлайн-копію</Button>
       </div>
-
-      <ButtonGroup>
-        <Button variant={target === "inventory" ? "primary" : "tertiary"} onPress={() => setTarget("inventory")}>
-          Описи
-        </Button>
-        <Button variant={target === "file" ? "primary" : "tertiary"} onPress={() => setTarget("file")}>
-          Справи
-        </Button>
-      </ButtonGroup>
 
       <div className="flex items-center gap-4 flex-wrap">
         <TextField aria-label="Пошук за URL" value={searchQuery} onChange={setSearchQuery} className="max-w-xs">
@@ -68,11 +61,47 @@ export default function EditorOnlineCopiesPage() {
         isLoading={isLoading}
         rows={copies ?? []}
         columns={[
-          { field: "url", headerName: "URL", flex: 8 },
+          {
+            field: "url",
+            headerName: "URL",
+            flex: 6,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            cellRenderer: (row: any) => (
+              <Link href={row.data.url} target="_blank" rel="noopener noreferrer" className="text-sm text-wrap">
+                {row.data.url}
+                <Link.Icon />
+              </Link>
+            ),
+          },
+          {
+            field: "parsed",
+            headerName: "Parsed",
+            flex: 3,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            cellRenderer: (row: any) => {
+              if (row.data.parsed.includes("+++")) {
+                const match = row.data.parsed.match(/^([^+()]+)-\(([^+]+)\+\+\+([^+]+)\+\+\+([^+]+)\)$/);
+                if (match) {
+                  const [fullMatch, prefix, p1, p2, p3] = match;
+                  return (
+                    <div className="flex flex-col gap-1">
+                      {[p1, p2, p3].map((part: string, index: number) => (
+                        <div key={index} className="text-sm text-wrap">
+                          {prefix}-{part}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }
+              } else {
+                return row.data.parsed;
+              }
+            },
+          },
           { field: "availability", headerName: "Доступність", flex: 2 },
           {
             headerName: "",
-            flex: 3,
+            flex: 2,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) =>
               row.data.has_pending_action ? (
@@ -81,11 +110,17 @@ export default function EditorOnlineCopiesPage() {
                 </Chip>
               ) : (
                 <div className="flex gap-1">
-                  <Button size="sm" onPress={() => setSelected(row.data)}>
-                    Прив&apos;язати
+                  <Button isIconOnly size="sm" aria-label="Прив'язати" onPress={() => setSelected(row.data)}>
+                    <FaLink />
                   </Button>
-                  <Button size="sm" variant="danger-soft" onPress={() => handleRemove(row.data)}>
-                    Видалити
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="danger-soft"
+                    aria-label="Видалити"
+                    onPress={() => handleRemove(row.data)}
+                  >
+                    <FaTimes />
                   </Button>
                 </div>
               ),
@@ -95,12 +130,11 @@ export default function EditorOnlineCopiesPage() {
 
       <OnlineCopyLinkModal
         copy={selected}
-        target={target}
         isOpen={Boolean(selected)}
         onClose={() => setSelected(null)}
         onSubmitted={mutate}
       />
-      <OnlineCopyAddModal target={target} isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmitted={mutate} />
+      <OnlineCopyAddModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmitted={mutate} />
     </section>
   );
 }

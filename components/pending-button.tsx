@@ -13,7 +13,11 @@ interface PendingButtonProps extends Omit<ButtonProps, "children"> {
  */
 const PendingButton: React.FC<PendingButtonProps> = ({ children, ...rest }) => (
   <Button {...rest}>
-    {({ isPending }) => (
+    {({ isPending }) => rest.isIconOnly ? (
+      <>
+        {isPending ? <Spinner color="current" size="sm" /> : children}
+      </>
+    ) : (
       <>
         {isPending && <Spinner color="current" size="sm" />}
         {children}

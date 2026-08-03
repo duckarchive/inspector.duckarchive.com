@@ -43,7 +43,7 @@ export const useCatalogPicker = <T extends { id: string }>(
   excludeId?: string,
 ): CatalogPicker<T> => {
   const [text, setText] = useState("");
-  const query = useDebouncedValue(text.trim());
+  const query = useDebouncedValue(text.trim(), 200);
   const search = useCatalogSearch<T>(endpoint, query);
   const items = excludeId ? search.items.filter((item) => item.id !== excludeId) : search.items;
 

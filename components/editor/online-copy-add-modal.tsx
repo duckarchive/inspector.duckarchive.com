@@ -1,26 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Label, Modal, TextField } from "@heroui/react";
+import { Button, ButtonGroup, Input, Label, Modal, TextField } from "@heroui/react";
 import InstancePicker from "@/components/editor/instance-picker";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
 import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
 interface OnlineCopyAddModalProps {
-  target: OnlineCopyTarget;
   isOpen: boolean;
   onClose: () => void;
   onSubmitted?: () => void;
 }
 
-const OnlineCopyAddModal: React.FC<OnlineCopyAddModalProps> = ({ target, isOpen, onClose, onSubmitted }) => {
+const OnlineCopyAddModal: React.FC<OnlineCopyAddModalProps> = ({ isOpen, onClose, onSubmitted }) => {
+  const [target, setTarget] = useState<OnlineCopyTarget>("inventory");
   const { submit, isMutating } = useSubmitAction(target);
   const [targetId, setTargetId] = useState("");
   const [url, setUrl] = useState("");
 
   useEffect(() => {
     if (isOpen) {
+      setTarget("inventory");
       setTargetId("");
       setUrl("");
     }
@@ -49,7 +50,27 @@ const OnlineCopyAddModal: React.FC<OnlineCopyAddModalProps> = ({ target, isOpen,
                 <Label>URL онлайн-копії</Label>
                 <Input />
               </TextField>
-              <InstancePicker target={target} onChange={setTargetId} />
+              <ButtonGroup>
+                <Button
+                  variant={target === "inventory" ? "primary" : "tertiary"}
+                  onPress={() => {
+                    setTarget("inventory");
+                    setTargetId("");
+                  }}
+                >
+                  Опис
+                </Button>
+                <Button
+                  variant={target === "file" ? "primary" : "tertiary"}
+                  onPress={() => {
+                    setTarget("file");
+                    setTargetId("");
+                  }}
+                >
+                  Справа
+                </Button>
+              </ButtonGroup>
+              <InstancePicker key={target} target={target} onChange={setTargetId} />
             </Modal.Body>
             <Modal.Footer>
               <Button variant="tertiary" onPress={onClose}>
