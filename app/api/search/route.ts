@@ -146,7 +146,24 @@ export async function POST(request: Request) {
     }
 
     if (tags && tags.length > 0) {
-      whereParts.push(Prisma.sql`f.tags @> ARRAY[${Prisma.join(tags)}]::text[]`);
+      // A tag matches through the file itself or through any linked author
+      // (confession tags live on authors, record-type tags on files). One CTE
+      // per tag keeps the file arm on the tags GIN index and lets the author
+      // arm start from the ~11k authors; the per-tag sets are then intersected.
+      tags.forEach((tag, i) => {
+        const cteName = Prisma.raw(`tag_files_${i}`);
+        ctes.push(Prisma.sql`${cteName} AS (
+          SELECT id AS file_id
+          FROM "files"
+          WHERE tags @> ARRAY[${tag}]::text[]
+          UNION
+          SELECT fa.file_id
+          FROM "authors" a
+          JOIN "file_authors" fa ON fa.author_id = a.id
+          WHERE a.tags @> ARRAY[${tag}]::text[]
+        )`);
+        whereParts.push(Prisma.sql`f.id IN (SELECT file_id FROM ${cteName})`);
+      });
     }
 
     if (is_online) {
