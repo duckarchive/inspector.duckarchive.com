@@ -103,39 +103,6 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       <div className="flex md:flex-row flex-col grow gap-4 mt-4">
         <div className="flex flex-col gap-8 pb-8 basis-1/4 min-w-0 h-full">
           <div className="flex flex-col gap-2">
-            <label htmlFor="coordinates-input" className="font-bold flex items-center">
-              <FaMapMarkerAlt className="inline mr-1" />
-              Локація
-            </label>
-            <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
-              <InputGroup>
-                <InputGroup.Input
-                  form="search-form"
-                  pattern="[\u0400-\u04FF\u0500-\u052F]+"
-                  placeholder="Назва населеного пункту"
-                />
-                {searchValues.place ? (
-                  <InputGroup.Suffix>
-                    <CloseButton
-                      aria-label="Очистити населений пункт"
-                      onPress={() => setSearchValues({ ...searchValues, place: undefined })}
-                    />
-                  </InputGroup.Suffix>
-                ) : null}
-              </InputGroup>
-            </TextField>
-            <CoordinatesInput
-              isLoading={isMutating}
-              year={searchValues.year || undefined}
-              value={{
-                lat: searchValues.lat || undefined,
-                lng: searchValues.lng || undefined,
-                radius_m: searchValues.radius_m || undefined,
-              }}
-              onChange={handleCoordinatesChange}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
             <label htmlFor="select-archive" className="font-bold flex items-center">
               <FaFolder className="inline mr-1" />
               Реквізити
@@ -167,6 +134,39 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 <Input form="search-form" placeholder="Справа" />
               </TextField>
             </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="coordinates-input" className="font-bold flex items-center">
+              <FaMapMarkerAlt className="inline mr-1" />
+              Локація
+            </label>
+            <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
+              <InputGroup>
+                <InputGroup.Input
+                  form="search-form"
+                  pattern="[\u0400-\u04FF\u0500-\u052F]+"
+                  placeholder="Назва населеного пункту"
+                />
+                {searchValues.place ? (
+                  <InputGroup.Suffix>
+                    <CloseButton
+                      aria-label="Очистити населений пункт"
+                      onPress={() => setSearchValues({ ...searchValues, place: undefined })}
+                    />
+                  </InputGroup.Suffix>
+                ) : null}
+              </InputGroup>
+            </TextField>
+            <CoordinatesInput
+              isLoading={isMutating}
+              year={searchValues.year || undefined}
+              value={{
+                lat: searchValues.lat || undefined,
+                lng: searchValues.lng || undefined,
+                radius_m: searchValues.radius_m || undefined,
+              }}
+              onChange={handleCoordinatesChange}
+            />
           </div>
           <div className="flex flex-col gap-2">
             <label className="font-bold flex items-center">
