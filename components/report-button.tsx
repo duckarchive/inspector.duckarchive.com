@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Label, Modal, TextArea, TextField } from "@heroui/react";
+import { Button, Modal, TextArea, TextField } from "@heroui/react";
 import { EditorEntity } from "@/lib/editor-actions";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
@@ -48,8 +48,7 @@ const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId }) => {
                   Опишіть, що саме є неправильним у цьому записі. Адміністратор розгляне ваше повідомлення.
                 </p>
                 <TextField value={note} onChange={setNote}>
-                  <Label>Опис помилки</Label>
-                  <TextArea placeholder="Наприклад: неправильний рік, помилка в назві тощо" rows={3} />
+                  <TextArea placeholder="Опис помилки — наприклад: неправильний рік, помилка в назві тощо" rows={3} />
                 </TextField>
               </Modal.Body>
               <Modal.Footer>

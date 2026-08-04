@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Chip, CloseButton, Label, NumberField } from "@heroui/react";
+import { Button, Chip, CloseButton, NumberField } from "@heroui/react";
 import { sameYearRange, YearRange } from "@/lib/editor-actions";
 import { FaPlus } from "react-icons/fa";
 
@@ -45,18 +45,16 @@ const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange }) =>
       </div>
       <div className="flex items-end gap-2">
         <NumberField className="grow" value={start} onChange={setStart} formatOptions={{ useGrouping: false }}>
-          <Label>Від</Label>
           <NumberField.Group>
             <NumberField.DecrementButton />
-            <NumberField.Input />
+            <NumberField.Input placeholder="Від" />
             <NumberField.IncrementButton />
           </NumberField.Group>
         </NumberField>
         <NumberField className="grow" value={end} onChange={setEnd} formatOptions={{ useGrouping: false }}>
-          <Label>До</Label>
           <NumberField.Group>
             <NumberField.DecrementButton />
-            <NumberField.Input />
+            <NumberField.Input placeholder="До" />
             <NumberField.IncrementButton />
           </NumberField.Group>
         </NumberField>

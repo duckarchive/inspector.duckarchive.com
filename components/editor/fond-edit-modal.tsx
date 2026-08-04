@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Label, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
+import { Button, Input, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
 import Select from "@/components/select";
 import CatalogSelect from "@/components/editor/catalog-select";
 import YearRangesField from "@/components/editor/year-ranges-field";
@@ -134,16 +134,13 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
             onChange={(key) => setArchiveCode(String(key ?? ""))}
           />
           <TextField value={code} onChange={setCode}>
-            <Label>Код</Label>
-            <Input />
+            <Input placeholder="Код" />
           </TextField>
           <TextField value={title} onChange={setTitle}>
-            <Label>Назва</Label>
-            <Input />
+            <Input placeholder="Назва" />
           </TextField>
           <TextField value={info} onChange={setInfo}>
-            <Label>Опис</Label>
-            <TextArea rows={2} />
+            <TextArea placeholder="Опис" rows={2} />
           </TextField>
           <YearRangesField value={years} onChange={setYears} />
 

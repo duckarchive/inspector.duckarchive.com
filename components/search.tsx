@@ -5,7 +5,7 @@ import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import InspectorDuckTable from "@/components/table";
-import { Button, CloseButton, Input, InputGroup, Label, Link, TextField } from "@heroui/react";
+import { Button, CloseButton, Input, InputGroup, Link, TextField } from "@heroui/react";
 import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
@@ -88,13 +88,11 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
           value={searchValues.title || ""}
           onChange={handleInputChange("title")}
         >
-          <Label>Заголовок справи</Label>
-          <Input />
+          <Input placeholder="Заголовок справи" />
         </TextField>
         {isMobile ? null : (
           <TextField type="number" className="basis-1/6 shrink-0" value={searchValues.year || ""} onChange={handleYearChange}>
-            <Label>Рік</Label>
-            <Input />
+            <Input placeholder="Рік" />
           </TextField>
         )}
         <Button type="submit" size="lg" className="basis-1/4 h-full font-bold text-lg" isIconOnly={isMobile}>
@@ -110,9 +108,12 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               Локація
             </label>
             <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
-              <Label>Назва населеного пункту</Label>
               <InputGroup>
-                <InputGroup.Input form="search-form" pattern="[\u0400-\u04FF\u0500-\u052F]+" />
+                <InputGroup.Input
+                  form="search-form"
+                  pattern="[\u0400-\u04FF\u0500-\u052F]+"
+                  placeholder="Назва населеного пункту"
+                />
                 {searchValues.place ? (
                   <InputGroup.Suffix>
                     <CloseButton
@@ -157,16 +158,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             />
             <div className="flex gap-2">
               <TextField value={searchValues.fond || ""} onChange={handleInputChange("fond")}>
-                <Label>Фонд</Label>
-                <Input form="search-form" />
+                <Input form="search-form" placeholder="Фонд" />
               </TextField>
               <TextField value={searchValues.inventory || ""} onChange={handleInputChange("inventory")}>
-                <Label>Опис</Label>
-                <Input form="search-form" />
+                <Input form="search-form" placeholder="Опис" />
               </TextField>
               <TextField value={searchValues.file || ""} onChange={handleInputChange("file")}>
-                <Label>Справа</Label>
-                <Input form="search-form" />
+                <Input form="search-form" placeholder="Справа" />
               </TextField>
             </div>
           </div>

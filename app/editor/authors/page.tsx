@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, CloseButton, InputGroup, Label, TextField } from "@heroui/react";
+import { Button, CloseButton, InputGroup, TextField } from "@heroui/react";
 import InspectorDuckTable from "@/components/table";
 import EditCell from "@/components/editor/edit-cell";
 import AuthorEditModal from "@/components/editor/author-edit-modal";
@@ -47,9 +47,8 @@ export default function EditorAuthorsPage() {
             syncEditorUrl({ q: v || null, edit: null });
           }}
         >
-          <Label>Пошук автора</Label>
           <InputGroup>
-            <InputGroup.Input />
+            <InputGroup.Input placeholder="Пошук автора" />
             {query ? (
               <InputGroup.Suffix>
                 <CloseButton

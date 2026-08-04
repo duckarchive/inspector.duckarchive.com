@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Label, Modal, TextArea, TextField, toast } from "@heroui/react";
+import { Button, Input, Modal, TextArea, TextField, toast } from "@heroui/react";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
@@ -70,16 +70,13 @@ const InventoryAddModal: React.FC<InventoryAddModalProps> = ({ fond, isOpen, onC
             </Modal.Header>
             <Modal.Body className="gap-3">
           <TextField value={code} onChange={setCode} autoFocus>
-            <Label>Код</Label>
-            <Input />
+            <Input placeholder="Код" />
           </TextField>
           <TextField value={title} onChange={setTitle}>
-            <Label>Назва</Label>
-            <Input />
+            <Input placeholder="Назва" />
           </TextField>
           <TextField value={info} onChange={setInfo}>
-            <Label>Опис</Label>
-            <TextArea rows={2} />
+            <TextArea placeholder="Опис" rows={2} />
           </TextField>
           <YearRangesField value={years} onChange={setYears} />
             </Modal.Body>

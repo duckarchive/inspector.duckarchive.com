@@ -1,5 +1,5 @@
 import { Key, ReactNode } from "react";
-import { Collection, ComboBox, Input, Label, ListBox, ListBoxLoadMoreItem, Spinner } from "@heroui/react";
+import { Collection, ComboBox, Input, ListBox, ListBoxLoadMoreItem, Spinner } from "@heroui/react";
 import { editorPopoverClassName, wrapItemClassName, wrapUrlItemClassName } from "@/components/editor/autocomplete";
 
 export interface SelectProps<T extends object> {
@@ -112,9 +112,8 @@ function Select<T extends object>({
       // snapping shut mid-search.
       {...(isServerSearch ? { allowsEmptyCollection: true } : { defaultItems: items })}
     >
-      <Label>{label}</Label>
       <ComboBox.InputGroup>
-        <Input form={form} className={SIZE_CLASS[size]} />
+        <Input form={form} className={SIZE_CLASS[size]} placeholder={label} />
         <ComboBox.Trigger />
       </ComboBox.InputGroup>
       <ComboBox.Popover className={virtualized || wrapUrls ? editorPopoverClassName : undefined}>

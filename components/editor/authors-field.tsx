@@ -1,7 +1,7 @@
 "use client";
 
 import { Key, useMemo, useState } from "react";
-import { Button, Chip, CloseButton, Input, Label, TextField } from "@heroui/react";
+import { Button, Chip, CloseButton, Input, TextField } from "@heroui/react";
 import Select from "@/components/select";
 import { useEditorAuthors } from "@/hooks/useEditor";
 
@@ -106,8 +106,7 @@ const AuthorsField: React.FC<AuthorsFieldProps> = ({ linked, ops, onChange }) =>
       />
       <div className="flex items-end gap-2">
         <TextField value={newTitle} onChange={setNewTitle}>
-          <Label>Додати нового автора</Label>
-          <Input />
+          <Input placeholder="Додати нового автора" />
         </TextField>
         <Button size="sm" onPress={addNew} isDisabled={!newTitle.trim()}>
           Додати

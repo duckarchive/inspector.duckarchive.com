@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Label, Modal, TextArea, TextField, toast } from "@heroui/react";
+import { Button, Input, Modal, TextArea, TextField, toast } from "@heroui/react";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
 import { encodeNote, SubmitActionBody } from "@/lib/editor-actions";
@@ -54,12 +54,10 @@ const AuthorAddModal: React.FC<AuthorAddModalProps> = ({ isOpen, onClose, onSubm
             </Modal.Header>
             <Modal.Body className="gap-3">
               <TextField value={title} onChange={setTitle} autoFocus>
-                <Label>Назва</Label>
-                <Input />
+                <Input placeholder="Назва" />
               </TextField>
               <TextField value={info} onChange={setInfo}>
-                <Label>Опис</Label>
-                <TextArea rows={2} />
+                <TextArea placeholder="Опис" rows={2} />
               </TextField>
             </Modal.Body>
             <Modal.Footer>

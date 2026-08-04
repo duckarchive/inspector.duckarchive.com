@@ -8,7 +8,6 @@ import {
   CloseButton,
   FieldError,
   InputGroup,
-  Label,
   Modal,
   NumberField,
   TextField,
@@ -118,7 +117,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
   const latLng: GeoDuckMapProps["positions"][number] = [
     +(coordinates.lat || UKRAINE_CENTER[0]),
     +(coordinates.lng || UKRAINE_CENTER[1]),
-    coordinates.radius_m || 0,
+    coordinates.radius_m || 5000,
   ];
   const center = latLng.slice(0, 2) as [number, number];
   const title =
@@ -136,7 +135,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
             center={center}
             year={+(year || 0) || undefined}
             hideLayers={{ searchInput: true, historicalLayers: true }}
-            zoom={12}
+            zoom={5}
           />
         )}
       </div>
@@ -149,7 +148,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
             </Accordion.Trigger>
           </Accordion.Heading>
           <Accordion.Panel>
-            <Accordion.Body className="p-0 flex flex-col gap-2">
+            <Accordion.Body className="p-1 flex flex-col gap-2">
               <fieldset aria-label="Ручне введення координат" className="flex flex-col gap-2">
                 <TextField
                   isDisabled={isLoading}
@@ -157,9 +156,8 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
                   value={coordinates.lat ?? ""}
                   onChange={handleLatChange}
                 >
-                  <Label>Широта (lat)</Label>
                   <InputGroup>
-                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" />
+                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder="Широта (lat)" />
                     {coordinates.lat ? (
                       <InputGroup.Suffix>
                         <CloseButton
@@ -177,9 +175,8 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
                   value={coordinates.lng ?? ""}
                   onChange={handleLngChange}
                 >
-                  <Label>Довгота (lng)</Label>
                   <InputGroup>
-                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" />
+                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder="Довгота (lng)" />
                     {coordinates.lng ? (
                       <InputGroup.Suffix>
                         <CloseButton
@@ -204,9 +201,10 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
                   value={coordinates.radius_m || 0}
                   onChange={handleRadiusChange}
                 >
-                  <Label>Радіус</Label>
                   <NumberField.Group>
-                    <NumberField.Input onPaste={handlePaste} />
+                    <NumberField.DecrementButton />
+                    <NumberField.Input onPaste={handlePaste} placeholder="Радіус" />
+                    <NumberField.IncrementButton />
                   </NumberField.Group>
                   <FieldError>{formErrors.radius_m}</FieldError>
                 </NumberField>

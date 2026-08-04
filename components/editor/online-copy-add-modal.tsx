@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup, Input, Label, Modal, TextField } from "@heroui/react";
+import { Button, ButtonGroup, Input, Modal, TextField } from "@heroui/react";
 import InstancePicker from "@/components/editor/instance-picker";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
@@ -47,8 +47,7 @@ const OnlineCopyAddModal: React.FC<OnlineCopyAddModalProps> = ({ isOpen, onClose
             </Modal.Header>
             <Modal.Body className="gap-3">
               <TextField value={url} onChange={setUrl}>
-                <Label>URL онлайн-копії</Label>
-                <Input />
+                <Input placeholder="URL онлайн-копії" />
               </TextField>
               <ButtonGroup>
                 <Button

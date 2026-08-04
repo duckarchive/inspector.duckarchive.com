@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Input, Label, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
+import { Button, Input, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import OnlineCopiesField, { emptyOnlineCopyOps, OnlineCopyOps } from "@/components/editor/online-copies-field";
 import CatalogSelect from "@/components/editor/catalog-select";
@@ -106,16 +106,13 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
             </Modal.Header>
             <Modal.Body className="gap-3">
           <TextField value={code} onChange={setCode}>
-            <Label>Код</Label>
-            <Input />
+            <Input placeholder="Код" />
           </TextField>
           <TextField value={title} onChange={setTitle}>
-            <Label>Назва</Label>
-            <Input />
+            <Input placeholder="Назва" />
           </TextField>
           <TextField value={info} onChange={setInfo}>
-            <Label>Опис</Label>
-            <TextArea rows={2} />
+            <TextArea placeholder="Опис" rows={2} />
           </TextField>
           <YearRangesField value={years} onChange={setYears} />
           <OnlineCopiesField copies={inventory.online_copies} ops={copyOps} onChange={setCopyOps} />

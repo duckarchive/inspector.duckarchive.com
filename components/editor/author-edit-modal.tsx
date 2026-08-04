@@ -1,7 +1,7 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
-import { Button, Chip, CloseButton, Input, Label, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
+import { Button, Chip, CloseButton, Input, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import useSubmitAction from "@/hooks/useSubmitAction";
@@ -119,12 +119,10 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
             </Modal.Header>
             <Modal.Body className="gap-3">
           <TextField value={title} onChange={setTitle}>
-            <Label>Назва</Label>
-            <Input />
+            <Input placeholder="Назва" />
           </TextField>
           <TextField value={info} onChange={setInfo}>
-            <Label>Опис</Label>
-            <TextArea rows={2} />
+            <TextArea placeholder="Опис" rows={2} />
           </TextField>
 
           <div className="flex flex-col gap-2">
@@ -140,8 +138,7 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
             </div>
             <div className="flex items-end gap-2">
               <TextField value={tagDraft} onChange={setTagDraft}>
-                <Label>Новий тег</Label>
-                <Input />
+                <Input placeholder="Новий тег" />
               </TextField>
               <Button size="sm" onPress={addTag} isDisabled={!tagDraft.trim()}>
                 Додати

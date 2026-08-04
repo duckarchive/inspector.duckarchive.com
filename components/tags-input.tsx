@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Chip, Label, SearchField } from "@heroui/react";
+import { Chip, SearchField } from "@heroui/react";
 import { FaBaby, FaHeart, FaLink, FaSkull } from "react-icons/fa";
 import { FaHeartCrack } from "react-icons/fa6";
 
@@ -42,10 +42,9 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags, value, onSelectionChange })
   return (
     <div className="flex flex-col gap-2">
       <SearchField value={filterValue} onChange={setFilterValue}>
-        <Label>Шукати тег</Label>
         <SearchField.Group>
           <SearchField.SearchIcon />
-          <SearchField.Input />
+          <SearchField.Input placeholder="Шукати тег" />
           <SearchField.ClearButton />
         </SearchField.Group>
       </SearchField>
