@@ -101,7 +101,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         </Button>
       </form>
       <div className="flex md:flex-row flex-col grow gap-4 mt-4">
-        <div className="flex flex-col gap-8 pb-8 basis-1/4 h-full">
+        <div className="flex flex-col gap-8 pb-8 basis-1/4 min-w-0 h-full">
           <div className="flex flex-col gap-2">
             <label htmlFor="coordinates-input" className="font-bold flex items-center">
               <FaMapMarkerAlt className="inline mr-1" />
@@ -157,13 +157,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
             />
             <div className="flex gap-2">
-              <TextField value={searchValues.fond || ""} onChange={handleInputChange("fond")}>
+              <TextField className="min-w-0 flex-1" value={searchValues.fond || ""} onChange={handleInputChange("fond")}>
                 <Input form="search-form" placeholder="Фонд" />
               </TextField>
-              <TextField value={searchValues.inventory || ""} onChange={handleInputChange("inventory")}>
+              <TextField className="min-w-0 flex-1" value={searchValues.inventory || ""} onChange={handleInputChange("inventory")}>
                 <Input form="search-form" placeholder="Опис" />
               </TextField>
-              <TextField value={searchValues.file || ""} onChange={handleInputChange("file")}>
+              <TextField className="min-w-0 flex-1" value={searchValues.file || ""} onChange={handleInputChange("file")}>
                 <Input form="search-form" placeholder="Справа" />
               </TextField>
             </div>

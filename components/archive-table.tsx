@@ -27,7 +27,6 @@ const Details: React.FC<{
               href={`https://www.google.com/maps/place/${archive.address.split(/,?\s+/).join("+")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono"
             >
               {archive.address}
             </Link>
@@ -36,7 +35,7 @@ const Details: React.FC<{
         {archive.url && (
           <li>
             Офіційний сайт:&nbsp;
-            <Link href={archive.url} target="_blank" className="font-mono">
+            <Link href={archive.url} target="_blank">
               {archive.url}
             </Link>
           </li>
@@ -44,7 +43,7 @@ const Details: React.FC<{
         {archive.phone_number && (
           <li>
             Телефон:&nbsp;
-            <Link href={`tel:${archive.phone_number}`} className="font-mono">
+            <Link href={`tel:${archive.phone_number}`}>
               {archive.phone_number}
             </Link>
           </li>
@@ -52,7 +51,7 @@ const Details: React.FC<{
         {archive.email && (
           <li>
             Email:&nbsp;
-            <Link href={`mailto:${archive.email}`} className="font-mono">
+            <Link href={`mailto:${archive.email}`}>
               {archive.email}
             </Link>
           </li>

@@ -61,6 +61,22 @@
 }
 
 /*
+ * Body defaults to font-mono (titles/text). Interactive controls opt back
+ * into font-sans here so a plain <Button>/<Input>/<Link>/<TextArea> etc.
+ * doesn't need the utility class on every usage; an explicit font-* class
+ * still wins since utilities sit in a layer above `base`.
+ */
+@layer base {
+  button,
+  input,
+  textarea,
+  select,
+  a {
+    font-family: var(--font-sans);
+  }
+}
+
+/*
  * HeroUI v3 theme overrides — ported from the v2 `heroui()` plugin themes.
  * Orange (#ff5c00) accent over an Apple-style neutral grey ramp.
  */

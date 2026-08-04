@@ -109,9 +109,9 @@ themes:
         large: 0px 10px 50px 0px rgb(0 0 0 / 0.45)
 typography:
   families:
-    font-sans: SF Pro Text (local, --font-sans) # display, headlines, body
+    font-mono: Geist Mono (google, --font-mono) # theme default — all titles/text, body copy, headings
+    font-sans: Geist (google, --font-sans) # interactive elements only — Button, Input, Link, TextArea, etc.
     font-label: Geist (google, --font-label) # labels, chips, metadata
-    font-mono: Geist Mono (google, --font-mono) # codes, tabular data points
     font-comic: CC Jim Lee (local, --font-comic) # comics easter egg only
   scale: # tailwind fontSize tokens → text-display-lg, text-headline-lg, …
     display-lg:
@@ -189,7 +189,11 @@ The palette is anchored in a monochromatic spectrum of Apple-inspired neutrals, 
 
 ## Typography
 
-The type scale uses **SF Pro Text** (`font-sans`) end to end — sharp, contemporary headings with tight letter spacing and heavy weights, and a highly legible foundation for body copy. **Geist** (`font-label`) introduces a technical, "developer-grade" feel for labels, chips, and metadata; **Geist Mono** (`font-mono`) covers archival codes and tabular data points.
+Font family is a theme-level split, not a per-component choice:
+
+- **`font-mono` (Geist Mono)** is the default for everything — titles, headlines, body copy, metadata. It's applied once on `<body>` in `app/layout.tsx`, so every text element inherits it automatically. This gives the whole app a technical, "archival ledger" feel that fits the codes/tabular-data subject matter.
+- **`font-sans` (Geist)** is reserved for interactive elements — `Button`, `Input`, `Link`, `TextArea`, `NumberField`, `SearchField`, and every other clickable/editable control. A global rule in `styles/globals.css` (`@layer base { button, input, textarea, select, a { font-family: var(--font-sans); } }`) applies this automatically to native form/interactive tags, so components don't need an explicit `font-sans` class. Don't add `font-mono`/`font-sans` overrides to individual interactive elements — fix the theme rule instead if the split needs to change.
+- **Geist** (`font-label`) still handles labels, chips, and metadata that aren't part of the mono/sans split above.
 
 High contrast is achieved by pairing massive `text-display-lg` styles with significantly smaller, breathable `text-body-md` copy. Always prioritize tight tracking on headings to maintain the luxury aesthetic. On mobile, `text-headline-lg` drops to `text-headline-lg-mobile`.
 
