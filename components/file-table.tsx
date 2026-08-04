@@ -43,7 +43,7 @@ const Details: React.FC<{
               className="rounded-lg text-accent"
               center={findCenter([...file.locations, ...file.authors.map(({ author }) => author)])}
               positions={prepareLocations([...file.locations, ...file.authors.map(({ author }) => author)])}
-              year={file.years[0].start_year || undefined}
+              year={file.years[0]?.start_year || undefined}
               hideLayers={{ searchInput: true, historicalLayers: true }}
               zoom={12}
               scrollWheelZoom
