@@ -19,8 +19,12 @@ const Details: React.FC<{
 }> = ({ fond }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {fond?.years.length ? (
-      <ul className="list-disc list-inside py-2">
-        {fond?.years.length ? <li>Роки: {getYearsString(fond.years)}</li> : null}
+      <ul className="list-inside py-2">
+        {fond?.years.length ? (
+          <li>
+            Роки:&nbsp;<span className="text-foreground">{getYearsString(fond.years)}</span>
+          </li>
+        ) : null}
       </ul>
     ) : null}
   </div>

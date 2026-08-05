@@ -20,11 +20,15 @@ const Details: React.FC<{
 }> = ({ inventory }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {inventory?.years.length || inventory?.online_copies?.length ? (
-      <ul className="list-disc list-inside py-2">
-        {Boolean(inventory.years.length) && <li>Роки: {getYearsString(inventory.years)}</li>}
+      <ul className="list-inside py-2">
+        {Boolean(inventory.years.length) && (
+          <li>
+            Роки:&nbsp;<span className="text-foreground">{getYearsString(inventory.years)}</span>
+          </li>
+        )}
         {(inventory.online_copies.filter((copy) => copy.url) as { url: string }[]).map((copy) => (
           <li key={copy.url}>
-            <Link href={copy.url} target="_blank" rel="noopener noreferrer" className="text-inherit text-sm underline">
+            <Link href={copy.url} target="_blank" rel="noopener noreferrer" className="text-foreground text-sm underline">
               {copy.url}
             </Link>
           </li>

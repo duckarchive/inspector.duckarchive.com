@@ -51,10 +51,10 @@ const Details: React.FC<{
             />
           </div>
         )}
-        <ul className="list-disc list-inside basis-1/2">
+        <ul className="list-inside basis-1/2">
           {Boolean(file.years.length) && (
             <li>
-              Рік: <span className="text-accent">{getYearsString(file.years)}</span>
+              Рік: <span className="text-foreground">{getYearsString(file.years)}</span>
             </li>
           )}
           {Boolean(file.authors.length) && (
@@ -63,8 +63,8 @@ const Details: React.FC<{
               {file.authors.map(({ author }, index) => (
                 <span key={author.id}>
                   {index > 0 && ", "}
-                  <span className="text-accent">
-                    {author.title} ({author.info})
+                  <span className="text-foreground">
+                    {author.title}{author.info ? ` (${author.info})` : ""}
                   </span>
                 </span>
               ))}
@@ -76,7 +76,7 @@ const Details: React.FC<{
               {file.tags.map((tag, index) => (
                 <span key={tag}>
                   {index > 0 && ", "}
-                  <span className="text-accent">{tag}</span>
+                  <span className="text-foreground">{tag}</span>
                 </span>
               ))}
             </li>
