@@ -96,6 +96,27 @@ Caveat: under-extraction in the OCR parse (lists like «спр. 238, 249 (дуб
 only yield the first number) can hide further conflicts inside the 47
 base-missing / 133 no-acmb-data groups — treat those as unverified, not cleared.
 
+## Step 4 — acmb year-matching reconciliation (2026-08-05)
+
+Tooling: `acmb_lookup.py` (per-item evidence card), `step4_engine.py` (sequential
+processor), `step4-worklist.csv` (1,016 items — re-detection after steps 2/3
+exposed 48 new outliers), `step4-decision-log.csv` (every item + evidence).
+
+Match rule per item: acmb refs for (archive, fond, опис) filtered by year
+overlap and by title-place mention near the ref; the item's own glued number is
+dropped when it echoes in the acmb OCR. Resolve on a single surviving candidate,
+or a unique prefix-consistent candidate with an exact year-range match.
+
+Results: **347 merged** into their true справа (0 renames needed — every
+resolved target already existed), 1 skipped, 0 errors, **669 → review**:
+345 without acmb coverage or without years, 119 with no candidates after
+filters, 205 with multiple candidates. Sample audits verified: merged files
+gone, targets enriched (years/authors/titles onto NULL-or-generic bases only).
+
+Notable OCR glue species identified: page numbers (`22445`=22+445), years
+(`581884`=58+1884), catalog page numbers at page breaks (`421`), rubric numbers
+(`6837`=683+«7.»).
+
 ## Out of scope, noted for later
 
 - 11,738 files have **no digits at all** in `code` — separate review.

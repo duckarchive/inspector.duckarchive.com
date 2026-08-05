@@ -1,0 +1,1018 @@
+seq,anomaly,action,target,evidence
+1,ДАІФО-631-1-6837,merged,ДАІФО-631-1-683,"acmb т.4 Олеша: шлюб 1837–1912 = спр.683; «6837» = 683 + rubric «7.» glue; Тлумач entry confirms 683"
+3,ДАІФО-631-1-66266,merged,ДАІФО-631-1-66,"acmb т.4 Устеріки: спр.66; years 1855–1902 identical on both sides; «266» = page glue"
+2,ДАІФО-631-1-63265,merged,63,"exact year match + prefix, of 598"
+3,ДАІФО-631-1-66266,skipped,,file no longer exists
+4,ДАІФО-631-1-98242,merged,98,"exact year match + prefix, of 6"
+5,ДАІФО-631-1-114244,merged,114,"exact year match + prefix, of 2"
+6,ДАІФО-631-1-117232,merged,117,"exact year match + prefix, of 7"
+7,ДАІФО-631-1-137245,merged,137,"exact year match + prefix, of 17"
+8,ДАІФО-631-1-148253,merged,148,"exact year match + prefix, of 3"
+9,ДАІФО-631-1-207250,merged,207,"exact year match + prefix, of 16"
+10,ДАІФО-631-1-238256,merged,238,"exact year match + prefix, of 3"
+11,ДАІФО-631-1-287276,merged,287,"exact year match + prefix, of 4"
+12,ДАІФО-631-1-317261,merged,317,"exact year match + prefix, of 13"
+13,ДАІФО-631-1-342264,merged,342,"exact year match + prefix, of 2"
+14,ДАІФО-631-1-486277,merged,486,"exact year match + prefix, of 3"
+15,ДАІФО-631-1-498278,merged,498,"exact year match + prefix, of 5"
+16,ДАІФО-631-1-571283,merged,571,"exact year match + prefix, of 3"
+17,ДАІФО-631-1-636290,merged,636,"exact year match + prefix, of 5"
+18,ДАІФО-631-1-697241,merged,697,"exact year match + prefix, of 14"
+19,ДАВоО-193-1-6037,merged,60,"single candidate; years [(1864, 1864)]"
+20,ДАВоО-193-1-6078,merged,60,"single candidate; years [(1864, 1864)]"
+21,ДАВоО-193-1-31270,review,,no candidates after filters
+22,ДАВоО-193-1-55164,merged,55,"single candidate; years [(1862, 1862)]"
+23,ДАВоО-193-1-55237,merged,55,unique prefix among 2 place-filtered
+24,ДАВоО-193-1-60130,merged,60,"single candidate; years [(1864, 1864)]"
+25,ДАВоО-193-1-60184,review,,"10 candidates, prefix=[60]"
+26,ДАВоО-193-1-60224,merged,60,"single candidate; years [(1864, 1864)]"
+27,ДАВоО-193-1-60231,merged,60,"single candidate; years [(1864, 1864)]"
+28,ДАВоО-193-1-60239,merged,60,"single candidate; years [(1864, 1864)]"
+29,ДАВоО-193-1-60240,merged,60,"single candidate; years [(1864, 1864)]"
+30,ДАВоО-195-1-28273,review,,no candidates after filters
+31,ДАВоО-195-1-28285,review,,"16 candidates, prefix=[28]"
+32,ДАВоО-286-1-138407,review,,"3 candidates, prefix=[138]"
+33,ДАВоО-297-1-146289,review,,no candidates after filters
+34,ДАВоО-35-1-11931,merged,119,unique prefix among 2 place-filtered
+35,ДАВоО-35-1-11935,merged,119,"single candidate; years [(1870, 1870)]"
+36,ДАВоО-35-1-161139,merged,161,"single candidate; years [(1871, 1871)]"
+37,ДАВоО-35-10-9395,merged,93,"exact year match + prefix, of 4"
+38,ДАВоО-35-10-21541,merged,215,"single candidate; years [(1864, 1864)]"
+39,ДАВоО-35-10-64370,merged,64,"single candidate; years [(1835, 1841)]"
+40,ДАВоО-35-2-16767,merged,167,unique prefix among 3 place-filtered
+41,ДАВоО-35-2-117566,review,,no candidates after filters
+42,ДАВоО-35-2-118291,review,,no candidates after filters
+43,ДАВоО-35-2-392241,merged,392,"single candidate; years [(1877, 1877)]"
+44,ДАВоО-35-2-775123,merged,775,unique prefix among 8 place-filtered
+45,ДАВоО-35-2-781147,merged,781,"single candidate; years [(1883, 1883)]"
+46,ДАВоО-35-2-925179,merged,925,"single candidate; years [(1901, 1910)]"
+47,ДАВоО-382-2-165382,merged,165,unique prefix among 2 place-filtered
+48,ДАВоО-382-2-165386,merged,165,unique prefix among 2 place-filtered
+49,ДАВоО-382-2-167397,merged,167,unique prefix among 2 place-filtered
+50,ДАВоО-382-3-731822,merged,73,"single candidate; years [(1819, 1819)]"
+51,ДАВоО-96-1-3654,review,,"43 candidates, prefix=[365]"
+52,ДАВоО-96-1-37413,review,,"10 candidates, prefix=[37]"
+53,ДАВоО-96-1-365403,merged,365,"single candidate; years [(1862, 1862)]"
+54,ДАВоО-96-1-414404,review,,"46 candidates, prefix=[414]"
+55,ДАВіО-177-1-120855,review,,no acmb data or no years
+56,ДАВіО-904-11-69242,review,,no candidates after filters
+57,ДАВіО-904-11-69265,review,,no candidates after filters
+58,ДАВіО-904-11-69266,review,,no candidates after filters
+59,ДАВіО-904-12-3219,merged,32,"exact year match + prefix, of 2"
+60,ДАВіО-904-12-9018,merged,90,"single candidate; years [(1908, 1920)]"
+61,ДАВіО-904-12-10521,merged,105,"single candidate; years [(1911, 1917)]"
+62,ДАВіО-904-13-17943,review,,no candidates after filters
+63,ДАВіО-904-13-18340,merged,183,"exact year match + prefix, of 4"
+64,ДАВіО-904-13-19338,merged,193,"single candidate; years [(1914, 1917), (1919, 1919)]"
+65,ДАВіО-904-13-19542,review,,no candidates after filters
+66,ДАВіО-904-14-65284,merged,67,"single candidate; years [(1908, 1910), (1914, 1914), (1916, 1917)]"
+67,ДАВіО-904-16-65110,merged,65,"single candidate; years [(1913, 1920)]"
+68,ДАВіО-904-16-67109,merged,67,"single candidate; years [(1913, 1919)]"
+69,ДАВіО-904-16-77112,merged,77,"single candidate; years [(1913, 1921)]"
+70,ДАВіО-904-17-49122,merged,49,"single candidate; years [(1891, 1893)]"
+71,ДАВіО-904-17-98126,merged,98,"single candidate; years [(1905, 1909)]"
+72,ДАВіО-904-17-108124,merged,108,"single candidate; years [(1911, 1915)]"
+73,ДАВіО-904-18-52127,merged,52,"exact year match + prefix, of 8"
+74,ДАВіО-904-18-59131,merged,59,"single candidate; years [(1911, 1919)]"
+75,ДАВіО-904-18-70132,merged,70,"single candidate; years [(1906, 1919)]"
+76,ДАВіО-904-2-23277,merged,232,"single candidate; years [(1906, 1917)]"
+77,ДАВіО-904-2-41789,merged,417,"single candidate; years [(1916, 1916)]"
+78,ДАВіО-904-2-41990,merged,419,"single candidate; years [(1903, 1903)]"
+79,ДАВіО-904-20-49101,merged,49,"exact year match + prefix, of 2"
+80,ДАВіО-904-20-65102,merged,65,"single candidate; years [(1905, 1905), (1907, 1914), (1916, 1916)]"
+81,ДАВіО-904-20-68103,review,,no candidates after filters
+82,ДАВіО-904-21-5725,merged,57,"exact year match + prefix, of 2"
+83,ДАВіО-904-21-6031,merged,60,"single candidate; years [(1907, 1907), (1909, 1919)]"
+84,ДАВіО-904-21-6727,merged,67,"exact year match + prefix, of 2"
+85,ДАВіО-904-24-14591,merged,145,"single candidate; years [(1880, 1890)]"
+86,ДАВіО-904-24-14999,merged,149,"exact year match + prefix, of 4"
+87,ДАВіО-904-24-19597,merged,195,"single candidate; years [(1913, 1918)]"
+88,ДАВіО-904-25-5456,merged,54,"single candidate; years [(1898, 1898)]"
+89,ДАВіО-904-25-5653,review,,no candidates after filters
+90,ДАВіО-904-25-7054,review,,no candidates after filters
+91,ДАВіО-904-26-174290,merged,174,"exact year match + prefix, of 16"
+92,ДАВіО-904-26-222214,merged,222,"single candidate; years [(1911, 1911), (1914, 1920)]"
+93,ДАВіО-904-26-227222,merged,227,"single candidate; years [(1911, 1914), (1916, 1916)]"
+94,ДАВіО-904-26-232220,merged,232,"single candidate; years [(1912, 1916), (1918, 1918)]"
+95,ДАВіО-904-27-32184,review,,no candidates after filters
+96,ДАВіО-904-29-84286,review,,"2 candidates, prefix=[]"
+97,ДАВіО-904-30-109288,merged,109,unique prefix among 3 place-filtered
+98,ДАВіО-904-31-1841,review,,no candidates after filters
+99,ДАВіО-904-32-99169,merged,99,"single candidate; years [(1885, 1886), (1891, 1891), (1895, 1895), (1898, 1898)]"
+100,ДАВіО-904-32-131160,merged,131,unique prefix among 3 place-filtered
+101,ДАВіО-904-33-184141,merged,184,"single candidate; years [(1914, 1918)]"
+102,ДАВіО-904-33-256147,merged,256,"exact year match + prefix, of 2"
+103,ДАВіО-904-34-3048,review,,no candidates after filters
+104,ДАВіО-904-35-242191,merged,242,unique prefix among 2 place-filtered
+105,ДАВіО-904-41-59229,merged,59,"single candidate; years [(1890, 1905)]"
+106,ДАВіО-904-41-105228,merged,105,"single candidate; years [(1911, 1915)]"
+107,ДАВіО-904-41-111231,merged,111,"single candidate; years [(1914, 1921)]"
+108,ДАВіО-905-2-239,review,,no candidates after filters
+109,ДАДнО-193-1-352495,merged,352,"exact year match + prefix, of 2"
+110,ДАДнО-193-1-352497,merged,352,"exact year match + prefix, of 2"
+111,ДАДнО-193-3-362522,review,,no candidates after filters
+112,ДАДнО-193-3-379539,merged,379,"single candidate; years [(1919, 1920)]"
+113,ДАДнО-193-3-431526,merged,431,"exact year match + prefix, of 227"
+114,ДАДнО-193-3-439527,review,,"184 candidates, prefix=[439]"
+115,ДАДнО-193-3-447529,review,,"147 candidates, prefix=[447]"
+116,ДАДнО-193-3-641900,merged,64,"single candidate; years [(1897, 1899)]"
+117,ДАДнО-193-3-676536,review,,"26 candidates, prefix=[676]"
+118,ДАДнО-193-3-689540,merged,689,"single candidate; years [(1912, 1915)]"
+119,ДАДнО-193-3-727519,merged,727,"single candidate; years [(1918, 1920)]"
+120,ДАДнО-193-3-742537,merged,742,unique prefix among 6 place-filtered
+121,ДАДнО-193-3-781899,review,,"97 candidates, prefix=[]"
+122,ДАДнО-193-3-791901,review,,"82 candidates, prefix=[]"
+123,ДАДнО-193-3-843543,review,,no candidates after filters
+124,ДАДнО-193-4-61518,merged,61,"single candidate; years [(1896, 1896)]"
+125,ДАДнО-193-4-521881,merged,52,"single candidate; years [(1878, 1879)]"
+126,ДАДнО-193-4-525570,merged,525,"exact year match + prefix, of 3"
+127,ДАДнО-193-4-607585,merged,607,"exact year match + prefix, of 2"
+128,ДАДнО-193-4-613596,merged,613,unique prefix among 2 place-filtered
+129,ДАДнО-193-4-672589,merged,672,"single candidate; years [(1911, 1912)]"
+130,ДАДнО-193-4-701901,merged,70,"single candidate; years [(1896, 1898), (1900, 1900)]"
+131,ДАДнО-193-4-710582,merged,710,"single candidate; years [(1917, 1918)]"
+132,ДАДнО-193-4-715587,merged,715,"exact year match + prefix, of 3"
+133,ДАДнО-193-4ДОД-34555,review,,no candidates after filters
+134,ДАДнО-193-5ДОД-13608,review,,no candidates after filters
+135,ДАДнО-193-9-38564,merged,38,"single candidate; years [(1911, 1916)]"
+136,ДАДнО-193-9-71908,review,,"13 candidates, prefix=[]"
+137,ДАДнО-Р6478-1-411115,review,,no acmb data or no years
+138,ДАДнО-Р6478-1-411116,review,,no acmb data or no years
+139,ДАДнО-Р6478-1-411117,review,,no acmb data or no years
+140,ДАДнО-Р6478-1-411118,review,,no acmb data or no years
+141,ДАДнО-Р6478-1-411119,review,,no acmb data or no years
+142,ДАДнО-Р6478-1-411120,review,,no acmb data or no years
+143,ДАДнО-Р6478-1-411121,review,,no acmb data or no years
+144,ДАДнО-Р6478-1-411122,review,,no acmb data or no years
+145,ДАДнО-Р6478-1-411123,review,,no acmb data or no years
+146,ДАДнО-Р6478-1-411124,review,,no acmb data or no years
+147,ДАДнО-Р6478-1-411125,review,,no acmb data or no years
+148,ДАДнО-Р6478-1-411126,review,,no acmb data or no years
+149,ДАДнО-Р6478-1-411127,review,,no acmb data or no years
+150,ДАДнО-Р6478-1-411128,review,,no acmb data or no years
+151,ДАДнО-Р6478-1-411129,review,,no acmb data or no years
+152,ДАДнО-Р6478-1-411130,review,,no acmb data or no years
+153,ДАДнО-Р6478-1-411131,review,,no acmb data or no years
+154,ДАДнО-Р6478-1-411132,review,,no acmb data or no years
+155,ДАДнО-Р6478-1-411133,review,,no acmb data or no years
+156,ДАДнО-Р6478-1-411134,review,,no acmb data or no years
+157,ДАДнО-Р6478-1-411135,review,,no acmb data or no years
+158,ДАДнО-Р6478-1-411136,review,,no acmb data or no years
+159,ДАДнО-Р6478-1-411137,review,,no acmb data or no years
+160,ДАДнО-Р6478-1-411138,review,,no acmb data or no years
+161,ДАДнО-Р6478-1-411139,review,,no acmb data or no years
+162,ДАДнО-Р6478-1-411140,review,,no acmb data or no years
+163,ДАДнО-Р6478-1-411141,review,,no acmb data or no years
+164,ДАДнО-Р6478-1-411142,review,,no acmb data or no years
+165,ДАДнО-Р6478-1-411143,review,,no acmb data or no years
+166,ДАДнО-Р6478-1-411145,review,,no acmb data or no years
+167,ДАДнО-Р6478-1-411146,review,,no acmb data or no years
+168,ДАДнО-Р6478-1-411147,review,,no acmb data or no years
+169,ДАДнО-Р6478-1-411148,review,,no acmb data or no years
+170,ДАДнО-Р6478-1-411149,review,,no acmb data or no years
+171,ДАДоО-102-1-3481,merged,34,"single candidate; years [(1916, 1916), (1919, 1920)]"
+172,ДАДоО-211-1-206,merged,6,"single candidate; years [(1886, 1886)]"
+173,ДАДоО-226-1-202,merged,20,"single candidate; years [(1901, 1901)]"
+174,ДАДоО-229-1-1995,review,,no candidates after filters
+175,ДАДоО-232-1-1496,review,,no candidates after filters
+176,ДАДоО-295-1-161,merged,8,"single candidate; years [(1888, 1888)]"
+177,ДАДоО-334-1-196,review,,no candidates after filters
+178,ДАЖО-1-74-2526,merged,252,"single candidate; years [(1825, 1825)]"
+179,ДАЖО-1-74-4345,merged,43,"exact year match + prefix, of 3"
+180,ДАЖО-1-74-235237,merged,235,"exact year match + prefix, of 2"
+181,ДАЖО-1-74-235238,merged,235,"exact year match + prefix, of 3"
+182,ДАЖО-1-74-245247,merged,245,"single candidate; years [(1819, 1822)]"
+183,ДАЖО-1-74-255257,merged,255,"single candidate; years [(1828, 1831)]"
+184,ДАЖО-1-74-255259,merged,255,"exact year match + prefix, of 7"
+185,ДАЖО-1-74-255260,merged,255,"single candidate; years [(1828, 1833)]"
+186,ДАЖО-1-74-256259,merged,256,"single candidate; years [(1829, 1832)]"
+187,ДАЖО-1-74-256260,merged,256,"exact year match + prefix, of 4"
+188,ДАЖО-1-74-257260,merged,257,"single candidate; years [(1830, 1833)]"
+189,ДАЖО-1-74-258260,merged,258,"single candidate; years [(1831, 1833)]"
+190,ДАЖО-1-74-271169,merged,271,"single candidate; years [(1835, 1835)]"
+191,ДАЖО-1-74-283285,merged,283,"exact year match + prefix, of 9"
+192,ДАЖО-1-77-1984499,merged,1984,"exact year match + prefix, of 3"
+193,ДАЖО-1-78-11149,review,,"86 candidates, prefix=[]"
+194,ДАЖО-1-78-691696,merged,691,"exact year match + prefix, of 9"
+195,ДАЖО-1-78-692695,merged,692,"exact year match + prefix, of 2"
+196,ДАЖО-1-78-850854,merged,850,"single candidate; years [(1801, 1805)]"
+197,ДАЖО-1-78-854856,merged,854,"single candidate; years [(1805, 1807)]"
+198,ДАЖО-1-78-854857,merged,854,"single candidate; years [(1805, 1809)]"
+199,ДАЖО-1-78-862866,merged,862,"single candidate; years [(1811, 1815)]"
+200,ДАЖО-1-78-867870,merged,867,"single candidate; years [(1816, 1820)]"
+201,ДАЖО-1-78-872874,merged,872,"single candidate; years [(1820, 1824)]"
+202,ДАЖО-1-78-879881,merged,879,"single candidate; years [(1825, 1827)]"
+203,ДАЖО-1-78-883887,merged,883,"single candidate; years [(1829, 1833)]"
+204,ДАЖО-1-78-883889,merged,883,"single candidate; years [(1829, 1835)]"
+205,ДАЖО-1-78-976978,review,,"38 candidates, prefix=[976]"
+206,ДАЖО-1-78-985987,merged,985,"exact year match + prefix, of 5"
+207,ДАЖО-1-78-985988,merged,985,"exact year match + prefix, of 2"
+208,ДАЖО-1-78-1035259,merged,1035,"exact year match + prefix, of 4"
+209,ДАЖО-1-78-1035261,merged,1035,"single candidate; years [(1836, 1836)]"
+210,ДАЖО-1-78-1100292,merged,1100,"single candidate; years [(1817, 1817)]"
+211,ДАЖО-1-81-66445,merged,66,"single candidate; years [(1830, 1833)]"
+212,ДАЖО-1-81-72449,merged,72,"single candidate; years [(1842, 1842)]"
+213,ДАЖО-1-85-428,merged,2,"single candidate; years [(1848, 1853)]"
+214,ДАЖО-1-85-43414,review,,no candidates after filters
+215,ДАЖО-1-86-432,review,,no candidates after filters
+216,ДАЖО-1-86-479,review,,no candidates after filters
+217,ДАЖО-107-1-2055,review,,no acmb data or no years
+218,ДАЖО-178-3-7577,merged,75,"single candidate; years [(1860, 1862)]"
+219,ДАЖО-178-3-9497,merged,94,"exact year match + prefix, of 7"
+220,ДАЖО-178-3-83537,merged,83,"exact year match + prefix, of 4"
+221,ДАЖО-178-3-93101,merged,93,unique prefix among 11 place-filtered
+222,ДАЖО-178-3-93112,merged,93,"exact year match + prefix, of 4"
+223,ДАЖО-178-3-99101,merged,99,"single candidate; years [(1833, 1840)]"
+224,ДАЖО-178-3-102104,merged,102,"single candidate; years [(1835, 1836)]"
+225,ДАЖО-178-3-102105,merged,102,"exact year match + prefix, of 2"
+226,ДАЖО-178-3-115119,merged,115,"single candidate; years [(1846, 1850)]"
+227,ДАЖО-178-3-117120,merged,117,"exact year match + prefix, of 17"
+228,ДАЖО-178-3-121124,merged,121,"exact year match + prefix, of 2"
+229,ДАЖО-178-3-121125,merged,121,"exact year match + prefix, of 4"
+230,ДАЖО-178-3-210603,review,,no candidates after filters
+231,ДАЖО-178-3-263559,review,,"98 candidates, prefix=[263]"
+232,ДАЖО-178-51-103620,merged,103,"single candidate; years [(1771, 1803)]"
+233,ДАЖО-178-51-355364,merged,355,"single candidate; years [(1832, 1834)]"
+234,ДАЖО-178-51-515561,review,,"3 candidates, prefix=[515]"
+235,ДАЖО-178-51-547606,review,,"38 candidates, prefix=[547]"
+236,ДАЖО-178-51-548593,review,,"38 candidates, prefix=[548]"
+237,ДАЖО-178-51-548594,merged,548,"single candidate; years [(1847, 1847)]"
+238,ДАЖО-178-51-548595,merged,548,"single candidate; years [(1847, 1847)]"
+239,ДАЖО-178-51-548609,merged,548,"single candidate; years [(1847, 1847)]"
+240,ДАЖО-178-51-615571,merged,615,"single candidate; years [(1871, 1871)]"
+241,ДАЖО-67-3-491677,merged,491,"exact year match + prefix, of 72"
+242,ДАЖО-85-1-183,review,,no acmb data or no years
+243,ДАЗкО-Р1606-1-97761,review,,no acmb data or no years
+244,ДАЗкО-Р1606-1-194757,review,,no acmb data or no years
+245,ДАЗкО-Р1606-1-204764,review,,no acmb data or no years
+246,ДАЗкО-Р1606-11-70746,review,,no acmb data or no years
+247,ДАЗкО-Р1606-11-101740,review,,no acmb data or no years
+248,ДАЗкО-Р1606-12-24728,review,,no acmb data or no years
+249,ДАЗкО-Р1606-13-814,review,,no acmb data or no years
+250,ДАЗкО-Р1606-13-846,review,,no acmb data or no years
+251,ДАЗкО-Р1606-13-9682,review,,no acmb data or no years
+252,ДАЗкО-Р1606-13-68750,review,,no acmb data or no years
+253,ДАЗкО-Р1606-13-98677,review,,no acmb data or no years
+254,ДАЗкО-Р1606-13-108752,review,,no acmb data or no years
+255,ДАЗкО-Р1606-14-25730,review,,no acmb data or no years
+256,ДАЗкО-Р1606-15-39709,review,,no acmb data or no years
+257,ДАЗкО-Р1606-2-32720,review,,no acmb data or no years
+258,ДАЗкО-Р1606-2-42719,review,,no acmb data or no years
+259,ДАЗкО-Р1606-3-4710,review,,no acmb data or no years
+260,ДАЗкО-Р1606-3-40711,review,,no acmb data or no years
+261,ДАЗкО-Р1606-3-52769,review,,no acmb data or no years
+262,ДАЗкО-Р1606-3-94713,review,,no acmb data or no years
+263,ДАЗкО-Р1606-3-114679,review,,no acmb data or no years
+264,ДАЗкО-Р1606-4-36689,review,,no acmb data or no years
+265,ДАЗкО-Р1606-5-29693,review,,no acmb data or no years
+266,ДАЗкО-Р1606-5-48695,review,,no acmb data or no years
+267,ДАЗкО-Р1606-6-32735,review,,no acmb data or no years
+268,ДАЗкО-Р1606-6-43736,review,,no acmb data or no years
+269,ДАЗкО-Р1606-7-35701,review,,no acmb data or no years
+270,ДАЗкО-Р1606-9-57737,review,,no acmb data or no years
+271,ДАЗпО-134-1-313,merged,5,"single candidate; years [(1864, 1866)]"
+272,ДАЗпО-157-1-321,review,,no candidates after filters
+273,ДАЗпО-245-1-350,review,,no candidates after filters
+274,ДАЗпО-246-1-130478,merged,130,"single candidate; years [(1852, 1852)]"
+275,ДАЗпО-Р5593-2-57477,review,,no candidates after filters
+276,ДАЗпО-Р5593-2-135318,review,,no candidates after filters
+277,ДАЗпО-Р5593-2-606607,review,,no candidates after filters
+278,ДАЗпО-Р5593-3-10076ШЛЮБ,review,,no candidates after filters
+279,ДАЗпО-Р5593-3-142202,review,,no candidates after filters
+280,ДАЗпО-Р5593-3-218438,review,,no candidates after filters
+281,ДАЗпО-Р5593-3-230432,review,,no candidates after filters
+282,ДАЗпО-Р5593-3-232433,review,,no candidates after filters
+283,ДАЗпО-Р5593-3-248331,review,,no candidates after filters
+284,ДАЗпО-Р5593-3-263440,review,,no candidates after filters
+285,ДАЗпО-Р5593-3-273443,review,,no candidates after filters
+286,ДАЗпО-Р5593-3-293434,review,,no candidates after filters
+287,ДАЗпО-Р5593-3-358343,review,,no candidates after filters
+288,ДАЗпО-Р5593-3-360327,review,,no candidates after filters
+289,ДАЗпО-Р5593-3-396452,review,,no candidates after filters
+290,ДАЗпО-Р5593-3-502455,review,,no candidates after filters
+291,ДАЗпО-Р5593-3-526472,review,,no candidates after filters
+292,ДАЗпО-Р5593-3-550458,review,,no candidates after filters
+293,ДАЗпО-Р5593-3-568460,review,,no candidates after filters
+294,ДАЗпО-Р5593-3-731489,review,,no candidates after filters
+295,ДАЗпО-Р5593-3-822384,review,,no candidates after filters
+296,ДАЗпО-Р5593-3-838412,review,,no candidates after filters
+297,ДАЗпО-Р5593-3-997400,review,,no candidates after filters
+298,ДАЗпО-Р5593-3-1033414,review,,no candidates after filters
+299,ДАЗпО-Р5593-3-10491050,review,,no candidates after filters
+300,ДАКрО-113-1-1314,review,,"2 candidates, prefix=[]"
+301,ДАКрО-121-1-21498,review,,no candidates after filters
+302,ДАКрО-154-1-439,review,,no candidates after filters
+303,ДАКрО-185-1-534,review,,no candidates after filters
+304,ДАКрО-347-1-442,merged,14,"single candidate; years [(1861, 1861)]"
+305,ДАКрО-349-1-444,review,,no candidates after filters
+306,ДАКрО-418-1-18479,review,,no candidates after filters
+307,ДАКрО-856-1-19494,review,,no candidates after filters
+308,ДАКрО-П5907-2-7069,review,,no acmb data or no years
+309,ДАКрО-П5907-32-6812,review,,no acmb data or no years
+310,ДАКрО-П5907-8-5801,review,,no acmb data or no years
+311,ДАЛуО-126-11-37380,merged,37,"exact year match + prefix, of 5"
+312,ДАЛуО-126-14-124401,review,,no candidates after filters
+313,ДАЛуО-126-14-132393,merged,132,"exact year match + prefix, of 13"
+314,ДАЛуО-126-17-4413,review,,"9 candidates, prefix=[4]"
+315,ДАЛуО-126-18-76347,review,,"18 candidates, prefix=[76]"
+316,ДАЛуО-126-18-145386,review,,"12 candidates, prefix=[145]"
+317,ДАЛуО-126-18-791903,review,,"13 candidates, prefix=[79]"
+318,ДАЛуО-126-20-34342,merged,34,"single candidate; years [(1913, 1914), (1916, 1916)]"
+319,ДАЛуО-126-21-70409,merged,70,"single candidate; years [(1912, 1919)]"
+320,ДАЛуО-126-21-73324,merged,73,"single candidate; years [(1914, 1919)]"
+321,ДАЛуО-126-23-144392,merged,144,"exact year match + prefix, of 26"
+322,ДАЛуО-126-26-96385,review,,"31 candidates, prefix=[96]"
+323,ДАЛуО-126-26-146405,review,,"19 candidates, prefix=[146]"
+324,ДАЛуО-126-27-383,review,,"14 candidates, prefix=[]"
+325,ДАЛуО-126-27-54384,merged,54,"exact year match + prefix, of 2"
+326,ДАЛуО-126-29-18471864,merged,236,"single candidate; years [(1843, 1851)]"
+327,ДАЛуО-126-30-6329,review,,"32 candidates, prefix=[6]"
+328,ДАЛуО-126-9-377,merged,7,"single candidate; years [(1888, 1891)]"
+329,ДАОО-37-13-8000,review,,"3 candidates, prefix=[]"
+330,ДАОО-37-13-669701,review,,no candidates after filters
+331,ДАОО-37-13-968502,review,,"3 candidates, prefix=[]"
+332,ДАОО-37-3А-1853,review,,no candidates after filters
+333,ДАОО-37-3А-100114,review,,no candidates after filters
+334,ДАОО-37-5-238,review,,no candidates after filters
+335,ДАОО-39-6-3921А,review,,no acmb data or no years
+336,ДАОО-920-1-56519,review,,no candidates after filters
+337,ДАПО-1011-1-81629,review,,no candidates after filters
+338,ДАПО-1011-14-39594,merged,39,"single candidate; years [(1915, 1915)]"
+339,ДАПО-1011-3-582,review,,no candidates after filters
+340,ДАПО-1011-3-75605,merged,75,"exact year match + prefix, of 2"
+341,ДАПО-1011-4-45574,merged,45,"single candidate; years [(1887, 1887), (1898, 1898), (1907, 1907), (1913, 1913)]"
+342,ДАПО-1011-5-11647,review,,"23 candidates, prefix=[11, 116]"
+343,ДАПО-1011-5-103583,merged,103,"single candidate; years [(1919, 1920)]"
+344,ДАПО-1011-5-152653,merged,152,"exact year match + prefix, of 2"
+345,ДАПО-1011-5-194690,merged,194,"exact year match + prefix, of 2"
+346,ДАПО-1011-6-54533,merged,50,"single candidate; years [(1917, 1918)]"
+347,ДАПО-1011-6-163544,review,,no candidates after filters
+348,ДАПО-1011-6-257547,merged,257,unique prefix among 6 place-filtered
+349,ДАПО-1011-6-308571,review,,no candidates after filters
+350,ДАПО-1011-6-546618,merged,561,"single candidate; years [(1913, 1913)]"
+351,ДАПО-1011-6-561619,merged,561,"single candidate; years [(1913, 1913)]"
+352,ДАПО-1011-6-965669,review,,no candidates after filters
+353,ДАПО-1011-7-12540,merged,12,unique prefix among 2 place-filtered
+354,ДАПО-1011-7-19537,merged,19,unique prefix among 2 place-filtered
+355,ДАПО-1011-7-53559,merged,53,"single candidate; years [(1914, 1914), (1916, 1916)]"
+356,ДАПО-1011-7-106650,merged,106,"single candidate; years [(1913, 1917)]"
+357,ДАПО-1011-8-12562,merged,12,"single candidate; years [(1915, 1915)]"
+358,ДАПО-1011-8-23570,merged,23,"exact year match + prefix, of 2"
+359,ДАПО-1011-8-41584,merged,41,"single candidate; years [(1904, 1906)]"
+360,ДАПО-1011-9-83617,merged,83,"exact year match + prefix, of 2"
+361,ДАПО-1011-9-140681,merged,140,"single candidate; years [(1910, 1910), (1912, 1917)]"
+362,ДАПО-1011-9-163689,merged,163,"single candidate; years [(1910, 1917)]"
+363,ДАПО-1011-9-168702,merged,168,"single candidate; years [(1910, 1910), (1912, 1916)]"
+364,ДАПО-1011-9-179701,merged,179,"single candidate; years [(1910, 1917)]"
+365,ДАПО-706-4-195552,review,,"46 candidates, prefix=[195]"
+366,ДАПО-706-4-247580,review,,"19 candidates, prefix=[247]"
+367,ДАПО-706-4-339548,review,,"12 candidates, prefix=[339]"
+368,ДАПО-706-4-339602,merged,339,"single candidate; years [(1856, 1856)]"
+369,ДАПО-706-4-339624,merged,339,"single candidate; years [(1856, 1856)]"
+370,ДАПО-706-4-339630,merged,339,"single candidate; years [(1856, 1856)]"
+371,ДАПО-801-1-46449,merged,404,"single candidate; years [(1833, 1833)]"
+372,ДАПО-801-1-4281573,review,,"108 candidates, prefix=[4281]"
+373,ДАПО-Р3374-1-738819,review,,no acmb data or no years
+374,ДАПО-Р6038-2-6098,review,,no acmb data or no years
+375,ДАПО-Р9106-1-155400,review,,no acmb data or no years
+376,ДАПО-Р9106-1-155510,review,,no acmb data or no years
+377,ДАПО-Р9106-1-155512,review,,no acmb data or no years
+378,ДАПО-Р9106-1-155514,review,,no acmb data or no years
+379,ДАПО-Р9106-1-155517,review,,no acmb data or no years
+380,ДАПО-Р9106-1-155518,review,,no acmb data or no years
+381,ДАПО-Р9106-1-155519,review,,no acmb data or no years
+382,ДАПО-Р9106-1-155520,review,,no acmb data or no years
+383,ДАПО-Р9106-1-155523,review,,no acmb data or no years
+384,ДАПО-Р9106-1-155524,review,,no acmb data or no years
+385,ДАПО-Р9106-1-155525,review,,no acmb data or no years
+386,ДАПО-Р9106-1-155526,review,,no acmb data or no years
+387,ДАПО-Р9106-1-155527,review,,no acmb data or no years
+388,ДАПО-Р9106-1-155528,review,,no acmb data or no years
+389,ДАПО-Р9106-1-155529,review,,no acmb data or no years
+390,ДАПО-Р9106-1-155530,review,,no acmb data or no years
+391,ДАПО-Р9106-1-155531,review,,no acmb data or no years
+392,ДАПО-Р9106-1-155532,review,,no acmb data or no years
+393,ДАПО-Р9106-1-155533,review,,no acmb data or no years
+394,ДАПО-Р9106-1-155534,review,,no acmb data or no years
+395,ДАПО-Р9106-1-155535,review,,no acmb data or no years
+396,ДАПО-Р9106-1-155536,review,,no acmb data or no years
+397,ДАПО-Р9106-1-155537,review,,no acmb data or no years
+398,ДАПО-Р9106-1-155538,review,,no acmb data or no years
+399,ДАПО-Р9106-1-155539,review,,no acmb data or no years
+400,ДАПО-Р9106-1-174340,review,,no acmb data or no years
+401,ДАПО-Р9106-7-130255,review,,no acmb data or no years
+402,ДАПО-Р9106-7-256380,review,,no acmb data or no years
+403,ДАПО-Р9106-7-381513,review,,no acmb data or no years
+404,ДАПО-Р9106-7-514645,review,,no acmb data or no years
+405,ДАПО-Р9106-7-647784,review,,no acmb data or no years
+406,ДАПО-Р9106-7-786908,review,,no acmb data or no years
+407,ДАХО-40-105-698501,merged,698,unique prefix among 2 place-filtered
+408,ДАХО-40-105-698515,review,,"68 candidates, prefix=[698]"
+409,ДАХО-40-105-1134179,review,,no candidates after filters
+410,ДАХО-40-105-1144178,review,,"107 candidates, prefix=[11, 114, 1144]"
+411,ДАХО-40-105-1182166,review,,"121 candidates, prefix=[118, 1182]"
+412,ДАХО-40-105-1199180,merged,1199,"single candidate; years [(1870, 1870)]"
+413,ДАХО-40-105-1199209,review,,"86 candidates, prefix=[119, 1199]"
+414,ДАХО-40-105-1202168,review,,"86 candidates, prefix=[1202]"
+415,ДАХО-40-105-1202193,review,,"86 candidates, prefix=[1202]"
+416,ДАХО-40-105-1202207,review,,"86 candidates, prefix=[1202]"
+417,ДАХО-40-105-1211169,review,,"68 candidates, prefix=[1211]"
+418,ДАХО-40-105-1211186,review,,"68 candidates, prefix=[1211]"
+419,ДАХО-40-105-1212182,review,,"68 candidates, prefix=[1212]"
+420,ДАХО-40-105-1212240,review,,"68 candidates, prefix=[1212]"
+421,ДАХО-40-105-1266476,review,,"98 candidates, prefix=[126, 1266]"
+422,ДАХО-40-105-1305304,review,,no candidates after filters
+423,ДАХО-40-105-1306318,review,,no candidates after filters
+424,ДАХО-40-105-1344477,review,,"107 candidates, prefix=[1344]"
+425,ДАХО-40-105-1373470,review,,no candidates after filters
+426,ДАХО-40-105-1373475,review,,"120 candidates, prefix=[137, 1373]"
+427,ДАХО-40-105-1373523,review,,"120 candidates, prefix=[137, 1373]"
+428,ДАХО-40-105-1379464,review,,no candidates after filters
+429,ДАХО-40-105-1381499,merged,1381,"single candidate; years [(1862, 1862)]"
+430,ДАХО-40-105-1385457,merged,1385,"single candidate; years [(1862, 1862)]"
+431,ДАХО-40-105-1385536,merged,1385,"single candidate; years [(1862, 1862)]"
+432,ДАХО-40-105-1386484,review,,"121 candidates, prefix=[1386]"
+433,ДАХО-40-105-1386488,review,,"98 candidates, prefix=[1386]"
+434,ДАХО-40-105-1388466,review,,no candidates after filters
+435,ДАХО-40-105-1388471,review,,"2 candidates, prefix=[]"
+436,ДАХО-40-105-1390467,review,,"98 candidates, prefix=[139, 1390]"
+437,ДАХО-40-105-2261852,review,,"106 candidates, prefix=[2, 226]"
+438,ДАХО-40-105-6801871,review,,no candidates after filters
+439,ДАХО-40-105-26041866,review,,no candidates after filters
+440,ДАХО-40-105-28441870,review,,no candidates after filters
+441,ДАХО-40-105-124441859,review,,no candidates after filters
+442,ДАХО-40-105-126541864,review,,no candidates after filters
+443,ДАХО-40-105-127541868,review,,no candidates after filters
+444,ДАХО-40-109-49451,merged,49,"exact year match + prefix, of 30"
+445,ДАХО-40-109-248465,review,,no candidates after filters
+446,ДАХО-40-109-536525,merged,536,"single candidate; years [(1862, 1862)]"
+447,ДАХО-40-109-540520,review,,"74 candidates, prefix=[540]"
+448,ДАХО-40-109-543510,merged,543,"single candidate; years [(1864, 1865)]"
+449,ДАХО-40-109-1355478,review,,"45 candidates, prefix=[1355]"
+450,ДАХО-40-110-27120,merged,27,"single candidate; years [(1801, 1801)]"
+451,ДАХО-40-110-27144,merged,27,unique prefix among 3 place-filtered
+452,ДАХО-40-110-38059,review,,"33 candidates, prefix=[38, 380]"
+453,ДАХО-40-110-47357,review,,"27 candidates, prefix=[473]"
+454,ДАХО-40-110-71818,review,,no candidates after filters
+455,ДАХО-40-110-429173,review,,"41 candidates, prefix=[429]"
+456,ДАХО-40-110-451823,review,,"40 candidates, prefix=[45]"
+457,ДАХО-40-110-486277,merged,486,unique prefix among 2 place-filtered
+458,ДАХО-40-110-505265,merged,404,"single candidate; years [(1843, 1843)]"
+459,ДАХО-40-110-510279,merged,510,"single candidate; years [(1848, 1848)]"
+460,ДАХО-40-110-515338,merged,515,unique prefix among 3 place-filtered
+461,ДАХО-40-110-545390,review,,"19 candidates, prefix=[545]"
+462,ДАХО-40-110-545417,merged,545,"single candidate; years [(1801, 1801)]"
+463,ДАХО-40-110-588459,merged,588,unique prefix among 2 place-filtered
+464,ДАХО-40-110-588486,review,,"26 candidates, prefix=[588]"
+465,ДАХО-40-110-599502,merged,599,unique prefix among 5 place-filtered
+466,ДАХО-40-110-599511,review,,"38 candidates, prefix=[599]"
+467,ДАХО-40-110-599528,merged,599,"single candidate; years [(1825, 1825)]"
+468,ДАХО-40-110-605463,merged,605,"single candidate; years [(1833, 1833)]"
+469,ДАХО-40-110-49441834,merged,494,unique prefix among 3 place-filtered
+470,ДАХО-40-110-50541846,review,,"3 candidates, prefix=[]"
+471,ДАХеО-137-25-24602,review,,no candidates after filters
+472,ДАХеО-137-40-191600,merged,191,unique prefix among 2 place-filtered
+473,ДАХеО-137-40-219627,review,,no candidates after filters
+474,ДАХеО-137-40-222601,merged,222,"single candidate; years [(1914, 1914)]"
+475,ДАХеО-137-40-233628,review,,no candidates after filters
+476,ДАХеО-137-40-240633,review,,no candidates after filters
+477,ДАХеО-137-40-246616,merged,246,"single candidate; years [(1917, 1917)]"
+478,ДАХеО-137-40-248551,merged,248,"single candidate; years [(1919, 1919)]"
+479,ДАХеО-137-40-248639,merged,248,unique prefix among 3 place-filtered
+480,ДАХеО-137-40-19051906,review,,"39 candidates, prefix=[190]"
+481,ДАХеО-137-6-580,review,,no candidates after filters
+482,ДАХеО-169-1-1920,merged,19,"single candidate; years [(1890, 1890)]"
+483,ДАХеО-207-1-2114615,review,,no candidates after filters
+484,ДАХеО-259-13-24539,merged,24,"single candidate; years [(1915, 1915)]"
+485,ДАХеО-259-27-12543,merged,12,unique prefix among 2 place-filtered
+486,ДАХеО-259-27-131537,merged,131,unique prefix among 3 place-filtered
+487,ДАХеО-259-27-132544,merged,132,"single candidate; years [(1909, 1909)]"
+488,ДАХеО-259-27-134525,merged,216,"single candidate; years [(1912, 1912)]"
+489,ДАХеО-259-27-209548,merged,209,unique prefix among 3 place-filtered
+490,ДАХеО-316-1-69550,merged,69,unique prefix among 3 place-filtered
+491,ДАХеО-316-1-377556,review,,no candidates after filters
+492,ДАХеО-316-4-37561,review,,no candidates after filters
+493,ДАХмО-18-1-169651,review,,no candidates after filters
+494,ДАХмО-18-1-199588,review,,"481 candidates, prefix=[199]"
+495,ДАХмО-18-1-253291,review,,no candidates after filters
+496,ДАХмО-18-1-268372,review,,no candidates after filters
+497,ДАХмО-18-1-271647,merged,271,"exact year match + prefix, of 2"
+498,ДАХмО-18-1-535691,review,,"72 candidates, prefix=[535]"
+499,ДАХмО-18-1-762315,review,,"118 candidates, prefix=[762]"
+500,ДАХмО-18-1-974644,merged,974,"exact year match + prefix, of 104"
+501,ДАХмО-18-1-1063329,review,,"277 candidates, prefix=[1063]"
+502,ДАХмО-18-1-1088326,review,,"365 candidates, prefix=[10, 1088]"
+503,ДАХмО-18-1-1180393,review,,"325 candidates, prefix=[11, 1180]"
+504,ДАХмО-18-1-1271674,review,,"475 candidates, prefix=[12, 127, 1271]"
+505,ДАХмО-18-1-1364616,review,,"125 candidates, prefix=[1364]"
+506,ДАХмО-18-1-1445682,review,,"110 candidates, prefix=[1445]"
+507,ДАХмО-18-1-1473340,review,,"99 candidates, prefix=[1473]"
+508,ДАХмО-18-1-1752411,merged,1752,"exact year match + prefix, of 201"
+509,ДАХмО-18-1-1892359,merged,1892,"exact year match + prefix, of 451"
+510,ДАХмО-18-1-1898636,review,,"449 candidates, prefix=[18, 1898]"
+511,ДАХмО-18-1-1911362,merged,1911,"single candidate; years [(1903, 1903)]"
+512,ДАХмО-18-1-1911363,merged,1911,"single candidate; years [(1903, 1903)]"
+513,ДАХмО-227-5ДОД-3084,review,,no acmb data or no years
+514,ДАХмО-234-1-5269,review,,no acmb data or no years
+515,ДАХмО-234-1-6789,review,,no acmb data or no years
+516,ДАХмО-315-1-668170,review,,"29 candidates, prefix=[6681]"
+517,ДАХмО-315-1-694615,review,,"75 candidates, prefix=[6946]"
+518,ДАХмО-315-1-694633,review,,"75 candidates, prefix=[6946]"
+519,ДАХмО-315-1-694644,review,,"75 candidates, prefix=[6946]"
+520,ДАХмО-315-1-694645,review,,"75 candidates, prefix=[6946]"
+521,ДАХмО-315-1-733862,review,,"147 candidates, prefix=[7338]"
+522,ДАХмО-315-1-733864,review,,"147 candidates, prefix=[7338]"
+523,ДАХмО-315-1-733866,merged,7338,"single candidate; years [(1830, 1830)]"
+524,ДАХмО-315-1-805919,review,,"194 candidates, prefix=[8059]"
+525,ДАХмО-315-1-805923,review,,"194 candidates, prefix=[8059]"
+526,ДАХмО-315-1-878974,review,,"44 candidates, prefix=[8789]"
+527,ДАХмО-315-1-878975,review,,"44 candidates, prefix=[8789]"
+528,ДАХмО-315-1-878979,review,,"44 candidates, prefix=[8789]"
+529,ДАХмО-315-1-878981,review,,"44 candidates, prefix=[8789]"
+530,ДАХмО-315-1-1183996,review,,"17 candidates, prefix=[11839]"
+531,ДАХмО-315-1-1183997,review,,"17 candidates, prefix=[11839]"
+532,ДАХмО-315-1-1183999,review,,"17 candidates, prefix=[11839]"
+533,ДАХмО-315-1-1187620,review,,"41 candidates, prefix=[11876]"
+534,ДАХмО-315-1-1187622,review,,"41 candidates, prefix=[11876]"
+535,ДАХмО-315-1-1187827,review,,"41 candidates, prefix=[11878]"
+536,ДАХмО-315-1-1190024,merged,11900,"single candidate; years [(1875, 1875)]"
+537,ДАХмО-315-1-1190029,merged,11900,"single candidate; years [(1875, 1875)]"
+538,ДАХмО-315-1-6681104,review,,"29 candidates, prefix=[6681]"
+539,ДАХмО-315-1-6681128,review,,"29 candidates, prefix=[6681]"
+540,ДАХмО-315-1-6773745,review,,"44 candidates, prefix=[6773]"
+541,ДАХмО-315-1-6813478,review,,"44 candidates, prefix=[6813]"
+542,ДАХмО-315-1-6813479,review,,"44 candidates, prefix=[6813]"
+543,ДАХмО-315-1-6813487,merged,6813,"single candidate; years [(1802, 1802)]"
+544,ДАХмО-315-1-6813501,review,,"44 candidates, prefix=[6813]"
+545,ДАХмО-315-1-6813513,review,,"44 candidates, prefix=[6813]"
+546,ДАХмО-315-1-6861604,review,,"58 candidates, prefix=[6861]"
+547,ДАХмО-315-1-6861608,review,,"58 candidates, prefix=[6861]"
+548,ДАХмО-315-1-6879146,review,,"56 candidates, prefix=[6879]"
+549,ДАХмО-315-1-6883305,review,,"56 candidates, prefix=[6883]"
+550,ДАХмО-315-1-6994428,review,,"79 candidates, prefix=[6994]"
+551,ДАХмО-315-1-6995218,review,,"79 candidates, prefix=[6995]"
+552,ДАХмО-315-1-6995223,merged,6995,"single candidate; years [(1814, 1814)]"
+553,ДАХмО-315-1-7021710,review,,"85 candidates, prefix=[7021]"
+554,ДАХмО-315-1-7021739,review,,"85 candidates, prefix=[7021]"
+555,ДАХмО-315-1-7121490,merged,7121,"exact year match + prefix, of 625"
+556,ДАХмО-315-1-7273126,review,,"299 candidates, prefix=[7273]"
+557,ДАХмО-315-1-7279293,review,,"139 candidates, prefix=[7279]"
+558,ДАХмО-315-1-7281743,review,,"139 candidates, prefix=[7281]"
+559,ДАХмО-315-1-7344439,review,,"156 candidates, prefix=[7344]"
+560,ДАХмО-315-1-7354491,review,,"156 candidates, prefix=[7354]"
+561,ДАХмО-315-1-7354492,review,,"156 candidates, prefix=[7354]"
+562,ДАХмО-315-1-7354493,review,,"156 candidates, prefix=[7354]"
+563,ДАХмО-315-1-7354495,review,,"156 candidates, prefix=[7354]"
+564,ДАХмО-315-1-7354497,review,,"156 candidates, prefix=[7354]"
+565,ДАХмО-315-1-7446597,review,,"172 candidates, prefix=[7446]"
+566,ДАХмО-315-1-7446618,review,,"172 candidates, prefix=[7446]"
+567,ДАХмО-315-1-7598688,review,,"176 candidates, prefix=[7598]"
+568,ДАХмО-315-1-8053225,merged,8053,"single candidate; years [(1849, 1849)]"
+569,ДАХмО-315-1-8053238,review,,"190 candidates, prefix=[8053]"
+570,ДАХмО-315-1-8168498,review,,"411 candidates, prefix=[8168]"
+571,ДАХмО-315-1-8178573,review,,"344 candidates, prefix=[8178]"
+572,ДАХмО-315-1-8280570,review,,"324 candidates, prefix=[8280]"
+573,ДАХмО-315-1-8317221,merged,8317,"exact year match + prefix, of 340"
+574,ДАХмО-315-1-8318250,review,,"20 candidates, prefix=[8318]"
+575,ДАХмО-315-1-8318251,review,,"20 candidates, prefix=[8318]"
+576,ДАХмО-315-1-8318252,review,,"20 candidates, prefix=[8318]"
+577,ДАХмО-315-1-8318254,review,,"20 candidates, prefix=[8318]"
+578,ДАХмО-315-1-8347725,review,,"193 candidates, prefix=[8347]"
+579,ДАХмО-315-1-8417426,review,,"190 candidates, prefix=[8417]"
+580,ДАХмО-315-1-8417443,review,,"190 candidates, prefix=[8417]"
+581,ДАХмО-315-1-8422549,review,,"179 candidates, prefix=[8422]"
+582,ДАХмО-315-1-8422552,review,,"179 candidates, prefix=[8422]"
+583,ДАХмО-315-1-8427435,review,,"190 candidates, prefix=[8427]"
+584,ДАХмО-315-1-8427448,review,,"190 candidates, prefix=[8427]"
+585,ДАХмО-315-1-8430499,review,,"190 candidates, prefix=[8430]"
+586,ДАХмО-315-1-8430500,review,,"190 candidates, prefix=[8430]"
+587,ДАХмО-315-1-8430506,review,,"190 candidates, prefix=[8430]"
+588,ДАХмО-315-1-8430509,review,,"190 candidates, prefix=[8430]"
+589,ДАХмО-315-1-8464598,review,,"179 candidates, prefix=[8464]"
+590,ДАХмО-315-1-8468510,review,,"179 candidates, prefix=[8468]"
+591,ДАХмО-315-1-8468519,merged,8468,"single candidate; years [(1859, 1859)]"
+592,ДАХмО-315-1-8583298,merged,8583,"single candidate; years [(1862, 1862)]"
+593,ДАХмО-315-1-8583330,review,,"129 candidates, prefix=[8583]"
+594,ДАХмО-315-1-8583335,review,,"129 candidates, prefix=[8583]"
+595,ДАХмО-315-1-8676581,review,,"97 candidates, prefix=[8676]"
+596,ДАХмО-315-1-8676590,merged,8676,"single candidate; years [(1864, 1865)]"
+597,ДАХмО-315-1-8677685,review,,"90 candidates, prefix=[8677]"
+598,ДАХмО-315-1-8677694,review,,"90 candidates, prefix=[8677]"
+599,ДАХмО-315-1-8677700,merged,8677,"single candidate; years [(1864, 1864)]"
+600,ДАХмО-315-1-8684721,review,,"77 candidates, prefix=[8684]"
+601,ДАХмО-315-1-8684728,review,,"77 candidates, prefix=[8684]"
+602,ДАХмО-315-1-8684729,review,,"77 candidates, prefix=[8684]"
+603,ДАХмО-315-1-8684734,review,,"77 candidates, prefix=[8684]"
+604,ДАХмО-315-1-8684735,review,,"77 candidates, prefix=[8684]"
+605,ДАХмО-315-1-8730544,review,,"77 candidates, prefix=[8730]"
+606,ДАХмО-315-1-8733523,review,,"63 candidates, prefix=[8733]"
+607,ДАХмО-315-1-8733524,review,,"63 candidates, prefix=[8733]"
+608,ДАХмО-315-1-8788371,review,,"44 candidates, prefix=[8788]"
+609,ДАХмО-315-1-8788381,review,,"44 candidates, prefix=[8788]"
+610,ДАХмО-315-1-8788389,review,,"44 candidates, prefix=[8788]"
+611,ДАХмО-315-1-8791133,merged,8791,"single candidate; years [(1867, 1867)]"
+612,ДАХмО-315-1-8791134,review,,"44 candidates, prefix=[8791]"
+613,ДАХмО-315-1-8791136,merged,8791,"single candidate; years [(1867, 1867)]"
+614,ДАХмО-315-1-8815383,review,,"34 candidates, prefix=[8815]"
+615,ДАХмО-315-1-8826232,review,,"28 candidates, prefix=[8826]"
+616,ДАХмО-315-1-8829339,review,,"28 candidates, prefix=[8829]"
+617,ДАХмО-315-1-8829346,review,,"28 candidates, prefix=[8829]"
+618,ДАХмО-315-1-8829349,review,,"28 candidates, prefix=[8829]"
+619,ДАХмО-315-1-8829353,review,,"28 candidates, prefix=[8829]"
+620,ДАХмО-315-1-8829357,merged,8829,"single candidate; years [(1869, 1869)]"
+621,ДАХмО-315-1-8829360,merged,8829,unique prefix among 2 place-filtered
+622,ДАХмО-315-1-11806419,merged,11806,"single candidate; years [(1870, 1870)]"
+623,ДАХмО-315-1-11811263,review,,"27 candidates, prefix=[11811]"
+624,ДАХмО-315-1-11811269,review,,"27 candidates, prefix=[11811]"
+625,ДАХмО-315-1-11811274,review,,"27 candidates, prefix=[11811]"
+626,ДАХмО-315-1-11830701,review,,"20 candidates, prefix=[11830]"
+627,ДАХмО-315-1-11834705,review,,"20 candidates, prefix=[11834]"
+628,ДАХмО-315-1-11834716,review,,"20 candidates, prefix=[11834]"
+629,ДАХмО-315-1-11834772,review,,no candidates after filters
+630,ДАХмО-315-1-11835714,merged,11835,"single candidate; years [(1872, 1872)]"
+631,ДАХмО-315-1-11839103,review,,"17 candidates, prefix=[11839]"
+632,ДАХмО-315-1-11862756,review,,"20 candidates, prefix=[11862]"
+633,ДАХмО-315-1-11862761,review,,"20 candidates, prefix=[11862]"
+634,ДАХмО-315-1-11866758,review,,"20 candidates, prefix=[11866]"
+635,ДАХмО-315-1-11879454,review,,"41 candidates, prefix=[11879]"
+636,ДАХмО-315-1-11879458,review,,"41 candidates, prefix=[11879]"
+637,ДАХмО-315-1-11879460,review,,"41 candidates, prefix=[11879]"
+638,ДАХмО-315-1-11927468,review,,"92 candidates, prefix=[11927]"
+639,ДАХмО-315-1-11927473,merged,11927,"single candidate; years [(1876, 1876)]"
+640,ДАХмО-315-1-11954551,review,,"92 candidates, prefix=[11954]"
+641,ДАХмО-315-1-11969556,review,,"381 candidates, prefix=[11969]"
+642,ДАХмО-315-1-12177219,review,,"39 candidates, prefix=[12177]"
+643,ДАХмО-315-1-12233144,review,,"84 candidates, prefix=[12233]"
+644,ДАХмО-315-1-12283288,review,,"23 candidates, prefix=[12283]"
+645,ДАХмО-315-1-12283296,review,,"23 candidates, prefix=[12283]"
+646,ДАХмО-315-1-12372437,review,,"16 candidates, prefix=[12372]"
+647,ДАХмО-315-1-12373445,review,,"16 candidates, prefix=[12373]"
+648,ДАХмО-315-1-12373449,review,,"16 candidates, prefix=[12373]"
+649,ДАХмО-315-1-12373452,review,,"16 candidates, prefix=[12373]"
+650,ДАХмО-315-1-12394174,review,,"22 candidates, prefix=[12394]"
+651,ДАХмО-315-1-12394177,review,,"22 candidates, prefix=[12394]"
+652,ДАХмО-315-1-12394181,review,,"22 candidates, prefix=[12394]"
+653,ДАХмО-315-1-12397200,review,,"22 candidates, prefix=[12397]"
+654,ДАХмО-315-1-12397202,review,,"22 candidates, prefix=[12397]"
+655,ДАХмО-315-1-12414158,review,,"27 candidates, prefix=[12414]"
+656,ДАХмО-315-1-12414162,review,,"27 candidates, prefix=[12414]"
+657,ДАХмО-315-1-12415185,review,,"27 candidates, prefix=[12415]"
+658,ДАХмО-315-1-12415186,review,,"27 candidates, prefix=[12415]"
+659,ДАХмО-315-1-12446101,review,,"54 candidates, prefix=[12446]"
+660,ДАХмО-685-6-351,review,,"8 candidates, prefix=[35]"
+661,ДАХмО-Р6379-1-2918,review,,no acmb data or no years
+662,ДАХмО-Р6379-1-3683,review,,no acmb data or no years
+663,ДАХмО-Р6379-1-4082,review,,no acmb data or no years
+664,ДАЧвО-1245-1-101106,merged,101,"exact year match + prefix, of 4"
+665,ДАЧвО-1245-1-107109,merged,107,"exact year match + prefix, of 4"
+666,ДАЧвО-1245-1-122125,review,,no candidates after filters
+667,ДАЧвО-1245-1-143146,merged,143,"exact year match + prefix, of 4"
+668,ДАЧвО-1245-1-147150,merged,147,"exact year match + prefix, of 4"
+669,ДАЧвО-1245-1-152154,merged,152,"exact year match + prefix, of 4"
+670,ДАЧвО-1245-1-155158,merged,155,"exact year match + prefix, of 9"
+671,ДАЧвО-1245-1-160162,merged,160,unique prefix among 9 place-filtered
+672,ДАЧвО-1245-1-168173,merged,168,"exact year match + prefix, of 3"
+673,ДАЧвО-1245-1-177179,merged,177,"exact year match + prefix, of 4"
+674,ДАЧвО-1245-1-186188,merged,186,"exact year match + prefix, of 6"
+675,ДАЧвО-1245-1-208213,merged,208,unique prefix among 4 place-filtered
+676,ДАЧвО-1245-1-250252,merged,250,"exact year match + prefix, of 4"
+677,ДАЧвО-1245-1-254257,merged,254,"exact year match + prefix, of 4"
+678,ДАЧвО-1245-1-265267,merged,265,"exact year match + prefix, of 4"
+679,ДАЧвО-1245-1-271273,merged,271,"exact year match + prefix, of 4"
+680,ДАЧвО-1245-1-290292,merged,290,"exact year match + prefix, of 3"
+681,ДАЧвО-1245-1-439442,merged,439,"exact year match + prefix, of 7"
+682,ДАЧвО-1245-1-506508,merged,506,"single candidate; years [(1880, 1926)]"
+683,ДАЧвО-1245-1-509512,merged,509,"exact year match + prefix, of 5"
+684,ДАЧвО-1245-1-513516,merged,513,"single candidate; years [(1880, 1924)]"
+685,ДАЧвО-1245-1-520526,review,,"5 candidates, prefix=[]"
+686,ДАЧвО-1245-1-527532,review,,no candidates after filters
+687,ДАЧвО-1245-1-533538,merged,533,"single candidate; years [(1880, 1902)]"
+688,ДАЧвО-1245-1-539544,merged,539,unique prefix among 4 place-filtered
+689,ДАЧвО-1245-1-548552,merged,548,"single candidate; years [(1880, 1933)]"
+690,ДАЧвО-1245-1-561568,merged,561,unique prefix among 5 place-filtered
+691,ДАЧвО-1245-1-569571,merged,569,"single candidate; years [(1886, 1921)]"
+692,ДАЧвО-1245-1-596600,merged,596,"single candidate; years [(1872, 1877)]"
+693,ДАЧвО-1245-1-601607,review,,no candidates after filters
+694,ДАЧвО-1245-1-610617,merged,610,"single candidate; years [(1881, 1930)]"
+695,ДАЧвО-1245-1-612618,review,,no candidates after filters
+696,ДАЧвО-1245-1-614617,merged,614,unique prefix among 4 place-filtered
+697,ДАЧвО-1245-1-669678,merged,669,"single candidate; years [(1880, 1929), (1932, 1932)]"
+698,ДАЧвО-1245-1-672674,merged,672,"single candidate; years [(1885, 1887)]"
+699,ДАЧвО-1245-1-673678,merged,673,"single candidate; years [(1886, 1932)]"
+700,ДАЧвО-1245-1-675677,review,,no candidates after filters
+701,ДАЧвО-1245-1-676678,merged,676,"single candidate; years [(1885, 1932)]"
+702,ДАЧвО-1245-1-685688,merged,685,"exact year match + prefix, of 3"
+703,ДАЧвО-1245-1-690692,merged,690,unique prefix among 2 place-filtered
+704,ДАЧвО-1245-1-697700,review,,no candidates after filters
+705,ДАЧвО-1245-1-719721,merged,719,"single candidate; years [(1875, 1876)]"
+706,ДАЧвО-1245-1-720723,merged,720,"single candidate; years [(1875, 1932)]"
+707,ДАЧвО-1245-1-722724,merged,722,"single candidate; years [(1881, 1932)]"
+708,ДАЧвО-1245-1-773775,merged,773,"exact year match + prefix, of 11"
+709,ДАЧвО-1245-1-853855,review,,no candidates after filters
+710,ДАЧвО-1245-1-964969,merged,964,"exact year match + prefix, of 39"
+711,ДАЧвО-1245-10-3133,merged,31,"exact year match + prefix, of 7"
+712,ДАЧвО-1245-11-1623,merged,16,"single candidate; years [(1886, 1921)]"
+713,ДАЧвО-1245-11-6364,merged,63,"single candidate; years [(1916, 1928)]"
+714,ДАЧвО-1245-11-8890,merged,88,"single candidate; years [(1880, 1902), (1904, 1904), (1912, 1912)]"
+715,ДАЧвО-1245-11-117123,merged,117,"single candidate; years [(1879, 1910), (1912, 1912)]"
+716,ДАЧвО-1245-11-173175,merged,173,"single candidate; years [(1931, 1932)]"
+717,ДАЧвО-1245-12-7477,merged,74,"exact year match + prefix, of 5"
+718,ДАЧвО-1245-12-8992,merged,89,"exact year match + prefix, of 4"
+719,ДАЧвО-1245-12-97101,merged,97,"exact year match + prefix, of 10"
+720,ДАЧвО-1245-12-104106,merged,104,"exact year match + prefix, of 6"
+721,ДАЧвО-1245-12-109111,merged,109,"exact year match + prefix, of 50"
+722,ДАЧвО-1245-12-114116,merged,114,"exact year match + prefix, of 50"
+723,ДАЧвО-1245-12-119122,merged,119,"exact year match + prefix, of 3"
+724,ДАЧвО-1245-13-3335,merged,33,"single candidate; years [(1880, 1890), (1894, 1894), (1896, 1896)]"
+725,ДАЧвО-1245-13-4344,review,,no candidates after filters
+726,ДАЧвО-1245-13-5563,review,,no candidates after filters
+727,ДАЧвО-1245-13-6671,review,,no candidates after filters
+728,ДАЧвО-1245-13-145146,merged,145,"single candidate; years [(1880, 1889)]"
+729,ДАЧвО-1245-13-196197,merged,196,"single candidate; years [(1882, 1887)]"
+730,ДАЧвО-1245-13-202206,review,,no candidates after filters
+731,ДАЧвО-1245-13-217218,review,,no candidates after filters
+732,ДАЧвО-1245-13-223225,review,,no candidates after filters
+733,ДАЧвО-1245-13-233237,review,,no candidates after filters
+734,ДАЧвО-1245-13-255257,merged,255,"single candidate; years [(1886, 1893)]"
+735,ДАЧвО-1245-13-258262,merged,258,"single candidate; years [(1897, 1928)]"
+736,ДАЧвО-1245-13-341345,merged,341,"single candidate; years [(1877, 1891)]"
+737,ДАЧвО-1245-13-350353,review,,no candidates after filters
+738,ДАЧвО-1245-13-360362,review,,no candidates after filters
+739,ДАЧвО-1245-13-372376,merged,372,"single candidate; years [(1900, 1908)]"
+740,ДАЧвО-1245-13-376381,merged,376,"single candidate; years [(1910, 1932)]"
+741,ДАЧвО-1245-14-2330,merged,23,"exact year match + prefix, of 6"
+742,ДАЧвО-1245-15-4863,merged,48,"exact year match + prefix, of 6"
+743,ДАЧвО-1245-15-6974,merged,69,"exact year match + prefix, of 6"
+744,ДАЧвО-1245-2-6769,merged,67,"exact year match + prefix, of 5"
+745,ДАЧвО-1245-3-6673,merged,66,"exact year match + prefix, of 18"
+746,ДАЧвО-1245-3-7477,merged,74,"exact year match + prefix, of 18"
+747,ДАЧвО-1245-3-7882,merged,78,"exact year match + prefix, of 18"
+748,ДАЧвО-1245-3-8389,merged,83,"exact year match + prefix, of 18"
+749,ДАЧвО-1245-3-9092,merged,90,"exact year match + prefix, of 18"
+750,ДАЧвО-1245-3-9396,merged,93,"exact year match + prefix, of 21"
+751,ДАЧвО-1245-3-97101,merged,97,"exact year match + prefix, of 23"
+752,ДАЧвО-1245-3-102103,review,,"21 candidates, prefix=[102]"
+753,ДАЧвО-1245-3-105109,merged,105,"exact year match + prefix, of 6"
+754,ДАЧвО-1245-3-110112,merged,110,unique prefix among 6 place-filtered
+755,ДАЧвО-1245-3-113115,merged,113,unique prefix among 6 place-filtered
+756,ДАЧвО-1245-3-116123,merged,116,"exact year match + prefix, of 20"
+757,ДАЧвО-1245-3-124128,merged,124,"exact year match + prefix, of 20"
+758,ДАЧвО-1245-3-126128,merged,126,"exact year match + prefix, of 19"
+759,ДАЧвО-1245-3-158162,merged,158,"exact year match + prefix, of 5"
+760,ДАЧвО-1245-4-1719,merged,17,"exact year match + prefix, of 3"
+761,ДАЧвО-1245-4-6062,review,,"6 candidates, prefix=[]"
+762,ДАЧвО-1245-5-7275,merged,72,"single candidate; years [(1893, 1912)]"
+763,ДАЧвО-1245-5-123125,merged,123,"exact year match + prefix, of 6"
+764,ДАЧвО-1245-6-4447,merged,44,"exact year match + prefix, of 4"
+765,ДАЧвО-1245-7-106109,review,,no candidates after filters
+766,ДАЧвО-1245-8-2325,review,,no candidates after filters
+767,ДАЧвО-1245-8-3538,merged,35,"single candidate; years [(1908, 1932)]"
+768,ДАЧвО-1245-8-3943,merged,39,"single candidate; years [(1901, 1908), (1911, 1911), (1915, 1915)]"
+769,ДАЧвО-1245-8-5862,merged,58,"single candidate; years [(1904, 1912)]"
+770,ДАЧвО-1245-8-6365,merged,63,"single candidate; years [(1908, 1928)]"
+771,ДАЧвО-1245-8-105107,merged,105,"single candidate; years [(1927, 1928), (1930, 1930)]"
+772,ДАЧвО-1245-9-3537,merged,35,"single candidate; years [(1881, 1895), (1921, 1921)]"
+773,ДАЧвО-1245-9-7577,review,,no candidates after filters
+774,ДАЧвО-1245-9-8384,review,,no candidates after filters
+775,ДАЧвО-1245-9-103106,merged,103,"exact year match + prefix, of 3"
+776,ДАЧвО-1245-9-122124,merged,122,"single candidate; years [(1881, 1916), (1932, 1932)]"
+777,ДАЧвО-1245-9-150153,review,,no candidates after filters
+778,ДАЧвО-605-1-5355,merged,53,"single candidate; years [(1833, 1835)]"
+779,ДАЧвО-605-1-145149,merged,145,"single candidate; years [(1864, 1866)]"
+780,ДАЧвО-605-1-161165,merged,161,"single candidate; years [(1869, 1870)]"
+781,ДАВіО-172-2-4680,review,,no acmb data or no years
+782,ДАВіО-172-2-507527,review,,no acmb data or no years
+783,ДАВіО-172-2-559580,review,,no acmb data or no years
+784,ДАВіО-172-2-587630,review,,no acmb data or no years
+785,ДАВіО-172-3-3032,review,,no acmb data or no years
+786,ДАВіО-172-5-296306,review,,no acmb data or no years
+787,ДАВіО-172-5-335394,review,,no acmb data or no years
+788,ДАВіО-172-5-441447,review,,no acmb data or no years
+789,ДАВіО-172-5-451455,review,,no acmb data or no years
+790,ДАВіО-172-5-457459,review,,no acmb data or no years
+791,ДАВіО-172-5-461472,review,,no acmb data or no years
+792,ДАВіО-172-5-474481,review,,no acmb data or no years
+793,ДАВіО-172-5-487545,review,,no acmb data or no years
+794,ДАВіО-172-5-656657,review,,no acmb data or no years
+795,ДАВіО-172-6-93208,review,,no acmb data or no years
+796,ДАВіО-172-6-9701049,review,,no acmb data or no years
+797,ДАВіО-172-6-10511122,review,,no acmb data or no years
+798,ДАВіО-172-6-11321135,review,,no acmb data or no years
+799,ДАВіО-172-6-11451156,review,,no acmb data or no years
+800,ДАВіО-172-6-11681288,review,,no acmb data or no years
+801,ДАВіО-172-7-130133,review,,no acmb data or no years
+802,ДАВіО-172-7-12831323,review,,no acmb data or no years
+803,ДАВіО-172-8-692693,review,,no acmb data or no years
+804,ДАВіО-172-8-749752,review,,no acmb data or no years
+805,ДАВіО-172-8-764769,review,,no acmb data or no years
+806,ДАВіО-172-8-771850,review,,no acmb data or no years
+807,ДАВіО-172-8-869939,review,,no acmb data or no years
+808,ДАВіО-172-8-10971324,review,,no acmb data or no years
+809,ДАВіО-172-8-13261328,review,,no acmb data or no years
+810,ДАВіО-172-8-13301347,review,,no acmb data or no years
+811,ДАВіО-172-8-13481349,review,,no acmb data or no years
+812,ДАВіО-172-8-13511355,review,,no acmb data or no years
+813,ДАВіО-172-8-13851386,review,,no acmb data or no years
+814,ДАВіО-172-8-14851486,review,,no acmb data or no years
+815,ДАВіО-172-8-15551557,review,,no acmb data or no years
+816,ДАВіО-172-8-15661567,review,,no acmb data or no years
+817,ДАВіО-172-8-15771585,review,,no acmb data or no years
+818,ДАВіО-172-8-16631669,review,,no acmb data or no years
+819,ДАВіО-172-8-16711694,review,,no acmb data or no years
+820,ДАВіО-172-8-16961785,review,,no acmb data or no years
+821,ДАВіО-172-8-17671805,review,,no acmb data or no years
+822,ДАВіО-172-8-18071814,review,,no acmb data or no years
+823,ДАВіО-172-8-18161818,review,,no acmb data or no years
+824,ДАВіО-172-8-18201838,review,,no acmb data or no years
+825,ДАВіО-172-8-18411845,review,,no acmb data or no years
+826,ДАВіО-172-8-18771891,review,,no acmb data or no years
+827,ДАВіО-172-8-18941895,review,,no acmb data or no years
+828,ДАВіО-172-8-18981907,review,,no acmb data or no years
+829,ДАВіО-172-8-19111912,review,,no acmb data or no years
+830,ДАВіО-172-8-22142262,review,,no acmb data or no years
+831,ДАВіО-172-8-22642318,review,,no acmb data or no years
+832,ДАВіО-172-8-23202321,review,,no acmb data or no years
+833,ДАВіО-172-8-23232332,review,,no acmb data or no years
+834,ДАВіО-172-8-23342339,review,,no acmb data or no years
+835,ДАВіО-67-1-286,review,,no acmb data or no years
+836,ДАВіО-Р1554-1-5758,review,,no acmb data or no years
+837,ДАВіО-Р1554-1-60107,review,,no acmb data or no years
+838,ДАВіО-Р1554-1-109110,review,,no acmb data or no years
+839,ДАВіО-Р1554-4-3234,review,,no acmb data or no years
+840,ДАЖО-1-32-23400,review,,no acmb data or no years
+841,ДАЗпО-Р5747-2-57263,review,,no acmb data or no years
+842,ДАЗпО-Р5747-2-57265,review,,no acmb data or no years
+843,ДАЗпО-Р5747-2-58070,review,,no acmb data or no years
+844,ДАЗпО-Р5747-2-58079,review,,no acmb data or no years
+845,ДАКрО-317-7-122834,review,,no acmb data or no years
+846,ДАКрО-317-7-128907,review,,no acmb data or no years
+847,ДАКрО-317-7-415422,review,,no acmb data or no years
+848,ДАКрО-317-7-10311037,review,,no acmb data or no years
+849,ДАКрО-353-1-242,review,,no acmb data or no years
+850,ДАКрО-Р1534-1-209,review,,no acmb data or no years
+851,ДАКрО-Р242-3-674,review,,no acmb data or no years
+852,ДАКрО-Р4100-1-4523,review,,no acmb data or no years
+853,ДАОО-1-173-11856,review,,no acmb data or no years
+854,ДАОО-37-3-13909,review,,no acmb data or no years
+855,ДАПО-370-2-5198,review,,no acmb data or no years
+856,ДАПО-Б1-1-88042,review,,no acmb data or no years
+857,ДАПО-Р1503-2-138140,review,,no acmb data or no years
+858,ДАПО-Р1503-2-144146,review,,no acmb data or no years
+859,ДАПО-Р1503-2-151152,review,,no acmb data or no years
+860,ДАПО-Р1503-2-156162,review,,no acmb data or no years
+861,ДАПО-Р1503-2-167175,review,,no acmb data or no years
+862,ДАПО-Р1503-2-178179,review,,no acmb data or no years
+863,ДАПО-Р1503-2-181184,review,,no acmb data or no years
+864,ДАПО-Р1503-2-187188,review,,no acmb data or no years
+865,ДАПО-Р3872-1-324330,review,,no acmb data or no years
+866,ДАПО-Р3872-1-753940,review,,no acmb data or no years
+867,ДАПО-Р9106-1-144688,review,,no acmb data or no years
+868,ДАПО-Р9106-2-51258,review,,no acmb data or no years
+869,ДАПО-Р9106-2-87909,review,,no acmb data or no years
+870,ДАПО-Р9106-2-92731,review,,no acmb data or no years
+871,ДАТО-Р3429-1-157896,review,,no acmb data or no years
+872,ДАХмО-198-1-30821,review,,no acmb data or no years
+873,ДАХмО-315-1-126051111,review,,no acmb data or no years
+874,ДАХмО-Р6193-12-534110422,review,,no acmb data or no years
+875,ДАХмО-Р6193-12-1042316825,review,,no acmb data or no years
+876,ДАХмО-Р6193-12-1682621302,review,,no acmb data or no years
+877,ДАХмО-Р6193-12-2130325915,review,,no acmb data or no years
+878,ДАХмО-Р6193-12-2591630748,review,,no acmb data or no years
+879,ДАХмО-Р6193-12-3074936573,review,,no acmb data or no years
+880,ДАХмО-Р6193-2-48560,review,,no acmb data or no years
+881,ДАХмО-Р6193-6-78188,review,,no acmb data or no years
+882,ДАХмО-Р6193-7-71010,review,,no acmb data or no years
+883,ДАХмО-Р6193-9-97834,review,,no acmb data or no years
+884,ДАХмО-Р6193-9-97835,review,,no acmb data or no years
+885,ДАХмО-Р6193-9-97836,review,,no acmb data or no years
+886,ДАХмО-Р6193-9-97837,review,,no acmb data or no years
+887,ДАХмО-Р6193-9-97838,review,,no acmb data or no years
+888,ДАХмО-Р6193-9-107178,review,,no acmb data or no years
+889,ДАЧвО-2-1-317435,review,,no acmb data or no years
+890,ДАЧвО-3-1-112730А,review,,no acmb data or no years
+891,ДАЧвО-3-1-132671,review,,no acmb data or no years
+892,ДАЧвО-3-2-169369,review,,no acmb data or no years
+893,ДАЧвО-3-2-240241,review,,no acmb data or no years
+894,ДАЧгО-1530-1-1444,review,,no acmb data or no years
+895,ДАЧкО-1-1-2005,review,,no acmb data or no years
+896,ДАЧкО-1-1-2009,review,,no acmb data or no years
+897,ДАЧкО-19-1-2006,review,,no acmb data or no years
+898,ДАЧкО-19-1-2007,review,,no acmb data or no years
+899,ДАЧкО-224-1-422,review,,no acmb data or no years
+900,ДАЧкО-6-1-2001,review,,no acmb data or no years
+901,ДАЧкО-6-1-2002,review,,no acmb data or no years
+902,ДАЧкО-6-1-2005,review,,no acmb data or no years
+903,ДАЧкО-6-1-2007,review,,no acmb data or no years
+904,ДААРК-142-4-34168,review,,no acmb data or no years
+905,ДААРК-142-5-1044,review,,no acmb data or no years
+906,ДААРК-142-5-1078,review,,no acmb data or no years
+907,ДААРК-142-5-19227,review,,no acmb data or no years
+908,ДААРК-142-5-20113,review,,no acmb data or no years
+909,ДААРК-266-1-3839,review,,no acmb data or no years
+910,ДААРК-282-1-6142,review,,no acmb data or no years
+911,ДААРК-299-1-218740,review,,no acmb data or no years
+912,ДААРК-299-1-265266,review,,no acmb data or no years
+913,ДААРК-299-1-477478,review,,no acmb data or no years
+914,ДААРК-299-1-589590,review,,no acmb data or no years
+915,ДААРК-299-1-627245,review,,no acmb data or no years
+916,ДААРК-319-1-105235,review,,no acmb data or no years
+917,ДААРК-319-1-174241,review,,no acmb data or no years
+918,ДААРК-319-1-228239,review,,no acmb data or no years
+919,ДААРК-321-1-12089,review,,no acmb data or no years
+920,ДААРК-321-1-225191,review,,no acmb data or no years
+921,ДААРК-321-1-350351,review,,no acmb data or no years
+922,ДААРК-321-1-1121194,review,,no acmb data or no years
+923,ДААРК-323-1-148149,review,,no acmb data or no years
+924,ДААРК-370-1-1928,review,,no acmb data or no years
+925,ДААРК-371-1-16215,review,,no acmb data or no years
+926,ДААРК-371-1-18204,review,,no acmb data or no years
+927,ДАКО-Р907-3-403402,review,,no acmb data or no years
+928,ДАЛО-108-1-697732,review,,no acmb data or no years
+929,ДАМО-122-1-4158,review,,no acmb data or no years
+930,ДАМО-169-1-334,review,,no acmb data or no years
+931,ДАМО-484-1-19001,review,,no acmb data or no years
+932,ДАС-30-1-1895,review,,no acmb data or no years
+933,ДАС-30-1-1919,review,,no acmb data or no years
+934,ЦДІАК-127-1013-1842,review,,no acmb data or no years
+935,ЦДІАК-127-1017-1879,review,,no acmb data or no years
+936,ЦДІАК-127-1070-1260,review,,no acmb data or no years
+937,ЦДІАК-127-1070-1871,review,,no acmb data or no years
+938,ЦДІАК-127-1070-1926,review,,no acmb data or no years
+939,ЦДІАК-127-1070-2167,review,,no acmb data or no years
+940,ЦДІАК-127-1070-2330,review,,no acmb data or no years
+941,ЦДІАК-127-1070-2370,review,,no acmb data or no years
+942,ЦДІАК-127-1079-461127,review,,no acmb data or no years
+943,ЦДІАК-127-161-1287,review,,no acmb data or no years
+944,ЦДІАК-127-178-2099,review,,no acmb data or no years
+945,ЦДІАК-127-195-11326,review,,no acmb data or no years
+946,ЦДІАК-127-389-1810,review,,no acmb data or no years
+947,ЦДІАК-127-40-1883,review,,no acmb data or no years
+948,ЦДІАК-127-685-3431880,review,,no acmb data or no years
+949,ЦДІАК-127-685-3431882,review,,no acmb data or no years
+950,ЦДІАК-127-685-5041880,review,,no acmb data or no years
+951,ЦДІАК-127-685-5041882,review,,no acmb data or no years
+952,ЦДІАК-127-685-5591880,review,,no acmb data or no years
+953,ЦДІАК-127-685-5591882,review,,no acmb data or no years
+954,ЦДІАК-127-685-5601881,review,,no acmb data or no years
+955,ЦДІАК-127-685-5601882,review,,no acmb data or no years
+956,ЦДІАК-127-685-6341881,review,,no acmb data or no years
+957,ЦДІАК-127-685-6341882,review,,no acmb data or no years
+958,ЦДІАК-127-874-31919,review,,no acmb data or no years
+959,ЦДІАК-1780-1-1479,review,,no acmb data or no years
+960,ЦДІАК-1975-1-1743А,review,,no acmb data or no years
+961,ЦДІАК-2004-1-5771792,review,,no acmb data or no years
+962,ЦДІАК-2009-1-30965,review,,no acmb data or no years
+963,ЦДІАК-2009-1-41287,review,,no acmb data or no years
+964,ЦДІАК-2009-1-46821,review,,no acmb data or no years
+965,ЦДІАК-442-101-1830,review,,no acmb data or no years
+966,ЦДІАК-990-1-11201,review,,no acmb data or no years
+967,ЦДІАК-990-1-11202,review,,no acmb data or no years
+968,ЦДІАК-990-2-15003,review,,no acmb data or no years
+969,ЦДІАК-990-2-15603,review,,no acmb data or no years
+970,ЦДІАЛ-201-4А-81845,review,,no acmb data or no years
+971,ЦДІАЛ-201-4А-82334,review,,no acmb data or no years
+972,ЦДАВО-1-24-58915900,review,,no acmb data or no years
+973,ЦДАВО-10-1-11921,review,,no acmb data or no years
+974,ЦДАВО-10-1-121922,review,,no acmb data or no years
+975,ЦДАВО-10-1-131922,review,,no acmb data or no years
+976,ЦДАВО-1092-3-2780,review,,no acmb data or no years
+977,ЦДАВО-1092-3-2781,review,,no acmb data or no years
+978,ЦДАВО-1092-3-2782,review,,no acmb data or no years
+979,ЦДАВО-1092-3-2783,review,,no acmb data or no years
+980,ЦДАВО-1092-3-2784,review,,no acmb data or no years
+981,ЦДАВО-1092-3-2785,review,,no acmb data or no years
+982,ЦДАВО-1092-3-2787,review,,no acmb data or no years
+983,ЦДАВО-1092-3-2788,review,,no acmb data or no years
+984,ЦДАВО-1390-1-1917,review,,no acmb data or no years
+985,ЦДАВО-1390-1-1918,review,,no acmb data or no years
+986,ЦДАВО-2193-2-1918,review,,no acmb data or no years
+987,ЦДАВО-2201-3-1918,review,,no acmb data or no years
+988,ЦДАВО-3096-1-1921,review,,no acmb data or no years
+989,ЦДАВО-3254-1-1920,review,,no acmb data or no years
+990,ЦДАВО-3254-1-1921,review,,no acmb data or no years
+991,ЦДАВО-3254-1-1922,review,,no acmb data or no years
+992,ЦДАВО-3254-1-1923,review,,no acmb data or no years
+993,ЦДАВО-3254-1-1924,review,,no acmb data or no years
+994,ЦДАВО-3520-1-1919,review,,no acmb data or no years
+995,ЦДАВО-3676-1-1941,review,,no acmb data or no years
+996,ЦДАВО-3676-1-1942,review,,no acmb data or no years
+997,ЦДАВО-3676-1-1943,review,,no acmb data or no years
+998,ЦДАВО-3676-1-1944,review,,no acmb data or no years
+999,ЦДАВО-3806-1-1901,review,,no acmb data or no years
+1000,ЦДАВО-3883-1-1917,review,,no acmb data or no years
+1001,ЦДАВО-3895-1-1915,review,,no acmb data or no years
+1002,ЦДАВО-3934-1-1895,review,,no acmb data or no years
+1003,ЦДАВО-3950-2-1924,review,,no acmb data or no years
+1004,ЦДАМЛМ-1109-1-2016,review,,no acmb data or no years
+1005,ЦДАМЛМ-1109-1-2018,review,,no acmb data or no years
+1006,ЦДАМЛМ-17-1-2281,review,,no acmb data or no years
+1007,ЦДАМЛМ-17-1-2282,review,,no acmb data or no years
+1008,ЦДАМЛМ-581-2-21031977,review,,no acmb data or no years
+1009,ЦДАМЛМ-616-2-8799К,review,,no acmb data or no years
+1010,ЦДАМЛМ-616-2-10929К,review,,no acmb data or no years
+1011,ЦДАМЛМ-616-2-11923К,review,,no acmb data or no years
+1012,ЦДАМЛМ-616-2-86100К,review,,no acmb data or no years
+1013,ЦДАМЛМ-617-1-11973,review,,no acmb data or no years
+1014,ЦДАМЛМ-617-1-71971,review,,no acmb data or no years
+1015,ЦДАМЛМ-Б1-1-411952,review,,no acmb data or no years
+1016,ЦДАМЛМ-Б1-1-411953,review,,no acmb data or no years
