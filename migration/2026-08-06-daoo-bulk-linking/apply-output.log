@@ -1,0 +1,37 @@
+BEGIN
+SELECT 4056
+SELECT 29
+SELECT 83
+SELECT 3315
+UPDATE 3974
+UPDATE 82
+ new_fonds 
+-----------
+        29
+(1 row)
+
+ new_invs 
+----------
+       83
+(1 row)
+
+ new_files 
+-----------
+      3315
+(1 row)
+
+ parsed_total | to_files | to_invs 
+--------------+----------+---------
+         4056 |     3974 |      82
+(1 row)
+
+ still_unlinked 
+----------------
+             23
+(1 row)
+
+COMMIT
+COPY 29
+COPY 83
+COPY 3315
+COPY 4056
