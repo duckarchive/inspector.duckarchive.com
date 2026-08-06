@@ -1,0 +1,24 @@
+BEGIN
+CREATE TABLE
+INSERT 0 9
+SELECT 138
+SELECT 2
+UPDATE 138
+ parsed_total 
+--------------
+          138
+(1 row)
+
+ new_files 
+-----------
+         2
+(1 row)
+
+ still_unlinked 
+----------------
+              0
+(1 row)
+
+COMMIT
+COPY 2
+COPY 138
