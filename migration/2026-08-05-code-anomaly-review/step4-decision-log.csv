@@ -1,6 +1,6 @@
 seq,anomaly,action,target,evidence
-1,ДАІФО-631-1-6837,merged,ДАІФО-631-1-683,"acmb т.4 Олеша: шлюб 1837–1912 = спр.683; «6837» = 683 + rubric «7.» glue; Тлумач entry confirms 683"
-3,ДАІФО-631-1-66266,merged,ДАІФО-631-1-66,"acmb т.4 Устеріки: спр.66; years 1855–1902 identical on both sides; «266» = page glue"
+1,ДАІФО-631-1-6837,merged,ДАІФО-631-1-683,acmb т.4 Олеша: шлюб 1837–1912 = спр.683; «6837» = 683 + rubric «7.» glue; Тлумач entry confirms 683
+3,ДАІФО-631-1-66266,merged,ДАІФО-631-1-66,acmb т.4 Устеріки: спр.66; years 1855–1902 identical on both sides; «266» = page glue
 2,ДАІФО-631-1-63265,merged,63,"exact year match + prefix, of 598"
 3,ДАІФО-631-1-66266,skipped,,file no longer exists
 4,ДАІФО-631-1-98242,merged,98,"exact year match + prefix, of 6"
@@ -1016,3 +1016,355 @@ seq,anomaly,action,target,evidence
 1014,ЦДАМЛМ-617-1-71971,review,,no acmb data or no years
 1015,ЦДАМЛМ-Б1-1-411952,review,,no acmb data or no years
 1016,ЦДАМЛМ-Б1-1-411953,review,,no acmb data or no years
+299,ДАЗпО-Р5593-3-10491050,renamed,1049,step5: unique split 1049+1050
+317,ДАЛуО-126-18-791903,renamed,79,step5: self-year: 79+1903 (years 1902:1903)
+438,ДАХО-40-105-6801871,renamed,680,step5: self-year: 680+1871 (years 1870:1872)
+439,ДАХО-40-105-26041866,renamed,2604,step5: self-year: 2604+1866 (years 1863:1863)
+440,ДАХО-40-105-28441870,renamed,2844,step5: self-year: 2844+1870 (years 1868:1868)
+441,ДАХО-40-105-124441859,renamed,12444,step5: self-year: 12444+1859 (years 1858:1858)
+442,ДАХО-40-105-126541864,renamed,12654,step5: self-year: 12654+1864 (years 1863:1863)
+443,ДАХО-40-105-127541868,renamed,12754,step5: self-year: 12754+1868 (years 1867:1867)
+481,ДАХеО-137-6-580,renamed,5,step5: unique split 5+80
+483,ДАХеО-207-1-2114615,renamed,2114,step5: unique split 2114+615
+782,ДАВіО-172-2-507527,renamed,507,step5: unique split 507+527
+783,ДАВіО-172-2-559580,renamed,559,step5: unique split 559+580
+784,ДАВіО-172-2-587630,renamed,587,step5: unique split 587+630
+785,ДАВіО-172-3-3032,renamed,30,step5: unique split 30+32
+786,ДАВіО-172-5-296306,renamed,296,step5: unique split 296+306
+787,ДАВіО-172-5-335394,renamed,335,step5: unique split 335+394
+790,ДАВіО-172-5-457459,renamed,457,step5: unique split 457+459
+792,ДАВіО-172-5-474481,renamed,474,step5: unique split 474+481
+793,ДАВіО-172-5-487545,renamed,487,step5: unique split 487+545
+794,ДАВіО-172-5-656657,renamed,656,step5: unique split 656+657
+25,ДАВоО-193-1-60184,merged,60,step5: unique split 60+184
+30,ДАВоО-195-1-28273,merged,28,step5: unique split 28+273
+31,ДАВоО-195-1-28285,merged,28,step5: unique split 28+285
+32,ДАВоО-286-1-138407,merged,138,step5: unique split 138+407
+33,ДАВоО-297-1-146289,merged,146,step5: unique split 146+289
+54,ДАВоО-96-1-414404,merged,414,step5: unique split 414+404
+55,ДАВіО-177-1-120855,merged,1208,step5: single existing base 1208 of 120|1208
+56,ДАВіО-904-11-69242,merged,69,step5: unique split 69+242
+57,ДАВіО-904-11-69265,merged,69,step5: unique split 69+265
+58,ДАВіО-904-11-69266,merged,69,step5: unique split 69+266
+81,ДАВіО-904-20-68103,merged,68,step5: unique split 68+103
+90,ДАВіО-904-25-7054,merged,70,step5: unique split 70+54
+95,ДАВіО-904-27-32184,merged,32,step5: unique split 32+184
+96,ДАВіО-904-29-84286,merged,84,step5: unique split 84+286
+103,ДАВіО-904-34-3048,merged,30,step5: unique split 30+48
+111,ДАДнО-193-3-362522,merged,362,step5: unique split 362+522
+114,ДАДнО-193-3-439527,merged,439,step5: unique split 439+527
+115,ДАДнО-193-3-447529,merged,447,step5: unique split 447+529
+117,ДАДнО-193-3-676536,merged,676,step5: unique split 676+536
+121,ДАДнО-193-3-781899,merged,78,step5: self-year: 78+1899 (years 1872:1872;1881:1881;1884:1884;1886:1887;1896:1896)
+122,ДАДнО-193-3-791901,merged,79,step5: self-year: 79+1901 (years 1899:1900)
+123,ДАДнО-193-3-843543,merged,843,step5: unique split 843+543
+133,ДАДнО-193-4ДОД-34555,merged,34,step5: unique split 34+555
+134,ДАДнО-193-5ДОД-13608,merged,13,step5: unique split 13+608
+136,ДАДнО-193-9-71908,merged,7,step5: self-year: 7+1908 (years 1907:1907)
+205,ДАЖО-1-78-976978,merged,976,step5: unique split 976+978
+214,ДАЖО-1-85-43414,merged,43,step5: unique split 43+414
+230,ДАЖО-178-3-210603,merged,210,step5: unique split 210+603
+231,ДАЖО-178-3-263559,merged,263,step5: unique split 263+559
+234,ДАЖО-178-51-515561,merged,515,step5: unique split 515+561
+235,ДАЖО-178-51-547606,merged,547,step5: unique split 547+606
+236,ДАЖО-178-51-548593,merged,548,step5: unique split 548+593
+243,ДАЗкО-Р1606-1-97761,merged,97,step5: unique split 97+761
+244,ДАЗкО-Р1606-1-194757,merged,194,step5: unique split 194+757
+245,ДАЗкО-Р1606-1-204764,merged,204,step5: unique split 204+764
+246,ДАЗкО-Р1606-11-70746,merged,70,step5: unique split 70+746
+247,ДАЗкО-Р1606-11-101740,merged,101,step5: unique split 101+740
+248,ДАЗкО-Р1606-12-24728,merged,24,step5: unique split 24+728
+252,ДАЗкО-Р1606-13-68750,merged,68,step5: unique split 68+750
+253,ДАЗкО-Р1606-13-98677,merged,98,step5: unique split 98+677
+254,ДАЗкО-Р1606-13-108752,merged,108,step5: unique split 108+752
+255,ДАЗкО-Р1606-14-25730,merged,25,step5: unique split 25+730
+256,ДАЗкО-Р1606-15-39709,merged,39,step5: unique split 39+709
+257,ДАЗкО-Р1606-2-32720,merged,32,step5: unique split 32+720
+258,ДАЗкО-Р1606-2-42719,merged,42,step5: unique split 42+719
+260,ДАЗкО-Р1606-3-40711,merged,40,step5: unique split 40+711
+261,ДАЗкО-Р1606-3-52769,merged,52,step5: unique split 52+769
+262,ДАЗкО-Р1606-3-94713,merged,94,step5: unique split 94+713
+263,ДАЗкО-Р1606-3-114679,merged,114,step5: unique split 114+679
+264,ДАЗкО-Р1606-4-36689,merged,36,step5: unique split 36+689
+265,ДАЗкО-Р1606-5-29693,merged,29,step5: unique split 29+693
+266,ДАЗкО-Р1606-5-48695,merged,48,step5: unique split 48+695
+267,ДАЗкО-Р1606-6-32735,merged,32,step5: unique split 32+735
+268,ДАЗкО-Р1606-6-43736,merged,43,step5: unique split 43+736
+269,ДАЗкО-Р1606-7-35701,merged,35,step5: unique split 35+701
+270,ДАЗкО-Р1606-9-57737,merged,57,step5: unique split 57+737
+273,ДАЗпО-245-1-350,merged,3,step5: unique split 3+50
+277,ДАЗпО-Р5593-2-606607,merged,606,step5: unique split 606+607
+279,ДАЗпО-Р5593-3-142202,merged,142,step5: unique split 142+202
+280,ДАЗпО-Р5593-3-218438,merged,218,step5: unique split 218+438
+281,ДАЗпО-Р5593-3-230432,merged,230,step5: unique split 230+432
+282,ДАЗпО-Р5593-3-232433,merged,232,step5: unique split 232+433
+283,ДАЗпО-Р5593-3-248331,merged,248,step5: unique split 248+331
+284,ДАЗпО-Р5593-3-263440,merged,263,step5: unique split 263+440
+285,ДАЗпО-Р5593-3-273443,merged,273,step5: unique split 273+443
+286,ДАЗпО-Р5593-3-293434,merged,293,step5: unique split 293+434
+287,ДАЗпО-Р5593-3-358343,merged,358,step5: unique split 358+343
+288,ДАЗпО-Р5593-3-360327,merged,360,step5: unique split 360+327
+289,ДАЗпО-Р5593-3-396452,merged,396,step5: unique split 396+452
+290,ДАЗпО-Р5593-3-502455,merged,502,step5: unique split 502+455
+291,ДАЗпО-Р5593-3-526472,merged,526,step5: unique split 526+472
+292,ДАЗпО-Р5593-3-550458,merged,550,step5: unique split 550+458
+293,ДАЗпО-Р5593-3-568460,merged,568,step5: unique split 568+460
+295,ДАЗпО-Р5593-3-822384,merged,822,step5: unique split 822+384
+296,ДАЗпО-Р5593-3-838412,merged,838,step5: unique split 838+412
+297,ДАЗпО-Р5593-3-997400,merged,997,step5: unique split 997+400
+298,ДАЗпО-Р5593-3-1033414,merged,1033,step5: unique split 1033+414
+300,ДАКрО-113-1-1314,merged,13,step5: adjacent pair 13|14
+306,ДАКрО-418-1-18479,merged,18,step5: single existing base 18 of 18|184|1847
+307,ДАКрО-856-1-19494,merged,19,step5: single existing base 19 of 19|194
+312,ДАЛуО-126-14-124401,merged,124,step5: unique split 124+401
+315,ДАЛуО-126-18-76347,merged,76,step5: unique split 76+347
+316,ДАЛуО-126-18-145386,merged,145,step5: unique split 145+386
+322,ДАЛуО-126-26-96385,merged,96,step5: unique split 96+385
+323,ДАЛуО-126-26-146405,merged,146,step5: unique split 146+405
+330,ДАОО-37-13-669701,merged,669,step5: unique split 669+701
+331,ДАОО-37-13-968502,merged,968,step5: unique split 968+502
+333,ДАОО-37-3А-100114,merged,100,step5: unique split 100+114
+336,ДАОО-920-1-56519,merged,56,step5: unique split 56+519
+337,ДАПО-1011-1-81629,merged,81,step5: unique split 81+629
+347,ДАПО-1011-6-163544,merged,163,step5: unique split 163+544
+349,ДАПО-1011-6-308571,merged,308,step5: unique split 308+571
+352,ДАПО-1011-6-965669,merged,965,step5: unique split 965+669
+365,ДАПО-706-4-195552,merged,195,step5: unique split 195+552
+366,ДАПО-706-4-247580,merged,247,step5: unique split 247+580
+367,ДАПО-706-4-339548,merged,339,step5: unique split 339+548
+372,ДАПО-801-1-4281573,merged,4281,step5: unique split 4281+573
+373,ДАПО-Р3374-1-738819,merged,738,step5: unique split 738+819
+406,ДАПО-Р9106-7-786908,merged,786,step5: unique split 786+908
+408,ДАХО-40-105-698515,merged,698,step5: single existing base 698 of 698|6985|69851
+409,ДАХО-40-105-1134179,merged,1134,step5: single existing base 1134 of 1134|11341|113417
+410,ДАХО-40-105-1144178,merged,1144,step5: single existing base 1144 of 1144|11441|114417
+411,ДАХО-40-105-1182166,merged,1182,step5: single existing base 1182 of 1182|11821|118216
+413,ДАХО-40-105-1199209,merged,1199,step5: single existing base 1199 of 1199|119920
+414,ДАХО-40-105-1202168,merged,1202,step5: single existing base 1202 of 1202|12021|120216
+415,ДАХО-40-105-1202193,merged,1202,step5: single existing base 1202 of 1202|12021|120219
+416,ДАХО-40-105-1202207,merged,1202,step5: single existing base 1202 of 1202|120220
+419,ДАХО-40-105-1212182,merged,1212,step5: single existing base 1212 of 1212|12121|121218
+420,ДАХО-40-105-1212240,merged,1212,step5: single existing base 1212 of 1212|12122
+421,ДАХО-40-105-1266476,merged,1266,step5: single existing base 1266 of 1266|12664|126647
+422,ДАХО-40-105-1305304,merged,1305,step5: single existing base 1305 of 1305|130530
+423,ДАХО-40-105-1306318,merged,1306,step5: single existing base 1306 of 1306|13063|130631
+424,ДАХО-40-105-1344477,merged,1344,step5: single existing base 1344 of 1344|13444|134447
+425,ДАХО-40-105-1373470,merged,1373,step5: single existing base 1373 of 1373|13734
+426,ДАХО-40-105-1373475,merged,1373,step5: single existing base 1373 of 1373|13734|137347
+427,ДАХО-40-105-1373523,merged,1373,step5: single existing base 1373 of 1373|13735|137352
+428,ДАХО-40-105-1379464,merged,1379,step5: single existing base 1379 of 1379|13794|137946
+432,ДАХО-40-105-1386484,merged,1386,step5: single existing base 1386 of 1386|13864
+433,ДАХО-40-105-1386488,merged,1386,step5: single existing base 1386 of 1386|13864
+434,ДАХО-40-105-1388466,merged,1388,step5: single existing base 1388 of 1388|13884
+435,ДАХО-40-105-1388471,merged,1388,step5: single existing base 1388 of 1388|13884
+436,ДАХО-40-105-1390467,merged,1390,step5: single existing base 1390 of 1390|13904
+437,ДАХО-40-105-2261852,merged,226,step5: self-year: 226+1852 (years 1851:1851)
+445,ДАХО-40-109-248465,merged,248,step5: unique split 248+465
+447,ДАХО-40-109-540520,merged,540,step5: unique split 540+520
+452,ДАХО-40-110-38059,merged,380,step5: unique split 380+59
+454,ДАХО-40-110-71818,merged,7,step5: self-year: 7+1818 (years 1814:1815)
+455,ДАХО-40-110-429173,merged,429,step5: unique split 429+173
+456,ДАХО-40-110-451823,merged,45,step5: self-year: 45+1823 (years 1821:1821)
+461,ДАХО-40-110-545390,merged,545,step5: unique split 545+390
+464,ДАХО-40-110-588486,merged,588,step5: unique split 588+486
+466,ДАХО-40-110-599511,merged,599,step5: unique split 599+511
+471,ДАХеО-137-25-24602,merged,24,step5: single existing base 24 of 24|2460
+473,ДАХеО-137-40-219627,merged,219,step5: unique split 219+627
+475,ДАХеО-137-40-233628,merged,233,step5: unique split 233+628
+476,ДАХеО-137-40-240633,merged,240,step5: unique split 240+633
+491,ДАХеО-316-1-377556,merged,377,step5: unique split 377+556
+492,ДАХеО-316-4-37561,merged,37,step5: unique split 37+561
+495,ДАХмО-18-1-253291,merged,253,step5: unique split 253+291
+496,ДАХмО-18-1-268372,merged,268,step5: unique split 268+372
+498,ДАХмО-18-1-535691,merged,535,step5: unique split 535+691
+499,ДАХмО-18-1-762315,merged,762,step5: unique split 762+315
+501,ДАХмО-18-1-1063329,merged,1063,step5: unique split 1063+329
+502,ДАХмО-18-1-1088326,merged,1088,step5: unique split 1088+326
+503,ДАХмО-18-1-1180393,merged,1180,step5: unique split 1180+393
+504,ДАХмО-18-1-1271674,merged,1271,step5: unique split 1271+674
+505,ДАХмО-18-1-1364616,merged,1364,step5: unique split 1364+616
+506,ДАХмО-18-1-1445682,merged,1445,step5: unique split 1445+682
+507,ДАХмО-18-1-1473340,merged,1473,step5: unique split 1473+340
+510,ДАХмО-18-1-1898636,merged,1898,step5: unique split 1898+636
+540,ДАХмО-315-1-6773745,merged,6773,step5: unique split 6773+745
+541,ДАХмО-315-1-6813478,merged,6813,step5: unique split 6813+478
+542,ДАХмО-315-1-6813479,merged,6813,step5: unique split 6813+479
+544,ДАХмО-315-1-6813501,merged,6813,step5: unique split 6813+501
+545,ДАХмО-315-1-6813513,merged,6813,step5: unique split 6813+513
+546,ДАХмО-315-1-6861604,merged,6861,step5: unique split 6861+604
+547,ДАХмО-315-1-6861608,merged,6861,step5: unique split 6861+608
+548,ДАХмО-315-1-6879146,merged,6879,step5: unique split 6879+146
+549,ДАХмО-315-1-6883305,merged,6883,step5: unique split 6883+305
+550,ДАХмО-315-1-6994428,merged,6994,step5: unique split 6994+428
+551,ДАХмО-315-1-6995218,merged,6995,step5: unique split 6995+218
+553,ДАХмО-315-1-7021710,merged,7021,step5: unique split 7021+710
+554,ДАХмО-315-1-7021739,merged,7021,step5: unique split 7021+739
+556,ДАХмО-315-1-7273126,merged,7273,step5: unique split 7273+126
+557,ДАХмО-315-1-7279293,merged,7279,step5: unique split 7279+293
+558,ДАХмО-315-1-7281743,merged,7281,step5: unique split 7281+743
+559,ДАХмО-315-1-7344439,merged,7344,step5: unique split 7344+439
+560,ДАХмО-315-1-7354491,merged,7354,step5: unique split 7354+491
+561,ДАХмО-315-1-7354492,merged,7354,step5: unique split 7354+492
+562,ДАХмО-315-1-7354493,merged,7354,step5: unique split 7354+493
+563,ДАХмО-315-1-7354495,merged,7354,step5: unique split 7354+495
+564,ДАХмО-315-1-7354497,merged,7354,step5: unique split 7354+497
+565,ДАХмО-315-1-7446597,merged,7446,step5: unique split 7446+597
+566,ДАХмО-315-1-7446618,merged,7446,step5: unique split 7446+618
+567,ДАХмО-315-1-7598688,merged,7598,step5: unique split 7598+688
+569,ДАХмО-315-1-8053238,merged,8053,step5: unique split 8053+238
+570,ДАХмО-315-1-8168498,merged,8168,step5: unique split 8168+498
+571,ДАХмО-315-1-8178573,merged,8178,step5: unique split 8178+573
+572,ДАХмО-315-1-8280570,merged,8280,step5: unique split 8280+570
+574,ДАХмО-315-1-8318250,merged,8318,step5: unique split 8318+250
+575,ДАХмО-315-1-8318251,merged,8318,step5: unique split 8318+251
+576,ДАХмО-315-1-8318252,merged,8318,step5: unique split 8318+252
+577,ДАХмО-315-1-8318254,merged,8318,step5: unique split 8318+254
+578,ДАХмО-315-1-8347725,merged,8347,step5: unique split 8347+725
+579,ДАХмО-315-1-8417426,merged,8417,step5: unique split 8417+426
+580,ДАХмО-315-1-8417443,merged,8417,step5: unique split 8417+443
+581,ДАХмО-315-1-8422549,merged,8422,step5: unique split 8422+549
+582,ДАХмО-315-1-8422552,merged,8422,step5: unique split 8422+552
+583,ДАХмО-315-1-8427435,merged,8427,step5: unique split 8427+435
+584,ДАХмО-315-1-8427448,merged,8427,step5: unique split 8427+448
+585,ДАХмО-315-1-8430499,merged,8430,step5: unique split 8430+499
+586,ДАХмО-315-1-8430500,merged,8430,step5: unique split 8430+500
+587,ДАХмО-315-1-8430506,merged,8430,step5: unique split 8430+506
+588,ДАХмО-315-1-8430509,merged,8430,step5: unique split 8430+509
+589,ДАХмО-315-1-8464598,merged,8464,step5: unique split 8464+598
+590,ДАХмО-315-1-8468510,merged,8468,step5: unique split 8468+510
+593,ДАХмО-315-1-8583330,merged,8583,step5: unique split 8583+330
+594,ДАХмО-315-1-8583335,merged,8583,step5: unique split 8583+335
+595,ДАХмО-315-1-8676581,merged,8676,step5: unique split 8676+581
+597,ДАХмО-315-1-8677685,merged,8677,step5: unique split 8677+685
+598,ДАХмО-315-1-8677694,merged,8677,step5: unique split 8677+694
+600,ДАХмО-315-1-8684721,merged,8684,step5: unique split 8684+721
+601,ДАХмО-315-1-8684728,merged,8684,step5: unique split 8684+728
+602,ДАХмО-315-1-8684729,merged,8684,step5: unique split 8684+729
+603,ДАХмО-315-1-8684734,merged,8684,step5: unique split 8684+734
+604,ДАХмО-315-1-8684735,merged,8684,step5: unique split 8684+735
+605,ДАХмО-315-1-8730544,merged,8730,step5: unique split 8730+544
+606,ДАХмО-315-1-8733523,merged,8733,step5: unique split 8733+523
+607,ДАХмО-315-1-8733524,merged,8733,step5: unique split 8733+524
+608,ДАХмО-315-1-8788371,merged,8788,step5: unique split 8788+371
+609,ДАХмО-315-1-8788381,merged,8788,step5: unique split 8788+381
+610,ДАХмО-315-1-8788389,merged,8788,step5: unique split 8788+389
+614,ДАХмО-315-1-8815383,merged,8815,step5: unique split 8815+383
+615,ДАХмО-315-1-8826232,merged,8826,step5: unique split 8826+232
+616,ДАХмО-315-1-8829339,merged,8829,step5: unique split 8829+339
+617,ДАХмО-315-1-8829346,merged,8829,step5: unique split 8829+346
+618,ДАХмО-315-1-8829349,merged,8829,step5: unique split 8829+349
+619,ДАХмО-315-1-8829353,merged,8829,step5: unique split 8829+353
+626,ДАХмО-315-1-11830701,merged,11830,step5: unique split 11830+701
+627,ДАХмО-315-1-11834705,merged,11834,step5: unique split 11834+705
+628,ДАХмО-315-1-11834716,merged,11834,step5: unique split 11834+716
+629,ДАХмО-315-1-11834772,merged,11834,step5: unique split 11834+772
+631,ДАХмО-315-1-11839103,merged,11839,step5: unique split 11839+103
+632,ДАХмО-315-1-11862756,merged,11862,step5: unique split 11862+756
+633,ДАХмО-315-1-11862761,merged,11862,step5: unique split 11862+761
+634,ДАХмО-315-1-11866758,merged,11866,step5: unique split 11866+758
+635,ДАХмО-315-1-11879454,merged,11879,step5: unique split 11879+454
+636,ДАХмО-315-1-11879458,merged,11879,step5: unique split 11879+458
+637,ДАХмО-315-1-11879460,merged,11879,step5: unique split 11879+460
+638,ДАХмО-315-1-11927468,merged,11927,step5: unique split 11927+468
+640,ДАХмО-315-1-11954551,merged,11954,step5: unique split 11954+551
+641,ДАХмО-315-1-11969556,merged,11969,step5: unique split 11969+556
+642,ДАХмО-315-1-12177219,merged,12177,step5: unique split 12177+219
+643,ДАХмО-315-1-12233144,merged,12233,step5: unique split 12233+144
+644,ДАХмО-315-1-12283288,merged,12283,step5: unique split 12283+288
+645,ДАХмО-315-1-12283296,merged,12283,step5: unique split 12283+296
+646,ДАХмО-315-1-12372437,merged,12372,step5: unique split 12372+437
+647,ДАХмО-315-1-12373445,merged,12373,step5: unique split 12373+445
+648,ДАХмО-315-1-12373449,merged,12373,step5: unique split 12373+449
+649,ДАХмО-315-1-12373452,merged,12373,step5: unique split 12373+452
+650,ДАХмО-315-1-12394174,merged,12394,step5: unique split 12394+174
+651,ДАХмО-315-1-12394177,merged,12394,step5: unique split 12394+177
+652,ДАХмО-315-1-12394181,merged,12394,step5: unique split 12394+181
+653,ДАХмО-315-1-12397200,merged,12397,step5: unique split 12397+200
+654,ДАХмО-315-1-12397202,merged,12397,step5: unique split 12397+202
+655,ДАХмО-315-1-12414158,merged,12414,step5: unique split 12414+158
+656,ДАХмО-315-1-12414162,merged,12414,step5: unique split 12414+162
+657,ДАХмО-315-1-12415185,merged,12415,step5: unique split 12415+185
+658,ДАХмО-315-1-12415186,merged,12415,step5: unique split 12415+186
+659,ДАХмО-315-1-12446101,merged,12446,step5: unique split 12446+101
+663,ДАХмО-Р6379-1-4082,merged,40,step5: single existing base 40 of 40|408
+666,ДАЧвО-1245-1-122125,merged,122,step5: single existing base 122 of 122|1221
+685,ДАЧвО-1245-1-520526,merged,520,step5: unique split 520+526
+686,ДАЧвО-1245-1-527532,merged,527,step5: unique split 527+532
+693,ДАЧвО-1245-1-601607,merged,601,step5: unique split 601+607
+695,ДАЧвО-1245-1-612618,merged,612,step5: unique split 612+618
+700,ДАЧвО-1245-1-675677,merged,675,step5: unique split 675+677
+704,ДАЧвО-1245-1-697700,merged,697,step5: unique split 697+700
+709,ДАЧвО-1245-1-853855,merged,853,step5: unique split 853+855
+725,ДАЧвО-1245-13-4344,merged,43,step5: adjacent pair 43|44
+730,ДАЧвО-1245-13-202206,merged,202,step5: unique split 202+206
+731,ДАЧвО-1245-13-217218,merged,217,step5: unique split 217+218
+732,ДАЧвО-1245-13-223225,merged,223,step5: unique split 223+225
+733,ДАЧвО-1245-13-233237,merged,233,step5: unique split 233+237
+737,ДАЧвО-1245-13-350353,merged,350,step5: unique split 350+353
+738,ДАЧвО-1245-13-360362,merged,360,step5: unique split 360+362
+752,ДАЧвО-1245-3-102103,merged,102,step5: unique split 102+103
+761,ДАЧвО-1245-4-6062,merged,60,step5: unique split 60+62
+765,ДАЧвО-1245-7-106109,merged,106,step5: unique split 106+109
+774,ДАЧвО-1245-9-8384,merged,83,step5: adjacent pair 83|84
+777,ДАЧвО-1245-9-150153,merged,150,step5: unique split 150+153
+781,ДАВіО-172-2-4680,merged,4,step5: single existing base 4 of 4|46
+795,ДАВіО-172-6-93208,renamed,93,step5: unique split 93+208
+796,ДАВіО-172-6-9701049,renamed,970,step5: unique split 970+1049
+797,ДАВіО-172-6-10511122,renamed,1051,step5: unique split 1051+1122
+798,ДАВіО-172-6-11321135,renamed,1132,step5: unique split 1132+1135
+799,ДАВіО-172-6-11451156,renamed,1145,step5: unique split 1145+1156
+800,ДАВіО-172-6-11681288,renamed,1168,step5: unique split 1168+1288
+802,ДАВіО-172-7-12831323,renamed,1283,step5: unique split 1283+1323
+803,ДАВіО-172-8-692693,renamed,692,step5: unique split 692+693
+804,ДАВіО-172-8-749752,renamed,749,step5: unique split 749+752
+805,ДАВіО-172-8-764769,renamed,764,step5: unique split 764+769
+807,ДАВіО-172-8-869939,merged,869,step5: unique split 869+939
+808,ДАВіО-172-8-10971324,renamed,1097,step5: unique split 1097+1324
+809,ДАВіО-172-8-13261328,renamed,1326,step5: unique split 1326+1328
+810,ДАВіО-172-8-13301347,renamed,1330,step5: unique split 1330+1347
+811,ДАВіО-172-8-13481349,renamed,1348,step5: unique split 1348+1349
+812,ДАВіО-172-8-13511355,renamed,1351,step5: unique split 1351+1355
+813,ДАВіО-172-8-13851386,renamed,1385,step5: unique split 1385+1386
+814,ДАВіО-172-8-14851486,renamed,1485,step5: unique split 1485+1486
+836,ДАВіО-Р1554-1-5758,renamed,57,step5: adjacent pair 57|58
+837,ДАВіО-Р1554-1-60107,renamed,60,step5: unique split 60+107
+838,ДАВіО-Р1554-1-109110,renamed,109,step5: unique split 109+110
+840,ДАЖО-1-32-23400,merged,23,step5: unique split 23+400
+843,ДАЗпО-Р5747-2-58070,merged,580,step5: unique split 580+70
+844,ДАЗпО-Р5747-2-58079,merged,580,step5: unique split 580+79
+848,ДАКрО-317-7-10311037,merged,1031,step5: unique split 1031+1037
+850,ДАКрО-Р1534-1-209,merged,20,step5: unique split 20+9
+857,ДАПО-Р1503-2-138140,merged,138,step5: single existing base 138 of 138|1381
+858,ДАПО-Р1503-2-144146,merged,144,step5: single existing base 144 of 144|1441
+859,ДАПО-Р1503-2-151152,merged,151,step5: adjacent pair 151|152
+860,ДАПО-Р1503-2-156162,merged,156,step5: single existing base 156 of 156|1561
+861,ДАПО-Р1503-2-167175,merged,167,step5: single existing base 167 of 167|1671
+862,ДАПО-Р1503-2-178179,merged,178,step5: adjacent pair 178|179
+864,ДАПО-Р1503-2-187188,merged,187,step5: adjacent pair 187|188
+865,ДАПО-Р3872-1-324330,merged,324,step5: unique split 324+330
+866,ДАПО-Р3872-1-753940,renamed,753,step5: unique split 753+940
+869,ДАПО-Р9106-2-87909,merged,8790,step5: single existing base 8790 of 87|8790
+873,ДАХмО-315-1-126051111,merged,12605,step5: unique split 12605+1111
+889,ДАЧвО-2-1-317435,merged,317,step5: unique split 317+435
+893,ДАЧвО-3-2-240241,merged,240,step5: adjacent pair 240|241
+904,ДААРК-142-4-34168,merged,34,step5: single existing base 34 of 34|341
+909,ДААРК-266-1-3839,merged,38,step5: adjacent pair 38|39
+911,ДААРК-299-1-218740,merged,218,step5: unique split 218+740
+912,ДААРК-299-1-265266,merged,265,step5: unique split 265+266
+913,ДААРК-299-1-477478,merged,477,step5: unique split 477+478
+914,ДААРК-299-1-589590,merged,589,step5: unique split 589+590
+915,ДААРК-299-1-627245,merged,627,step5: unique split 627+245
+916,ДААРК-319-1-105235,merged,105,step5: unique split 105+235
+917,ДААРК-319-1-174241,merged,174,step5: unique split 174+241
+918,ДААРК-319-1-228239,merged,228,step5: unique split 228+239
+920,ДААРК-321-1-225191,renamed,225,step5: unique split 225+191
+921,ДААРК-321-1-350351,merged,350,step5: unique split 350+351
+923,ДААРК-323-1-148149,merged,148,step5: unique split 148+149
+925,ДААРК-371-1-16215,merged,16,step5: unique split 16+215
+926,ДААРК-371-1-18204,merged,18,step5: unique split 18+204
+927,ДАКО-Р907-3-403402,merged,403,step5: unique split 403+402
+928,ДАЛО-108-1-697732,renamed,697,step5: unique split 697+732
+931,ДАМО-484-1-19001,merged,1900,step5: unique split 1900+1
+944,ЦДІАК-127-178-2099,renamed,20,step5: unique split 20+99
+946,ЦДІАК-127-389-1810,merged,18,step5: single existing base 18 of 1|18
+969,ЦДІАК-990-2-15603,merged,15,step5: unique split 15+603

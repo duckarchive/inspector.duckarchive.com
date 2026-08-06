@@ -117,6 +117,30 @@ Notable OCR glue species identified: page numbers (`22445`=22+445), years
 (`581884`=58+1884), catalog page numbers at page breaks (`421`), rubric numbers
 (`6837`=683+«7.»).
 
+## Step 5 — mechanical split-rule fixes (2026-08-06)
+
+Tooling: `step5_apply.py` (plan + apply), `step5-plan.csv` (decision per item),
+`step5-backup.jsonl` (pre-fix rows of all touched files + related tables),
+`STEP5-PROPOSAL.md` (rationale). Input: the 669 step-4 `review` leftovers.
+
+Revised target rule after spot-checks disproved naive equal-splitting:
+справа = digit-prefix ≤ max(1.25·p95, p95+50), glued remainder = 1–1500, no
+leading zero; self-year splits (4-digit year suffix matching the file's own
+years ±5) win first. Guards that sent items back to manual: series-suspect
+inventories (dense consecutive runs = legit numbering: ДАПО-Р9106-1 filtration
+files, ЦДАВО-1092-3), year-glue with no own years to arbitrate (ЦДІАК 31919),
+codes that are simply the file's own year (1919/1920 blocks).
+
+Result: **352 fixed** (308 merged into existing bases, 44 renamed onto free
+codes; 13 self-year among them), 0 errors. 309 stay manual. Notable rule
+lesson: in ДАХмО-315-1 the true справа is the *longest* plausible prefix
+(`11811263` = спр. 11811 + арк. 263 — справа↔year monotone confirms), so the
+short equal-split reading was wrong there.
+
+Post-step detector residue: **360 anomalies / 133 inventories** (was 1,380 /
+354 at the start of this review) — the 309 manual holds plus ~50 newly exposed
+by p95 shifts after the merges.
+
 ## Out of scope, noted for later
 
 - 11,738 files have **no digits at all** in `code` — separate review.
