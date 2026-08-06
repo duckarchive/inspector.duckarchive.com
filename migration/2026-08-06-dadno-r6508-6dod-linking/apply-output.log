@@ -1,0 +1,8 @@
+BEGIN
+UPDATE 24
+ still_unlinked 
+----------------
+              0
+(1 row)
+
+COMMIT
