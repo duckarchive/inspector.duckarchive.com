@@ -1,6 +1,7 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
+import NextLink from "next/link";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
 import CatalogItemLink from "@/components/editor/catalog-item-link";
@@ -13,6 +14,7 @@ import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
+import { editorFondHref } from "@/lib/editor-links";
 
 export default function EditorFondsPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -74,7 +76,20 @@ export default function EditorFondsPage() {
         isLoading={isLoading}
         rows={fonds ?? []}
         columns={[
-          { field: "code", headerName: "Код" },
+          {
+            field: "code",
+            headerName: "Код",
+            cellRenderer: (row: any) => (
+              <NextLink
+                href={editorFondHref(archiveCode, row.data.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link"
+              >
+                {row.value}
+              </NextLink>
+            ),
+          },
           { field: "title", headerName: "Назва", flex: 5 },
           { field: "info", headerName: "Опис", flex: 4 },
           { field: "children_count", headerName: "Описи", flex: 1, type: "numericColumn" },

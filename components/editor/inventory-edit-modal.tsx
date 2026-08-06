@@ -11,6 +11,8 @@ import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/ed
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorInventoriesEndpoint } from "@/hooks/useEditor";
+import { useIsAdmin } from "@/components/editor/admin-context";
+import { FaTrash } from "react-icons/fa";
 
 interface InventoryEditModalProps {
   inventory: EditorInventory | null;
@@ -20,6 +22,7 @@ interface InventoryEditModalProps {
 }
 
 const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOpen, onClose, onSubmitted }) => {
+  const isAdmin = useIsAdmin();
   const { submit: submitInventoryAction, submitMany: submitInventoryActions, isMutating } = useSubmitAction("inventory");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
@@ -94,6 +97,12 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
     onClose();
   };
 
+  const handleDelete = async () => {
+    await submitInventoryAction({ type: "remove", target_id: inventory.id });
+    onSubmitted?.();
+    onClose();
+  };
+
   return (
     <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Modal.Backdrop>
@@ -131,6 +140,18 @@ const InventoryEditModal: React.FC<InventoryEditModalProps> = ({ inventory, isOp
           </div>
             </Modal.Body>
             <Modal.Footer>
+              {isAdmin && (
+                <PendingButton
+                  isIconOnly
+                  aria-label="Видалити"
+                  variant="ghost"
+                  className="mr-auto"
+                  onPress={handleDelete}
+                  isPending={isMutating}
+                >
+                  <FaTrash />
+                </PendingButton>
+              )}
               <Button variant="tertiary" onPress={onClose}>
                 Скасувати
               </Button>

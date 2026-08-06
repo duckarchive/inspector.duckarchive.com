@@ -17,6 +17,8 @@ import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFilesEndpoint, editorFondsEndpoint } from "@/hooks/useEditor";
 import { useGet } from "@/hooks/useApi";
 import { GetArchivesResponse } from "@/app/api/archives/route";
+import { useIsAdmin } from "@/components/editor/admin-context";
+import { FaTrash } from "react-icons/fa";
 
 interface FileEditModalProps {
   file: EditorFile | null;
@@ -26,6 +28,7 @@ interface FileEditModalProps {
 }
 
 const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, onSubmitted }) => {
+  const isAdmin = useIsAdmin();
   const { submit, submitMany, isMutating } = useSubmitAction("file");
   const { submit: submitInventory, isMutating: isSubmittingInventory } = useSubmitAction("inventory");
   const [code, setCode] = useState("");
@@ -70,7 +73,17 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
     if (!mergeTargetId || mergeTargetId === file.id) {
       return;
     }
-    await submit({ type: "merge_to", target_id: file.id, note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }) });
+    await submit({
+      type: "merge_to",
+      target_id: file.id,
+      note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }),
+    });
+    onSubmitted?.();
+    onClose();
+  };
+
+  const handleDelete = async () => {
+    await submit({ type: "remove", target_id: file.id });
     onSubmitted?.();
     onClose();
   };
@@ -121,10 +134,18 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
       bodies.push({ type: "change_info", target_id: id, note: encodeNote({ v: 1, field: "info", value: info }) });
     }
     for (const removed of file.years.filter((o) => !years.some((y) => sameYearRange(y, o)))) {
-      bodies.push({ type: "remove_year_range", target_id: id, note: encodeNote({ v: 1, field: "year_range", value: removed }) });
+      bodies.push({
+        type: "remove_year_range",
+        target_id: id,
+        note: encodeNote({ v: 1, field: "year_range", value: removed }),
+      });
     }
     for (const added of years.filter((y) => !file.years.some((o) => sameYearRange(o, y)))) {
-      bodies.push({ type: "add_year_range", target_id: id, note: encodeNote({ v: 1, field: "year_range", value: added }) });
+      bodies.push({
+        type: "add_year_range",
+        target_id: id,
+        note: encodeNote({ v: 1, field: "year_range", value: added }),
+      });
     }
 
     // online copies
@@ -143,7 +164,11 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
       bodies.push({ type: "connect_to_author", target_id: id, note: encodeNote({ v: 1, author_id: authorId }) });
     }
     for (const authorTitle of authorOps.addNew) {
-      bodies.push({ type: "add_author", target_id: id, note: encodeNote({ v: 1, field: "title", value: authorTitle }) });
+      bodies.push({
+        type: "add_author",
+        target_id: id,
+        note: encodeNote({ v: 1, field: "title", value: authorTitle }),
+      });
     }
 
     // locations
@@ -182,85 +207,108 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
               <span className="text-xs font-normal text-muted select-all">{file.id}</span>
             </Modal.Header>
             <Modal.Body className="gap-3">
-          <TextField value={code} onChange={setCode}>
-            <Input placeholder="Код" />
-          </TextField>
-          <TextField value={title} onChange={setTitle}>
-            <Input placeholder="Назва" />
-          </TextField>
-          <TextField value={info} onChange={setInfo}>
-            <TextArea placeholder="Опис" rows={2} />
-          </TextField>
-          <YearRangesField value={years} onChange={setYears} />
-          <OnlineCopiesField copies={file.online_copies} ops={copyOps} onChange={setCopyOps} />
-          <AuthorsField linked={linkedAuthors} ops={authorOps} onChange={setAuthorOps} />
-          <LocationsField locations={file.locations} ops={locationOps} onChange={setLocationOps} />
+              <TextField value={code} onChange={setCode}>
+                <Input placeholder="Код" />
+              </TextField>
+              <TextField value={title} onChange={setTitle}>
+                <Input placeholder="Назва" />
+              </TextField>
+              <TextField value={info} onChange={setInfo}>
+                <TextArea placeholder="Опис" rows={2} />
+              </TextField>
+              <YearRangesField value={years} onChange={setYears} />
+              <OnlineCopiesField copies={file.online_copies} ops={copyOps} onChange={setCopyOps} />
+              <AuthorsField linked={linkedAuthors} ops={authorOps} onChange={setAuthorOps} />
+              <LocationsField locations={file.locations} ops={locationOps} onChange={setLocationOps} />
 
-          <Separator className="my-2" />
+              <Separator className="my-2" />
 
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold">Об&apos;єднати з іншою справою</span>
-            <span className="text-xs text-muted">
-              Усі автори, локації та онлайн-копії цієї справи буде перенесено до обраної.
-            </span>
-            <CatalogSelect picker={mergePicker} label="Справа-приймач" value={mergeTargetId} onChange={setMergeTargetId} />
-            <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
-              Об&apos;єднати
-            </PendingButton>
-          </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-semibold">Об&apos;єднати з іншою справою</span>
+                <span className="text-xs text-muted">
+                  Усі автори, локації та онлайн-копії цієї справи буде перенесено до обраної.
+                </span>
+                <CatalogSelect
+                  picker={mergePicker}
+                  label="Справа-приймач"
+                  value={mergeTargetId}
+                  onChange={setMergeTargetId}
+                />
+                <PendingButton
+                  size="sm"
+                  variant="secondary"
+                  onPress={handleMerge}
+                  isDisabled={!mergeTargetId}
+                  isPending={isMutating}
+                >
+                  Об&apos;єднати
+                </PendingButton>
+              </div>
 
-          <Separator className="my-2" />
+              <Separator className="my-2" />
 
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold">Перетворити на опис</span>
-            <span className="text-xs text-muted">
-              Буде створено новий опис у вибраному фонді з кодом, назвою, описом та роками цієї справи, онлайн-копії
-              буде відв&apos;язано (не видалено — прив&apos;яжіть їх до нового опису на сторінці «Онлайн-копії без
-              прив&apos;язки» після схвалення), а сама справа — видалена.
-            </span>
-            {!canConvertToInventory && (
-              <span className="text-xs text-danger">
-                Спочатку відв&apos;яжіть авторів та локації — опис не підтримує ці поля.
-              </span>
-            )}
-            <Select
-              items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
-              label="Архів"
-              size="sm"
-              isDisabled={!canConvertToInventory}
-              getKey={(a) => a.code}
-              getTextValue={(a) => a.code}
-              renderItem={(a) => (
-                <div>
-                  <p>{a.code}</p>
-                  <p className="opacity-70 text-sm text-wrap">{a.title}</p>
-                </div>
-              )}
-              value={convertArchiveCode}
-              onChange={(key: Key | null) => {
-                setConvertArchiveCode(String(key ?? ""));
-                setConvertFondId("");
-              }}
-            />
-            <CatalogSelect
-              picker={convertFondPicker}
-              label="Фонд-приймач"
-              isDisabled={!canConvertToInventory || !convertArchiveCode}
-              value={convertFondId}
-              onChange={setConvertFondId}
-            />
-            <PendingButton
-              size="sm"
-              variant="secondary"
-              onPress={handleConvertToInventory}
-              isDisabled={!canConvertToInventory || !convertFondId}
-              isPending={isMutating || isSubmittingInventory}
-            >
-              Перетворити на опис
-            </PendingButton>
-          </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-semibold">Перетворити на опис</span>
+                <span className="text-xs text-muted">
+                  Буде створено новий опис у вибраному фонді з кодом, назвою, описом та роками цієї справи, онлайн-копії
+                  буде відв&apos;язано (не видалено — прив&apos;яжіть їх до нового опису на сторінці «Онлайн-копії без
+                  прив&apos;язки» після схвалення), а сама справа — видалена.
+                </span>
+                {!canConvertToInventory && (
+                  <span className="text-xs text-danger">
+                    Спочатку відв&apos;яжіть авторів та локації — опис не підтримує ці поля.
+                  </span>
+                )}
+                <Select
+                  items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+                  label="Архів"
+                  size="sm"
+                  isDisabled={!canConvertToInventory}
+                  getKey={(a) => a.code}
+                  getTextValue={(a) => a.code}
+                  renderItem={(a) => (
+                    <div>
+                      <p>{a.code}</p>
+                      <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+                    </div>
+                  )}
+                  value={convertArchiveCode}
+                  onChange={(key: Key | null) => {
+                    setConvertArchiveCode(String(key ?? ""));
+                    setConvertFondId("");
+                  }}
+                />
+                <CatalogSelect
+                  picker={convertFondPicker}
+                  label="Фонд-приймач"
+                  isDisabled={!canConvertToInventory || !convertArchiveCode}
+                  value={convertFondId}
+                  onChange={setConvertFondId}
+                />
+                <PendingButton
+                  size="sm"
+                  variant="secondary"
+                  onPress={handleConvertToInventory}
+                  isDisabled={!canConvertToInventory || !convertFondId}
+                  isPending={isMutating || isSubmittingInventory}
+                >
+                  Перетворити на опис
+                </PendingButton>
+              </div>
             </Modal.Body>
             <Modal.Footer>
+              {isAdmin && (
+                <PendingButton
+                  isIconOnly
+                  aria-label="Видалити"
+                  variant="ghost"
+                  className="mr-auto"
+                  onPress={handleDelete}
+                  isPending={isMutating}
+                >
+                  <FaTrash />
+                </PendingButton>
+              )}
               <Button variant="tertiary" onPress={onClose}>
                 Скасувати
               </Button>
