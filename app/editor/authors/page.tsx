@@ -34,7 +34,7 @@ export default function EditorAuthorsPage() {
   }, [pendingEditId, authors]);
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 h-full">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h1 className="text-2xl font-bold">Автори</h1>
       </div>

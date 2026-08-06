@@ -17,7 +17,7 @@ import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
-import { editorInventoryHref } from "@/lib/editor-links";
+import { editorFileHref } from "@/lib/editor-links";
 
 export default function EditorInventoriesPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -101,7 +101,7 @@ export default function EditorInventoriesPage() {
             headerName: "Код",
             cellRenderer: (row: any) => (
               <NextLink
-                href={editorInventoryHref(archiveCode, fondId, row.data.id)}
+                href={editorFileHref(archiveCode, fondId, row.data.id)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link"

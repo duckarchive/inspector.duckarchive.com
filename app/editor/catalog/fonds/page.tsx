@@ -14,7 +14,7 @@ import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
-import { editorFondHref } from "@/lib/editor-links";
+import { editorInventoryHref } from "@/lib/editor-links";
 
 export default function EditorFondsPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -81,7 +81,7 @@ export default function EditorFondsPage() {
             headerName: "Код",
             cellRenderer: (row: any) => (
               <NextLink
-                href={editorFondHref(archiveCode, row.data.id)}
+                href={editorInventoryHref(archiveCode, row.data.id)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link"
