@@ -3,22 +3,25 @@
 import { Key, useEffect, useState } from "react";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
+import CatalogSelect from "@/components/editor/catalog-select";
+import CatalogItemLink from "@/components/editor/catalog-item-link";
 import EditCell from "@/components/editor/edit-cell";
 import InventoryEditModal from "@/components/editor/inventory-edit-modal";
 import InventoryAddModal from "@/components/editor/inventory-add-modal";
 import { useGet } from "@/hooks/useApi";
-import { useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorFondsEndpoint, useEditorInventories } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
 
 export default function EditorInventoriesPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
   const [archiveCode, setArchiveCode] = useState("");
   const [fondId, setFondId] = useState("");
-  const { data: fonds } = useEditorFonds(archiveCode || undefined);
+  const fondPicker = useCatalogPicker<EditorFond>(editorFondsEndpoint(archiveCode), fondId);
   const { data: inventories, isLoading, mutate } = useEditorInventories(fondId || undefined);
   const [selected, setSelected] = useState<EditorInventory | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -41,7 +44,7 @@ export default function EditorInventoriesPage() {
     }
   }, [pendingEditId, inventories]);
 
-  const selectedFond = fonds?.find((f) => f.id === fondId) as EditorFond | undefined;
+  const selectedFond = fondPicker.selected;
 
   return (
     <section className="flex flex-col gap-4 h-full">
@@ -49,6 +52,7 @@ export default function EditorInventoriesPage() {
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 grow">
           <Select
+            className="grow"
             items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
             label="Архів"
             getKey={(a) => a.code}
@@ -67,31 +71,23 @@ export default function EditorInventoriesPage() {
               syncEditorUrl({ archive: v || null, fond: null, edit: null });
             }}
           />
-          <Select
-            items={fonds ?? []}
+          <CatalogSelect
+            className="grow"
+            picker={fondPicker}
             label="Фонд"
-            virtualized
             isDisabled={!archiveCode}
-            getKey={(f) => f.id}
-            getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
-            renderItem={(f) => (
-              <div>
-                <p>{f.code}</p>
-                <p className="opacity-70 text-sm text-wrap">{f.title}</p>
-              </div>
-            )}
             value={fondId}
-            onChange={(key: Key | null) => {
-              const v = String(key ?? "");
-              setFondId(v);
-              syncEditorUrl({ fond: v || null, edit: null });
+            onChange={(id) => {
+              setFondId(id);
+              syncEditorUrl({ fond: id || null, edit: null });
             }}
           />
         </div>
-        <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!fondId}>
+        <Button variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!fondId}>
           Створити
         </Button>
       </div>
+      <CatalogItemLink codes={[archiveCode, selectedFond?.code]} />
 
       <InspectorDuckTable<EditorInventory>
         id="editor-inventories-table"

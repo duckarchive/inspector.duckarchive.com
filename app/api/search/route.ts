@@ -12,29 +12,34 @@ export type SearchRequest = Partial<{
   author: string;
   tags: string[];
   archive: string;
-  fund: string;
-  description: string;
-  case: string;
+  fond: string;
+  inventory: string;
+  file: string;
   is_online: boolean;
 }>;
 
 export type SearchResponse = {
   id: string;
   code: string;
-  created_at: string;
   updated_at: string;
   title: string;
   info: string | null;
-  description_id: string | null;
+  inventory_id: string;
+  /** legacy alias of `inventory_id`, kept for existing API consumers */
+  description_id: string;
   full_code: string;
   tags: string[];
   is_online: boolean;
   years: Array<{
+    file_id: string;
+    /** legacy alias of `file_id` */
     case_id: string;
     start_year: number;
     end_year: number;
   }>;
 }[];
+
+const isFiniteNumber = (value: string) => value.trim() !== "" && Number.isFinite(Number(value));
 
 export async function POST(request: Request) {
   try {
@@ -48,96 +53,151 @@ export async function POST(request: Request) {
       year,
       tags,
       archive,
-      fund,
-      description,
-      case: case_number, // 'case' is a reserved keyword
+      fond,
+      inventory,
+      file,
       is_online,
     }: SearchRequest = await request.json();
 
     const hasOnlineCopy = Prisma.sql`EXISTS (
       SELECT 1
-      FROM "case_online_copies" m
-      WHERE m.case_id = c.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
+      FROM "online_copies" m
+      WHERE m.file_id = f.id AND m.url IS NOT NULL AND m.availability = 'PUBLIC'
     )`;
 
     // Build dynamic SQL query parts
+    const ctes: Prisma.Sql[] = [];
     const whereParts: Prisma.Sql[] = [];
 
-    // search allowed only by place or by geographical coordinates
+    // Location narrowing runs in a CTE rather than a join predicate: it lets the
+    // planner start from the ~11k authors / file_locations rows and reach `files`
+    // by id, instead of scanning 3.3M files. Search is allowed either by place
+    // name or by geographical coordinates, never both.
     if (place) {
-      whereParts.push(Prisma.sql`c.info ILIKE ${`%${place}%`}`);
-    } else if (lng && lat) {
-      const radiusValue = radius_m || 0;
-      whereParts.push(Prisma.sql`
-        ST_DWithin(
-          ST_SetSRID(ST_MakePoint(cl.lng, cl.lat), 4326)::geography,
-          ST_SetSRID(ST_MakePoint(${+lng}, ${+lat}), 4326)::geography,
-          COALESCE(cl.radius_m, 0) + ${+radiusValue}
+      const pattern = `%${place}%`;
+
+      ctes.push(Prisma.sql`place_files AS (
+        SELECT id AS file_id
+        FROM "files"
+        WHERE info ILIKE ${pattern}
+        UNION
+        SELECT fa.file_id
+        FROM "authors" a
+        JOIN "file_authors" fa ON fa.author_id = a.id
+        WHERE a.title ILIKE ${pattern}
+      )`);
+      whereParts.push(Prisma.sql`f.id IN (SELECT file_id FROM place_files)`);
+    } else if (lat && lng && isFiniteNumber(lat) && isFiniteNumber(lng)) {
+      const radiusValue = Number(radius_m) || 0;
+      const target = Prisma.sql`ST_SetSRID(ST_MakePoint(${+lng}, ${+lat}), 4326)::geography`;
+
+      // A file matches through its own coordinates or through those of any author
+      // (church/parish) it is attributed to — authors carry the geocoded locations.
+      // Only file_locations has its own radius; an author is a bare point.
+      ctes.push(Prisma.sql`geo_files AS (
+        SELECT l.file_id
+        FROM "file_locations" l
+        WHERE ST_DWithin(
+          ST_SetSRID(ST_MakePoint(l.lng, l.lat), 4326)::geography,
+          ${target},
+          COALESCE(l.radius_m, 0) + ${radiusValue}
         )
-      `);
+        UNION
+        SELECT fa.file_id
+        FROM "authors" a
+        JOIN "file_authors" fa ON fa.author_id = a.id
+        WHERE a.lat IS NOT NULL
+          AND a.lng IS NOT NULL
+          AND ST_DWithin(
+            ST_SetSRID(ST_MakePoint(a.lng, a.lat), 4326)::geography,
+            ${target},
+            ${radiusValue}
+          )
+      )`);
+      whereParts.push(Prisma.sql`f.id IN (SELECT file_id FROM geo_files)`);
     }
 
     if (title) {
-      whereParts.push(Prisma.sql`c.title ILIKE ${`%${title}%`}`);
+      whereParts.push(Prisma.sql`f.title ILIKE ${`%${title}%`}`);
     }
 
     if (author) {
-      whereParts.push(Prisma.sql`au.title ILIKE ${`%${author}%`}`);
+      whereParts.push(Prisma.sql`EXISTS (
+        SELECT 1
+        FROM "file_authors" fa
+        JOIN "authors" a ON a.id = fa.author_id
+        WHERE fa.file_id = f.id AND a.title ILIKE ${`%${author}%`}
+      )`);
     }
 
     if (year) {
-      whereParts.push(Prisma.sql`${+year} BETWEEN cy.start_year AND cy.end_year`);
+      whereParts.push(Prisma.sql`${+year} BETWEEN fy.start_year AND fy.end_year`);
     }
 
-    if (archive || fund || description || case_number) {
+    if (archive || fond || inventory || file) {
       const isStrict = true; // TODO: make it configurable
       const _a = archive || "%"; // case sensitive
-      const _f = isStrict ? fund || "%" : `${fund || ""}%`;
-      const _d = isStrict ? description || "%" : `${description || ""}%`;
-      const _c = isStrict ? case_number || "%" : `${case_number || ""}%`;
-      const rest = `${_f}-${_d}-${_c}`.toUpperCase();
+      const _f = isStrict ? fond || "%" : `${fond || ""}%`;
+      const _i = isStrict ? inventory || "%" : `${inventory || ""}%`;
+      const _fl = isStrict ? file || "%" : `${file || ""}%`;
+      const rest = `${_f}-${_i}-${_fl}`.toUpperCase();
       const full_code = `${_a}-${rest}`;
-      whereParts.push(Prisma.sql`c.full_code LIKE ${full_code}`);
+      whereParts.push(Prisma.sql`f.full_code LIKE ${full_code}`);
     }
 
     if (tags && tags.length > 0) {
-      whereParts.push(Prisma.sql`c.tags @> ARRAY[${Prisma.join(tags)}]::text[]`);
+      // A tag matches through the file itself or through any linked author
+      // (confession tags live on authors, record-type tags on files). One CTE
+      // per tag keeps the file arm on the tags GIN index and lets the author
+      // arm start from the ~11k authors; the per-tag sets are then intersected.
+      tags.forEach((tag, i) => {
+        const cteName = Prisma.raw(`tag_files_${i}`);
+        ctes.push(Prisma.sql`${cteName} AS (
+          SELECT id AS file_id
+          FROM "files"
+          WHERE tags @> ARRAY[${tag}]::text[]
+          UNION
+          SELECT fa.file_id
+          FROM "authors" a
+          JOIN "file_authors" fa ON fa.author_id = a.id
+          WHERE a.tags @> ARRAY[${tag}]::text[]
+        )`);
+        whereParts.push(Prisma.sql`f.id IN (SELECT file_id FROM ${cteName})`);
+      });
     }
 
     if (is_online) {
       whereParts.push(hasOnlineCopy);
     }
 
+    const withQuery = ctes.length > 0 ? Prisma.sql`WITH ${Prisma.join(ctes, ", ")}` : Prisma.sql``;
     const bodyQuery = whereParts.length > 0 ? Prisma.sql`WHERE ${Prisma.join(whereParts, " AND ")}` : Prisma.sql``;
 
     const query = Prisma.sql`
+      ${withQuery}
       SELECT
-        c.*,
+        f.*,
+        f.inventory_id AS description_id,
         ${hasOnlineCopy} AS is_online,
         COALESCE(
           jsonb_agg(
             DISTINCT jsonb_build_object(
-              'case_id', cy.case_id,
-              'start_year', cy.start_year,
-              'end_year', cy.end_year
+              'file_id', fy.file_id,
+              'case_id', fy.file_id,
+              'start_year', fy.start_year,
+              'end_year', fy.end_year
             )
-          ) FILTER (WHERE cy.case_id IS NOT NULL),
+          ) FILTER (WHERE fy.file_id IS NOT NULL),
           '[]'
         ) AS years
 
-      FROM "cases" c
-      LEFT JOIN "descriptions" d ON c.description_id = d.id
-      LEFT JOIN "funds" f ON d.fund_id = f.id
-      LEFT JOIN "archives" a ON f.archive_id = a.id
-      LEFT JOIN "case_authors" ca ON c.id = ca.case_id
-      LEFT JOIN "authors" au ON ca.author_id = au.id
-      LEFT JOIN "case_locations" cl ON c.id = cl.case_id
-      LEFT JOIN "case_years" cy ON c.id = cy.case_id
+      FROM "files" f
+      LEFT JOIN "file_years" fy ON f.id = fy.file_id
 
       ${bodyQuery}
 
-      GROUP BY c.id
-      ORDER BY c.full_code ASC
+      GROUP BY f.id
+      ORDER BY f.full_code ASC
       LIMIT 50
     `;
 

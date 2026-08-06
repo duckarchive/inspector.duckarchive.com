@@ -17,16 +17,12 @@ export const getNav = (t: _Translator<Record<string, any>, "navigation">, isAdmi
     path: "/archives",
   },
   {
-    label: t("online-copy-search"),
-    path: "/online-copy-search",
-  },
-  {
-    label: t("catalog"),
-    path: "/catalog",
-  },
-  {
     label: t("resources"),
     path: "/resources",
+  },
+  {
+    label: t("institutions"),
+    path: "/institutions",
   },
   // Editor is uk-only and admin-gated; label is hardcoded (no i18n).
   ...(isAdmin ? [{ label: "Редактор", path: "/editor" }] : []),

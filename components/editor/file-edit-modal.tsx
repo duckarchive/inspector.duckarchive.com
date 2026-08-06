@@ -1,21 +1,22 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { Divider } from "@heroui/divider";
-import { addToast } from "@heroui/toast";
+import { Button, Input, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
+import Select from "@/components/select";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import OnlineCopiesField, { emptyOnlineCopyOps, OnlineCopyOps } from "@/components/editor/online-copies-field";
 import AuthorsField, { AuthorOps, emptyAuthorOps } from "@/components/editor/authors-field";
 import LocationsField, { emptyLocationOps, LocationOps } from "@/components/editor/locations-field";
+import CatalogSelect from "@/components/editor/catalog-select";
 import useSubmitAction from "@/hooks/useSubmitAction";
-import { encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
+import PendingButton from "@/components/pending-button";
+import { AddActionValue, encodeNote, sameYearRange, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
-import { useEditorFiles } from "@/hooks/useEditor";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
+import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorFilesEndpoint, editorFondsEndpoint } from "@/hooks/useEditor";
+import { useGet } from "@/hooks/useApi";
+import { GetArchivesResponse } from "@/app/api/archives/route";
 
 interface FileEditModalProps {
   file: EditorFile | null;
@@ -26,6 +27,7 @@ interface FileEditModalProps {
 
 const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, onSubmitted }) => {
   const { submit, submitMany, isMutating } = useSubmitAction("file");
+  const { submit: submitInventory, isMutating: isSubmittingInventory } = useSubmitAction("inventory");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [info, setInfo] = useState("");
@@ -35,7 +37,12 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   const [locationOps, setLocationOps] = useState<LocationOps>(emptyLocationOps());
 
   const [mergeTargetId, setMergeTargetId] = useState<string>("");
-  const { data: mergeCandidates } = useEditorFiles(file?.inventory_id || undefined);
+  const mergePicker = useCatalogPicker<EditorFile>(editorFilesEndpoint(file?.inventory_id), mergeTargetId, file?.id);
+
+  const [convertArchiveCode, setConvertArchiveCode] = useState("");
+  const [convertFondId, setConvertFondId] = useState("");
+  const { data: archives } = useGet<GetArchivesResponse>(isOpen ? "/api/archives" : null);
+  const convertFondPicker = useCatalogPicker<EditorFond>(editorFondsEndpoint(convertArchiveCode), convertFondId);
 
   useEffect(() => {
     if (file) {
@@ -47,6 +54,8 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
       setAuthorOps(emptyAuthorOps());
       setLocationOps(emptyLocationOps());
       setMergeTargetId("");
+      setConvertArchiveCode("");
+      setConvertFondId("");
     }
   }, [file]);
 
@@ -55,12 +64,45 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   }
 
   const linkedAuthors = file.authors.map((fa) => fa.author);
+  const canConvertToInventory = linkedAuthors.length === 0 && file.locations.length === 0;
 
   const handleMerge = async () => {
     if (!mergeTargetId || mergeTargetId === file.id) {
       return;
     }
     await submit({ type: "merge_to", target_id: file.id, note: encodeNote({ v: 1, field: "parent", value: mergeTargetId }) });
+    onSubmitted?.();
+    onClose();
+  };
+
+  /**
+   * No dedicated "convert" action type exists (it would need a shared-schema
+   * change), so this composes existing ones: create the inventory, unlink the
+   * file's online copies (kept, not deleted — re-link them from the "без
+   * прив'язки" page once the new opis is approved), then remove the file.
+   * Approval order matters: if "remove" resolves before the disconnects, the
+   * copies cascade-delete with the file.
+   */
+  const handleConvertToInventory = async () => {
+    if (!convertFondId) {
+      return;
+    }
+    const value: AddActionValue = {
+      parent_id: convertFondId,
+      code: file.code,
+      title: file.title ?? undefined,
+      info: file.info ?? undefined,
+      years: file.years.map((y) => ({ start_year: y.start_year, end_year: y.end_year })),
+    };
+    await submitInventory({ type: "add", note: encodeNote({ v: 1, value }) });
+    await submitMany([
+      ...file.online_copies.map((copy) => ({
+        type: "disconnect_from_online_copy" as const,
+        target_id: file.id,
+        online_copy_id: copy.id,
+      })),
+      { type: "remove", target_id: file.id },
+    ]);
     onSubmitted?.();
     onClose();
   };
@@ -120,7 +162,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
     }
 
     if (bodies.length === 0) {
-      addToast({ title: "Немає змін", color: "default" });
+      toast("Немає змін");
       return;
     }
 
@@ -130,58 +172,105 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-0.5">
-          Редагувати справу {file.full_code || file.code}
-          <span className="text-tiny font-normal text-default-400 select-all">{file.id}</span>
-        </ModalHeader>
-        <ModalBody className="gap-3">
-          <Input label="Код" value={code} onValueChange={setCode} />
-          <Input label="Назва" value={title} onValueChange={setTitle} />
-          <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header className="flex flex-col gap-0.5">
+              <Modal.Heading>Редагувати справу {file.full_code || file.code}</Modal.Heading>
+              <span className="text-xs font-normal text-muted select-all">{file.id}</span>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
+          <TextField value={code} onChange={setCode}>
+            <Input placeholder="Код" />
+          </TextField>
+          <TextField value={title} onChange={setTitle}>
+            <Input placeholder="Назва" />
+          </TextField>
+          <TextField value={info} onChange={setInfo}>
+            <TextArea placeholder="Опис" rows={2} />
+          </TextField>
           <YearRangesField value={years} onChange={setYears} />
-          <OnlineCopiesField copies={file.online_copies} target="file" ops={copyOps} onChange={setCopyOps} />
+          <OnlineCopiesField copies={file.online_copies} ops={copyOps} onChange={setCopyOps} />
           <AuthorsField linked={linkedAuthors} ops={authorOps} onChange={setAuthorOps} />
           <LocationsField locations={file.locations} ops={locationOps} onChange={setLocationOps} />
 
-          <Divider className="my-2" />
+          <Separator className="my-2" />
 
           <div className="flex flex-col gap-2">
             <span className="text-sm font-semibold">Об&apos;єднати з іншою справою</span>
-            <span className="text-xs text-default-500">
+            <span className="text-xs text-muted">
               Усі автори, локації та онлайн-копії цієї справи буде перенесено до обраної.
             </span>
-            <Autocomplete
-              size="sm"
-              label="Справа-приймач"
-              onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-              defaultItems={(mergeCandidates ?? []).filter((f) => f.id !== file.id)}
-              {...editorAutocompleteVirtualization}
-            >
-              {(f) => (
-                <AutocompleteItem key={f.id} textValue={f.code} classNames={wrapItemClassNames}>
-                  <div>
-                    <p>{f.code}</p>
-                    <p className="opacity-70 text-sm">{f.title}</p>
-                  </div>
-                </AutocompleteItem>
-              )}
-            </Autocomplete>
-            <Button size="sm" color="warning" variant="flat" onPress={handleMerge} isDisabled={!mergeTargetId} isLoading={isMutating}>
+            <CatalogSelect picker={mergePicker} label="Справа-приймач" value={mergeTargetId} onChange={setMergeTargetId} />
+            <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
               Об&apos;єднати
-            </Button>
+            </PendingButton>
           </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isLoading={isMutating}>
-            Надіслати на розгляд
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+
+          <Separator className="my-2" />
+
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Перетворити на опис</span>
+            <span className="text-xs text-muted">
+              Буде створено новий опис у вибраному фонді з кодом, назвою, описом та роками цієї справи, онлайн-копії
+              буде відв&apos;язано (не видалено — прив&apos;яжіть їх до нового опису на сторінці «Онлайн-копії без
+              прив&apos;язки» після схвалення), а сама справа — видалена.
+            </span>
+            {!canConvertToInventory && (
+              <span className="text-xs text-danger">
+                Спочатку відв&apos;яжіть авторів та локації — опис не підтримує ці поля.
+              </span>
+            )}
+            <Select
+              items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+              label="Архів"
+              size="sm"
+              isDisabled={!canConvertToInventory}
+              getKey={(a) => a.code}
+              getTextValue={(a) => a.code}
+              renderItem={(a) => (
+                <div>
+                  <p>{a.code}</p>
+                  <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+                </div>
+              )}
+              value={convertArchiveCode}
+              onChange={(key: Key | null) => {
+                setConvertArchiveCode(String(key ?? ""));
+                setConvertFondId("");
+              }}
+            />
+            <CatalogSelect
+              picker={convertFondPicker}
+              label="Фонд-приймач"
+              isDisabled={!canConvertToInventory || !convertArchiveCode}
+              value={convertFondId}
+              onChange={setConvertFondId}
+            />
+            <PendingButton
+              size="sm"
+              variant="secondary"
+              onPress={handleConvertToInventory}
+              isDisabled={!canConvertToInventory || !convertFondId}
+              isPending={isMutating || isSubmittingInventory}
+            >
+              Перетворити на опис
+            </PendingButton>
+          </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isPending={isMutating}>
+                Надіслати на розгляд
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

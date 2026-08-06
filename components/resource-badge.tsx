@@ -1,17 +1,16 @@
 "use client";
 
 import { PropsWithChildren } from "react";
-import { Chip } from "@heroui/chip";
-import { Tooltip } from "@heroui/tooltip";
+import { Chip, Tooltip } from "@heroui/react";
 import { ResourceType } from "@generated/prisma/client/enums";
 import { Resource } from "@generated/prisma/client/client";
 
 export const TYPE_COLORS: Record<ResourceType, string> = {
   [ResourceType.ARCHIUM]: "warning",
   [ResourceType.FAMILY_SEARCH]: "success",
-  [ResourceType.WIKIPEDIA]: "primary",
+  [ResourceType.WIKIPEDIA]: "accent",
   [ResourceType.BABYN_YAR]: "default",
-  [ResourceType.WEBSITE]: "secondary",
+  [ResourceType.WEBSITE]: "default",
   [ResourceType.GOOGLE_DRIVE]: "danger",
 };
 
@@ -42,25 +41,23 @@ const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({
   const content = children !== undefined ? children : prettyResource;
   const inner = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Chip color={resource ? (TYPE_COLORS[resource] as any) : "default"} size="sm" variant="solid">
+    <Chip color={resource ? (TYPE_COLORS[resource] as any) : "default"} size="sm" variant="primary">
       {content || "Невідомий ресурс"}
     </Chip>
   );
 
   return tooltip ? (
-    <Tooltip
-      content={
+    <Tooltip delay={0}>
+      <Tooltip.Trigger className="leading-4 cursor-help" {...rest}>
+        {inner}
+      </Tooltip.Trigger>
+      <Tooltip.Content showArrow placement="left">
+        <Tooltip.Arrow />
         <div className="flex flex-col">
           <p className="text-sm font-thin">{prettyResource}</p>
           <p className="text-sm">{tooltip}</p>
         </div>
-      }
-      showArrow
-      placement="left"
-    >
-      <div className="leading-4 cursor-help" {...rest}>
-        {inner}
-      </div>
+      </Tooltip.Content>
     </Tooltip>
   ) : (
     inner

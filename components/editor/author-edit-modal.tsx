@@ -1,17 +1,12 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { Chip } from "@heroui/chip";
-import { Divider } from "@heroui/divider";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { addToast } from "@heroui/toast";
+import { Button, Chip, CloseButton, Input, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
+import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import useSubmitAction from "@/hooks/useSubmitAction";
+import PendingButton from "@/components/pending-button";
 import { useAuthorFiles, useEditorAuthors } from "@/hooks/useEditor";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
 import { encodeNote, SubmitActionBody } from "@/lib/editor-actions";
 import { EditorAuthor } from "@/app/api/editor/authors/data";
 
@@ -91,7 +86,7 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
     }
 
     if (bodies.length === 0) {
-      addToast({ title: "Немає змін", color: "default" });
+      toast("Немає змін");
       return;
     }
 
@@ -114,25 +109,37 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader>Редагувати автора</ModalHeader>
-        <ModalBody className="gap-3">
-          <Input label="Назва" value={title} onValueChange={setTitle} />
-          <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Редагувати автора</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
+          <TextField value={title} onChange={setTitle}>
+            <Input placeholder="Назва" />
+          </TextField>
+          <TextField value={info} onChange={setInfo}>
+            <TextArea placeholder="Опис" rows={2} />
+          </TextField>
 
           <div className="flex flex-col gap-2">
-            <span className="text-sm text-default-600">Теги</span>
+            <span className="text-sm text-muted">Теги</span>
             <div className="flex flex-wrap gap-1">
-              {tags.length === 0 && <span className="text-default-400 text-sm">Немає</span>}
+              {tags.length === 0 && <span className="text-muted text-sm">Немає</span>}
               {tags.map((t) => (
-                <Chip key={t} onClose={() => setTags(tags.filter((x) => x !== t))} variant="flat">
+                <Chip key={t} variant="soft">
                   {t}
+                  <CloseButton aria-label="Видалити тег" onPress={() => setTags(tags.filter((x) => x !== t))} />
                 </Chip>
               ))}
             </div>
             <div className="flex items-end gap-2">
-              <Input size="sm" label="Новий тег" value={tagDraft} onValueChange={setTagDraft} />
+              <TextField value={tagDraft} onChange={setTagDraft}>
+                <Input placeholder="Новий тег" />
+              </TextField>
               <Button size="sm" onPress={addTag} isDisabled={!tagDraft.trim()}>
                 Додати
               </Button>
@@ -141,42 +148,40 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
 
           <CoordinatesInput value={coords} onChange={setCoords} />
 
-          <Divider className="my-2" />
+          <Separator className="my-2" />
 
           <div className="flex flex-col gap-2">
             <span className="text-sm font-semibold">Об&apos;єднати з іншим автором</span>
-            <span className="text-xs text-default-500">
+            <span className="text-xs text-muted">
               Усі справи цього автора буде перепривʼязано до обраного, а цей автор — видалено.
             </span>
-            <Autocomplete
-              size="sm"
+            <Select
               label="Автор-приймач"
+              virtualized
+              items={(mergeCandidates ?? []).filter((a) => a.id !== author.id)}
+              getKey={(a) => a.id}
+              getTextValue={(a) => a.title}
+              renderItem={(a) => a.title}
               inputValue={mergeQuery}
               onInputChange={setMergeQuery}
-              onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-              items={(mergeCandidates ?? []).filter((a) => a.id !== author.id)}
-              {...editorAutocompleteVirtualization}
-            >
-              {(a) => (
-                <AutocompleteItem key={a.id} textValue={a.title} classNames={wrapItemClassNames}>
-                  {a.title}
-                </AutocompleteItem>
-              )}
-            </Autocomplete>
-            <Button size="sm" color="warning" variant="flat" onPress={handleMerge} isDisabled={!mergeTargetId} isLoading={isMutating}>
+              onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
+            />
+            <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
               Об&apos;єднати
-            </Button>
+            </PendingButton>
           </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isLoading={isMutating}>
-            Надіслати на розгляд
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isPending={isMutating}>
+                Надіслати на розгляд
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

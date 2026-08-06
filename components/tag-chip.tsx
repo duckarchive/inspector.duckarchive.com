@@ -1,6 +1,6 @@
 "use client";
 
-import { Chip } from "@heroui/chip";
+import { Chip } from "@heroui/react";
 
 interface TagChipProps {
   label: string;

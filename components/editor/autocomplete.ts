@@ -1,21 +1,27 @@
 /**
- * Shared HeroUI Autocomplete config for editor selects.
+ * Shared HeroUI ComboBox config for editor selects.
  *
- * HeroUI auto-enables listbox virtualization past 50 items (fixed row height),
- * which is fast but clips/overlaps multi-line content. Non-virtualized fits
- * content but lags on long lists. We keep virtualization and instead pin a row
- * height + clamp each option to 2 lines so rows always fit — fast AND no overlap.
+ * HeroUI v3 dropped v2's listbox virtualization props (`isVirtualized`,
+ * `itemHeight`, `maxListboxHeight`). Long lists are handled by paging instead
+ * (see `useCatalogSearch`), but the popover still needs pinning down:
+ *
+ * - v3 sizes the popover to its widest option, so one long fond title stretches
+ *   the dropdown far past the input. Pinning it to `--trigger-width` (set inline
+ *   by React Aria) keeps it aligned with the field and lets the per-option
+ *   `line-clamp-2` actually clamp, since the text finally has a width to wrap in.
+ * - React Aria writes `max-height` inline from the available viewport space, so a
+ *   `max-h-*` class here would never win. The popover already scrolls
+ *   (`overflow: auto`), which is what we need once the width is fixed.
  */
-export const editorAutocompleteVirtualization = { itemHeight: 56, maxListboxHeight: 320 } as const;
+export const editorPopoverClassName = "w-(--trigger-width) max-w-(--trigger-width)";
 
-/** Clamp option content to 2 wrapped lines within the fixed row height. */
-export const wrapItemClassNames = {
-  base: "overflow-hidden",
-  title: "whitespace-normal break-words line-clamp-2",
-};
+/**
+ * Clamp each line of an option (code, then title) to 2 wrapped lines.
+ *
+ * Clamping the option *wrapper* instead would cut the block mid-row and leave a
+ * sliver of the next line showing, since the content is two stacked paragraphs.
+ */
+export const wrapItemClassName = "overflow-hidden [&_p]:line-clamp-2 [&_p]:break-words";
 
 /** Variant for URL-heavy options (break anywhere). */
-export const wrapUrlItemClassNames = {
-  base: "overflow-hidden",
-  title: "whitespace-normal break-all line-clamp-2",
-};
+export const wrapUrlItemClassName = "overflow-hidden [&_span]:line-clamp-2 [&_span]:break-all";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -18,10 +18,13 @@ const Details: React.FC<{
   fond?: GetFondResponse;
 }> = ({ fond }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {fond?.info && <p>{fond.info}</p>}
     {fond?.years.length ? (
-      <ul className="list-disc list-inside py-2">
-        {fond?.years.length ? <li>Роки: {getYearsString(fond.years)}</li> : null}
+      <ul className="list-inside py-2">
+        {fond?.years.length ? (
+          <li>
+            Роки:&nbsp;<span className="text-foreground">{getYearsString(fond.years)}</span>
+          </li>
+        ) : null}
       </ul>
     ) : null}
   </div>
@@ -43,10 +46,10 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        title={`${code} фонд`}
+        code={`${code} фонд`}
         breadcrumbs={[archiveCode, code]}
-        basePath="/catalog/"
-        description={fond?.title || "Без назви"}
+        title={fond?.title || undefined}
+        description={fond?.info || undefined}
         message={<Details fond={fond} />}
       >
         <ReportButton entity="fond" targetId={fond?.id} />
@@ -66,9 +69,9 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/catalog/${archiveCode}/${code}/${row.data.code}`}>
+              <NextLink href={`/archives/${archiveCode}/${code}/${row.data.code}`} className="link">
                 {row.value || `Опис ${row.data.code}`}
-              </Link>
+              </NextLink>
             ),
           },
           {

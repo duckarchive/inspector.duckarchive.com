@@ -33,10 +33,9 @@
     "main": "Domů",
     "resources": "Zdroje",
     "inspector": "Inspektor",
-    "online-copy-search": "🚧Vyhledávání",
     "search": "Vyhledávání",
     "archives": "Archivy",
-    "catalog": "🚧Katalog",
+    "institutions": "Instituce",
     "daily-updates": "Denní zpráva",
     "stats": "Statistika",
     "docs": "Dokumentace"
@@ -57,16 +56,5 @@
     "body-1": "Duck Inspector je dobrovolnický projekt bez jakéhokoli zdroje financování. Vše, co na těchto stránkách vidíte, je uživatelům poskytováno zcela zdarma.",
     "body-2": "Pravidelné a stabilní dary pomáhají platit služby potřebné k provozu webu.",
     "cta": "Podpořte projekt"
-  },
-  "online-copy-search-page": {
-    "title": "Vyhledávací dotaz",
-    "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak",
-    "search-button": "Hledat",
-    "parsed-column": "Signatura",
-    "url-column": "Odkaz",
-    "availability-column": "Dostupnost",
-    "availability-public": "Dostupné",
-    "availability-restricted": "Omezený přístup",
-    "availability-unknown": "Neznámé"
   }
 }

@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
+import { Button, CloseButton, InputGroup, TextField } from "@heroui/react";
 import InspectorDuckTable from "@/components/table";
 import EditCell from "@/components/editor/edit-cell";
 import AuthorEditModal from "@/components/editor/author-edit-modal";
@@ -40,23 +39,31 @@ export default function EditorAuthorsPage() {
         <h1 className="text-2xl font-bold">Автори</h1>
       </div>
       <div className="flex items-center justify-between gap-4">
-        <Input
-          isClearable
-          size="sm"
+        <TextField
           className="max-w-sm"
-          label="Пошук автора"
           value={query}
-          onValueChange={(v) => {
+          onChange={(v) => {
             setQuery(v);
             syncEditorUrl({ q: v || null, edit: null });
           }}
-          onClear={() => {
-            setQuery("");
-            syncEditorUrl({ q: null, edit: null });
-          }}
-        />
+        >
+          <InputGroup>
+            <InputGroup.Input placeholder="Пошук автора" />
+            {query ? (
+              <InputGroup.Suffix>
+                <CloseButton
+                  aria-label="Очистити пошук"
+                  onPress={() => {
+                    setQuery("");
+                    syncEditorUrl({ q: null, edit: null });
+                  }}
+                />
+              </InputGroup.Suffix>
+            ) : null}
+          </InputGroup>
+        </TextField>
 
-        <Button color="success" variant="ghost" onPress={() => setIsAddOpen(true)}>
+        <Button variant="ghost" onPress={() => setIsAddOpen(true)}>
           Створити
         </Button>
       </div>

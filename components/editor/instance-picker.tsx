@@ -2,9 +2,15 @@
 
 import { Key, useState } from "react";
 import Select from "@/components/select";
+import CatalogSelect from "@/components/editor/catalog-select";
+import CatalogItemLink from "@/components/editor/catalog-item-link";
 import { useGet } from "@/hooks/useApi";
-import { useEditorFiles, useEditorFonds, useEditorInventories } from "@/hooks/useEditor";
+import { useCatalogPicker } from "@/hooks/useCatalogPicker";
+import { editorFilesEndpoint, editorFondsEndpoint, editorInventoriesEndpoint } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
+import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
+import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
+import { EditorFile } from "@/app/api/editor/catalog/files/data";
 import { OnlineCopyTarget } from "@/app/api/editor/online-copies/data";
 
 interface InstancePickerProps {
@@ -20,9 +26,12 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
   const [inventoryId, setInventoryId] = useState("");
   const [fileId, setFileId] = useState("");
 
-  const { data: fonds } = useEditorFonds(archiveCode || undefined);
-  const { data: inventories } = useEditorInventories(fondId || undefined);
-  const { data: files } = useEditorFiles(target === "file" ? inventoryId || undefined : undefined);
+  const fonds = useCatalogPicker<EditorFond>(editorFondsEndpoint(archiveCode), fondId);
+  const inventories = useCatalogPicker<EditorInventory>(editorInventoriesEndpoint(fondId), inventoryId);
+  const files = useCatalogPicker<EditorFile>(
+    editorFilesEndpoint(target === "file" ? inventoryId : ""),
+    fileId,
+  );
 
   return (
     <div className="flex flex-col gap-3">
@@ -46,70 +55,49 @@ const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => 
           onChange("");
         }}
       />
-      <Select
-        items={fonds ?? []}
+      <CatalogSelect
+        picker={fonds}
         label="Фонд"
-        virtualized
         isDisabled={!archiveCode}
-        getKey={(f) => f.id}
-        getTextValue={(f) => `${f.code} ${f.title ?? ""}`}
-        renderItem={(f) => (
-          <div>
-            <p>{f.code}</p>
-            <p className="opacity-70 text-sm text-wrap">{f.title}</p>
-          </div>
-        )}
         value={fondId}
-        onChange={(key: Key | null) => {
-          setFondId(String(key ?? ""));
+        onChange={(id) => {
+          setFondId(id);
           setInventoryId("");
           setFileId("");
           onChange("");
         }}
       />
-      <Select
-        items={inventories ?? []}
+      <CatalogSelect
+        picker={inventories}
         label="Опис"
-        virtualized
         isDisabled={!fondId}
-        getKey={(inv) => inv.id}
-        getTextValue={(inv) => `${inv.code} ${inv.title ?? ""}`}
-        renderItem={(inv) => (
-          <div>
-            <p>{inv.code}</p>
-            <p className="opacity-70 text-sm text-wrap">{inv.title}</p>
-          </div>
-        )}
         value={inventoryId}
-        onChange={(key: Key | null) => {
-          const id = String(key ?? "");
+        onChange={(id) => {
           setInventoryId(id);
           setFileId("");
           onChange(target === "inventory" ? id : "");
         }}
       />
       {target === "file" && (
-        <Select
-          items={files ?? []}
+        <CatalogSelect
+          picker={files}
           label="Справа"
-          virtualized
           isDisabled={!inventoryId}
-          getKey={(file) => file.id}
-          getTextValue={(file) => `${file.code} ${file.title ?? ""}`}
-          renderItem={(file) => (
-            <div>
-              <p>{file.code}</p>
-              <p className="opacity-70 text-sm text-wrap">{file.title}</p>
-            </div>
-          )}
           value={fileId}
-          onChange={(key: Key | null) => {
-            const id = String(key ?? "");
+          onChange={(id) => {
             setFileId(id);
             onChange(id);
           }}
         />
       )}
+      <CatalogItemLink
+        codes={[
+          archiveCode,
+          fonds.selected?.code,
+          inventories.selected?.code,
+          target === "file" ? files.selected?.code : undefined,
+        ]}
+      />
     </div>
   );
 };

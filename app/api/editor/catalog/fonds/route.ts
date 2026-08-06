@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { resolveDuckUser } from "@/lib/auth";
 import { ErrorResponse } from "@/types";
 import { EditorFond, getEditorFonds } from "@/app/api/editor/catalog/fonds/data";
+import { parseCatalogQuery } from "@/app/api/editor/catalog/query";
 
 export type GetEditorFondsResponse = EditorFond[];
 
@@ -16,6 +17,6 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetEditorFonds
     return NextResponse.json({ message: '"archive" query param is required' }, { status: 400 });
   }
 
-  const fonds = await getEditorFonds(archive);
+  const fonds = await getEditorFonds(archive, parseCatalogQuery(req));
   return NextResponse.json(fonds);
 }

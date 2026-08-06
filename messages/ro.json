@@ -33,10 +33,9 @@
     "main": "Acasă",
     "resources": "Resurse",
     "inspector": "Inspector",
-    "online-copy-search": "🚧Căutare",
     "search": "Căutare",
     "archives": "Arhive",
-    "catalog": "🚧Catalog",
+    "institutions": "Instituții",
     "daily-updates": "Raport zilnic",
     "stats": "Statistici",
     "docs": "Documentație"
@@ -57,16 +56,5 @@
     "body-1": "Duck Inspector este un proiect de voluntariat care nu are nicio sursă de finanțare. Tot ceea ce vedeți pe acest site este oferit utilizatorilor absolut gratuit.",
     "body-2": "Donațiile regulate și constante ajută la plata serviciilor necesare pentru funcționarea site-ului.",
     "cta": "Susțineți proiectul"
-  },
-  "online-copy-search-page": {
-    "title": "Cerere de căutare",
-    "hint": "Folosiți * pentru orice număr de caractere și _ pentru un singur caracter",
-    "search-button": "Caută",
-    "parsed-column": "Cod",
-    "url-column": "Link",
-    "availability-column": "Disponibilitate",
-    "availability-public": "Disponibil",
-    "availability-restricted": "Acces restricționat",
-    "availability-unknown": "Necunoscut"
   }
 }

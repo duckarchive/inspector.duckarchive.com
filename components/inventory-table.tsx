@@ -1,6 +1,7 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -18,13 +19,16 @@ const Details: React.FC<{
   inventory?: GetInventoryResponse;
 }> = ({ inventory }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {inventory?.info && <p>{inventory.info}</p>}
     {inventory?.years.length || inventory?.online_copies?.length ? (
-      <ul className="list-disc list-inside py-2">
-        {Boolean(inventory.years.length) && <li>Роки: {getYearsString(inventory.years)}</li>}
+      <ul className="list-inside py-2">
+        {Boolean(inventory.years.length) && (
+          <li>
+            Роки:&nbsp;<span className="text-foreground">{getYearsString(inventory.years)}</span>
+          </li>
+        )}
         {(inventory.online_copies.filter((copy) => copy.url) as { url: string }[]).map((copy) => (
           <li key={copy.url}>
-            <Link href={copy.url} target="_blank" className="text-inherit text-sm underline">
+            <Link href={copy.url} target="_blank" rel="noopener noreferrer" className="text-foreground text-sm underline">
               {copy.url}
             </Link>
           </li>
@@ -50,10 +54,10 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        title={`${code} опис`}
+        code={`${code} опис`}
         breadcrumbs={[archiveCode, fondCode, code]}
-        basePath="/catalog/"
-        description={inventory?.title || "Без назви"}
+        title={inventory?.title || undefined}
+        description={inventory?.info || undefined}
         message={<Details inventory={inventory} />}
       >
         <ReportButton entity="inventory" targetId={inventory?.id} />
@@ -74,9 +78,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/catalog/${archiveCode}/${fondCode}/${code}/${row.data.code}`}>
+              <NextLink href={`/archives/${archiveCode}/${fondCode}/${code}/${row.data.code}`} className="link">
                 {row.value || `Справа ${row.data.code}`}
-              </Link>
+              </NextLink>
             ),
           },
           {

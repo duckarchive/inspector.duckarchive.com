@@ -15,11 +15,15 @@ export const authOptions: AuthOptions = {
     async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token;
+        token.expiresAt = account.expires_at;
+      }
+      if (typeof token.expiresAt === "number" && Date.now() / 1000 > token.expiresAt) {
+        token.error = "AccessTokenExpired";
       }
       return token;
     },
     async session({ session, token }) {
-      return { ...session, accessToken: token.accessToken as string };
+      return { ...session, accessToken: token.accessToken as string, error: token.error as string | undefined };
     },
   },
 };

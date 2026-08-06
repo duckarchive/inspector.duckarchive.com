@@ -1,6 +1,7 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -8,25 +9,24 @@ import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import useArchive from "@/hooks/useArchive";
 import { sortByCode } from "@/lib/table";
-import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
+import { GetCatalogArchiveResponse } from "@/app/api/catalog/[archive-code]/route";
 import { getYearsString } from "@/lib/text";
 
-type TableItem = GetArchiveResponse["funds"][number];
+type TableItem = GetCatalogArchiveResponse["fonds"][number];
 
 const Details: React.FC<{
-  archive?: GetArchiveResponse;
+  archive?: GetCatalogArchiveResponse;
 }> = ({ archive }) => (
-  <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {archive?.info && <p>{archive.info}</p>}
+  <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto mb-4">
     {archive?.url || archive?.address || archive?.phone_number || archive?.email ? (
-      <ul className="list-disc list-inside py-2">
+      <ul className="list-inside">
         {archive.address && (
           <li>
             Адреса:&nbsp;
             <Link
               href={`https://www.google.com/maps/place/${archive.address.split(/,?\s+/).join("+")}`}
               target="_blank"
-              className="text-primary text-sm"
+              rel="noopener noreferrer"
             >
               {archive.address}
             </Link>
@@ -35,7 +35,7 @@ const Details: React.FC<{
         {archive.url && (
           <li>
             Офіційний сайт:&nbsp;
-            <Link href={archive.url} target="_blank" className="text-primary text-sm">
+            <Link href={archive.url} target="_blank">
               {archive.url}
             </Link>
           </li>
@@ -43,7 +43,7 @@ const Details: React.FC<{
         {archive.phone_number && (
           <li>
             Телефон:&nbsp;
-            <Link href={`tel:${archive.phone_number}`} className="text-primary text-sm">
+            <Link href={`tel:${archive.phone_number}`}>
               {archive.phone_number}
             </Link>
           </li>
@@ -51,7 +51,7 @@ const Details: React.FC<{
         {archive.email && (
           <li>
             Email:&nbsp;
-            <Link href={`mailto:${archive.email}`} className="text-primary text-sm">
+            <Link href={`mailto:${archive.email}`}>
               {archive.email}
             </Link>
           </li>
@@ -74,9 +74,10 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        title={`${code} архів`}
+        code={`${code} архів`}
         breadcrumbs={[code]}
-        description={archive?.title || "Без назви"}
+        title={archive?.title || undefined}
+        description={archive?.info || undefined}
         message={<Details archive={archive} />}
       />
       <InspectorDuckTable<TableItem>
@@ -94,7 +95,9 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/archives/${code}/${row.data.code}`}>{row.value || `Фонд ${row.data.code}`}</Link>
+              <NextLink href={`/archives/${code}/${row.data.code}`} className="link">
+                {row.value || `Фонд ${row.data.code}`}
+              </NextLink>
             ),
           },
           {
@@ -105,7 +108,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
             hide: isMobile,
           },
         ]}
-        rows={archive?.funds?.sort(sortByCode) || []}
+        rows={archive?.fonds?.sort(sortByCode) || []}
       />
     </>
   );

@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Chip } from "@heroui/chip";
-import { NumberInput } from "@heroui/number-input";
-import { Button } from "@heroui/button";
+import { Button, Chip, CloseButton, NumberField } from "@heroui/react";
 import { sameYearRange, YearRange } from "@/lib/editor-actions";
+import { FaPlus } from "react-icons/fa";
 
 interface YearRangesFieldProps {
   value: YearRange[];
@@ -34,34 +33,33 @@ const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange }) =>
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm text-default-600">Роки</span>
+      <span className="text-sm text-muted">Роки</span>
       <div className="flex flex-wrap gap-1">
-        {value.length === 0 && <span className="text-default-400 text-sm">Немає</span>}
+        {value.length === 0 && <span className="text-muted text-sm">Немає</span>}
         {value.map((r) => (
-          <Chip key={`${r.start_year}-${r.end_year}`} onClose={() => remove(r)} variant="flat">
+          <Chip key={`${r.start_year}-${r.end_year}`} variant="soft">
             {r.start_year}–{r.end_year}
+            <CloseButton aria-label="Видалити роки" onPress={() => remove(r)} />
           </Chip>
         ))}
       </div>
       <div className="flex items-end gap-2">
-        <NumberInput
-          size="sm"
-          label="Від"
-          hideStepper
-          value={start}
-          onValueChange={setStart}
-          formatOptions={{ useGrouping: false }}
-        />
-        <NumberInput
-          size="sm"
-          label="До"
-          hideStepper
-          value={end}
-          onValueChange={setEnd}
-          formatOptions={{ useGrouping: false }}
-        />
-        <Button size="sm" onPress={add} isDisabled={start === undefined || end === undefined}>
-          Додати
+        <NumberField className="grow" value={start} onChange={setStart} formatOptions={{ useGrouping: false }}>
+          <NumberField.Group>
+            <NumberField.DecrementButton />
+            <NumberField.Input placeholder="Від" />
+            <NumberField.IncrementButton />
+          </NumberField.Group>
+        </NumberField>
+        <NumberField className="grow" value={end} onChange={setEnd} formatOptions={{ useGrouping: false }}>
+          <NumberField.Group>
+            <NumberField.DecrementButton />
+            <NumberField.Input placeholder="До" />
+            <NumberField.IncrementButton />
+          </NumberField.Group>
+        </NumberField>
+        <Button isIconOnly size="sm" onPress={add} isDisabled={start === undefined || end === undefined}>
+          <FaPlus />
         </Button>
       </div>
     </div>
