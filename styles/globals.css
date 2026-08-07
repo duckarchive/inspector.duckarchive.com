@@ -159,25 +159,7 @@ input:focus {
   outline: transparent !important;
 }
 
-.ag-cell {
-  display: flex;
-  align-items: center;
-}
-
-.ag-cell-wrapper > .ag-cell-value > *,
-.ag-cell-wrapper > .ag-cell-value {
-  font-size: 14px;
-  line-height: 1.1;
-}
-
-@media (width < theme(--breakpoint-md)) {
-  .ag-paging-panel {
-    justify-content: center !important;
-  }
-  .ag-paging-panel .ag-paging-page-size {
-    display: none;
-  }
-  .ag-paging-panel .ag-paging-row-summary-panel {
-    display: none;
-  }
+.bg-dotted {
+  background-image: radial-gradient(color-mix(in srgb, var(--foreground) 10%, transparent) 1px, transparent 1px);
+  background-size: calc(var(--spacing) * 4) calc(var(--spacing) * 4);
 }
