@@ -161,5 +161,5 @@ input:focus {
 
 .bg-dotted {
   background-image: radial-gradient(color-mix(in srgb, var(--foreground) 10%, transparent) 1px, transparent 1px);
-  background-size: calc(var(--spacing) * 4) calc(var(--spacing) * 4);
+  background-size: calc(var(--spacing) * 6) calc(var(--spacing) * 6);
 }
