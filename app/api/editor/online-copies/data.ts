@@ -39,7 +39,7 @@ export const getEditorOnlineCopies = async (
   query?: string,
 ): Promise<EditorOnlineCopy[]> => {
   if (target === "inventory") {
-    const rows = await prisma.inventoryOnlineCopy.findMany({
+    const rows = await prisma.onlineCopy.findMany({
       where: { ...(unlinkedOnly ? { inventory_id: null } : {}), ...searchFilter(query) },
       select: { id: true, url: true, parsed: true, availability: true, resource_id: true, inventory_id: true, _count: pendingActionsCount },
       orderBy: { updated_at: "desc" },
@@ -56,7 +56,7 @@ export const getEditorOnlineCopies = async (
     }));
   }
 
-  const rows = await prisma.fileOnlineCopy.findMany({
+  const rows = await prisma.onlineCopy.findMany({
     where: { ...(unlinkedOnly ? { file_id: null } : {}), ...searchFilter(query) },
     select: { id: true, url: true, parsed: true, availability: true, resource_id: true, file_id: true, _count: pendingActionsCount },
     orderBy: { updated_at: "desc" },

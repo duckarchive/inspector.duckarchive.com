@@ -86,13 +86,13 @@ const mergeFileInto = async (tx: Tx, sourceId: string, targetId: string): Promis
   await tx.fileAuthor.deleteMany({ where: { file_id: sourceId } });
 
   for (const copy of file.online_copies) {
-    const duplicate = await tx.fileOnlineCopy.findFirst({
+    const duplicate = await tx.onlineCopy.findFirst({
       where: { file_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
     });
     if (duplicate) {
-      await tx.fileOnlineCopy.delete({ where: { id: copy.id } });
+      await tx.onlineCopy.delete({ where: { id: copy.id } });
     } else {
-      await tx.fileOnlineCopy.update({ where: { id: copy.id }, data: { file_id: targetId } });
+      await tx.onlineCopy.update({ where: { id: copy.id }, data: { file_id: targetId } });
     }
   }
 
@@ -139,18 +139,18 @@ const mergeInventoryInto = async (tx: Tx, sourceId: string, targetId: string): P
     }
   }
 
-  const copies = await tx.inventoryOnlineCopy.findMany({
+  const copies = await tx.onlineCopy.findMany({
     where: { inventory_id: sourceId },
     select: { id: true, resource_id: true, url: true, parsed: true },
   });
   for (const copy of copies) {
-    const duplicate = await tx.inventoryOnlineCopy.findFirst({
+    const duplicate = await tx.onlineCopy.findFirst({
       where: { inventory_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
     });
     if (duplicate) {
-      await tx.inventoryOnlineCopy.delete({ where: { id: copy.id } });
+      await tx.onlineCopy.delete({ where: { id: copy.id } });
     } else {
-      await tx.inventoryOnlineCopy.update({ where: { id: copy.id }, data: { inventory_id: targetId } });
+      await tx.onlineCopy.update({ where: { id: copy.id }, data: { inventory_id: targetId } });
     }
   }
 
@@ -370,15 +370,15 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     case "connect_to_online_copy": {
       if (!action.online_copy_id) throw new ActionExecutionError("Дія не містить онлайн-копії");
       const id = requireTarget();
-      if (entity === "inventory") await tx.inventoryOnlineCopy.update({ where: { id: action.online_copy_id }, data: { inventory_id: id } });
-      else if (entity === "file") await tx.fileOnlineCopy.update({ where: { id: action.online_copy_id }, data: { file_id: id } });
+      if (entity === "inventory") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { inventory_id: id } });
+      else if (entity === "file") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { file_id: id } });
       else throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
       return null;
     }
     case "disconnect_from_online_copy": {
       if (!action.online_copy_id) throw new ActionExecutionError("Дія не містить онлайн-копії");
-      if (entity === "inventory") await tx.inventoryOnlineCopy.update({ where: { id: action.online_copy_id }, data: { inventory_id: null } });
-      else if (entity === "file") await tx.fileOnlineCopy.update({ where: { id: action.online_copy_id }, data: { file_id: null } });
+      if (entity === "inventory") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { inventory_id: null } });
+      else if (entity === "file") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { file_id: null } });
       else throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
       return null;
     }
@@ -388,19 +388,19 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       if (!url) throw new ActionExecutionError("Дія не містить URL");
       const resourceId = await inferResourceId(tx, url);
       if (entity === "inventory") {
-        const copy = await tx.inventoryOnlineCopy.create({ data: { url, resource_id: resourceId, inventory_id: id } });
+        const copy = await tx.onlineCopy.create({ data: { url, resource_id: resourceId, inventory_id: id } });
         return copy.id;
       }
       if (entity === "file") {
-        const copy = await tx.fileOnlineCopy.create({ data: { url, resource_id: resourceId, file_id: id } });
+        const copy = await tx.onlineCopy.create({ data: { url, resource_id: resourceId, file_id: id } });
         return copy.id;
       }
       throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
     }
     case "remove_online_copy": {
       if (!action.online_copy_id) throw new ActionExecutionError("Дія не містить онлайн-копії");
-      if (entity === "inventory") await tx.inventoryOnlineCopy.delete({ where: { id: action.online_copy_id } });
-      else if (entity === "file") await tx.fileOnlineCopy.delete({ where: { id: action.online_copy_id } });
+      if (entity === "inventory") await tx.onlineCopy.delete({ where: { id: action.online_copy_id } });
+      else if (entity === "file") await tx.onlineCopy.delete({ where: { id: action.online_copy_id } });
       else throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
       return null;
     }
