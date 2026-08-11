@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     const results = await prisma.$queryRaw<OnlineCopySearchResponse>(Prisma.sql`
       SELECT parsed, url, availability
-      FROM "file_online_copies"
+      FROM "online_copies"
       WHERE parsed ILIKE ${pattern}
       ORDER BY parsed ASC
       LIMIT 100

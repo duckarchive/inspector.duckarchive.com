@@ -14,8 +14,6 @@ export interface EditorOnlineCopy {
   has_pending_action: boolean;
 }
 
-const pendingActionsCount = { select: { actions: { where: { resolved_at: null } } } } as const;
-
 /**
  * Server-side search over the whole copies table (2.5M rows — the client only ever
  * sees a page). Both branches are index-backed: full urls (`http…`) hit the btree
@@ -41,7 +39,7 @@ export const getEditorOnlineCopies = async (
   if (target === "inventory") {
     const rows = await prisma.onlineCopy.findMany({
       where: { ...(unlinkedOnly ? { inventory_id: null } : {}), ...searchFilter(query) },
-      select: { id: true, url: true, parsed: true, availability: true, resource_id: true, inventory_id: true, _count: pendingActionsCount },
+      select: { id: true, url: true, parsed: true, availability: true, resource_id: true, inventory_id: true },
       orderBy: { updated_at: "desc" },
       take: 200,
     });
@@ -52,13 +50,13 @@ export const getEditorOnlineCopies = async (
       availability: r.availability,
       resource_id: r.resource_id,
       linked_id: r.inventory_id,
-      has_pending_action: r._count.actions > 0,
+      has_pending_action: false,
     }));
   }
 
   const rows = await prisma.onlineCopy.findMany({
     where: { ...(unlinkedOnly ? { file_id: null } : {}), ...searchFilter(query) },
-    select: { id: true, url: true, parsed: true, availability: true, resource_id: true, file_id: true, _count: pendingActionsCount },
+    select: { id: true, url: true, parsed: true, availability: true, resource_id: true, file_id: true },
     orderBy: { updated_at: "desc" },
     take: 200,
   });
@@ -69,6 +67,6 @@ export const getEditorOnlineCopies = async (
     availability: r.availability,
     resource_id: r.resource_id,
     linked_id: r.file_id,
-    has_pending_action: r._count.actions > 0,
+    has_pending_action: false,
   }));
 };
