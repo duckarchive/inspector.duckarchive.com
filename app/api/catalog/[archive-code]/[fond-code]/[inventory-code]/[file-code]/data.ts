@@ -27,6 +27,11 @@ export const getFileByCode = async (
         },
       },
       online_copies: true,
+      inventory: {
+        select: {
+          fond_id: true,
+        },
+      },
     },
   });
 

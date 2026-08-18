@@ -12,6 +12,8 @@ import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFondsEndpoint } from "@/hooks/useEditor";
 import { Archives } from "@/data/archives";
+import { useIsAdmin } from "@/components/editor/admin-context";
+import { FaTrash } from "react-icons/fa";
 
 interface FondEditModalProps {
   fond: EditorFond | null;
@@ -22,6 +24,7 @@ interface FondEditModalProps {
 }
 
 const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, onClose, onSubmitted }) => {
+  const isAdmin = useIsAdmin();
   const { submit: submitFondAction, submitMany: submitFondActions, isMutating } = useSubmitAction("fond");
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
@@ -108,6 +111,12 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
     onClose();
   };
 
+  const handleDelete = async () => {
+    await submitFondAction({ type: "remove", target_id: fond.id });
+    onSubmitted?.();
+    onClose();
+  };
+
   return (
     <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Modal.Backdrop>
@@ -158,6 +167,18 @@ const FondEditModal: React.FC<FondEditModalProps> = ({ fond, archives, isOpen, o
           </div>
             </Modal.Body>
             <Modal.Footer>
+              {isAdmin && (
+                <PendingButton
+                  isIconOnly
+                  aria-label="Видалити"
+                  variant="ghost"
+                  className="mr-auto"
+                  onPress={handleDelete}
+                  isPending={isMutating}
+                >
+                  <FaTrash />
+                </PendingButton>
+              )}
               <Button variant="tertiary" onPress={onClose}>
                 Скасувати
               </Button>

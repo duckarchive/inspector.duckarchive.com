@@ -17,6 +17,7 @@ import useFile from "@/hooks/useFile";
 import ResourceBadge from "./resource-badge";
 import { GetFileResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/[file-code]/route";
 import { getYearsString } from "@/lib/text";
+import { editorFileHref } from "@/lib/editor-links";
 import dynamic from "next/dynamic";
 import { findCenter, prepareLocations } from "@/lib/map";
 
@@ -89,9 +90,10 @@ const Details: React.FC<{
 
 interface FileTableProps {
   resources: Resources;
+  isAdmin?: boolean;
 }
 
-const FileTable: React.FC<FileTableProps> = ({ resources }) => {
+const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fondCode = params["fond-code"];
@@ -111,7 +113,11 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
         description={file?.info || undefined}
         message={<Details file={file} />}
       >
-        <ReportButton entity="file" targetId={file?.id} />
+        <ReportButton
+          entity="file"
+          targetId={file?.id}
+          editorHref={isAdmin && file?.id ? editorFileHref(archiveCode, file.inventory.fond_id, file.inventory_id, file.id) : undefined}
+        />
       </PagePanel>
       <InspectorDuckTable<TableItem>
         id="file-table"

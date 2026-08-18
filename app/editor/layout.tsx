@@ -3,6 +3,7 @@ import { getSessionDuckUser } from "@/lib/auth";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { ComponentProps } from "react";
+import { AdminProvider } from "@/components/editor/admin-context";
 
 const MODES = [
   { href: "/editor/catalog/fonds", label: "Фонди" },
@@ -37,21 +38,23 @@ const EditorLayout: React.FC<React.PropsWithChildren> = async ({ children }) => 
   }
 
   return (
-    <main className="container mx-auto max-w-7xl p-6 grow flex flex-col gap-4">
-      <nav className="sticky top-0 z-30 flex items-center gap-4 bg-background/70 py-3 backdrop-blur-md">
-        <NextLink href="/editor" className="text-xl font-bold text-foreground">
-          Редактор
-        </NextLink>
-        <ul className="hidden lg:flex gap-4 justify-start">
-          {MODES.map((item) => (
-            <li key={item.href}>
-              <NavLink href={item.href}>{item.label}</NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      {children}
-    </main>
+    <AdminProvider isAdmin={Boolean(user.is_admin)}>
+      <main className="container mx-auto max-w-7xl p-6 grow flex flex-col gap-4">
+        <nav className="sticky top-0 z-30 flex items-center gap-4 bg-background/70 py-3 backdrop-blur-md">
+          <NextLink href="/editor" className="text-xl font-bold text-foreground">
+            Редактор
+          </NextLink>
+          <ul className="hidden lg:flex gap-4 justify-start">
+            {MODES.map((item) => (
+              <li key={item.href}>
+                <NavLink href={item.href}>{item.label}</NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        {children}
+      </main>
+    </AdminProvider>
   );
 };
 

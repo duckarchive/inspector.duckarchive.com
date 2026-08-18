@@ -3,6 +3,7 @@ import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
 import { getInventoryByCode } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/data";
 import { getTranslations } from "next-intl/server";
+import { getSessionDuckUser } from "@/lib/auth";
 
 export interface InventoryPageProps {
   params: Promise<{
@@ -51,8 +52,9 @@ export async function generateMetadata(pageProps: InventoryPageProps, parent: Re
 
 const InventoryPage: NextPage = async () => {
   const resources = await getResources();
+  const user = await getSessionDuckUser();
 
-  return <InventoryTable resources={resources} />;
+  return <InventoryTable resources={resources} isAdmin={Boolean(user?.is_admin)} />;
 };
 
 export default InventoryPage;

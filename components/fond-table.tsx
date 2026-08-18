@@ -11,6 +11,7 @@ import { sortByCode } from "@/lib/table";
 import useFond from "@/hooks/useFond";
 import { GetFondResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/route";
 import { getYearsString } from "@/lib/text";
+import { editorFondHref } from "@/lib/editor-links";
 
 type TableItem = GetFondResponse["inventories"][number];
 
@@ -32,9 +33,10 @@ const Details: React.FC<{
 
 interface FondTableProps {
   resources: Resources;
+  isAdmin?: boolean;
 }
 
-const FondTable: React.FC<FondTableProps> = ({ resources }) => {
+const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const code = params["fond-code"];
@@ -52,7 +54,11 @@ const FondTable: React.FC<FondTableProps> = ({ resources }) => {
         description={fond?.info || undefined}
         message={<Details fond={fond} />}
       >
-        <ReportButton entity="fond" targetId={fond?.id} />
+        <ReportButton
+          entity="fond"
+          targetId={fond?.id}
+          editorHref={isAdmin && fond?.id ? editorFondHref(archiveCode, fond.id) : undefined}
+        />
       </PagePanel>
       <InspectorDuckTable<TableItem>
         id="fond-table"

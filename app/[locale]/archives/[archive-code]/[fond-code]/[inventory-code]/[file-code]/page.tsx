@@ -3,6 +3,7 @@ import { Metadata, NextPage, ResolvingMetadata } from "next";
 import { getResources } from "@/data/resources";
 import { getFileByCode } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/[file-code]/data";
 import { getTranslations } from "next-intl/server";
+import { getSessionDuckUser } from "@/lib/auth";
 
 export interface FilePageProps {
   params: Promise<{
@@ -54,8 +55,9 @@ export async function generateMetadata(pageProps: FilePageProps, parent: Resolvi
 
 const FilePage: NextPage = async () => {
   const resources = await getResources();
+  const user = await getSessionDuckUser();
 
-  return <FileTable resources={resources} />;
+  return <FileTable resources={resources} isAdmin={Boolean(user?.is_admin)} />;
 };
 
 export default FilePage;

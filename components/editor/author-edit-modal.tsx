@@ -9,6 +9,8 @@ import PendingButton from "@/components/pending-button";
 import { useAuthorFiles, useEditorAuthors } from "@/hooks/useEditor";
 import { encodeNote, SubmitActionBody } from "@/lib/editor-actions";
 import { EditorAuthor } from "@/app/api/editor/authors/data";
+import { useIsAdmin } from "@/components/editor/admin-context";
+import { FaTrash } from "react-icons/fa";
 
 interface AuthorEditModalProps {
   author: EditorAuthor | null;
@@ -20,6 +22,7 @@ interface AuthorEditModalProps {
 const sameNum = (a: number | null, b: number | null) => (a ?? null) === (b ?? null);
 
 const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClose, onSubmitted }) => {
+  const isAdmin = useIsAdmin();
   // Author edits are stored in file_actions; anchor to a linked file so the
   // (type, file_id) partial unique index applies per-file instead of globally.
   const { submitMany, isMutating } = useSubmitAction("file");
@@ -67,13 +70,25 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
     const base = { target_id: anchorFileId };
 
     if (title !== author.title) {
-      bodies.push({ ...base, type: "change_author_title", note: encodeNote({ v: 1, author_id: author.id, field: "title", value: title }) });
+      bodies.push({
+        ...base,
+        type: "change_author_title",
+        note: encodeNote({ v: 1, author_id: author.id, field: "title", value: title }),
+      });
     }
     if (info !== (author.info ?? "")) {
-      bodies.push({ ...base, type: "change_author_info", note: encodeNote({ v: 1, author_id: author.id, field: "info", value: info }) });
+      bodies.push({
+        ...base,
+        type: "change_author_info",
+        note: encodeNote({ v: 1, author_id: author.id, field: "info", value: info }),
+      });
     }
     if (JSON.stringify(tags) !== JSON.stringify(author.tags)) {
-      bodies.push({ ...base, type: "change_author_tags", note: encodeNote({ v: 1, author_id: author.id, field: "tags", value: tags }) });
+      bodies.push({
+        ...base,
+        type: "change_author_tags",
+        note: encodeNote({ v: 1, author_id: author.id, field: "tags", value: tags }),
+      });
     }
     const lat = coords.lat ? Number(coords.lat) : null;
     const lng = coords.lng ? Number(coords.lng) : null;
@@ -101,8 +116,14 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
     }
     // one pending action; on approve the executor re-links every file, merges
     // the author fields and deletes the source — all under the hood
+    await submitMany([{ type: "merge_to", note: encodeNote({ v: 1, author_id: author.id, value: mergeTargetId }) }]);
+    onSubmitted?.();
+    onClose();
+  };
+
+  const handleDelete = async () => {
     await submitMany([
-      { type: "merge_to", note: encodeNote({ v: 1, author_id: author.id, value: mergeTargetId }) },
+      { type: "remove_author", target_id: anchorFileId, note: encodeNote({ v: 1, author_id: author.id }) },
     ]);
     onSubmitted?.();
     onClose();
@@ -118,60 +139,78 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
               <Modal.Heading>Редагувати автора</Modal.Heading>
             </Modal.Header>
             <Modal.Body className="gap-3">
-          <TextField value={title} onChange={setTitle}>
-            <Input placeholder="Назва" />
-          </TextField>
-          <TextField value={info} onChange={setInfo}>
-            <TextArea placeholder="Опис" rows={2} />
-          </TextField>
-
-          <div className="flex flex-col gap-2">
-            <span className="text-sm text-muted">Теги</span>
-            <div className="flex flex-wrap gap-1">
-              {tags.length === 0 && <span className="text-muted text-sm">Немає</span>}
-              {tags.map((t) => (
-                <Chip key={t} variant="soft">
-                  {t}
-                  <CloseButton aria-label="Видалити тег" onPress={() => setTags(tags.filter((x) => x !== t))} />
-                </Chip>
-              ))}
-            </div>
-            <div className="flex items-end gap-2">
-              <TextField value={tagDraft} onChange={setTagDraft}>
-                <Input placeholder="Новий тег" />
+              <TextField value={title} onChange={setTitle}>
+                <Input placeholder="Назва" />
               </TextField>
-              <Button size="sm" onPress={addTag} isDisabled={!tagDraft.trim()}>
-                Додати
-              </Button>
-            </div>
-          </div>
+              <TextField value={info} onChange={setInfo}>
+                <TextArea placeholder="Опис" rows={2} />
+              </TextField>
 
-          <CoordinatesInput value={coords} onChange={setCoords} />
+              <div className="flex flex-col gap-2">
+                <span className="text-sm text-muted">Теги</span>
+                <div className="flex flex-wrap gap-1">
+                  {tags.length === 0 && <span className="text-muted text-sm">Немає</span>}
+                  {tags.map((t) => (
+                    <Chip key={t} variant="soft">
+                      {t}
+                      <CloseButton aria-label="Видалити тег" onPress={() => setTags(tags.filter((x) => x !== t))} />
+                    </Chip>
+                  ))}
+                </div>
+                <div className="flex items-end gap-2">
+                  <TextField value={tagDraft} onChange={setTagDraft}>
+                    <Input placeholder="Новий тег" />
+                  </TextField>
+                  <Button size="sm" onPress={addTag} isDisabled={!tagDraft.trim()}>
+                    Додати
+                  </Button>
+                </div>
+              </div>
 
-          <Separator className="my-2" />
+              <CoordinatesInput value={coords} onChange={setCoords} />
 
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold">Об&apos;єднати з іншим автором</span>
-            <span className="text-xs text-muted">
-              Усі справи цього автора буде перепривʼязано до обраного, а цей автор — видалено.
-            </span>
-            <Select
-              label="Автор-приймач"
-              virtualized
-              items={(mergeCandidates ?? []).filter((a) => a.id !== author.id)}
-              getKey={(a) => a.id}
-              getTextValue={(a) => a.title}
-              renderItem={(a) => a.title}
-              inputValue={mergeQuery}
-              onInputChange={setMergeQuery}
-              onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-            />
-            <PendingButton size="sm" variant="secondary" onPress={handleMerge} isDisabled={!mergeTargetId} isPending={isMutating}>
-              Об&apos;єднати
-            </PendingButton>
-          </div>
+              <Separator className="my-2" />
+
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-semibold">Об&apos;єднати з іншим автором</span>
+                <span className="text-xs text-muted">
+                  Усі справи цього автора буде перепривʼязано до обраного, а цей автор — видалено.
+                </span>
+                <Select
+                  label="Автор-приймач"
+                  virtualized
+                  items={(mergeCandidates ?? []).filter((a) => a.id !== author.id)}
+                  getKey={(a) => a.id}
+                  getTextValue={(a) => a.title}
+                  renderItem={(a) => a.title}
+                  inputValue={mergeQuery}
+                  onInputChange={setMergeQuery}
+                  onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
+                />
+                <PendingButton
+                  size="sm"
+                  variant="secondary"
+                  onPress={handleMerge}
+                  isDisabled={!mergeTargetId}
+                  isPending={isMutating}
+                >
+                  Об&apos;єднати
+                </PendingButton>
+              </div>
             </Modal.Body>
             <Modal.Footer>
+              {isAdmin && (
+                <PendingButton
+                  isIconOnly
+                  aria-label="Видалити"
+                  variant="ghost"
+                  className="mr-auto"
+                  onPress={handleDelete}
+                  isPending={isMutating}
+                >
+                  <FaTrash />
+                </PendingButton>
+              )}
               <Button variant="tertiary" onPress={onClose}>
                 Скасувати
               </Button>

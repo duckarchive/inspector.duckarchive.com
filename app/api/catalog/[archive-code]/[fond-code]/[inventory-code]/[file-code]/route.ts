@@ -20,6 +20,11 @@ export type GetFileResponse = Prisma.FileGetPayload<{
         radius_m: true;
       };
     };
+    inventory: {
+      select: {
+        fond_id: true;
+      };
+    };
   };
 }>;
 

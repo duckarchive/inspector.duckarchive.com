@@ -28,7 +28,7 @@ export default function EditorOnlineCopiesPage() {
   };
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 h-full">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h1 className="text-2xl font-bold">Онлайн-копії без прив&apos;язки</h1>
         <Button onPress={() => setIsAddOpen(true)}>Додати онлайн-копію</Button>

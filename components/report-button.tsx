@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Modal, TextArea, TextField } from "@heroui/react";
+import { Button, Link, Modal, TextArea, TextField } from "@heroui/react";
 import { EditorEntity } from "@/lib/editor-actions";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
@@ -9,9 +9,10 @@ import PendingButton from "@/components/pending-button";
 interface ReportButtonProps {
   entity: EditorEntity;
   targetId?: string;
+  editorHref?: string;
 }
 
-const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId }) => {
+const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId, editorHref }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [note, setNote] = useState("");
   const { submit, isMutating } = useSubmitAction(entity);
@@ -47,6 +48,11 @@ const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId }) => {
                 <p className="text-sm text-muted">
                   Опишіть, що саме є неправильним у цьому записі. Адміністратор розгляне ваше повідомлення.
                 </p>
+                {editorHref ? (
+                  <Link href={editorHref} target="_blank" rel="noopener noreferrer" className="text-sm self-start">
+                    Відкрити в редакторі ↗
+                  </Link>
+                ) : null}
                 <TextField value={note} onChange={setNote}>
                   <TextArea placeholder="Опис помилки — наприклад: неправильний рік, помилка в назві тощо" rows={3} />
                 </TextField>

@@ -12,6 +12,7 @@ import { sortByCode } from "@/lib/table";
 import useInventory from "@/hooks/useInventory";
 import { GetInventoryResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/route";
 import { getYearsString } from "@/lib/text";
+import { editorInventoryHref } from "@/lib/editor-links";
 
 type TableItem = GetInventoryResponse["files"][number];
 
@@ -28,7 +29,12 @@ const Details: React.FC<{
         )}
         {(inventory.online_copies.filter((copy) => copy.url) as { url: string }[]).map((copy) => (
           <li key={copy.url}>
-            <Link href={copy.url} target="_blank" rel="noopener noreferrer" className="text-foreground text-sm underline">
+            <Link
+              href={copy.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground text-sm underline"
+            >
               {copy.url}
             </Link>
           </li>
@@ -40,9 +46,10 @@ const Details: React.FC<{
 
 interface InventoryTableProps {
   resources: Resources;
+  isAdmin?: boolean;
 }
 
-const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
+const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) => {
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fondCode = params["fond-code"];
@@ -60,7 +67,13 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
         description={inventory?.info || undefined}
         message={<Details inventory={inventory} />}
       >
-        <ReportButton entity="inventory" targetId={inventory?.id} />
+        <ReportButton
+          entity="inventory"
+          targetId={inventory?.id}
+          editorHref={
+            isAdmin && inventory?.id ? editorInventoryHref(archiveCode, inventory.fond_id, inventory.id) : undefined
+          }
+        />
       </PagePanel>
       <InspectorDuckTable<TableItem>
         id="inventory-table"
