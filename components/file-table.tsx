@@ -134,6 +134,14 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
         <ReportButton
           entity="file"
           targetId={file?.id}
+          current={{
+            title: file?.title ?? null,
+            info: file?.info ?? null,
+            years: file?.years?.map(({ start_year, end_year }) => ({ start_year, end_year })) ?? [],
+            codes: { archive: archiveCode, fond: fondCode, inventory: inventoryCode, file: code },
+            onlineCopies: file?.online_copies?.map(({ id, url }) => ({ id, url })) ?? [],
+            authors: file?.authors?.map(({ author }) => ({ id: author.id, title: author.title })) ?? [],
+          }}
           editorHref={isAdmin && file?.id ? editorFileHref(archiveCode, file.inventory.fond_id, file.inventory_id, file.id) : undefined}
         />
       </PagePanel>

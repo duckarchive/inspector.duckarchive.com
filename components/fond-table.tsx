@@ -72,6 +72,12 @@ const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
         <ReportButton
           entity="fond"
           targetId={fond?.id}
+          current={{
+            title: fond?.title ?? null,
+            info: fond?.info ?? null,
+            years: fond?.years?.map(({ start_year, end_year }) => ({ start_year, end_year })) ?? [],
+            codes: { archive: archiveCode, fond: code },
+          }}
           editorHref={isAdmin && fond?.id ? editorFondHref(archiveCode, fond.id) : undefined}
         />
       </PagePanel>

@@ -130,7 +130,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
         {!isOpen && (
           <GeoDuckMap
             key={`static-geoduck-map-${center.join(",")}`}
-            className="rounded-lg text-accent z-0"
+            className="rounded-lg text-accent"
             positions={[latLng]}
             center={center}
             year={+(year || 0) || undefined}

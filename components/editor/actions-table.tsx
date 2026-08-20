@@ -12,7 +12,11 @@ import {
   ActionStatus,
   decodeNote,
   EditorQueue,
+  REPORT_SECTION_LABELS,
+  ReportNotePayload,
+  YearRange,
 } from "@/lib/editor-actions";
+import { catalogItemHref, catalogItemLabel } from "@/lib/catalog-links";
 import { ActionType } from "@generated/prisma/client/client";
 
 interface ActionsTableProps {
@@ -148,6 +152,101 @@ const noteLabel = (note: string | null): string => {
   return parts.join(": ");
 };
 
+const yearLabel = (y: YearRange) => `${y.start_year}–${y.end_year}`;
+
+/** Section header + one line per proposed change. */
+const reportSectionLines = (report: ReportNotePayload): { label: string; lines: React.ReactNode[] }[] => {
+  const sections: { label: string; lines: React.ReactNode[] }[] = [];
+
+  if (report.tree) {
+    const codes = [report.tree.archive?.code, report.tree.fond?.code, report.tree.inventory?.code];
+    const label = catalogItemLabel(codes);
+    const href = catalogItemHref(codes);
+    sections.push({
+      label: REPORT_SECTION_LABELS.tree,
+      lines: [
+        href ? (
+          <Link key="tree" href={href} target="_blank" rel="noopener noreferrer" className="text-sm">
+            {label}
+            <Link.Icon />
+          </Link>
+        ) : (
+          label
+        ),
+      ],
+    });
+  }
+
+  if (report.online_copy) {
+    const { id, url } = report.online_copy;
+    sections.push({
+      label: REPORT_SECTION_LABELS.online_copy,
+      lines: [
+        url ? (
+          <Link key="copy" href={url} target="_blank" rel="noopener noreferrer" className="text-sm">
+            {hostLabel(url)}
+            <Link.Icon />
+          </Link>
+        ) : null,
+        id ? `id: ${id.slice(0, 8)}` : null,
+      ].filter(Boolean),
+    });
+  }
+
+  if (report.data) {
+    const lines: React.ReactNode[] = [];
+    if (report.data.title) lines.push(`назва: "${report.data.title.old ?? ""}" → "${report.data.title.value}"`);
+    if (report.data.info) lines.push(`опис: "${report.data.info.old ?? ""}" → "${report.data.info.value}"`);
+    if (report.data.years) {
+      const { add, remove } = report.data.years;
+      const parts = [...add.map((y) => `+${yearLabel(y)}`), ...remove.map((y) => `−${yearLabel(y)}`)];
+      if (parts.length) lines.push(`роки: ${parts.join(" ")}`);
+    }
+    sections.push({ label: REPORT_SECTION_LABELS.data, lines });
+  }
+
+  if (report.geo) {
+    const lines: React.ReactNode[] = [];
+    if (report.geo.authors?.length) {
+      lines.push(`автори: ${report.geo.authors.map((a) => a.title).join(", ")}`);
+    }
+    if (report.geo.locations?.length) {
+      lines.push(
+        `локації: ${report.geo.locations
+          .map((l) => `${l.lat.toFixed(4)},${l.lng.toFixed(4)}${l.radius_m ? ` ±${l.radius_m}м` : ""}`)
+          .join(" · ")}`,
+      );
+    }
+    sections.push({ label: REPORT_SECTION_LABELS.geo, lines });
+  }
+
+  return sections.filter((s) => s.lines.length > 0);
+};
+
+const noteCell = (note: string | null): React.ReactNode => {
+  const decoded = decodeNote(note);
+  const report = decoded && !("raw" in decoded) ? decoded.report : undefined;
+  if (!report) {
+    return noteLabel(note);
+  }
+  const sections = reportSectionLines(report);
+  return (
+    <div className="flex flex-col gap-1.5">
+      {sections.map((section) => (
+        <div key={section.label} className="flex flex-col gap-0.5">
+          <span className="text-xs text-muted">{section.label}</span>
+          {section.lines.map((line, i) => (
+            <span key={i} className="text-sm">
+              {line}
+            </span>
+          ))}
+        </div>
+      ))}
+      {report.text && <span className="text-sm text-muted italic">{report.text}</span>}
+    </div>
+  );
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isPending = (data: any): boolean => !data?.resolved_at;
 
@@ -272,7 +371,7 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
                   </td>
                   <td className="p-2">{ACTION_TYPE_LABELS[row.type as ActionType] ?? row.type}</td>
                   <td className="p-2">{targetCell(row)}</td>
-                  <td className="p-2 max-w-xs break-words">{noteLabel(row.note)}</td>
+                  <td className="p-2 max-w-xs break-words">{noteCell(row.note)}</td>
                   <td className="p-2">{statusChip(row)}</td>
                   <td className="p-2">
                     {pending && (

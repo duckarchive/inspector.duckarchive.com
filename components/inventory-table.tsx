@@ -85,6 +85,13 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) =
         <ReportButton
           entity="inventory"
           targetId={inventory?.id}
+          current={{
+            title: inventory?.title ?? null,
+            info: inventory?.info ?? null,
+            years: inventory?.years?.map(({ start_year, end_year }) => ({ start_year, end_year })) ?? [],
+            codes: { archive: archiveCode, fond: fondCode, inventory: code },
+            onlineCopies: inventory?.online_copies?.map(({ id, url }) => ({ id, url })) ?? [],
+          }}
           editorHref={
             isAdmin && inventory?.id ? editorInventoryHref(archiveCode, inventory.fond_id, inventory.id) : undefined
           }
