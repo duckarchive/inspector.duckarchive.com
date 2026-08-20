@@ -33,12 +33,26 @@ URLs stored in `authors.info` ("Реєстр: …").
   "Сповідальні розписи церков Ямпільського повіту. Села А–М" ← 63 authors;
   ДАХмО-315-1-11912 (Вінницький повіт, М–Я) ← 58.
 
+## Info cleanup (applied 2026-08-20, after linking)
+
+Once linked, the raw "Реєстр: <url>" segment in `authors.info` became
+redundant for these 337 authors — `cleanup-info-registry.sql` removed it,
+keeping the rest of info (Повіт / Населені пункти / eparchy text; verified
+0 rows left empty or NULL). The URLs remain recoverable from
+`author-file-mapping.csv` and `pre-state-info.csv`. The other 848 parish
+authors (daro-metric-map, lubgens, etc.) keep their registry URLs in info
+until they get linked by their own pipelines.
+
 ## Files
 
 - `author-file-mapping.csv` — the 337 verified pairs with author/file
   titles, groupId, DGS, online_copy_id (source of truth for apply/rollback).
 - `apply-parafii-file-authors.sql` — the INSERT (applied 2026-08-20).
 - `rollback-parafii-file-authors.sql` — deletes exactly those pairs.
+- `cleanup-info-registry.sql` — strips "Реєстр: <url>" from info for the
+  337 linked authors (applied 2026-08-20).
+- `pre-state-info.csv` — info snapshot of those authors taken right before
+  the cleanup; `rollback-info-cleanup.sql` restores from it.
 
 ## Not covered (future work)
 
