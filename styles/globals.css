@@ -217,3 +217,16 @@ nav.h-screen {
   background-image: radial-gradient(color-mix(in srgb, var(--foreground) 10%, transparent) 1px, transparent 1px);
   background-size: calc(var(--spacing) * 6) calc(var(--spacing) * 6);
 }
+
+/* Home "how it works" diagram: a dashed pulse traveling along each flow line,
+ * into the Duck Inspector node from its sources and out to what it produces.
+ * Skipped when the visitor prefers reduced motion. */
+.duck-flow-pulse {
+  animation: duck-flow-dash 1.6s linear infinite;
+}
+
+@keyframes duck-flow-dash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}

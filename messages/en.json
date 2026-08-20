@@ -3,7 +3,26 @@
     "title": "Find an archival file online ― easily!",
     "description": "Duck Inspector is a search service that allows you to find an archive file online. Just enter the details of the archive, fund, description, and file and get a link to the source.",
     "search-label": "Search by file title",
-    "search-button": "Search"
+    "search-button": "Search",
+    "process": {
+      "title": "How it works",
+      "subtitle": "Duck Inspector doesn't store the archives — it watches where they already live and gives you one door in.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Archives publish scans",
+          "description": "State archives and partner platforms digitize case files and put them online, each on its own site."
+        },
+        "index": {
+          "title": "Duck Inspector indexes them",
+          "description": "We track every source continuously and match up archives, funds and descriptions across all of them."
+        },
+        "search": {
+          "title": "You search once",
+          "description": "Type a name or a case, and get a direct link to wherever the scan actually lives."
+        }
+      }
+    }
   },
   "daily-updates-page": {
     "title": "Daily Report",

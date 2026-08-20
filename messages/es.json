@@ -3,7 +3,26 @@
     "title": "¡Encuentra expedientes de archivo en línea fácilmente!",
     "description": "Duck Inspector es un servicio de búsqueda que te permite encontrar expedientes de archivo en línea. Simplemente ingresa los detalles del archivo, fondo, descripción y expediente para obtener un enlace a la fuente.",
     "search-label": "Buscar por título",
-    "search-button": "Buscar"
+    "search-button": "Buscar",
+    "process": {
+      "title": "Cómo funciona",
+      "subtitle": "Duck Inspector no almacena los archivos: vigila dónde ya están y te da una sola puerta de entrada a todos.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Los archivos publican escaneos",
+          "description": "Los archivos estatales y las plataformas asociadas digitalizan los expedientes y los publican en línea, cada uno en su propio sitio."
+        },
+        "index": {
+          "title": "Duck Inspector los indexa",
+          "description": "Rastreamos cada fuente continuamente y relacionamos archivos, fondos y descripciones entre todas ellas."
+        },
+        "search": {
+          "title": "Buscas una sola vez",
+          "description": "Escribe un nombre o un expediente y obtén un enlace directo a donde realmente está el escaneo."
+        }
+      }
+    }
   },
   "daily-updates-page": {
     "title": "Reporte Diario",

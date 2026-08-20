@@ -3,7 +3,26 @@
     "title": "Znajdź sprawy archiwalne online łatwo!",
     "description": "Duck Inspector to serwis wyszukiwarki, który pozwala znaleźć archiwalne sprawy online. Wystarczy wpisać dane dotyczące archiwum, funduszu, opisu i sprawy, aby uzyskać link do źródła.",
     "search-label": "Szukaj po nazwie jednostki",
-    "search-button": "Szukaj"
+    "search-button": "Szukaj",
+    "process": {
+      "title": "Jak to działa",
+      "subtitle": "Duck Inspector nie przechowuje archiwów — obserwuje, gdzie już się znajdują, i daje jedno wejście do wszystkich.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Archiwa publikują skany",
+          "description": "Archiwa państwowe i platformy partnerskie digitalizują sprawy i publikują je online, każde na własnej stronie."
+        },
+        "index": {
+          "title": "Duck Inspector je indeksuje",
+          "description": "Stale śledzimy każde źródło i dopasowujemy archiwa, fundusze i opisy między nimi."
+        },
+        "search": {
+          "title": "Szukasz tylko raz",
+          "description": "Wpisz nazwisko lub sprawę i otrzymaj bezpośredni link tam, gdzie skan faktycznie się znajduje."
+        }
+      }
+    }
   },
   "daily-updates-page": {
     "title": "Raport Dzienny",
