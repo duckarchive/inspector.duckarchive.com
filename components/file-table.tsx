@@ -12,12 +12,14 @@ import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import ReportButton from "./report-button";
+import CsvDownloadButton from "./csv-download-button";
 import { getSyncAtLabel } from "@/lib/table";
 import useFile from "@/hooks/useFile";
-import ResourceBadge from "./resource-badge";
+import ResourceBadge, { TYPE_LABEL } from "./resource-badge";
 import { GetFileResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/[file-code]/route";
 import { getYearsString } from "@/lib/text";
 import { editorFileHref } from "@/lib/editor-links";
+import { catalogItemLabel } from "@/lib/catalog-links";
 import dynamic from "next/dynamic";
 import { findCenter, prepareLocations } from "@/lib/map";
 
@@ -26,6 +28,17 @@ const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.de
 });
 
 type TableItem = GetFileResponse["online_copies"][number];
+
+const prepareToDownload = (copies: TableItem[], resources: Resources) =>
+  copies.map((copy) => {
+    const resourceType = copy.resource_id !== null ? resources[copy.resource_id]?.type : undefined;
+    return {
+      resource: (resourceType && TYPE_LABEL[resourceType]) || "",
+      url: copy.url,
+      availability: copy.availability,
+      updated_at: copy.updated_at ? new Date(copy.updated_at).toISOString() : "",
+    };
+  });
 
 const Details: React.FC<{
   file?: GetFileResponse;
@@ -113,6 +126,11 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
         description={file?.info || undefined}
         message={<Details file={file} />}
       >
+        <CsvDownloadButton
+          filename={catalogItemLabel([archiveCode, fondCode, inventoryCode, code])}
+          rows={prepareToDownload(file?.online_copies || [], resources)}
+          isDisabled={isLoading}
+        />
         <ReportButton
           entity="file"
           targetId={file?.id}

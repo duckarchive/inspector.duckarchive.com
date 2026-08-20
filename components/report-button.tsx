@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { Button, Link, Modal, TextArea, TextField } from "@heroui/react";
+import { FaBug } from "react-icons/fa";
 import { EditorEntity } from "@/lib/editor-actions";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
@@ -13,6 +15,7 @@ interface ReportButtonProps {
 }
 
 const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId, editorHref }) => {
+  const { status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [note, setNote] = useState("");
   const { submit, isMutating } = useSubmitAction(entity);
@@ -31,10 +34,19 @@ const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId, editorHre
     }
   };
 
+  if (status !== "authenticated") return null;
+
   return (
     <>
-      <Button size="sm" variant="tertiary" isDisabled={!targetId} onPress={() => setIsOpen(true)}>
-        Повідомити про помилку
+      <Button
+        size="sm"
+        variant="outline"
+        isIconOnly
+        aria-label="Повідомити про помилку"
+        isDisabled={!targetId}
+        onPress={() => setIsOpen(true)}
+      >
+        <FaBug />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={(open) => !open && close()}>
         <Modal.Backdrop>
