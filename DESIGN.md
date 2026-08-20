@@ -112,7 +112,6 @@ typography:
     font-mono: Geist Mono (google, --font-mono) # theme default — all titles/text, body copy, headings
     font-sans: Geist (google, --font-sans) # interactive elements only — Button, Input, Link, TextArea, etc.
     font-label: Geist (google, --font-label) # labels, chips, metadata
-    font-comic: CC Jim Lee (local, --font-comic) # comics easter egg only
   scale: # tailwind fontSize tokens → text-display-lg, text-headline-lg, …
     display-lg:
       fontSize: 4rem # 64px

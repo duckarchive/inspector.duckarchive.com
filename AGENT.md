@@ -61,7 +61,7 @@ app/
     availability/dgs/           # DGS availability check + report-dgs
     search/                     # search over files (requisites, title, author, tags, place, geo-radius)
     sync/familysearch/          # FamilySearch sync endpoints (items, projects)
-components/        # shared React components (tables per hierarchy level, search, modals, comics-card, home/)
+components/        # shared React components (tables per hierarchy level, search, modals, report wizard)
 config/            # site.ts (site meta), i18n.ts
 data/              # static datasets (archives, institutions, resources, tags, FamilySearch, DGS lists)
 generated/prisma/  # GENERATED — never edit by hand (client + zod)

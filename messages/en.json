@@ -2,17 +2,8 @@
   "home-page": {
     "title": "Find an archival file online ― easily!",
     "description": "Duck Inspector is a search service that allows you to find an archive file online. Just enter the details of the archive, fund, description, and file and get a link to the source.",
-    "about": {
-      "title": "Duck Inspector is:",
-      "one-place": "aggregated data from archival resources in one place",
-      "extended-data": "extended info with coordinates and dates",
-      "form": "simple search form to find the file you need in seconds",
-      "direct-link": "24/7 monitoring for links to online copies",
-      "free": "community driven and free to use",
-      "universe": "integrated with tools of Duck Universe and other friendly services",
-      "notifications": "regular notifications about new files",
-      "open-source": "open source code and data for everyone"
-    }
+    "search-label": "Search by file title",
+    "search-button": "Search"
   },
   "daily-updates-page": {
     "title": "Daily Report",
