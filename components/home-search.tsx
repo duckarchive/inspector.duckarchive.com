@@ -8,7 +8,7 @@ import { FaSearch } from "react-icons/fa";
 import { sendGAEvent } from "@next/third-parties/google";
 
 /** Real document types from the catalog, so the examples return actual results. */
-const EXAMPLES = ["київ", "шевченко", "ревізька казка", "рацс", "клірові відомості"];
+const EXAMPLES = ["київ", "шевченко", "ревізька казка", "рацс", "1921"];
 
 const TYPE_MS = 90;
 const ERASE_MS = 40;

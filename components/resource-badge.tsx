@@ -41,7 +41,7 @@ const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({
   const content = children !== undefined ? children : prettyResource;
   const inner = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Chip color={resource ? (TYPE_COLORS[resource] as any) : "default"} size="sm" variant="primary">
+    <Chip color={resource ? (TYPE_COLORS[resource] as any) : "default"} variant="primary">
       {content || "Невідомий ресурс"}
     </Chip>
   );
