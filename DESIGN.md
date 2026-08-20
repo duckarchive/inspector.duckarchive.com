@@ -201,6 +201,7 @@ HeroUI v3 variants: `primary`, `secondary`, `tertiary`, `outline`, `ghost`, `dan
 ### Chips/Tags
 - Small, pill-shaped (`radius="full"`) with `default` backgrounds.
 - Use `font-label` (Geist) to denote system information or metadata.
+- **Resource identity chips** (`components/resource-badge.tsx`) are the one place with a categorical palette: six Tailwind fills in `TYPE_CHIP_CLASS`, all with white labels and **one value per resource across both themes**. Each fill is mid-tone so it separates from the light and dark ground alike, and dark enough for ≥6:1 against its label; hues stay clear of the accent orange. They mark *which* service hosts a copy — an identity, not a status — so they deliberately avoid `accent`, `danger`, `success` and `warning`, which carry meaning elsewhere. Add an entry to that map rather than reaching for a semantic color when a resource type is added.
 
 ### Status Indicators
 - Use small, glowing dots for security status. A "Pulse" animation on the `accent` indicates active verification or "scanning" processes.

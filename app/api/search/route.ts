@@ -6,6 +6,9 @@ export type SearchRequest = Partial<{
   lat: string;
   lng: string;
   radius_m: number;
+  year_from: string;
+  year_to: string;
+  /** @deprecated single year — still honoured for existing links and API callers. */
   year: string;
   title: string;
   place: string;
@@ -51,6 +54,8 @@ export async function POST(request: Request) {
       lat,
       radius_m,
       year,
+      year_from,
+      year_to,
       tags,
       archive,
       fond,
@@ -130,8 +135,17 @@ export async function POST(request: Request) {
       )`);
     }
 
-    if (year) {
-      whereParts.push(Prisma.sql`${+year} BETWEEN fy.start_year AND fy.end_year`);
+    // A file matches when its own [start_year, end_year] overlaps the requested
+    // window. With a single `year` (or from === to) that is the old "year falls
+    // inside the file's range" test; an open end leaves that side unbounded.
+    const yearFrom = year_from || year;
+    const yearTo = year_to || year;
+    if (yearFrom && yearTo) {
+      whereParts.push(Prisma.sql`fy.start_year <= ${+yearTo} AND fy.end_year >= ${+yearFrom}`);
+    } else if (yearFrom) {
+      whereParts.push(Prisma.sql`fy.end_year >= ${+yearFrom}`);
+    } else if (yearTo) {
+      whereParts.push(Prisma.sql`fy.start_year <= ${+yearTo}`);
     }
 
     if (archive || fond || inventory || file) {

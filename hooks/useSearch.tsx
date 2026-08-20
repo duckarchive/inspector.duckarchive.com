@@ -41,6 +41,19 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
       }
     });
 
+    // A single "year" used to mean "this year falls inside the file's range";
+    // it now seeds both ends of the range so old links keep their meaning.
+    if ("year" in raw && typeof raw.year === "string") {
+      if (!("year_from" in raw)) {
+        raw.year_from = raw.year;
+      }
+      if (!("year_to" in raw)) {
+        raw.year_to = raw.year;
+      }
+      delete raw.year;
+      needsRewrite = true;
+    }
+
     // "q" is the shorthand the search boxes push: a single dash-joined full code
     if ("q" in raw && typeof raw.q === "string") {
       const [a, f, i, file] = raw.q.toLocaleUpperCase().split("-");
