@@ -21,7 +21,7 @@ const InstitutionsTable: React.FC<InstitutionsTableProps> = ({ authors }) => {
       <div className="h-64 grow">
         <GeoDuckMap
           key="static-geoduck-map"
-          className="rounded-lg text-primary"
+          className="rounded-lg text-accent"
           positions={prepareLocations(authors)}
           hideLayers={{ searchInput: true, historicalLayers: true }}
           scrollWheelZoom
