@@ -119,14 +119,18 @@
     --danger-soft: #ffdad6; /* error-container */
     --danger-soft-foreground: #93000a; /* on-error-container */
 
-    --field-background: #ffffff; /* surface-container-lowest */
+    /* Fields wear the DuckTable's chrome so a form and a grid read as one system:
+     * ag-grid derives --ag-border-color and --ag-header-background-color from
+     * --default, so pointing the field tokens at the same source keeps them
+     * matched in both themes without repeating the values. */
+    --field-background: color-mix(in srgb, transparent, var(--default) 50%);
     --field-foreground: var(--foreground);
     --field-placeholder: #74777b; /* neutral outline — muted would read as real text */
 
     /* HeroUI ships --field-border-width: 0px, so inputs are borderless out of
      * the box. Setting both here gives every field a default outline; hover and
      * focus borders derive from --field-border automatically. */
-    --field-border: #c4c6ca; /* neutral outline-variant — greyscale, not the warm ramp */
+    --field-border: var(--default);
     --field-border-width: 1px;
 
     --border: #e3bfb1; /* outline-variant */
@@ -135,7 +139,8 @@
 
     --surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.03);
     --overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.08);
-    --field-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.03);
+    /* Fields sit flat like the DuckTable — the 1px border is the whole edge. */
+    --field-shadow: none;
   }
 
   .dark,
@@ -167,17 +172,17 @@
     --danger-soft: #93000a; /* on-error-container */
     --danger-soft-foreground: #ffdad6; /* error-container */
 
-    --field-background: #1a1c1e;
+    /* --field-background and --field-border follow --default (redefined above),
+     * so they track the DuckTable in dark without their own values. */
     --field-foreground: var(--foreground);
     --field-placeholder: #8e9195; /* neutral dark outline */
-    --field-border: #44474a; /* neutral dark outline-variant */
 
     --border: #53433c;
     --separator: #53433c;
 
     --surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.3);
     --overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.45);
-    --field-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.3);
+    /* --field-shadow stays `none` from :root */
   }
 }
 

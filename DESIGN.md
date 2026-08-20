@@ -26,10 +26,10 @@ themes:
     danger-foreground: '#ffffff' # on-error
     danger-soft: '#ffdad6' # error-container
     danger-soft-foreground: '#93000a' # on-error-container
-    field-background: '#ffffff' # surface-container-lowest
+    field-background: color-mix(in srgb, transparent, var(--default) 50%) # = DuckTable header fill
     field-foreground: '#1a1c1e' # on-surface
     field-placeholder: '#74777b' # neutral outline
-    field-border: '#c4c6ca' # neutral outline-variant — greyscale, not the warm ramp
+    field-border: var(--default) # = DuckTable border (#e8e8ea light / #292a2c dark)
     field-border-width: 1px # HeroUI ships 0px — fields are borderless without this
     border: '#e3bfb1' # outline-variant
     separator: '#e3bfb1' # outline-variant
@@ -53,9 +53,7 @@ themes:
     success-foreground: '#005234' # on-secondary-fixed-variant
     danger: '#ffb4ab' # dark error
     danger-foreground: '#690005' # dark on-error
-    field-background: '#1a1c1e'
-    field-placeholder: '#8e9195' # neutral dark outline
-    field-border: '#44474a' # neutral dark outline-variant
+    field-placeholder: '#8e9195' # neutral dark outline (background/border follow --default)
     border: '#53433c'
     separator: '#53433c'
     scrollbar-thumb: '#53433c'
@@ -188,6 +186,7 @@ HeroUI v3 variants: `primary`, `secondary`, `tertiary`, `outline`, `ghost`, `dan
 
 ### Input Fields
 - Every field carries a **1px `field-border`** by default. HeroUI ships `--field-border-width: 0px` (borderless), so `styles/globals.css` sets both the width and the color; hover and focus borders derive from `--field-border` automatically via `color-mix`, and invalid state uses `--color-field-border-invalid`.
+- **Fields match the DuckTable.** `--field-border` and `--field-background` point at `--default` and at the same `color-mix(… var(--default) 50%)` the grid uses for its header, because ag-grid derives `--ag-border-color` / `--ag-header-background-color` from that token too. A form and a grid on the same page therefore share one border color and one surface tint in both themes, and stay in sync if `--default` ever moves — don't re-specify these per theme.
 - `InputGroup` addons (`__prefix` / `__suffix`) have their divider border zeroed in `styles/globals.css`. HeroUI sizes that divider from `--field-border-width`, which suits text addons (`https://`); every addon here is an icon or button, where it reads as a stray line inside the field. Only the field's outer border should be visible.
 - Large height (`h-14` / `size="lg"`, 48px+) on primary search surfaces.
 - Border and placeholder are both **neutral greyscale**, not the palette's warm `outline` / `outline-variant` — the warm hue read as a tint on every field.
