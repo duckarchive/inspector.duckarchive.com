@@ -42,20 +42,52 @@ old's missing coords filled from the import, tags unioned, import info
 segments appended unless already present (Повіт: skipped when the повіт is
 already in the old title), import author deleted.
 
+## Round 2 (applied 2026-08-20) — file-link overlap
+
+The user reported two survivors ("Носківці", "Стадниця"), both parked in
+round 1's ambiguous list. The signal round 1 lacked: every bare import
+carries the file link from `2026-08-20-parafii-file-authors` (registry URL
+→ DGS → online_copy → file). **If a candidate is already attached to that
+same file, both are documented in the same confessional book** — decisive
+evidence of the same parish. Of the 111 ambiguous imports, 91 had a file
+link and 51 shared it with ≥1 candidate; **48 merged**:
+
+- `shared_file` (36) — exactly one candidate shares the file.
+- `shared_file+dedication` (12) — several share it, but the import title
+  names its own dedication ("Пиків (містечко), Свято-Покровська" →
+  "Покровська церква, м. Пиків"), picking exactly one. All 12 were
+  eyeballed against their rejected same-file rivals; the rivals are
+  genuinely different churches.
+
+The rule reproduced both user-reported pairs without being tuned to them
+(Носківці → "Різдво-богородична церква … Станіславчицька волость",
+Стадниця → "Дмитрівська церква … Стрижавська волость"), and those targets
+are also the best-attested authors (29 and 24 files respectively).
+
 ## Left for manual review
 
-- `review-ambiguous.csv` — **111 bare imports** with multiple valid
-  candidates that are genuinely different churches (e.g. "Стадниця" with
-  Дмитрівська + another church in the same village): can't tell which
-  parish the confessional-book link belongs to without opening the source.
+- `review-ambiguous.csv` — the **63 imports still unresolved** after round
+  2: no candidate shares their file (or they have no file link at all), and
+  the village genuinely holds several churches. Sorted by shared_files then
+  old_files so the likeliest target is first per import.
+- **Pre-existing old-vs-old duplicates** are now the visible remainder, e.g.
+  "Дмитрівська церква, с. Стадниця … Стрижавська волость" (24 files) vs
+  "Дмитріївська церква, с. Стадниця … Подільська губернія" (4 files), and
+  the two Носківці Різдво-Богородиц* rows. These predate the parish import
+  — a `волость`-suffixed series with консисторія info (3,799 authors) and a
+  `губернія`-suffixed one without (1,065) — and need their own dedup pass.
 - 370 bare imports with no candidate at all (nothing to merge into) and the
   44 whose candidates all failed the guards — kept as standalone authors.
 - Pre-existing old-vs-old duplicates surfaced by the `clones` class.
 
 ## Files
 
-- `merge-list.csv` — the 196 applied pairs (source of truth).
-- `review-ambiguous.csv` — the 111 unresolved imports with candidates.
+- `merge-list.csv` — round 1's 196 applied pairs (source of truth).
+- `merge-list-round2.csv` — round 2's 48 applied pairs.
+- `*-round2.sql` / `pre-state-*-round2.csv` — round 2's apply, rollback and
+  snapshots (same shape as round 1; run round 2's rollback first if undoing
+  both).
+- `review-ambiguous.csv` — the 63 imports still unresolved after round 2.
 - `pre-state-imp-authors.csv` / `pre-state-old-authors.csv` /
   `pre-state-file-authors.csv` / `pre-state-case-authors.csv` — full
   pre-merge snapshots of every involved row.
