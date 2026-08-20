@@ -71,13 +71,13 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
       <GoogleAnalytics />
       <body
         className={clsx(
-          "min-h-screen bg-background bg-dotted font-mono antialiased",
+          "min-h-dvh bg-background bg-dotted font-mono antialiased",
           fontSans.variable,
           fontMono.variable,
         )}
       >
         <Providers i18nMessages={messages} i18nLocale={locale}>
-          <div className="relative flex flex-col h-screen overflow-y-scroll">
+          <div className="relative flex flex-col h-dvh overflow-y-scroll">
             <Suspense fallback={<DuckLoader />}>{children}</Suspense>
           </div>
         </Providers>

@@ -201,6 +201,22 @@ input:focus {
   border-width: 0;
 }
 
+/*
+ * DuckNav (@duckarchive/framework) adds h-screen to its <nav> while the mobile
+ * menu is open, but the app shell in app/layout.tsx is a flex column, so the nav
+ * is a flex item that shrinks to share space with <main> — 100vh became ~43% of
+ * the screen. Promote it to a real overlay for as long as it is open; the class
+ * is only present then, so the closed nav keeps its sticky behaviour.
+ */
+nav.h-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100dvh;
+  flex-shrink: 0;
+}
+
 .bg-dotted {
   background-image: radial-gradient(color-mix(in srgb, var(--foreground) 10%, transparent) 1px, transparent 1px);
   background-size: calc(var(--spacing) * 6) calc(var(--spacing) * 6);
