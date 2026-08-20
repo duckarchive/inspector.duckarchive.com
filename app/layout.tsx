@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
+import { apiJsonLd } from "@/config/api-json-ld";
 import { fontMono, fontSans } from "@duckarchive/framework/fonts";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
@@ -67,7 +68,9 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
 
   return (
     <html suppressHydrationWarning lang={locale} className="overflow-y-hidden">
-      <head />
+      <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(apiJsonLd) }} />
+      </head>
       <GoogleAnalytics />
       <body
         className={clsx(

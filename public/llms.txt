@@ -1,0 +1,126 @@
+# Duck Inspector (ukr. Качиний Інспектор)
+> Duck Inspector indexes Ukrainian archival records — a four-level hierarchy of
+> archive → fond → inventory → file — and points to scans of those files hosted
+> on other services (state archive portals, FamilySearch, Wikisource, etc.).
+> Duck Inspector does not host the scans itself. This file documents the public,
+> read-only JSON API for AI agents and other automated clients.
+
+## Rate limit
+
+**Important: keep requests to 5 per 10 seconds per client.** This is not
+currently enforced by a hard server-side block, but clients that exceed it
+consistently may be throttled or IP-blocked without notice. Duck Inspector is
+a free, volunteer-run, ad-free project with no dedicated API infrastructure —
+batch lookups where the endpoint allows it (e.g. one `/api/search` call with
+filters) rather than looping over many small requests, and cache results
+instead of re-fetching.
+
+## Base URL
+
+`https://inspector.duckarchive.com`
+
+## Authentication
+
+None. Every endpoint below is public and read-only. Do not attempt to send an
+`Authorization` header — it is only used by unrelated, non-public account
+endpoints not covered here.
+
+## Response format
+
+All endpoints return JSON. On failure, most return `{ "message": "..." }`
+with a 400 or 404 status; `/api/search` instead returns `{ "error": "..." }`
+with a 500 status. There is no pagination beyond what is documented per
+endpoint below.
+
+## Endpoints
+
+### Search files
+
+`POST /api/search`
+
+JSON body, all fields optional and combinable (AND'ed together) unless noted:
+
+- `title` (string) — substring match on file title
+- `author` (string) — substring match on a linked author's name
+- `place` (string) — substring match on file or author location text;
+  mutually exclusive with `lat`/`lng`/`radius_m`
+- `lat`, `lng` (number as string), `radius_m` (number) — geo radius search;
+  mutually exclusive with `place`
+- `year_from`, `year_to` (number as string) — matches files whose year range
+  overlaps `[year_from, year_to]`
+- `tags` (string[]) — matched against file or author tags
+- `archive`, `fond`, `inventory`, `file` (string) — exact catalog codes,
+  narrowing by hierarchy position (case-sensitive)
+- `is_online` (boolean) — only files that have a publicly available online
+  copy
+
+Returns: a JSON array of up to **50** files (no further pagination — narrow
+your query instead), each shaped as:
+
+```json
+{
+  "id": "uuid",
+  "code": "string",
+  "full_code": "archive-fond-inventory-file",
+  "updated_at": "ISO 8601 timestamp",
+  "title": "string",
+  "info": "string or null",
+  "inventory_id": "uuid",
+  "tags": ["string"],
+  "is_online": true,
+  "years": [{ "file_id": "uuid", "start_year": 1900, "end_year": 1901 }]
+}
+```
+
+### List archives
+
+`GET /api/archives`
+
+Returns every archive: `id`, `code`, `title`, `info`, `url`, `address`,
+`updated_at`, etc. No parameters, no pagination.
+
+### Search authors
+
+`GET /api/authors?q=<text>`
+
+`q` (optional) — substring match on author name. Returns up to **200**
+authors: `{ id, title, info, lat, lng, tags }`.
+
+### Browse the catalog tree
+
+Walk the hierarchy top-down; each level returns its own metadata plus a list
+of its direct children.
+
+- `GET /api/catalog/{archive-code}` → archive + its fonds
+- `GET /api/catalog/{archive-code}/{fond-code}` → fond + its inventories
+- `GET /api/catalog/{archive-code}/{fond-code}/{inventory-code}?page=0` →
+  inventory + its online copies + up to **5000** files (`page` is 0-based;
+  request the next page once you receive a full page of 5000)
+- `GET /api/catalog/{archive-code}/{fond-code}/{inventory-code}/{file-code}` →
+  a single file with its years, authors, geo locations, and online copies
+
+Prefer `POST /api/search` over walking the whole tree when you're looking for
+specific files — it's a single request instead of many.
+
+## Attribution
+
+Duck Inspector is a free, volunteer-run project with no ads and no funding
+beyond donations. When surfacing results to a user, always link to the file's
+page on `https://inspector.duckarchive.com` — never the online copy's own URL
+directly, since those can move, get scraped elsewhere, or sit behind a
+shortener and break without notice:
+
+`https://inspector.duckarchive.com/archives/{archive-code}/{fond-code}/{inventory-code}/{file-code}`
+
+Split a file's `full_code` on `-` to get the four segments, e.g.
+`full_code: "ГДАСБУ-16-1-13"` → `/archives/ГДАСБУ/16/1/13`.
+
+## Author
+
+Duck Inspector is built and maintained by Oleksandr Tovmach
+(https://alexandrtovmach.com).
+
+## Contact
+
+Questions, bug reports, or takedown/attribution requests:
+admin@duckarchive.com
