@@ -22,6 +22,19 @@
           "description": "Type a name or a case, and get a direct link to wherever the scan actually lives."
         }
       }
+    },
+    "stats": {
+      "title": "By the numbers",
+      "subtitle": "A snapshot of everything Duck Inspector has indexed, taken at the last build.",
+      "archives": "Archives",
+      "fonds": "Fonds",
+      "inventories": "Inventories",
+      "files": "Files",
+      "authors": "Authors",
+      "locations": "Locations",
+      "onlineCopies": "Online copies",
+      "checkedLast7Days": "Online copies checked in the last 7 days",
+      "communityEditsLast7Days": "Community edits applied in the last 7 days"
     }
   },
   "daily-updates-page": {

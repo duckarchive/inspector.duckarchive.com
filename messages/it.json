@@ -22,6 +22,19 @@
           "description": "Digita un nome o un fascicolo e ottieni un link diretto a dove si trova davvero la scansione."
         }
       }
+    },
+    "stats": {
+      "title": "In numeri",
+      "subtitle": "Un'istantanea di tutto ciò che Duck Inspector ha indicizzato, presa all'ultima build.",
+      "archives": "Archivi",
+      "fonds": "Fondi",
+      "inventories": "Inventari",
+      "files": "Fascicoli",
+      "authors": "Autori",
+      "locations": "Località",
+      "onlineCopies": "Copie online",
+      "checkedLast7Days": "Copie online controllate negli ultimi 7 giorni",
+      "communityEditsLast7Days": "Modifiche della comunità applicate negli ultimi 7 giorni"
     }
   },
   "daily-updates-page": {

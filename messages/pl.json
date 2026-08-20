@@ -22,6 +22,19 @@
           "description": "Wpisz nazwisko lub sprawę i otrzymaj bezpośredni link tam, gdzie skan faktycznie się znajduje."
         }
       }
+    },
+    "stats": {
+      "title": "W liczbach",
+      "subtitle": "Migawka wszystkiego, co Duck Inspector zaindeksował, wykonana przy ostatniej kompilacji.",
+      "archives": "Archiwa",
+      "fonds": "Fundusze",
+      "inventories": "Opisy",
+      "files": "Sprawy",
+      "authors": "Autorzy",
+      "locations": "Lokalizacje",
+      "onlineCopies": "Kopie online",
+      "checkedLast7Days": "Kopii online sprawdzonych w ciągu ostatnich 7 dni",
+      "communityEditsLast7Days": "Poprawek społeczności zastosowanych w ciągu ostatnich 7 dni"
     }
   },
   "daily-updates-page": {

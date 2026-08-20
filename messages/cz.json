@@ -22,6 +22,19 @@
           "description": "Zadejte jméno nebo spis a získáte přímý odkaz tam, kde se sken skutečně nachází."
         }
       }
+    },
+    "stats": {
+      "title": "V číslech",
+      "subtitle": "Přehled všeho, co Duck Inspector zaindexoval — stav k poslednímu sestavení.",
+      "archives": "Archivy",
+      "fonds": "Fondy",
+      "inventories": "Inventáře",
+      "files": "Spisy",
+      "authors": "Autoři",
+      "locations": "Lokality",
+      "onlineCopies": "Online kopie",
+      "checkedLast7Days": "Online kopií zkontrolováno za posledních 7 dní",
+      "communityEditsLast7Days": "Úprav komunity provedeno za posledních 7 dní"
     }
   },
   "daily-updates-page": {

@@ -22,6 +22,19 @@
           "description": "Escribe un nombre o un expediente y obtén un enlace directo a donde realmente está el escaneo."
         }
       }
+    },
+    "stats": {
+      "title": "En cifras",
+      "subtitle": "Una instantánea de todo lo que Duck Inspector ha indexado, tomada en la última compilación.",
+      "archives": "Archivos",
+      "fonds": "Fondos",
+      "inventories": "Inventarios",
+      "files": "Expedientes",
+      "authors": "Autores",
+      "locations": "Ubicaciones",
+      "onlineCopies": "Copias en línea",
+      "checkedLast7Days": "Copias en línea verificadas en los últimos 7 días",
+      "communityEditsLast7Days": "Ediciones de la comunidad aplicadas en los últimos 7 días"
     }
   },
   "daily-updates-page": {

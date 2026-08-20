@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { getTranslations } from "next-intl/server";
 import HomeSearch from "@/components/home-search";
 import ProcessSection from "./components/home/process-section";
+import StatsSection from "./components/home/stats-section";
 
 const WelcomePage: NextPage = async () => {
   const t = await getTranslations("home-page");
@@ -16,6 +17,7 @@ const WelcomePage: NextPage = async () => {
       </section>
 
       <ProcessSection />
+      <StatsSection />
     </div>
   );
 };

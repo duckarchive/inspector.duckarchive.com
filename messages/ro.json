@@ -22,6 +22,19 @@
           "description": "Introdu un nume sau un dosar și primești un link direct către locul unde se află scanarea."
         }
       }
+    },
+    "stats": {
+      "title": "În cifre",
+      "subtitle": "O instantanee a tot ce a indexat Duck Inspector, realizată la ultima compilare.",
+      "archives": "Arhive",
+      "fonds": "Fonduri",
+      "inventories": "Inventare",
+      "files": "Dosare",
+      "authors": "Autori",
+      "locations": "Locații",
+      "onlineCopies": "Copii online",
+      "checkedLast7Days": "Copii online verificate în ultimele 7 zile",
+      "communityEditsLast7Days": "Modificări ale comunității aplicate în ultimele 7 zile"
     }
   },
   "daily-updates-page": {
