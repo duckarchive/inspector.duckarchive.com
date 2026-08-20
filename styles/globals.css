@@ -109,15 +109,21 @@
     --accent: #ff5c00;
     --accent-foreground: #ffffff;
 
-    --success: #006c47; /* secondary */
-    --success-foreground: #ffffff; /* on-secondary */
-    --success-soft: #7ff6bb; /* secondary-container */
-    --success-soft-foreground: #00714a; /* on-secondary-container */
+    /* Status colours are theme-independent — a danger is a danger on any ground.
+     * Both fills are mid-tone, so they separate from the light (#f9f9fc) and dark
+     * (#131316) background alike while carrying white text at >=5:1. The `-soft`
+     * variants are deliberately left to HeroUI, which derives them from these, so
+     * the hue stays identical in both themes too. Do not add .dark overrides. */
+    --danger: #ba1a1a; /* M3 error */
+    --danger-foreground: #ffffff;
 
-    --danger: #ba1a1a; /* error */
-    --danger-foreground: #ffffff; /* on-error */
-    --danger-soft: #ffdad6; /* error-container */
-    --danger-soft-foreground: #93000a; /* on-error-container */
+    --warning: #b45309;
+    --warning-foreground: #ffffff;
+
+    /* Neither M3 tone worked on both grounds — #006c47 disappears on #131316 and
+     * #65dca3 is too pale to carry white text — so this is a mid-tone between them. */
+    --success: #00794f;
+    --success-foreground: #ffffff;
 
     /* Fields wear the DuckTable's chrome so a form and a grid read as one system:
      * ag-grid derives --ag-border-color and --ag-header-background-color from
@@ -159,18 +165,8 @@
     --muted: #d8c3b9; /* dark on-surface-variant */
     --scrollbar-thumb: #53433c; /* dark outline-variant */
 
-    --accent: #ff5c00;
-    --accent-foreground: #ffffff;
-
-    --success: #65dca3; /* secondary-fixed-dim */
-    --success-foreground: #005234; /* on-secondary-fixed-variant */
-    --success-soft: #005234;
-    --success-soft-foreground: #82f9be; /* secondary-fixed */
-
-    --danger: #ffb4ab; /* dark error */
-    --danger-foreground: #690005; /* dark on-error */
-    --danger-soft: #93000a; /* on-error-container */
-    --danger-soft-foreground: #ffdad6; /* error-container */
+    /* No status colours here: --accent, --danger, --warning and --success are
+     * constant across themes and defined once in :root. */
 
     /* --field-background and --field-border follow --default (redefined above),
      * so they track the DuckTable in dark without their own values. */

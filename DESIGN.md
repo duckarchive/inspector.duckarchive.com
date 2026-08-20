@@ -18,14 +18,13 @@ themes:
     accent: '#ff5c00' # brand orange — deliberately NOT the M3 primary (see Colors)
     accent-foreground: '#ffffff'
     # accent-soft / -foreground are left to HeroUI, which derives them from accent
-    success: '#006c47' # secondary
-    success-foreground: '#ffffff' # on-secondary
-    success-soft: '#7ff6bb' # secondary-container
-    success-soft-foreground: '#00714a' # on-secondary-container
-    danger: '#ba1a1a' # error
-    danger-foreground: '#ffffff' # on-error
-    danger-soft: '#ffdad6' # error-container
-    danger-soft-foreground: '#93000a' # on-error-container
+    # status colours — constant across themes, never override in dark
+    danger: '#ba1a1a' # M3 error
+    danger-foreground: '#ffffff'
+    warning: '#b45309'
+    warning-foreground: '#ffffff'
+    success: '#00794f'
+    success-foreground: '#ffffff'
     field-background: color-mix(in srgb, transparent, var(--default) 50%) # = DuckTable header fill
     field-foreground: '#1a1c1e' # on-surface
     field-placeholder: '#74777b' # neutral outline
@@ -37,7 +36,7 @@ themes:
     focus: accent
     surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.03)
     overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.08)
-    field-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.03)
+    field-shadow: none # fields sit flat like the DuckTable
   dark: # M3 dark counterpart of the same palette
     background: '#131316'
     foreground: '#e2e2e5'
@@ -47,19 +46,13 @@ themes:
     overlay: '#1e1f21'
     default: '#292a2c'
     muted: '#d8c3b9' # dark on-surface-variant
-    accent: '#ff5c00' # identical orange in both themes
-    accent-foreground: '#ffffff'
-    success: '#65dca3' # secondary-fixed-dim
-    success-foreground: '#005234' # on-secondary-fixed-variant
-    danger: '#ffb4ab' # dark error
-    danger-foreground: '#690005' # dark on-error
+    # no status colours here — accent / danger / warning / success are constant
     field-placeholder: '#8e9195' # neutral dark outline (background/border follow --default)
     border: '#53433c'
     separator: '#53433c'
     scrollbar-thumb: '#53433c'
     surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.3)
     overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.45)
-    field-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.3)
 radius: # HeroUI derives component radii from --radius
   base: 1rem # --radius
   field: 1.5rem # --field-radius = --radius * 1.5 — inputs, selects, textareas
@@ -136,7 +129,9 @@ The palette is a **Material 3** scheme: a burnt-orange primary over a warm-neutr
 - **Typography:** `foreground` (`#1A1C1E`) for headlines and body. `muted` (`#5A4136`, M3 on-surface-variant) is the warm secondary tone for metadata and descriptions.
 - **Accent:** `accent` (`#FF5C00`, Crisp Orange) is used exclusively for primary calls to action, active states, and critical status indicators. `focus` is the same value — HeroUI applies it to focus rings. `accent-soft` is left undefined so HeroUI derives it from the accent.
   - This is the **one deliberate departure from the M3 palette**: the scheme's primary (`#A33E00`) reads muddy against the orange logo, so the brand orange is kept in both themes. The tradeoff is contrast — white on `#FF5C00` is ~3.1:1, which clears AA for large text and UI components but not for normal-size body text. Keep accent surfaces to buttons, chips and indicators; don't set long-form copy on it.
-- **Status:** `success` maps from M3 secondary (`#006C47`), `danger` from M3 error (`#BA1A1A`); both have `-soft` container variants. `warning` stays on the HeroUI default until the palette defines one.
+- **Status:** `danger` (`#BA1A1A`), `warning` (`#B45309`) and `success` (`#00794F`) are **theme-independent** — a danger is a danger on any ground. Each fill is mid-tone, so it separates from the light and the dark background alike (≥2.8:1 either way) and carries white text at ≥5:1. Never add `.dark` overrides for them.
+  - `success` is not an M3 tone: the scheme's `#006C47` all but disappears on the dark ground and its dark counterpart `#65DCA3` is too pale to carry white text, so the constant sits between them.
+  - Their `-soft` variants are left to HeroUI, which derives the tint from the base colour, so the hue is constant too. The matching `-soft-foreground` still varies by theme *on purpose*: it is mixed with `--foreground` so label text stays legible on a translucent tint.
 - **Dark theme** is the M3 dark counterpart of the same palette over a `#131316` ground, keeping the identical orange accent.
 - M3 *tertiary* (`#336666`) has no HeroUI slot and is currently unused.
 
