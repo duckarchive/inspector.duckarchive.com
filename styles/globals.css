@@ -76,43 +76,61 @@
 }
 
 /*
- * HeroUI v3 theme overrides — ported from the v2 `heroui()` plugin themes.
- * Orange (#ff5c00) accent over an Apple-style neutral grey ramp.
+ * HeroUI v3 theme — Material 3 palette (see DESIGN.md) over a warm-neutral
+ * surface ramp, with the brand orange kept as the accent instead of the M3
+ * primary. Comments name the M3 role each variable comes from; dark is the
+ * M3 dark counterpart of the same palette.
  */
 @layer theme {
   :root {
     --radius: 1rem;
 
-    --background: #ffffff;
-    --foreground: #1d1d1f;
+    --background: #f9f9fc; /* background */
+    --foreground: #1a1c1e; /* on-background */
 
-    --surface: #ffffff;
+    --surface: #ffffff; /* surface-container-lowest */
     --surface-foreground: var(--foreground);
-    --surface-secondary: #f5f5f7;
+    --surface-secondary: #f3f3f6; /* surface-container-low */
     --surface-secondary-foreground: var(--foreground);
-    --surface-tertiary: #e8e8ed;
+    --surface-tertiary: #eeeef0; /* surface-container */
     --surface-tertiary-foreground: var(--foreground);
 
-    --overlay: #ffffff;
+    --overlay: #ffffff; /* surface-container-lowest */
     --overlay-foreground: var(--foreground);
 
-    --default: #f5f5f7;
-    --default-foreground: #1d1d1f;
-    --muted: #6e6e73;
-    --scrollbar: #d2d2d7;
+    --default: #e8e8ea; /* surface-container-high */
+    --default-foreground: var(--foreground);
+    --muted: #5a4136; /* on-surface-variant */
+    --scrollbar-thumb: #e3bfb1; /* outline-variant */
+    --scrollbar-track: transparent;
 
+    /* Brand orange, kept from the previous theme — the M3 primary (#a33e00)
+     * read as muddy next to the logo. Soft variants derive from it. */
     --accent: #ff5c00;
     --accent-foreground: #ffffff;
 
-    --danger: #ba1a1a;
-    --danger-foreground: #ffffff;
+    --success: #006c47; /* secondary */
+    --success-foreground: #ffffff; /* on-secondary */
+    --success-soft: #7ff6bb; /* secondary-container */
+    --success-soft-foreground: #00714a; /* on-secondary-container */
 
-    --field-background: #ffffff;
-    --field-foreground: #1d1d1f;
-    --field-placeholder: var(--muted);
+    --danger: #ba1a1a; /* error */
+    --danger-foreground: #ffffff; /* on-error */
+    --danger-soft: #ffdad6; /* error-container */
+    --danger-soft-foreground: #93000a; /* on-error-container */
 
-    --border: #d2d2d7;
-    --separator: #d2d2d7;
+    --field-background: #ffffff; /* surface-container-lowest */
+    --field-foreground: var(--foreground);
+    --field-placeholder: #74777b; /* neutral outline — muted would read as real text */
+
+    /* HeroUI ships --field-border-width: 0px, so inputs are borderless out of
+     * the box. Setting both here gives every field a default outline; hover and
+     * focus borders derive from --field-border automatically. */
+    --field-border: #c4c6ca; /* neutral outline-variant — greyscale, not the warm ramp */
+    --field-border-width: 1px;
+
+    --border: #e3bfb1; /* outline-variant */
+    --separator: #e3bfb1; /* outline-variant */
     --focus: var(--accent);
 
     --surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.03);
@@ -122,31 +140,40 @@
 
   .dark,
   [data-theme="dark"] {
-    --background: #000000;
-    --foreground: #f5f5f7;
+    --background: #131316; /* dark surface */
+    --foreground: #e2e2e5; /* dark on-surface */
 
-    --surface: #1d1d1f;
-    --surface-secondary: #2c2c2e;
-    --surface-tertiary: #3a3a3c;
+    --surface: #1a1c1e; /* dark surface-container-low */
+    --surface-secondary: #1e1f21; /* dark surface-container */
+    --surface-tertiary: #292a2c; /* dark surface-container-high */
 
-    --overlay: #1d1d1f;
+    --overlay: #1e1f21;
 
-    --default: #2c2c2e;
-    --default-foreground: #f5f5f7;
-    --muted: #8e8e93;
-    --scrollbar: #48484a;
+    --default: #292a2c;
+    --default-foreground: var(--foreground);
+    --muted: #d8c3b9; /* dark on-surface-variant */
+    --scrollbar-thumb: #53433c; /* dark outline-variant */
 
     --accent: #ff5c00;
     --accent-foreground: #ffffff;
 
-    --danger: #ff5449;
-    --danger-foreground: #ffffff;
+    --success: #65dca3; /* secondary-fixed-dim */
+    --success-foreground: #005234; /* on-secondary-fixed-variant */
+    --success-soft: #005234;
+    --success-soft-foreground: #82f9be; /* secondary-fixed */
 
-    --field-background: #1d1d1f;
+    --danger: #ffb4ab; /* dark error */
+    --danger-foreground: #690005; /* dark on-error */
+    --danger-soft: #93000a; /* on-error-container */
+    --danger-soft-foreground: #ffdad6; /* error-container */
+
+    --field-background: #1a1c1e;
     --field-foreground: var(--foreground);
+    --field-placeholder: #8e9195; /* neutral dark outline */
+    --field-border: #44474a; /* neutral dark outline-variant */
 
-    --border: #424245;
-    --separator: #424245;
+    --border: #53433c;
+    --separator: #53433c;
 
     --surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.3);
     --overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.45);
@@ -156,6 +183,17 @@
 
 input:focus {
   outline: transparent !important;
+}
+
+/*
+ * HeroUI draws a divider between an InputGroup addon and the field, sized from
+ * --field-border-width. That divider is meant for text addons ("https://"); every
+ * addon in this app is an icon or a button, where it reads as a stray line inside
+ * the field. The field's own outer border stays.
+ */
+.input-group__prefix,
+.input-group__suffix {
+  border-width: 0;
 }
 
 .bg-dotted {
