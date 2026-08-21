@@ -57,7 +57,7 @@ const FlowNode: React.FC<FlowNodeProps> = ({ label, pos, className, truncate, co
     style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
   >
     <span
-      className={`${className} ${truncate ? "block max-w-28 truncate" : "whitespace-nowrap"}`}
+      className={`rounded-md bg-background px-2 py-1 ${className} ${truncate ? "block max-w-28 truncate" : "whitespace-nowrap"}`}
       style={color ? { color } : undefined}
     >
       {label}
