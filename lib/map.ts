@@ -1,4 +1,4 @@
-import { Author, CaseLocation } from "@generated/prisma/client/client";
+import { Author, FileLocation } from "@generated/prisma/client/client";
 import type { GeoDuckMapProps } from "@duckarchive/map";
 
 /** Golden angle ≈ 137.5° — sunflower-seed packing, uniform in every direction. */
@@ -62,7 +62,7 @@ const tag2icon: Record<string, string> = {
 export const prepareLocations = (
   locations: (
     | Pick<Author, "id" | "lat" | "lng" | "title" | "tags">
-    | Pick<CaseLocation, "lat" | "lng" | "radius_m">
+    | Pick<FileLocation, "lat" | "lng" | "radius_m">
   )[],
 ): GeoDuckMapProps["positions"] => {
   const markers: GeoDuckMapProps["positions"] = locations.map(({ lat, lng, ...rest }) => {
@@ -82,7 +82,7 @@ export const prepareLocations = (
 };
 
 export const findCenter = (
-  locations: (Pick<Author, "lat" | "lng"> | Pick<CaseLocation, "lat" | "lng">)[],
+  locations: (Pick<Author, "lat" | "lng"> | Pick<FileLocation, "lat" | "lng">)[],
 ): [number, number] => {
   if (locations.length === 0) return [0, 0];
   const validLocations = locations.filter((loc) => loc.lat !== null && loc.lng !== null);

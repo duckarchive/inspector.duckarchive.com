@@ -99,10 +99,21 @@ export async function POST(request: Request) {
       // A file matches through its own coordinates or through those of any author
       // (church/parish) it is attributed to — authors carry the geocoded locations.
       // Only file_locations has its own radius; an author is a bare point.
+      //
+      // Both ST_DWithin calls are served by GiST indexes on the exact expression
+      // ST_SetSRID(ST_MakePoint(lng, lat), 4326)::geography (file_locations_geog_idx,
+      // authors_geog_idx) — keep the expression text identical. A per-row distance
+      // (radius_m + r) can't use the index, so file_locations is first narrowed with
+      // a constant upper bound (r + max radius_m) and then checked exactly.
       ctes.push(Prisma.sql`geo_files AS (
         SELECT l.file_id
         FROM "file_locations" l
         WHERE ST_DWithin(
+          ST_SetSRID(ST_MakePoint(l.lng, l.lat), 4326)::geography,
+          ${target},
+          ${radiusValue} + (SELECT COALESCE(MAX(radius_m), 0) FROM "file_locations")
+        )
+        AND ST_DWithin(
           ST_SetSRID(ST_MakePoint(l.lng, l.lat), 4326)::geography,
           ${target},
           COALESCE(l.radius_m, 0) + ${radiusValue}
