@@ -4,6 +4,7 @@
     "description": "Duck Inspector is a search service that allows you to find an archive file online. Just enter the details of the archive, fund, description, and file and get a link to the source.",
     "search-label": "Search by file title",
     "search-button": "Search",
+    "search-footer": "{count} records",
     "process": {
       "title": "How it works",
       "subtitle": "Duck Inspector doesn't store the archives — it watches where they already live and gives you one door in.",

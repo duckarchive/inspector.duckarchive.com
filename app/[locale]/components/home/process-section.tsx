@@ -8,9 +8,9 @@ const ProcessSection: React.FC = async () => {
 
   return (
     <section className="flex w-full flex-col gap-8">
-      <div className="flex flex-col gap-3 text-center">
+      <div className="flex flex-col gap-3">
         <h2 className="text-headline-lg-mobile md:text-headline-lg tracking-tight">{t("title")}</h2>
-        <p className="mx-auto max-w-2xl text-body-lg text-muted text-balance">{t("subtitle")}</p>
+        <p className="max-w-2xl text-body-lg text-muted text-balance">{t("subtitle")}</p>
       </div>
 
       <ProcessDiagram duckLabel={t("duckLabel")} />

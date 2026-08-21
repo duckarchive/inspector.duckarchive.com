@@ -4,6 +4,7 @@
     "description": "Duck Inspector je vyhledávací služba, která vám umožňuje vyhledávat archivní spisy online. Stačí zadat údaje o archivu, fondu, popisu a spisu a získáte odkaz na zdroj.",
     "search-label": "Hledat podle názvu",
     "search-button": "Hledat",
+    "search-footer": "{count} záznamů",
     "process": {
       "title": "Jak to funguje",
       "subtitle": "Duck Inspector archivy neukládá — sleduje, kde už existují, a dává vám jeden vstup ke všem.",

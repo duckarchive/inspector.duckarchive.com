@@ -4,6 +4,7 @@
     "description": "Duck Inspector es un servicio de búsqueda que te permite encontrar expedientes de archivo en línea. Simplemente ingresa los detalles del archivo, fondo, descripción y expediente para obtener un enlace a la fuente.",
     "search-label": "Buscar por título",
     "search-button": "Buscar",
+    "search-footer": "{count} registros",
     "process": {
       "title": "Cómo funciona",
       "subtitle": "Duck Inspector no almacena los archivos: vigila dónde ya están y te da una sola puerta de entrada a todos.",

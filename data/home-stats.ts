@@ -8,3 +8,13 @@ import stats from "@generated/home-stats.json";
 export type HomeStats = typeof stats;
 
 export const homeStats: HomeStats = stats;
+
+/** Every count-type stat on the stats page, summed for the home hero's "search over X records" line. */
+export const totalRecords =
+  homeStats.archives +
+  homeStats.fonds +
+  homeStats.inventories +
+  homeStats.files +
+  homeStats.authors +
+  homeStats.locations +
+  homeStats.onlineCopies;

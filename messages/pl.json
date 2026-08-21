@@ -4,6 +4,7 @@
     "description": "Duck Inspector to serwis wyszukiwarki, który pozwala znaleźć archiwalne sprawy online. Wystarczy wpisać dane dotyczące archiwum, funduszu, opisu i sprawy, aby uzyskać link do źródła.",
     "search-label": "Szukaj po nazwie jednostki",
     "search-button": "Szukaj",
+    "search-footer": "{count} rekordów",
     "process": {
       "title": "Jak to działa",
       "subtitle": "Duck Inspector nie przechowuje archiwów — obserwuje, gdzie już się znajdują, i daje jedno wejście do wszystkich.",
@@ -54,7 +55,7 @@
   "navigation": {
     "logo": "Inspektor",
     "main": "Strona główna",
-    "resources": "Zasoby",
+    "resources": "Źródła",
     "inspector": "Inspektor",
     "search": "Wyszukiwanie",
     "archives": "Archiwa",
