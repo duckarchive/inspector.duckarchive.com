@@ -56,6 +56,7 @@ const tag2icon: Record<string, string> = {
   баптизм: "christianCrossIcon",
   євангелізм: "christianCrossIcon",
   "цивільний стан": "buildingIcon",
+  "суд": "courtIcon",
 };
 
 export const prepareLocations = (
