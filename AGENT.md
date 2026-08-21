@@ -63,7 +63,8 @@ app/
     sync/familysearch/          # FamilySearch sync endpoints (items, projects)
 components/        # shared React components (tables per hierarchy level, search, modals, report wizard)
 config/            # site.ts (site meta), i18n.ts
-data/              # static datasets (archives, institutions, resources, tags, FamilySearch, DGS lists)
+data/              # static datasets + DB readers (archives, institutions, resources, FamilySearch, DGS lists);
+                   # home-stats.ts / search-vocab.ts read build-time JSON from generated/ (scripts/generate-stats.ts)
 generated/prisma/  # GENERATED — never edit by hand (client + zod)
 hooks/             # useApi, useArchive, useFond, useInventory, useFile, useSearch, useCyrillicParams, useIsMobile, useNoRussians
 i18n/              # next-intl routing/request/constants
@@ -117,6 +118,7 @@ The `fund → description → case` ⇒ `fond → inventory → file` migration 
 - **APIs:** `/api/catalog/*` is the canonical new-structure API and the only one the app itself uses. `/api/archives` (list only, no `[archive-code]`+ tree) is kept because editor pages/`instance-picker` still call it. The legacy fund/description/case-shaped deep endpoints (`/api/archives/[archive-code]`, `.../[fund-code]`, etc.) were deleted — no external consumer needed them preserved.
 - **Search:** `/api/search` queries `files` (+`file_years`, `file_authors`, `authors`, `file_locations`, `online_copies`). Request keys are `fond`/`inventory`/`file`; `useSearch` still rewrites inbound legacy `fund`/`description`/`case` query params. Geo-radius search is live: a file matches through its own `file_locations` OR any linked author's coordinates (authors carry the geocoded church/parish points).
 - **Removed:** `/online-copy-search` page + `/api/online-copy-search` + `lib/online-copy-query.ts` (hard 404, no redirect).
+- **Hot-path DB rules:** catalog pages must not run aggregate queries per request. Tag vocabulary comes from `generated/search-vocab.json` (built by `scripts/generate-stats.ts` on `prebuild`/`predev`), never from a live `UNNEST(tags)` scan. Per-resource online-copy counts live behind `unstable_cache` (1h) in `data/resources.ts` (`getResourcesWithCounts`, only `/resources` needs them); everything else uses `getResources()` (metadata only).
 - The legacy `funds`/`descriptions`/`cases` tables (and their `*_years`/`*_online_copies`/`case_authors` companions) were dropped from the DB and the schema in `@duckarchive/prisma` 6.0.0; only the `fonds`/`inventories`/`files` tree exists. Expression/partial indexes Prisma can't declare (`file_locations_geog_idx`, `authors_geog_idx`, `online_copies_public_by_resource_idx`) live in raw migrations there — keep the geo query text in `app/api/search/route.ts` identical to the index expression or the planner won't use it.
 
 ## In-Progress Work

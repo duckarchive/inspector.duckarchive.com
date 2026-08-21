@@ -41,7 +41,7 @@ const Details: React.FC<{
 );
 
 interface FondTableProps {
-  resources: Resources;
+  resources?: Resources;
   isAdmin?: boolean;
 }
 

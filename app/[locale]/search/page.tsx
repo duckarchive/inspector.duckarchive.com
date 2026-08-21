@@ -1,13 +1,12 @@
 import { NextPage } from "next";
 import { getArchives } from "@/data/archives";
 import Search from "@/components/search";
-import getTags from "@/data/tags";
+import { searchVocab } from "@/data/search-vocab";
 
 const SearchPage: NextPage = async () => {
   const archives = await getArchives();
-  const tags = await getTags();
 
-  return <Search archives={archives} tags={tags} />;
+  return <Search archives={archives} tags={searchVocab.tags} />;
 };
 
 export default SearchPage;

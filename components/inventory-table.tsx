@@ -54,7 +54,7 @@ const Details: React.FC<{
 );
 
 interface InventoryTableProps {
-  resources: Resources;
+  resources?: Resources;
   isAdmin?: boolean;
 }
 

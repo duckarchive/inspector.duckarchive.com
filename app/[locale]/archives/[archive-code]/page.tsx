@@ -1,6 +1,5 @@
 import ArchiveTable from "@/components/archive-table";
 import { Metadata, NextPage } from "next";
-import { getResources } from "@/data/resources";
 import { getCatalogArchiveByCode } from "@/app/api/catalog/[archive-code]/data";
 import { getTranslations } from "next-intl/server";
 
@@ -37,9 +36,7 @@ export async function generateMetadata(pageProps: ArchivePageProps): Promise<Met
 }
 
 const ArchivePage: NextPage = async () => {
-  const resources = await getResources();
-
-  return <ArchiveTable resources={resources} />;
+  return <ArchiveTable />;
 };
 
 export default ArchivePage;

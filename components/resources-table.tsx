@@ -1,15 +1,15 @@
 "use client";
 
-import { Resources } from "@/data/resources";
+import { ResourcesWithCounts } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import ResourceBadge from "./resource-badge";
 import { Resource } from "@generated/prisma/client/client";
 import { Link } from "@heroui/react";
 
-type TableItem = Resources[number];
+type TableItem = ResourcesWithCounts[number];
 
 interface ResourceTableProps {
-  resources: Resources;
+  resources: ResourcesWithCounts;
 }
 
 const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
