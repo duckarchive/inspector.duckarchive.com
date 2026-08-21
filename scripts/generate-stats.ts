@@ -8,7 +8,35 @@ import prisma from "@/lib/db";
  * numbers are baked into the build output rather than queried per-request or from the client.
  */
 const OUTPUT_PATH = path.join(process.cwd(), "generated", "home-stats.json");
+/**
+ * Archive codes and the tag vocabulary, for the home page's on-device query
+ * parser (lib/prompt-search.ts): they become JSON-schema enums so the model can
+ * only pick real filter values. Snapshotted here so the home page never hits
+ * the DB at request time for them.
+ */
+const VOCAB_OUTPUT_PATH = path.join(process.cwd(), "generated", "search-vocab.json");
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
+const FALLBACK_VOCAB = {
+  archives: [] as Array<{ code: string; title: string | null }>,
+  tags: [] as string[],
+};
+
+const collectVocab = async () => {
+  const [archives, tagRows] = await Promise.all([
+    prisma.archive.findMany({ select: { code: true, title: true }, orderBy: { code: "asc" } }),
+    prisma.$queryRaw<Array<{ tag: string }>>`
+      SELECT DISTINCT tag FROM (
+        SELECT UNNEST("tags") AS tag FROM "files" WHERE cardinality("tags") > 0
+        UNION
+        SELECT UNNEST("tags") AS tag FROM "authors" WHERE cardinality("tags") > 0
+      ) t
+      ORDER BY tag
+    `,
+  ]);
+
+  return { archives, tags: tagRows.map((row) => row.tag) };
+};
 
 const FALLBACK_STATS = {
   generatedAt: null as string | null,
@@ -69,20 +97,23 @@ const collectStats = async () => {
 
 const main = async () => {
   let stats = FALLBACK_STATS;
+  let vocab = FALLBACK_VOCAB;
 
   try {
-    stats = await collectStats();
+    [stats, vocab] = await Promise.all([collectStats(), collectVocab()]);
     console.log("Generated home stats:", stats);
+    console.log(`Generated search vocab: ${vocab.archives.length} archives, ${vocab.tags.length} tags`);
   } catch (error) {
     // A build must still succeed if the DB is briefly unreachable — ship zeroed stats
-    // rather than failing `next build`/`next dev` outright.
-    console.warn("Failed to collect home stats, writing fallback zeros:", error);
+    // and an empty vocabulary rather than failing `next build`/`next dev` outright.
+    console.warn("Failed to collect home stats, writing fallbacks:", error);
   } finally {
     await prisma.$disconnect();
   }
 
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(OUTPUT_PATH, `${JSON.stringify(stats, null, 2)}\n`);
+  fs.writeFileSync(VOCAB_OUTPUT_PATH, `${JSON.stringify(vocab, null, 2)}\n`);
 };
 
 main();
