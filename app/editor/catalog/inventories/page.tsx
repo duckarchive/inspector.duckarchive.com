@@ -12,7 +12,7 @@ import InventoryAddModal from "@/components/editor/inventory-add-modal";
 import { useGet } from "@/hooks/useApi";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFondsEndpoint, useEditorInventories } from "@/hooks/useEditor";
-import { GetArchivesResponse } from "@/app/api/archives/route";
+import { GetCatalogArchivesResponse } from "@/app/api/catalog/route";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { Button } from "@heroui/react";
@@ -20,7 +20,7 @@ import { syncEditorUrl } from "@/lib/editor-url";
 import { editorFileHref } from "@/lib/editor-links";
 
 export default function EditorInventoriesPage() {
-  const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
+  const { data: archives } = useGet<GetCatalogArchivesResponse>("/api/catalog");
   const [archiveCode, setArchiveCode] = useState("");
   const [fondId, setFondId] = useState("");
   const fondPicker = useCatalogPicker<EditorFond>(editorFondsEndpoint(archiveCode), fondId);

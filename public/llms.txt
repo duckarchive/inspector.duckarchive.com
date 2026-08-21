@@ -74,9 +74,9 @@ your query instead), each shaped as:
 
 ### List archives
 
-`GET /api/archives`
+`GET /api/catalog`
 
-Returns every archive: `id`, `code`, `title`, `info`, `url`, `address`,
+Returns every archive (ordered by `code`): `id`, `code`, `title`, `info`, `url`, `address`,
 `updated_at`, etc. No parameters, no pagination.
 
 ### Search authors
@@ -91,6 +91,7 @@ authors: `{ id, title, info, lat, lng, tags }`.
 Walk the hierarchy top-down; each level returns its own metadata plus a list
 of its direct children.
 
+- `GET /api/catalog` → all archives
 - `GET /api/catalog/{archive-code}` → archive + its fonds
 - `GET /api/catalog/{archive-code}/{fond-code}` → fond + its inventories
 - `GET /api/catalog/{archive-code}/{fond-code}/{inventory-code}?page=0` →

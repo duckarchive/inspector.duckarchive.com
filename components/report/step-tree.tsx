@@ -6,7 +6,7 @@ import Select from "@/components/select";
 import { useGet } from "@/hooks/useApi";
 import { EditorEntity, ReportNotePayload } from "@/lib/editor-actions";
 import { catalogItemLabel } from "@/lib/catalog-links";
-import { GetArchivesResponse } from "@/app/api/archives/route";
+import { GetCatalogArchivesResponse } from "@/app/api/catalog/route";
 import { GetCatalogArchiveResponse } from "@/app/api/catalog/[archive-code]/route";
 import { GetFondResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/route";
 import { ReportCurrentValues } from "@/components/report/types";
@@ -33,7 +33,7 @@ const StepTree: React.FC<StepTreeProps> = ({ entity, current, value, onChange })
   const needsFond = entity !== "fond";
   const needsInventory = entity === "file";
 
-  const { data: archives, isLoading: isLoadingArchives } = useGet<GetArchivesResponse>("/api/archives");
+  const { data: archives, isLoading: isLoadingArchives } = useGet<GetCatalogArchivesResponse>("/api/catalog");
   const { data: archive, isLoading: isLoadingFonds } = useGet<GetCatalogArchiveResponse>(
     needsFond && archiveCode ? `/api/catalog/${encodeURIComponent(archiveCode)}` : null,
   );

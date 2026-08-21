@@ -64,7 +64,7 @@ components/report/
 "Далі" stays disabled until a gate answered "Так" has actual content, so an empty section can never be submitted. Answering "Ні" clears whatever that gate had collected, keeping Back truthful.
 
 **Tree step endpoints** (all public, whole-level dumps filtered client-side — none of them accept `q`):
-- archives: `GET /api/archives`
+- archives: `GET /api/catalog`
 - fonds: `GET /api/catalog/[archive]` → `.fonds`
 - inventories: `GET /api/catalog/[a]/[f]` → `.inventories`
 

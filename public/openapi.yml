@@ -8,7 +8,7 @@ info:
   description: >
     AI agents and other automated clients: see /llms.txt for an up-to-date,
     agent-oriented guide to the public read-only endpoints (/api/search,
-    /api/archives, /api/authors, /api/catalog/**), including a rate-limit
+    /api/catalog, /api/catalog/**, /api/authors), including a rate-limit
     note (5 requests per 10 seconds per client).
 
 
@@ -456,25 +456,6 @@ paths:
                 properties:
                   error:
                     type: string
-  /api/archives:
-    get:
-      summary: List archives
-      description: All archives, no parameters, no pagination.
-      responses:
-        "200":
-          description: List of archives.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Archive"
-        "404":
-          description: No archives found.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
   /api/authors:
     get:
       summary: Search authors
@@ -495,6 +476,25 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Author"
+  /api/catalog:
+    get:
+      summary: List archives (catalog root)
+      description: All archives, no parameters, no pagination.
+      responses:
+        "200":
+          description: List of archives.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Archive"
+        "404":
+          description: No archives found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
   /api/catalog/{archive-code}:
     get:
       summary: Get archive and its fonds

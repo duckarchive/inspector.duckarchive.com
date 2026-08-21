@@ -54,9 +54,8 @@ app/
     daily-updates/ friends/ institutions/ reference/ resources/ search/ stats/
     iframe/family-search-dgs-list/[archive-code]/   # embeddable iframe view
   api/
-    archives/                   # GET list only (flat Archive[], used by editor pages/instance-picker) — no legacy
-                                # fund/description/case tree anymore
-    catalog/...                 # new-structure REST API (fond/inventory/file); the pages and hooks consume this one
+    catalog/...                 # catalog REST API: GET /api/catalog lists archives (editor pages, instance-picker,
+                                # duckarchive.com), then /[archive-code]/[fond-code]/[inventory-code]/[file-code]
     auth/[...nextauth]/         # NextAuth handler
     availability/dgs/           # DGS availability check + report-dgs
     search/                     # search over files (requisites, title, author, tags, place, geo-radius)
@@ -115,7 +114,7 @@ Scripts load env via `dotenv` (`tsx -r dotenv/config`).
 The `fund → description → case` ⇒ `fond → inventory → file` migration is promoted to prod (2026-07-29) and the app switched over:
 
 - **Pages:** `/archives/...` URLs are kept (SEO) but render the new structure: `archives/[archive-code]/[fond-code]/[inventory-code]/[file-code]`. The `/catalog` page tree was deleted outright (no redirect). Components: `archive-table` / `fond-table` / `inventory-table` / `file-table`; hooks: `useArchive` / `useFond` / `useInventory` / `useFile` — all read `/api/catalog/*`.
-- **APIs:** `/api/catalog/*` is the canonical new-structure API and the only one the app itself uses. `/api/archives` (list only, no `[archive-code]`+ tree) is kept because editor pages/`instance-picker` still call it. The legacy fund/description/case-shaped deep endpoints (`/api/archives/[archive-code]`, `.../[fund-code]`, etc.) were deleted — no external consumer needed them preserved.
+- **APIs:** `/api/catalog/*` is the canonical API and the only one the app itself uses; `GET /api/catalog` (flat `Archive[]`, ordered by code) replaced the old `/api/archives` list endpoint — it is also consumed by **duckarchive.com** (`INSPECTOR_API_URL/api/catalog`), so keep it stable. Everything under `/api/archives/*` (list and the legacy fund/description/case tree) is gone.
 - **Search:** `/api/search` queries `files` (+`file_years`, `file_authors`, `authors`, `file_locations`, `online_copies`). Request keys are `fond`/`inventory`/`file`; `useSearch` still rewrites inbound legacy `fund`/`description`/`case` query params. Geo-radius search is live: a file matches through its own `file_locations` OR any linked author's coordinates (authors carry the geocoded church/parish points).
 - **Removed:** `/online-copy-search` page + `/api/online-copy-search` + `lib/online-copy-query.ts` (hard 404, no redirect).
 - **Hot-path DB rules:** catalog pages must not run aggregate queries per request. Tag vocabulary comes from `generated/search-vocab.json` (built by `scripts/generate-stats.ts` on `prebuild`/`predev`), never from a live `UNNEST(tags)` scan. Per-resource online-copy counts live behind `unstable_cache` (1h) in `data/resources.ts` (`getResourcesWithCounts`, only `/resources` needs them); everything else uses `getResources()` (metadata only).

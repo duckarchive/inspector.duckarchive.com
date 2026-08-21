@@ -11,7 +11,7 @@ import FileAddModal from "@/components/editor/file-add-modal";
 import { useGet } from "@/hooks/useApi";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFondsEndpoint, editorInventoriesEndpoint, useEditorFiles } from "@/hooks/useEditor";
-import { GetArchivesResponse } from "@/app/api/archives/route";
+import { GetCatalogArchivesResponse } from "@/app/api/catalog/route";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
@@ -19,7 +19,7 @@ import { syncEditorUrl } from "@/lib/editor-url";
 import { Button } from "@heroui/react";
 
 export default function EditorFilesPage() {
-  const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
+  const { data: archives } = useGet<GetCatalogArchivesResponse>("/api/catalog");
   const [archiveCode, setArchiveCode] = useState("");
   const [fondId, setFondId] = useState("");
   const [inventoryId, setInventoryId] = useState("");
