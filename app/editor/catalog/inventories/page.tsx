@@ -99,6 +99,7 @@ export default function EditorInventoriesPage() {
           {
             field: "code",
             headerName: "Код",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
               <NextLink
                 href={editorFileHref(archiveCode, fondId, row.data.id)}
