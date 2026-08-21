@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { FaClock, FaPen } from "react-icons/fa";
 
 interface EditCellProps {
@@ -15,7 +15,13 @@ interface EditCellProps {
  * until the queued action is resolved.
  */
 const EditCell: React.FC<EditCellProps> = ({ hasPending, onEdit, color = "default" }) => (
-  <Button isIconOnly size="sm" color={color} onPress={onEdit} disabled={hasPending} isDisabled={hasPending}>
+  <Button
+    isIconOnly
+    size="sm"
+    variant={color === "primary" ? "primary" : "secondary"}
+    onPress={onEdit}
+    isDisabled={hasPending}
+  >
     {hasPending ? <FaClock /> : <FaPen />}
   </Button>
 );

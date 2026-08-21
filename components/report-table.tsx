@@ -1,7 +1,7 @@
 "use client";
 
 import { Report } from "@/data/report";
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import { getSyncAtLabel } from "@/lib/table";
@@ -43,7 +43,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           filter: true,
           flex: 1,
           cellRenderer: (row: { value: TableItem["archive_code"]; data: TableItem }) => (
-            <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm" target="_blank">
+            <Link href={`/archives/${row.data.archive_code}`} className="text-inherit text-sm" target="_blank" rel="noopener noreferrer">
               {row.value}
             </Link>
           ),
@@ -59,6 +59,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}`}
               className="text-inherit text-sm"
               target="_blank"
+              rel="noopener noreferrer"
             >
               {row.value}
             </Link>
@@ -75,6 +76,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}`}
               className="text-inherit text-sm"
               target="_blank"
+              rel="noopener noreferrer"
             >
               {row.value}
             </Link>
@@ -91,6 +93,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
               href={`/archives/${row.data.archive_code}/${row.data.fund_code}/${row.data.description_code}/${row.data.case_code}`}
               className="text-inherit text-sm"
               target="_blank"
+              rel="noopener noreferrer"
             >
               {row.value}
             </Link>
@@ -102,8 +105,9 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           flex: 4,
           sortable: false,
           cellRenderer: (row: { value: string; data: TableItem }) => (
-            <Link href={row.value || "#"} isExternal>
+            <Link href={row.value || "#"} target="_blank" rel="noopener noreferrer">
               {row.value || "Щось пішло не так"}
+              <Link.Icon />
             </Link>
           ),
         },

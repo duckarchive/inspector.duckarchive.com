@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { resolveDuckUser } from "@/lib/auth";
 import { ErrorResponse } from "@/types";
 import { EditorFile, getEditorFiles } from "@/app/api/editor/catalog/files/data";
+import { parseCatalogQuery } from "@/app/api/editor/catalog/query";
 
 export type GetEditorFilesResponse = EditorFile[];
 
@@ -16,6 +17,6 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetEditorFiles
     return NextResponse.json({ message: '"inventory" query param is required' }, { status: 400 });
   }
 
-  const files = await getEditorFiles(inventory);
+  const files = await getEditorFiles(inventory, parseCatalogQuery(req));
   return NextResponse.json(files);
 }

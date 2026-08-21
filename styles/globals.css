@@ -1,30 +1,232 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@heroui/styles";
+
+/* Class-based dark mode, driven by next-themes (attribute="class"). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Shared org packages ship compiled JS with Tailwind classes in it. */
+@source "../node_modules/@duckarchive/framework/dist";
+@source "../node_modules/@duckarchive/map/dist";
+
+@theme {
+  --font-sans: var(--font-sans), sans-serif;
+  --font-label: var(--font-label), sans-serif;
+  --font-mono: var(--font-mono), monospace;
+
+  /* DESIGN.md typography scale */
+  --text-display-lg: 4rem;
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -0.04em;
+  --text-display-lg--font-weight: 800;
+
+  --text-headline-lg: 2.5rem;
+  --text-headline-lg--line-height: 1.2;
+  --text-headline-lg--letter-spacing: -0.02em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-lg-mobile: 2rem;
+  --text-headline-lg-mobile--line-height: 1.2;
+  --text-headline-lg-mobile--letter-spacing: -0.02em;
+  --text-headline-lg-mobile--font-weight: 700;
+
+  --text-headline-md: 1.5rem;
+  --text-headline-md--line-height: 1.3;
+  --text-headline-md--letter-spacing: -0.01em;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--letter-spacing: -0.01em;
+
+  --text-body-md: 0.9375rem;
+  --text-body-md--line-height: 1.5;
+
+  --text-label-sm: 0.75rem;
+  --text-label-sm--line-height: 1;
+  --text-label-sm--letter-spacing: 0.05em;
+  --text-label-sm--font-weight: 600;
+
+  /* DESIGN.md rounded scale (rounded-xl = hero cards) */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  --container-container: 75rem; /* 1200px fixed grid */
+
+  --spacing-gutter: 2rem; /* 32px grid gutter */
+  --spacing-section: 8rem; /* 128px section gap (desktop) */
+  --spacing-section-mobile: 4rem; /* 64px section gap (mobile) */
+}
+
+/*
+ * Body defaults to font-mono (titles/text). Interactive controls opt back
+ * into font-sans here so a plain <Button>/<Input>/<Link>/<TextArea> etc.
+ * doesn't need the utility class on every usage; an explicit font-* class
+ * still wins since utilities sit in a layer above `base`.
+ */
+@layer base {
+  button,
+  input,
+  textarea,
+  select,
+  a {
+    font-family: var(--font-sans);
+  }
+}
+
+/*
+ * HeroUI v3 theme — Material 3 palette (see DESIGN.md) over a warm-neutral
+ * surface ramp, with the brand orange kept as the accent instead of the M3
+ * primary. Comments name the M3 role each variable comes from; dark is the
+ * M3 dark counterpart of the same palette.
+ */
+@layer theme {
+  :root {
+    --radius: 1rem;
+
+    --background: #f9f9fc; /* background */
+    --foreground: #1a1c1e; /* on-background */
+
+    --surface: #ffffff; /* surface-container-lowest */
+    --surface-foreground: var(--foreground);
+    --surface-secondary: #f3f3f6; /* surface-container-low */
+    --surface-secondary-foreground: var(--foreground);
+    --surface-tertiary: #eeeef0; /* surface-container */
+    --surface-tertiary-foreground: var(--foreground);
+
+    --overlay: #ffffff; /* surface-container-lowest */
+    --overlay-foreground: var(--foreground);
+
+    --default: #e8e8ea; /* surface-container-high */
+    --default-foreground: var(--foreground);
+    --muted: #5a4136; /* on-surface-variant */
+    --scrollbar-thumb: #e3bfb1; /* outline-variant */
+    --scrollbar-track: transparent;
+
+    /* Brand orange, kept from the previous theme — the M3 primary (#a33e00)
+     * read as muddy next to the logo. Soft variants derive from it. */
+    --accent: #ff5c00;
+    --accent-foreground: #ffffff;
+
+    /* Status colours are theme-independent — a danger is a danger on any ground.
+     * Both fills are mid-tone, so they separate from the light (#f9f9fc) and dark
+     * (#131316) background alike while carrying white text at >=5:1. The `-soft`
+     * variants are deliberately left to HeroUI, which derives them from these, so
+     * the hue stays identical in both themes too. Do not add .dark overrides. */
+    --danger: #ba1a1a; /* M3 error */
+    --danger-foreground: #ffffff;
+
+    --warning: #b45309;
+    --warning-foreground: #ffffff;
+
+    /* Neither M3 tone worked on both grounds — #006c47 disappears on #131316 and
+     * #65dca3 is too pale to carry white text — so this is a mid-tone between them. */
+    --success: #00794f;
+    --success-foreground: #ffffff;
+
+    /* Fields wear the DuckTable's chrome so a form and a grid read as one system:
+     * ag-grid derives --ag-border-color and --ag-header-background-color from
+     * --default, so pointing the field tokens at the same source keeps them
+     * matched in both themes without repeating the values. */
+    --field-background: color-mix(in srgb, transparent, var(--default) 50%);
+    --field-foreground: var(--foreground);
+    --field-placeholder: #74777b; /* neutral outline — muted would read as real text */
+
+    /* HeroUI ships --field-border-width: 0px, so inputs are borderless out of
+     * the box. Setting both here gives every field a default outline; hover and
+     * focus borders derive from --field-border automatically. */
+    --field-border: var(--default);
+    --field-border-width: 1px;
+
+    --border: #e3bfb1; /* outline-variant */
+    --separator: #e3bfb1; /* outline-variant */
+    --focus: var(--accent);
+
+    --surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.03);
+    --overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.08);
+    /* Fields sit flat like the DuckTable — the 1px border is the whole edge. */
+    --field-shadow: none;
+  }
+
+  .dark,
+  [data-theme="dark"] {
+    --background: #131316; /* dark surface */
+    --foreground: #e2e2e5; /* dark on-surface */
+
+    --surface: #1a1c1e; /* dark surface-container-low */
+    --surface-secondary: #1e1f21; /* dark surface-container */
+    --surface-tertiary: #292a2c; /* dark surface-container-high */
+
+    --overlay: #1e1f21;
+
+    --default: #292a2c;
+    --default-foreground: var(--foreground);
+    --muted: #d8c3b9; /* dark on-surface-variant */
+    --scrollbar-thumb: #53433c; /* dark outline-variant */
+
+    /* No status colours here: --accent, --danger, --warning and --success are
+     * constant across themes and defined once in :root. */
+
+    /* --field-background and --field-border follow --default (redefined above),
+     * so they track the DuckTable in dark without their own values. */
+    --field-foreground: var(--foreground);
+    --field-placeholder: #8e9195; /* neutral dark outline */
+
+    --border: #53433c;
+    --separator: #53433c;
+
+    --surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.3);
+    --overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.45);
+    /* --field-shadow stays `none` from :root */
+  }
+}
 
 input:focus {
   outline: transparent !important;
 }
 
-.ag-cell {
-  display: flex;
-  align-items: center;
+/*
+ * HeroUI draws a divider between an InputGroup addon and the field, sized from
+ * --field-border-width. That divider is meant for text addons ("https://"); every
+ * addon in this app is an icon or a button, where it reads as a stray line inside
+ * the field. The field's own outer border stays.
+ */
+.input-group__prefix,
+.input-group__suffix {
+  border-width: 0;
 }
 
-.ag-cell-wrapper > .ag-cell-value > *,
-.ag-cell-wrapper > .ag-cell-value {
-  font-size: 14px;
-  line-height: 1.1;
+/*
+ * DuckNav (@duckarchive/framework) adds h-screen to its <nav> while the mobile
+ * menu is open, but the app shell in app/layout.tsx is a flex column, so the nav
+ * is a flex item that shrinks to share space with <main> — 100vh became ~43% of
+ * the screen. Promote it to a real overlay for as long as it is open; the class
+ * is only present then, so the closed nav keeps its sticky behaviour.
+ */
+nav.h-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100dvh;
+  flex-shrink: 0;
 }
 
-@media (max-width: theme("screens.md")) {
-  .ag-paging-panel {
-    justify-content: center !important;
-  }
-  .ag-paging-panel .ag-paging-page-size {
-    display: none;
-  }
-  .ag-paging-panel .ag-paging-row-summary-panel {
-    display: none;
+.bg-dotted {
+  background-image: radial-gradient(color-mix(in srgb, var(--foreground) 10%, transparent) 1px, transparent 1px);
+  background-size: calc(var(--spacing) * 6) calc(var(--spacing) * 6);
+}
+
+/* Home "how it works" diagram: a dashed pulse traveling along each flow line,
+ * into the Duck Inspector node from its sources and out to what it produces.
+ * Skipped when the visitor prefers reduced motion. */
+.duck-flow-pulse {
+  animation: duck-flow-dash 1.6s linear infinite;
+}
+
+@keyframes duck-flow-dash {
+  to {
+    stroke-dashoffset: -28;
   }
 }

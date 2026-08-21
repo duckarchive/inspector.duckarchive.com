@@ -4,18 +4,383 @@ servers:
     description: Production server
 info:
   title: inspector.duckarchive.com API
-  version: 1.4.0
+  version: 2.0.0
+  description: >
+    AI agents and other automated clients: see /llms.txt for an up-to-date,
+    agent-oriented guide to the public read-only endpoints (/api/search,
+    /api/archives, /api/authors, /api/catalog/**), including a rate-limit
+    note (5 requests per 10 seconds per client).
+
+
+    Editor/moderation endpoints under /api/editor/** exist but require an
+    authenticated NextAuth session (cookie-based, not the bearer token below)
+    and are not documented here — they aren't part of the public API surface.
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: >
+        A Duck account token (Authorization: Bearer <token>), unrelated to the
+        NextAuth session cookies used by /api/auth/** and the editor UI.
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+    YearRange:
+      type: object
+      properties:
+        start_year:
+          type: integer
+        end_year:
+          type: integer
+    Archive:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        info:
+          type: string
+          nullable: true
+        url:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        phone_number:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        logo_url:
+          type: string
+          nullable: true
+    FondSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        title:
+          type: string
+          nullable: true
+        years:
+          type: array
+          items:
+            $ref: "#/components/schemas/YearRange"
+    ArchiveWithFonds:
+      allOf:
+        - $ref: "#/components/schemas/Archive"
+        - type: object
+          properties:
+            fonds:
+              type: array
+              items:
+                $ref: "#/components/schemas/FondSummary"
+    Fond:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        info:
+          type: string
+          nullable: true
+        archive_id:
+          type: string
+          format: uuid
+    InventorySummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        title:
+          type: string
+          nullable: true
+        years:
+          type: array
+          items:
+            $ref: "#/components/schemas/YearRange"
+    FondWithInventories:
+      allOf:
+        - $ref: "#/components/schemas/Fond"
+        - type: object
+          properties:
+            years:
+              type: array
+              items:
+                $ref: "#/components/schemas/YearRange"
+            inventories:
+              type: array
+              items:
+                $ref: "#/components/schemas/InventorySummary"
+    OnlineCopy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        updated_at:
+          type: string
+          format: date-time
+        checked_availability_at:
+          type: string
+          format: date-time
+          nullable: true
+        resource_id:
+          type: string
+          format: uuid
+        inventory_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        url:
+          type: string
+        availability:
+          type: string
+          enum: [PUBLIC, RESTRICTED]
+          nullable: true
+        parsed:
+          type: string
+    FileSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        title:
+          type: string
+          nullable: true
+        years:
+          type: array
+          items:
+            $ref: "#/components/schemas/YearRange"
+    Inventory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        info:
+          type: string
+          nullable: true
+        fond_id:
+          type: string
+          format: uuid
+    InventoryWithFiles:
+      allOf:
+        - $ref: "#/components/schemas/Inventory"
+        - type: object
+          properties:
+            years:
+              type: array
+              items:
+                $ref: "#/components/schemas/YearRange"
+            online_copies:
+              type: array
+              items:
+                $ref: "#/components/schemas/OnlineCopy"
+            files:
+              type: array
+              items:
+                $ref: "#/components/schemas/FileSummary"
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        info:
+          type: string
+          nullable: true
+        lat:
+          type: number
+          nullable: true
+        lng:
+          type: number
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+    FileLocation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        lat:
+          type: number
+        lng:
+          type: number
+        radius_m:
+          type: integer
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        full_code:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        info:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+        inventory_id:
+          type: string
+          format: uuid
+    FileWithDetails:
+      allOf:
+        - $ref: "#/components/schemas/File"
+        - type: object
+          properties:
+            years:
+              type: array
+              items:
+                $ref: "#/components/schemas/YearRange"
+            online_copies:
+              type: array
+              items:
+                $ref: "#/components/schemas/OnlineCopy"
+            authors:
+              type: array
+              items:
+                type: object
+                properties:
+                  file_id:
+                    type: string
+                    format: uuid
+                  author_id:
+                    type: string
+                    format: uuid
+                  author:
+                    $ref: "#/components/schemas/Author"
+            locations:
+              type: array
+              items:
+                $ref: "#/components/schemas/FileLocation"
+            inventory:
+              type: object
+              properties:
+                fond_id:
+                  type: string
+                  format: uuid
+    SearchResultFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        title:
+          type: string
+        info:
+          type: string
+          nullable: true
+        inventory_id:
+          type: string
+          format: uuid
+        description_id:
+          type: string
+          format: uuid
+          description: Legacy alias of inventory_id, kept for existing API consumers.
+        full_code:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        is_online:
+          type: boolean
+        years:
+          type: array
+          items:
+            type: object
+            properties:
+              file_id:
+                type: string
+                format: uuid
+              case_id:
+                type: string
+                format: uuid
+                description: Legacy alias of file_id.
+              start_year:
+                type: integer
+              end_year:
+                type: integer
 paths:
   /api/search:
     post:
-      summary: Search
-      description: Пошук справ за реквізитами
+      summary: Search files
+      description: >
+        Search across all files by title, author, place, geo-radius, year
+        range, tags, or exact catalog codes. All body fields are optional and
+        combined with AND. Results are capped at 50 rows with no further
+        pagination — narrow the query instead. Rate limit: 5 requests per 10
+        seconds per client (see /llms.txt).
       requestBody:
         required: true
         content:
@@ -23,362 +388,269 @@ paths:
             schema:
               type: object
               properties:
-                a:
+                title:
                   type: string
-                  description: Archive code
-                f:
+                  description: Substring match on file title.
+                author:
                   type: string
-                  description: Fund code
-                d:
+                  description: Substring match on a linked author's name.
+                place:
                   type: string
-                  description: Description code
-                c:
+                  description: >
+                    Substring match on file/author location text. Mutually
+                    exclusive with lat/lng/radius_m.
+                lat:
                   type: string
-                  description: Case code
-                isStrict:
-                  type: boolean
-                  description: Whether to use strict matching
-      responses:
-        "200":
-          description: Search results found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  total_count:
-                    type: integer
-                    description: Total number of matches found
+                  description: Latitude for geo-radius search (mutually exclusive with place).
+                lng:
+                  type: string
+                  description: Longitude for geo-radius search (mutually exclusive with place).
+                radius_m:
+                  type: integer
+                  description: Search radius in meters, used with lat/lng.
+                year_from:
+                  type: string
+                  description: Start of the year range (inclusive, overlap match).
+                year_to:
+                  type: string
+                  description: End of the year range (inclusive, overlap match).
+                year:
+                  type: string
+                  deprecated: true
+                  description: Single-year shorthand for year_from/year_to. Still honoured.
+                tags:
+                  type: array
                   items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        archive_code:
-                          type: string
-                        fund_code:
-                          type: string
-                        description_code:
-                          type: string
-                        case_code:
-                          type: string
-                        url:
-                          type: string
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
                     type: string
-        "404":
-          description: No matches found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-  /api/archives/{archive-code}:
-    get:
-      summary: Get Archive
-      description: Отримати дані про архів та список дочірніх фондів
-      parameters:
-        - name: archive-code
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The code of the archive to retrieve
+                  description: Matched against file or author tags.
+                archive:
+                  type: string
+                  description: Exact archive code (case-sensitive).
+                fond:
+                  type: string
+                  description: Exact fond code (case-sensitive).
+                inventory:
+                  type: string
+                  description: Exact inventory code (case-sensitive).
+                file:
+                  type: string
+                  description: Exact file code (case-sensitive).
+                is_online:
+                  type: boolean
+                  description: Only files with a publicly available online copy.
       responses:
         "200":
-          description: Archive found
+          description: Up to 50 matching files.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SearchResultFile"
+        "500":
+          description: Search failed.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
+                  error:
                     type: string
-                  code:
-                    type: string
-                  title:
-                    type: string
-                  funds:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        code:
-                          type: string
-                        title:
-                          type: string
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "404":
-          description: Archive not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-  /api/archives/{archive-code}/{fund-code}:
+  /api/archives:
     get:
-      summary: Get Fund
-      description: Отримати дані про фонд та список дочірніх описів
-      parameters:
-        - name: archive-code
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The code of the archive
-        - name: fund-code
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The code of the fund to retrieve
+      summary: List archives
+      description: All archives, no parameters, no pagination.
       responses:
         "200":
-          description: Fund found
+          description: List of archives.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  code:
-                    type: string
-                  title:
-                    type: string
-                  descriptions:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        code:
-                          type: string
-                        title:
-                          type: string
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                type: array
+                items:
+                  $ref: "#/components/schemas/Archive"
         "404":
-          description: Fund not found
+          description: No archives found.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-  /api/archives/{archive-code}/{fund-code}/{description-code}:
+                $ref: "#/components/schemas/ErrorMessage"
+  /api/authors:
     get:
-      summary: Get Description
-      description: Отримати дані про опис та список дочірніх справ
+      summary: Search authors
+      description: Returns up to 200 authors, optionally filtered by name.
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Substring match on author title/name.
+      responses:
+        "200":
+          description: List of authors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Author"
+  /api/catalog/{archive-code}:
+    get:
+      summary: Get archive and its fonds
       parameters:
         - name: archive-code
           in: path
           required: true
           schema:
             type: string
-          description: The code of the archive
-        - name: fund-code
+      responses:
+        "200":
+          description: Archive with its fonds.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArchiveWithFonds"
+        "400":
+          description: Missing archive-code.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "404":
+          description: Archive not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /api/catalog/{archive-code}/{fond-code}:
+    get:
+      summary: Get fond and its inventories
+      parameters:
+        - name: archive-code
           in: path
           required: true
           schema:
             type: string
-          description: The code of the fund
-        - name: description-code
+        - name: fond-code
           in: path
           required: true
           schema:
             type: string
-          description: The code of the description to retrieve
+      responses:
+        "200":
+          description: Fond with its inventories.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FondWithInventories"
+        "400":
+          description: Missing path parameter.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "404":
+          description: Fond not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /api/catalog/{archive-code}/{fond-code}/{inventory-code}:
+    get:
+      summary: Get inventory, its online copies, and its files
+      description: Files are paginated at 5000 per page.
+      parameters:
+        - name: archive-code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fond-code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: inventory-code
+          in: path
+          required: true
+          schema:
+            type: string
         - name: page
           in: query
           required: false
           schema:
             type: integer
             default: 0
-          description: Page number for pagination (0-based)
+          description: 0-based page number over files (5000 per page).
       responses:
         "200":
-          description: Description found
+          description: Inventory with its online copies and a page of files.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  code:
-                    type: string
-                  title:
-                    type: string
-                  cases:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        code:
-                          type: string
-                        title:
-                          type: string
+                $ref: "#/components/schemas/InventoryWithFiles"
         "400":
-          description: Bad Request
+          description: Missing path parameter.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
         "404":
-          description: Description not found
+          description: Inventory not found.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-  /api/archives/{archive-code}/{fund-code}/{description-code}/{case-code}:
+                $ref: "#/components/schemas/ErrorMessage"
+  /api/catalog/{archive-code}/{fond-code}/{inventory-code}/{file-code}:
     get:
-      summary: Get Case
-      description: Отримати дані про справу та список посилань на онлайн джерела
+      summary: Get a single file
+      description: Returns the file with its years, authors, geo locations, and online copies.
       parameters:
         - name: archive-code
           in: path
           required: true
           schema:
             type: string
-          description: The code of the archive
-        - name: fund-code
+        - name: fond-code
           in: path
           required: true
           schema:
             type: string
-          description: The code of the fund
-        - name: description-code
+        - name: inventory-code
           in: path
           required: true
           schema:
             type: string
-          description: The code of the description
-        - name: case-code
+        - name: file-code
           in: path
           required: true
           schema:
             type: string
-          description: The code of the case to retrieve
       responses:
         "200":
-          description: Case found
+          description: File with full details.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  title:
-                    type: string
+                $ref: "#/components/schemas/FileWithDetails"
         "400":
-          description: Bad Request
+          description: Missing path parameter.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
         "404":
-          description: Case not found
+          description: File not found.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-  /api/availability/code:
-    post:
-      security:
-        - bearerAuth: []
-      summary: Get Availability by code
-      description: Перевірка доступності справ за списком реквізитів
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                full_codes:
-                  type: array
-                  items:
-                    type: string
-                    description: The full code for case
-      responses:
-        "200":
-          description: Availability found
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: boolean
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "404":
-          description: Availability not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
   /api/availability/dgs:
     post:
       security:
         - bearerAuth: []
-      summary: Get Availability by DGS
-      description: Перевірка належності DGS до НАФ
+      summary: Check whether a FamilySearch DGS belongs to the National Archival Fund
       requestBody:
         required: true
         content:
@@ -388,47 +660,31 @@ paths:
               properties:
                 dgs:
                   type: string
-                  description: The DGS code to check availability
       responses:
         "200":
-          description: DGS availability found
+          description: Result of the check.
           content:
             application/json:
               schema:
                 type: boolean
         "400":
-          description: Bad Request
+          description: Missing dgs.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
         "401":
-          description: Unauthorized
+          description: Unauthorized.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "404":
-          description: No DGS matches found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
   /api/availability/report-dgs:
     post:
       security:
         - bearerAuth: []
-      summary: Report DGS Availability
-      description: Запит на ручну перевірку належності DGS до НАФ
+      summary: Request a manual review of a DGS
+      description: Posts a notification to the maintainers' Telegram channel.
       requestBody:
         required: true
         content:
@@ -438,50 +694,33 @@ paths:
               properties:
                 dgs:
                   type: string
-                  description: The DGS code to report
       responses:
         "200":
-          description: DGS report successful
+          description: Report submitted.
           content:
             application/json:
               schema:
                 type: boolean
         "400":
-          description: Bad Request
+          description: Missing dgs, or Telegram is not configured.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
         "401":
-          description: Unauthorized
+          description: Unauthorized.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "404":
-          description: No DGS matches found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-  /api/sync/familysearch/place:
+                $ref: "#/components/schemas/ErrorMessage"
+  /api/sync/familysearch/projects:
     get:
       security:
         - bearerAuth: []
-      summary: Get FamilySearch Places
-      description: ADMIN ONLY
+      summary: List synced FamilySearch projects (admin only)
       responses:
         "200":
-          description: FamilySearch places retrieved successfully
+          description: FamilySearch projects linked to an archive.
           content:
             application/json:
               schema:
@@ -491,292 +730,104 @@ paths:
                   properties:
                     id:
                       type: string
-                    name:
-                      type: string
-                    total_count:
-                      type: integer
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-    patch:
-      security:
-        - bearerAuth: []
-      summary: Update FamilySearch Places
-      description: ADMIN ONLY
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                places:
-                  type: object
-                  additionalProperties:
-                    type: integer
-      responses:
-        "200":
-          description: FamilySearch places updated successfully
-          content:
-            application/json:
-              schema:
-                type: boolean
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-  /api/sync/familysearch/project:
-    get:
-      security:
-        - bearerAuth: []
-      summary: Get FamilySearch Projects
-      description: ADMIN ONLY
-      responses:
-        "200":
-          description: FamilySearch projects retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    children_count:
-                      type: integer
-                    prev_children_count:
-                      type: integer
-                    updated_at:
-                      type: string
-                      format: date-time
                     synced_at:
                       type: string
                       format: date-time
+                      nullable: true
+                    archive_id:
+                      type: string
+                      format: uuid
+                      nullable: true
                     archive:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        code:
-                          type: string
+                      $ref: "#/components/schemas/Archive"
         "401":
-          description: Unauthorized
+          description: Unauthorized or not an admin.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
+  /api/sync/familysearch/items:
     post:
       security:
         - bearerAuth: []
-      summary: Create FamilySearch Projects
-      description: ADMIN ONLY
+      summary: Upsert FamilySearch items and their parent projects (admin only)
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                projects:
-                  type: object
-                  additionalProperties:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  dgs:
+                    type: string
+                  archival_reference:
+                    type: string
+                    nullable: true
+                  volume:
+                    type: string
+                    nullable: true
+                  volumes:
+                    type: string
+                    nullable: true
+                  date:
+                    type: string
+                    nullable: true
+                  image_count:
                     type: integer
+                    nullable: true
+                  project_id:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  creator:
+                    type: string
+                    nullable: true
+                  indexed_child_count:
+                    type: integer
+                    nullable: true
       responses:
         "200":
-          description: FamilySearch projects created successfully
+          description: The same items list, once upserted.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   type: object
-                  properties:
-                    id:
-                      type: string
-                    children_count:
-                      type: integer
-                    prev_children_count:
-                      type: integer
-                    updated_at:
-                      type: string
-                      format: date-time
-                    synced_at:
-                      type: string
-                      format: date-time
-                    archive:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        code:
-                          type: string
         "400":
-          description: Bad Request
+          description: items is required.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
         "401":
-          description: Unauthorized
+          description: Unauthorized or not an admin.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-    patch:
-      security:
-        - bearerAuth: []
-      summary: Update FamilySearch Projects
-      description: ADMIN ONLY
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                projects:
-                  type: object
-                  additionalProperties:
-                    type: integer
-      responses:
-        "200":
-          description: FamilySearch projects updated successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    children_count:
-                      type: integer
-                    prev_children_count:
-                      type: integer
-                    updated_at:
-                      type: string
-                      format: date-time
-                    synced_at:
-                      type: string
-                      format: date-time
-                    archive:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        code:
-                          type: string
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: "#/components/schemas/ErrorMessage"
   /api/auth/signin:
     get:
       summary: Sign In Page
-      description: Displays the built-in sign-in page
+      description: Displays the built-in sign-in page.
       responses:
         "200":
-          description: Sign-in page displayed
+          description: Sign-in page displayed.
           content:
             text/html:
               schema:
                 type: string
         "302":
-          description: Redirect to custom sign-in page if configured
+          description: Redirect to custom sign-in page if configured.
   /api/auth/signin/google:
     post:
       summary: Google OAuth Sign In
-      description: Initiates Google OAuth sign-in flow
+      description: Initiates the Google OAuth sign-in flow.
       requestBody:
         required: true
         content:
@@ -786,41 +837,33 @@ paths:
               properties:
                 csrfToken:
                   type: string
-                  description: CSRF token from /api/auth/csrf
+                  description: CSRF token from /api/auth/csrf.
       responses:
         "302":
-          description: Redirect to Google OAuth authorization
+          description: Redirect to Google OAuth authorization.
         "400":
-          description: Bad Request - missing CSRF token
-        "500":
-          description: Internal Server Error
+          description: Bad Request - missing CSRF token.
   /api/auth/callback/google:
     get:
       summary: Google OAuth Callback
-      description: Handles the callback from Google OAuth provider
       parameters:
         - name: code
           in: query
           required: true
           schema:
             type: string
-          description: Authorization code from Google
         - name: state
           in: query
           required: true
           schema:
             type: string
-          description: State parameter for CSRF protection
       responses:
         "302":
-          description: Redirect after successful authentication
+          description: Redirect after successful authentication.
         "400":
-          description: Bad Request - invalid state or code
-        "500":
-          description: Internal Server Error
+          description: Bad Request - invalid state or code.
     post:
       summary: Google OAuth Callback
-      description: Handles the callback from Google OAuth provider
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -829,33 +872,27 @@ paths:
               properties:
                 code:
                   type: string
-                  description: Authorization code from Google
                 state:
                   type: string
-                  description: State parameter for CSRF protection
       responses:
         "302":
-          description: Redirect after successful authentication
+          description: Redirect after successful authentication.
         "400":
-          description: Bad Request - invalid state or code
-        "500":
-          description: Internal Server Error
+          description: Bad Request - invalid state or code.
   /api/auth/signout:
     get:
       summary: Sign Out Page
-      description: Displays the built-in sign-out page
       responses:
         "200":
-          description: Sign-out page displayed
+          description: Sign-out page displayed.
           content:
             text/html:
               schema:
                 type: string
         "302":
-          description: Redirect to custom sign-out page if configured
+          description: Redirect to custom sign-out page if configured.
     post:
       summary: Sign Out
-      description: Signs out the current user
       requestBody:
         required: true
         content:
@@ -865,21 +902,17 @@ paths:
               properties:
                 csrfToken:
                   type: string
-                  description: CSRF token from /api/auth/csrf
       responses:
         "302":
-          description: Redirect after successful sign-out
+          description: Redirect after successful sign-out.
         "400":
-          description: Bad Request - missing CSRF token
-        "500":
-          description: Internal Server Error
+          description: Bad Request - missing CSRF token.
   /api/auth/session:
     get:
       summary: Get Session
-      description: Returns the current user session
       responses:
         "200":
-          description: Session data
+          description: Session data.
           content:
             application/json:
               schema:
@@ -897,22 +930,14 @@ paths:
                   expires:
                     type: string
                     format: date-time
-                  accessToken:
-                    type: string
-                    description: Google access token
         "404":
-          description: No session found
-          content:
-            application/json:
-              schema:
-                type: object
+          description: No session found.
   /api/auth/csrf:
     get:
       summary: Get CSRF Token
-      description: Returns a CSRF token for form submissions
       responses:
         "200":
-          description: CSRF token
+          description: CSRF token.
           content:
             application/json:
               schema:
@@ -920,14 +945,12 @@ paths:
                 properties:
                   csrfToken:
                     type: string
-                    description: CSRF token to include in POST requests
   /api/auth/providers:
     get:
       summary: Get Providers
-      description: Returns list of configured authentication providers
       responses:
         "200":
-          description: List of providers
+          description: Configured authentication providers.
           content:
             application/json:
               schema:

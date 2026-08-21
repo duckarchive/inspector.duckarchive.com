@@ -123,21 +123,88 @@ const mergeInventoryInto = async (tx: Tx, sourceId: string, targetId: string): P
   if (!target) throw new ActionExecutionError("Опис-приймач не знайдений");
   const prefix = `${target.fond.archive.code}-${target.fond.code}-${target.code}`;
 
-  const files = await tx.file.findMany({ where: { inventory_id: sourceId }, select: { id: true, code: true } });
-  for (const file of files) {
-    const existing = await tx.file.findUnique({
-      where: { code_inventory_id: { code: file.code, inventory_id: targetId } },
-      select: { id: true },
-    });
-    if (existing) {
-      await mergeFileInto(tx, file.id, existing.id);
-    } else {
-      await tx.file.update({
-        where: { id: file.id },
-        data: { inventory_id: targetId, full_code: `${prefix}-${file.code}` },
-      });
-    }
-  }
+  // A large inventory can have thousands of files, and a per-file loop calling
+  // mergeFileInto blows past the interactive transaction timeout (each file costs
+  // several sequential round-trips). Do the same work set-based instead: every
+  // colliding (same-code) file pair is merged in one pass per child table, no
+  // matter how many files are involved.
+  await tx.$executeRaw`
+    INSERT INTO file_authors (file_id, author_id)
+    SELECT tgt.id, fa.author_id
+    FROM file_authors fa
+    JOIN files src ON src.id = fa.file_id AND src.inventory_id = ${sourceId}::uuid
+    JOIN files tgt ON tgt.inventory_id = ${targetId}::uuid AND tgt.code = src.code
+    ON CONFLICT DO NOTHING
+  `;
+  await tx.$executeRaw`
+    DELETE FROM file_authors
+    WHERE file_id IN (
+      SELECT src.id FROM files src
+      JOIN files tgt ON tgt.inventory_id = ${targetId}::uuid AND tgt.code = src.code
+      WHERE src.inventory_id = ${sourceId}::uuid
+    )
+  `;
+
+  await tx.$executeRaw`
+    DELETE FROM online_copies oc
+    USING files src, files tgt
+    WHERE oc.file_id = src.id
+      AND src.inventory_id = ${sourceId}::uuid
+      AND tgt.inventory_id = ${targetId}::uuid
+      AND tgt.code = src.code
+      AND EXISTS (
+        SELECT 1 FROM online_copies dup
+        WHERE dup.file_id = tgt.id AND dup.resource_id = oc.resource_id AND dup.url = oc.url AND dup.parsed = oc.parsed
+      )
+  `;
+  await tx.$executeRaw`
+    UPDATE online_copies oc
+    SET file_id = tgt.id
+    FROM files src, files tgt
+    WHERE oc.file_id = src.id
+      AND src.inventory_id = ${sourceId}::uuid
+      AND tgt.inventory_id = ${targetId}::uuid
+      AND tgt.code = src.code
+  `;
+
+  // file_locations/file_years both have a unique constraint matching this dedup
+  // criteria exactly, so ON CONFLICT DO NOTHING dedupes via a fast index probe —
+  // a NOT EXISTS anti-join here would instead scan the whole (multi-million row)
+  // table and can pick a poor index, costing seconds instead of milliseconds
+  await tx.$executeRaw`
+    INSERT INTO file_locations (id, lat, lng, radius_m, file_id)
+    SELECT gen_random_uuid(), fl.lat, fl.lng, fl.radius_m, tgt.id
+    FROM file_locations fl
+    JOIN files src ON src.id = fl.file_id AND src.inventory_id = ${sourceId}::uuid
+    JOIN files tgt ON tgt.inventory_id = ${targetId}::uuid AND tgt.code = src.code
+    ON CONFLICT DO NOTHING
+  `;
+
+  await tx.$executeRaw`
+    INSERT INTO file_years (file_id, start_year, end_year)
+    SELECT tgt.id, fy.start_year, fy.end_year
+    FROM file_years fy
+    JOIN files src ON src.id = fy.file_id AND src.inventory_id = ${sourceId}::uuid
+    JOIN files tgt ON tgt.inventory_id = ${targetId}::uuid AND tgt.code = src.code
+    ON CONFLICT DO NOTHING
+  `;
+
+  // colliding source files are now fully absorbed into their target twins —
+  // cascade deletes take care of whatever's left (locations/years/online copies)
+  await tx.$executeRaw`
+    DELETE FROM files src
+    USING files tgt
+    WHERE src.inventory_id = ${sourceId}::uuid
+      AND tgt.inventory_id = ${targetId}::uuid
+      AND tgt.code = src.code
+  `;
+
+  // only non-colliding files remain under sourceId — relocate them in one pass
+  await tx.$executeRaw`
+    UPDATE files
+    SET inventory_id = ${targetId}::uuid, full_code = ${prefix} || '-' || code
+    WHERE inventory_id = ${sourceId}::uuid
+  `;
 
   const copies = await tx.onlineCopy.findMany({
     where: { inventory_id: sourceId },
@@ -185,10 +252,9 @@ const mergeFondInto = async (tx: Tx, sourceId: string, targetId: string): Promis
     await tx.inventory.update({ where: { id: inventory.id }, data: { fond_id: targetId } });
     // the fond segment of the files' full_code changes with the new parent
     const prefix = `${target.archive.code}-${target.code}-${inventory.code}`;
-    const files = await tx.file.findMany({ where: { inventory_id: inventory.id }, select: { id: true, code: true } });
-    for (const file of files) {
-      await tx.file.update({ where: { id: file.id }, data: { full_code: `${prefix}-${file.code}` } });
-    }
+    await tx.$executeRaw`
+      UPDATE files SET full_code = ${prefix} || '-' || code WHERE inventory_id = ${inventory.id}::uuid
+    `;
   }
 
   const targetYears = await tx.fondYear.findMany({ where: { fond_id: targetId }, select: { start_year: true, end_year: true } });
@@ -296,21 +362,23 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
         });
         if (inventory) {
           const { code: fondCode, archive: { code: archCode } } = inventory.fond;
-          const files = await tx.file.findMany({ where: { inventory_id: codeTarget }, select: { id: true, code: true } });
-          for (const file of files) {
-            await tx.file.update({ where: { id: file.id }, data: { full_code: `${archCode}-${fondCode}-${value}-${file.code}` } });
-          }
+          const prefix = `${archCode}-${fondCode}-${value}`;
+          // bulk rewrite instead of a per-file loop — an inventory can hold thousands of files
+          await tx.$executeRaw`
+            UPDATE files SET full_code = ${prefix} || '-' || code WHERE inventory_id = ${codeTarget}::uuid
+          `;
         }
       } else {
         const fond = await tx.fond.findUnique({ where: { id: codeTarget }, select: { archive: { select: { code: true } } } });
         if (fond) {
-          const inventories = await tx.inventory.findMany({ where: { fond_id: codeTarget }, select: { id: true, code: true } });
-          for (const inv of inventories) {
-            const files = await tx.file.findMany({ where: { inventory_id: inv.id }, select: { id: true, code: true } });
-            for (const file of files) {
-              await tx.file.update({ where: { id: file.id }, data: { full_code: `${fond.archive.code}-${value}-${inv.code}-${file.code}` } });
-            }
-          }
+          const prefix = `${fond.archive.code}-${value}`;
+          // bulk rewrite instead of a nested inventory/file loop
+          await tx.$executeRaw`
+            UPDATE files f
+            SET full_code = ${prefix} || '-' || inv.code || '-' || f.code
+            FROM inventories inv
+            WHERE f.inventory_id = inv.id AND inv.fond_id = ${codeTarget}::uuid
+          `;
         }
       }
       return null;
@@ -370,38 +438,41 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     case "connect_to_online_copy": {
       if (!action.online_copy_id) throw new ActionExecutionError("Дія не містить онлайн-копії");
       const id = requireTarget();
-      if (entity === "inventory") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { inventory_id: id } });
-      else if (entity === "file") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { file_id: id } });
-      else throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
+      if (entity !== "inventory" && entity !== "file") throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
+      await tx.onlineCopy.update({
+        where: { id: action.online_copy_id },
+        data: entity === "inventory" ? { inventory_id: id } : { file_id: id },
+      });
       return null;
     }
     case "disconnect_from_online_copy": {
       if (!action.online_copy_id) throw new ActionExecutionError("Дія не містить онлайн-копії");
-      if (entity === "inventory") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { inventory_id: null } });
-      else if (entity === "file") await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: { file_id: null } });
-      else throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
+      if (entity !== "inventory" && entity !== "file") throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
+      await tx.onlineCopy.update({
+        where: { id: action.online_copy_id },
+        data: entity === "inventory" ? { inventory_id: null } : { file_id: null },
+      });
       return null;
     }
     case "add_online_copy": {
       const id = requireTarget();
       const url = (rawNote ?? "").split("\n")[0].trim();
       if (!url) throw new ActionExecutionError("Дія не містить URL");
+      if (entity !== "inventory" && entity !== "file") throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
       const resourceId = await inferResourceId(tx, url);
-      if (entity === "inventory") {
-        const copy = await tx.onlineCopy.create({ data: { url, resource_id: resourceId, inventory_id: id } });
-        return copy.id;
-      }
-      if (entity === "file") {
-        const copy = await tx.onlineCopy.create({ data: { url, resource_id: resourceId, file_id: id } });
-        return copy.id;
-      }
-      throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
+      const copy = await tx.onlineCopy.create({
+        data: {
+          url,
+          resource_id: resourceId,
+          ...(entity === "inventory" ? { inventory_id: id } : { file_id: id }),
+        },
+      });
+      return copy.id;
     }
     case "remove_online_copy": {
       if (!action.online_copy_id) throw new ActionExecutionError("Дія не містить онлайн-копії");
-      if (entity === "inventory") await tx.onlineCopy.delete({ where: { id: action.online_copy_id } });
-      else if (entity === "file") await tx.onlineCopy.delete({ where: { id: action.online_copy_id } });
-      else throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
+      if (entity !== "inventory" && entity !== "file") throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
+      await tx.onlineCopy.delete({ where: { id: action.online_copy_id } });
       return null;
     }
 
@@ -589,6 +660,8 @@ export const resolveAction = async (
       copyId = await applyMutation(tx, entity, action);
     }
     return resolveActionRow(tx, entity, id, resolvedBy, resolution === "reject", copyId);
-    // fond/inventory merges walk every child row — far beyond the 5s default
-  }, { timeout: 120_000 });
+    // merges/renames now run as bulk set-based SQL rather than a per-row loop, but
+    // a code rename on the largest fond (~190k files) still measured ~80s, mostly
+    // GIN trigram index maintenance on full_code — keep headroom above the 5s default
+  }, { timeout: 300_000 });
 };

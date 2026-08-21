@@ -1,19 +1,17 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { Chip } from "@heroui/chip";
-import { Divider } from "@heroui/divider";
-import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { addToast } from "@heroui/toast";
+import { Button, Chip, CloseButton, Input, Modal, Separator, TextArea, TextField, toast } from "@heroui/react";
+import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import useSubmitAction from "@/hooks/useSubmitAction";
-import { useAuthorFiles, useEditorAuthors } from "@/hooks/useEditor";
-import { editorAutocompleteVirtualization, wrapItemClassNames } from "@/components/editor/autocomplete";
+import PendingButton from "@/components/pending-button";
+import { useAuthorFiles } from "@/hooks/useEditor";
+import { useAuthors } from "@/hooks/useAuthors";
 import { encodeNote, SubmitActionBody } from "@/lib/editor-actions";
 import { EditorAuthor } from "@/app/api/editor/authors/data";
+import { useIsAdmin } from "@/components/editor/admin-context";
+import { FaTrash } from "react-icons/fa";
 
 interface AuthorEditModalProps {
   author: EditorAuthor | null;
@@ -25,6 +23,7 @@ interface AuthorEditModalProps {
 const sameNum = (a: number | null, b: number | null) => (a ?? null) === (b ?? null);
 
 const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClose, onSubmitted }) => {
+  const isAdmin = useIsAdmin();
   // Author edits are stored in file_actions; anchor to a linked file so the
   // (type, file_id) partial unique index applies per-file instead of globally.
   const { submitMany, isMutating } = useSubmitAction("file");
@@ -39,7 +38,7 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
 
   const [mergeQuery, setMergeQuery] = useState("");
   const [mergeTargetId, setMergeTargetId] = useState<string>("");
-  const { data: mergeCandidates } = useEditorAuthors(mergeQuery || undefined);
+  const { data: mergeCandidates } = useAuthors(mergeQuery || undefined);
 
   useEffect(() => {
     if (author) {
@@ -72,13 +71,25 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
     const base = { target_id: anchorFileId };
 
     if (title !== author.title) {
-      bodies.push({ ...base, type: "change_author_title", note: encodeNote({ v: 1, author_id: author.id, field: "title", value: title }) });
+      bodies.push({
+        ...base,
+        type: "change_author_title",
+        note: encodeNote({ v: 1, author_id: author.id, field: "title", value: title }),
+      });
     }
     if (info !== (author.info ?? "")) {
-      bodies.push({ ...base, type: "change_author_info", note: encodeNote({ v: 1, author_id: author.id, field: "info", value: info }) });
+      bodies.push({
+        ...base,
+        type: "change_author_info",
+        note: encodeNote({ v: 1, author_id: author.id, field: "info", value: info }),
+      });
     }
     if (JSON.stringify(tags) !== JSON.stringify(author.tags)) {
-      bodies.push({ ...base, type: "change_author_tags", note: encodeNote({ v: 1, author_id: author.id, field: "tags", value: tags }) });
+      bodies.push({
+        ...base,
+        type: "change_author_tags",
+        note: encodeNote({ v: 1, author_id: author.id, field: "tags", value: tags }),
+      });
     }
     const lat = coords.lat ? Number(coords.lat) : null;
     const lng = coords.lng ? Number(coords.lng) : null;
@@ -91,7 +102,7 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
     }
 
     if (bodies.length === 0) {
-      addToast({ title: "Немає змін", color: "default" });
+      toast("Немає змін");
       return;
     }
 
@@ -106,77 +117,111 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
     }
     // one pending action; on approve the executor re-links every file, merges
     // the author fields and deletes the source — all under the hood
+    await submitMany([{ type: "merge_to", note: encodeNote({ v: 1, author_id: author.id, value: mergeTargetId }) }]);
+    onSubmitted?.();
+    onClose();
+  };
+
+  const handleDelete = async () => {
     await submitMany([
-      { type: "merge_to", note: encodeNote({ v: 1, author_id: author.id, value: mergeTargetId }) },
+      { type: "remove_author", target_id: anchorFileId, note: encodeNote({ v: 1, author_id: author.id }) },
     ]);
     onSubmitted?.();
     onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader>Редагувати автора</ModalHeader>
-        <ModalBody className="gap-3">
-          <Input label="Назва" value={title} onValueChange={setTitle} />
-          <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Редагувати автора</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
+              <TextField value={title} onChange={setTitle}>
+                <Input placeholder="Назва" />
+              </TextField>
+              <TextField value={info} onChange={setInfo}>
+                <TextArea placeholder="Опис" rows={2} />
+              </TextField>
 
-          <div className="flex flex-col gap-2">
-            <span className="text-sm text-default-600">Теги</span>
-            <div className="flex flex-wrap gap-1">
-              {tags.length === 0 && <span className="text-default-400 text-sm">Немає</span>}
-              {tags.map((t) => (
-                <Chip key={t} onClose={() => setTags(tags.filter((x) => x !== t))} variant="flat">
-                  {t}
-                </Chip>
-              ))}
-            </div>
-            <div className="flex items-end gap-2">
-              <Input size="sm" label="Новий тег" value={tagDraft} onValueChange={setTagDraft} />
-              <Button size="sm" onPress={addTag} isDisabled={!tagDraft.trim()}>
-                Додати
-              </Button>
-            </div>
-          </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm text-muted">Теги</span>
+                <div className="flex flex-wrap gap-1">
+                  {tags.length === 0 && <span className="text-muted text-sm">Немає</span>}
+                  {tags.map((t) => (
+                    <Chip key={t} variant="soft">
+                      {t}
+                      <CloseButton aria-label="Видалити тег" onPress={() => setTags(tags.filter((x) => x !== t))} />
+                    </Chip>
+                  ))}
+                </div>
+                <div className="flex items-end gap-2">
+                  <TextField value={tagDraft} onChange={setTagDraft}>
+                    <Input placeholder="Новий тег" />
+                  </TextField>
+                  <Button size="sm" onPress={addTag} isDisabled={!tagDraft.trim()}>
+                    Додати
+                  </Button>
+                </div>
+              </div>
 
-          <CoordinatesInput value={coords} onChange={setCoords} />
+              <CoordinatesInput value={coords} onChange={setCoords} />
 
-          <Divider className="my-2" />
+              <Separator className="my-2" />
 
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold">Об&apos;єднати з іншим автором</span>
-            <span className="text-xs text-default-500">
-              Усі справи цього автора буде перепривʼязано до обраного, а цей автор — видалено.
-            </span>
-            <Autocomplete
-              size="sm"
-              label="Автор-приймач"
-              inputValue={mergeQuery}
-              onInputChange={setMergeQuery}
-              onSelectionChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
-              items={(mergeCandidates ?? []).filter((a) => a.id !== author.id)}
-              {...editorAutocompleteVirtualization}
-            >
-              {(a) => (
-                <AutocompleteItem key={a.id} textValue={a.title} classNames={wrapItemClassNames}>
-                  {a.title}
-                </AutocompleteItem>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-semibold">Об&apos;єднати з іншим автором</span>
+                <span className="text-xs text-muted">
+                  Усі справи цього автора буде перепривʼязано до обраного, а цей автор — видалено.
+                </span>
+                <Select
+                  label="Автор-приймач"
+                  virtualized
+                  items={(mergeCandidates ?? []).filter((a) => a.id !== author.id)}
+                  getKey={(a) => a.id}
+                  getTextValue={(a) => a.title}
+                  renderItem={(a) => a.title}
+                  inputValue={mergeQuery}
+                  onInputChange={setMergeQuery}
+                  onChange={(key: Key | null) => setMergeTargetId(String(key ?? ""))}
+                />
+                <PendingButton
+                  size="sm"
+                  variant="secondary"
+                  onPress={handleMerge}
+                  isDisabled={!mergeTargetId}
+                  isPending={isMutating}
+                >
+                  Об&apos;єднати
+                </PendingButton>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              {isAdmin && (
+                <PendingButton
+                  isIconOnly
+                  aria-label="Видалити"
+                  variant="ghost"
+                  className="mr-auto"
+                  onPress={handleDelete}
+                  isPending={isMutating}
+                >
+                  <FaTrash />
+                </PendingButton>
               )}
-            </Autocomplete>
-            <Button size="sm" color="warning" variant="flat" onPress={handleMerge} isDisabled={!mergeTargetId} isLoading={isMutating}>
-              Об&apos;єднати
-            </Button>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isLoading={isMutating}>
-            Надіслати на розгляд
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isPending={isMutating}>
+                Надіслати на розгляд
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

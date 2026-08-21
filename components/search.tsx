@@ -5,13 +5,11 @@ import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import InspectorDuckTable from "@/components/table";
-import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
+import { Accordion, Button, CloseButton, Input, InputGroup, Link, TextField } from "@heroui/react";
 import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
-import { Link } from "@heroui/link";
 import useIsMobile from "@/hooks/useIsMobile";
 import TagsInput from "@/components/tags-input";
 import isEmpty from "lodash/isEmpty.js";
@@ -43,51 +41,29 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValues]);
 
-  const handleInputChange = (key: keyof SearchRequest) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleInputChange = (key: keyof SearchRequest) => (value: string) => {
     setSearchValues({ ...searchValues, [key]: value });
   };
 
-  const handleYearChange = (value: string) => {
-    setSearchValues({ ...searchValues, year: value || undefined });
+  const handleYearChange = (key: "year_from" | "year_to") => (value: string) => {
+    setSearchValues((prev) => ({ ...prev, [key]: value || undefined }));
   };
 
-  // const handleGeoChange = (position: [number, number]) => {
-  //   setSearchValues({ ...searchValues, lat: position[0], lng: position[1] });
-  // };
-
-  // const handleLatInputChange = (value: number) => {
-  //   setSearchValues({ ...searchValues, lat: value });
-  // };
-
-  // const handleLngInputChange = (value: number) => {
-  //   setSearchValues({ ...searchValues, lng: value });
-  // };
-
-  // const handleRadiusInputChange = (value: number) => {
-  //   setSearchValues({ ...searchValues, radius_m: value });
-  // };
-
-  const handlePlaceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePlaceInputChange = (value: string) => {
     if (searchValues.lat || searchValues.lng) {
       const isConfirmed = window.confirm("Поля 'Широта' та 'Довгота' будуть очищені. Продовжити?");
       if (!isConfirmed) {
         return;
       }
     }
-    const value = e.target.value;
-    setSearchValues({ ...searchValues, lat: undefined, lng: undefined, place: value });
+    setSearchValues({ ...searchValues, lat: undefined, lng: undefined, radius_m: undefined, place: value });
   };
 
-  const handleOpenMap = () => {
-    if (searchValues.place) {
-      const isConfirmed = window.confirm("Поле 'Населений пункт' буде очищено. Продовжити?");
-      if (!isConfirmed) {
-        return;
-      }
-    }
-    setSearchValues({ ...searchValues, place: undefined });
-    // onOpen();
+  // Place name and coordinates are alternative ways to say the same thing, and the
+  // API honours only one of them — picking a point on the map drops the place name.
+  const handleCoordinatesChange = (value: Pick<SearchRequest, "lat" | "lng" | "radius_m">) => {
+    const hasPoint = Boolean(value.lat && value.lng);
+    setSearchValues((prev) => ({ ...prev, ...value, place: hasPoint ? undefined : prev.place }));
   };
 
   const handleTagsChange = (values: string[]) => {
@@ -104,137 +80,159 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     trigger(searchValues);
   };
 
+  /* One control: the year fields share a single border, so the pair reads as a
+     range rather than two unrelated inputs. -ml-px collapses the touching
+     borders into one line; focus-within lifts the active field's ring above
+     its neighbour. `form` is set because on mobile these render outside the
+     <form>, inside the accordion. */
+  const yearRange = (
+    <div className="flex grow-0 shrink">
+      <TextField
+        type="number"
+        className="min-w-0 relative focus-within:z-10"
+        value={searchValues.year_from || ""}
+        onChange={handleYearChange("year_from")}
+      >
+        <Input form="search-form" className="rounded-r-none" placeholder="Рік від" />
+      </TextField>
+      <TextField
+        type="number"
+        className="min-w-0 relative -ml-px focus-within:z-10"
+        value={searchValues.year_to || ""}
+        onChange={handleYearChange("year_to")}
+      >
+        <Input form="search-form" className="rounded-l-none" placeholder="Рік до" />
+      </TextField>
+    </div>
+  );
+
+  const filters = (
+    <>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="select-archive" className="font-bold flex items-center">
+          <FaFolder className="inline mr-1" />
+          Реквізити
+        </label>
+        <Select
+          id="select-archive"
+          form="search-form"
+          items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
+          label="Архів"
+          getKey={(a) => a.code}
+          getTextValue={(a) => a.code}
+          renderItem={(a) => (
+            <div>
+              <p>{a.code}</p>
+              <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+            </div>
+          )}
+          value={searchValues.archive}
+          onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
+        />
+        <div className="flex gap-2">
+          <TextField className="min-w-0 flex-1" value={searchValues.fond || ""} onChange={handleInputChange("fond")}>
+            <Input form="search-form" placeholder="Фонд" />
+          </TextField>
+          <TextField
+            className="min-w-0 flex-1"
+            value={searchValues.inventory || ""}
+            onChange={handleInputChange("inventory")}
+          >
+            <Input form="search-form" placeholder="Опис" />
+          </TextField>
+          <TextField className="min-w-0 flex-1" value={searchValues.file || ""} onChange={handleInputChange("file")}>
+            <Input form="search-form" placeholder="Справа" />
+          </TextField>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="coordinates-input" className="font-bold flex items-center">
+          <FaMapMarkerAlt className="inline mr-1" />
+          Локація
+        </label>
+        <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
+          <InputGroup>
+            <InputGroup.Input
+              form="search-form"
+              pattern="[Ѐ-ӿԀ-ԯ]+"
+              placeholder="Назва населеного пункту"
+            />
+            {searchValues.place ? (
+              <InputGroup.Suffix>
+                <CloseButton
+                  aria-label="Очистити населений пункт"
+                  onPress={() => setSearchValues({ ...searchValues, place: undefined })}
+                />
+              </InputGroup.Suffix>
+            ) : null}
+          </InputGroup>
+        </TextField>
+        <CoordinatesInput
+          isLoading={isMutating}
+          year={searchValues.year_from || searchValues.year_to || undefined}
+          value={{
+            lat: searchValues.lat || undefined,
+            lng: searchValues.lng || undefined,
+            radius_m: searchValues.radius_m || undefined,
+          }}
+          onChange={handleCoordinatesChange}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="font-bold flex items-center">
+          <FaListUl className="inline mr-1" />
+          Теги
+        </label>
+        <TagsInput
+          tags={[ONLINE_TAG, ...tags]}
+          value={[searchValues.is_online ? ONLINE_TAG : null, ...(searchValues.tags || [])].filter(Boolean) as string[]}
+          onSelectionChange={handleTagsChange}
+        />
+      </div>
+    </>
+  );
+
   return (
     <>
       <form id="search-form" className="flex gap-2" onSubmit={handleSubmit}>
-        <Input
-          className="w-full"
-          label="Заголовок справи"
+        <TextField
+          className="grow"
           value={searchValues.title || ""}
           onChange={handleInputChange("title")}
-        />
-        {isMobile ? null : (
-          <Input
-            type="number"
-            className="basis-1/6 shrink-0"
-            value={searchValues.year}
-            onValueChange={handleYearChange}
-            label="Рік"
-            labelPlacement="inside"
-          />
-        )}
-        <Button
-          type="submit"
-          color="primary"
-          size="lg"
-          className="basis-1/4 h-full font-bold text-lg"
-          startContent={<FaSearch />}
-          isIconOnly={isMobile}
         >
+          <Input placeholder="Заголовок справи" />
+        </TextField>
+        {/* On mobile the row keeps only the title and the submit button; the years
+            move into the accordion below rather than disappearing. */}
+        {isMobile ? null : yearRange}
+        <Button type="submit" size="lg" className="basis-1/6 h-auto font-bold text-lg" isIconOnly={isMobile}>
+          <FaSearch />
           {isMobile ? undefined : "Пошук"}
         </Button>
       </form>
+      {/* Mobile: everything except the title and the submit button collapses into
+          one accordion, so results stay near the top of the screen. Desktop keeps
+          the persistent sidebar. */}
+      {isMobile ? (
+        <Accordion>
+          <Accordion.Item id="search-filters">
+            <Accordion.Heading>
+              <Accordion.Trigger className="font-bold px-0">
+                Фільтри
+                <Accordion.Indicator />
+              </Accordion.Trigger>
+            </Accordion.Heading>
+            <Accordion.Panel>
+              <Accordion.Body className="flex flex-col gap-8 p-0">
+                {yearRange}
+                {filters}
+              </Accordion.Body>
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+      ) : null}
       <div className="flex md:flex-row flex-col grow gap-4 mt-4">
-        <div className="flex flex-col gap-8 pb-8 basis-1/4 h-full">
-          <div className="flex flex-col gap-2" onClick={handleOpenMap}>
-            <label htmlFor="coordinates-input" className="font-bold flex items-center">
-              <FaMapMarkerAlt className="inline mr-1" />
-              Локація
-            </label>
-            <Input
-              isDisabled
-              size="sm"
-              form="search-form"
-              id="coordinates-input"
-              isClearable
-              value={searchValues.place || ""}
-              onChange={handlePlaceInputChange}
-              onClear={() => setSearchValues({ ...searchValues, place: undefined })}
-              pattern="[\u0400-\u04FF\u0500-\u052F]+"
-              label="Назва населеного пункту"
-              labelPlacement="inside"
-            />
-            <CoordinatesInput
-              isDisabled
-              isLoading={isMutating}
-              year={searchValues.year || undefined}
-              value={{
-                lat: searchValues.lat || undefined,
-                lng: searchValues.lng || undefined,
-                radius_m: searchValues.radius_m || undefined,
-              }}
-              onChange={(value) => setSearchValues({ ...searchValues, ...value })}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="select-archive" className="font-bold flex items-center">
-              <FaFolder className="inline mr-1" />
-              Реквізити
-            </label>
-            <Select
-              id="select-archive"
-              form="search-form"
-              items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
-              label="Архів"
-              getKey={(a) => a.code}
-              getTextValue={(a) => a.code}
-              renderItem={(a) => (
-                <div>
-                  <p>{a.code}</p>
-                  <p className="opacity-70 text-sm text-wrap">{a.title}</p>
-                </div>
-              )}
-              value={searchValues.archive}
-              onChange={(v) => setSearchValues({ ...searchValues, archive: v?.toString() || undefined })}
-            />
-            <div className="flex gap-2">
-              <Input
-                size="sm"
-                label="Фонд"
-                form="search-form"
-                value={searchValues.fund || ""}
-                onChange={handleInputChange("fund")}
-              />
-              <Input
-                size="sm"
-                label="Опис"
-                form="search-form"
-                value={searchValues.description || ""}
-                onChange={handleInputChange("description")}
-              />
-              <Input
-                size="sm"
-                label="Справа"
-                form="search-form"
-                value={searchValues.case || ""}
-                onChange={handleInputChange("case")}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="font-bold flex items-center">
-              <FaListUl className="inline mr-1" />
-              Теги
-            </label>
-            <TagsInput
-              tags={[ONLINE_TAG, ...tags]}
-              value={
-                [searchValues.is_online ? ONLINE_TAG : null, ...(searchValues.tags || [])].filter(Boolean) as string[]
-              }
-              onSelectionChange={handleTagsChange}
-            />
-          </div>
-          {/* <div className="w-full text-sm">
-            <p className="text-warning">
-              Нова пошукова форма є експериментальною. Якщо ви помітили некоректну роботу, будь ласка, повідомте
-              в чаті <Link href="https://t.me/spravnakachka" target="_blank" className="text-sm">@spravnakachka</Link>.
-            </p>
-            <p>
-              Результати пошуку можуть виглядати &quot;порожніми&quot;, через те, що назви та роки не заповнені на 100%, але це не впливає на
-              основну функцію Інспектора ― пошук посилання на онлайн копію.
-            </p>
-          </div> */}
-        </div>
+        {isMobile ? null : <div className="flex flex-col gap-8 pb-8 basis-1/4 min-w-0 h-full">{filters}</div>}
         <div className="min-h-[75vh] md:min-h-[300px] grow flex flex-col">
           <InspectorDuckTable<TableItem>
             id="search-table"
@@ -253,6 +251,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                       href={`/archives/${row.value.replace(/\-/g, "/")}`}
                       className="text-lg leading-none font-bold inline"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       {row.data.title || "Без назви"}
                     </Link>

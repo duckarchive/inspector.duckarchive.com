@@ -1,5 +1,4 @@
 import type { GetFileResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/[file-code]/route";
-import { Availability } from "@/generated/prisma/client/enums";
 import prisma from "@/lib/db";
 
 export const getFileByCode = async (
@@ -27,9 +26,10 @@ export const getFileByCode = async (
           radius_m: true,
         },
       },
-      online_copies: {
-        where: {
-          availability: Availability.PUBLIC,
+      online_copies: true,
+      inventory: {
+        select: {
+          fond_id: true,
         },
       },
     },

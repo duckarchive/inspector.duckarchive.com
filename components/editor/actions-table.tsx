@@ -1,10 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button, ButtonGroup } from "@heroui/button";
-import { Checkbox } from "@heroui/checkbox";
-import { Chip } from "@heroui/chip";
-import { Link } from "@heroui/link";
+import { Button, ButtonGroup, Checkbox, Chip, Link } from "@heroui/react";
+import PendingButton from "@/components/pending-button";
 import { FaCheck, FaPen, FaTimes } from "react-icons/fa";
 import { useEditorActions } from "@/hooks/useEditor";
 import useResolveAction from "@/hooks/useResolveAction";
@@ -14,7 +12,11 @@ import {
   ActionStatus,
   decodeNote,
   EditorQueue,
+  REPORT_SECTION_LABELS,
+  ReportNotePayload,
+  YearRange,
 } from "@/lib/editor-actions";
+import { catalogItemHref, catalogItemLabel } from "@/lib/catalog-links";
 import { ActionType } from "@generated/prisma/client/client";
 
 interface ActionsTableProps {
@@ -34,7 +36,7 @@ const STATUS_FILTER_LABELS: Record<ActionStatus | "all", string> = {
 const catalogTarget = (data: any): { label: string; href: string | null } | null => {
   const enc = (...segments: (string | undefined)[]): string | null => {
     if (segments.some((s) => !s)) return null;
-    return `/catalog/${segments.map((s) => encodeURIComponent(s as string)).join("/")}`;
+    return `/archives/${segments.map((s) => encodeURIComponent(s as string)).join("/")}`;
   };
   if (data?.fond) {
     return { label: data.fond.code, href: enc(data.fond.archive?.code, data.fond.code) };
@@ -112,20 +114,22 @@ const targetCell = (data: any) => {
       {author && (
         <span className="font-medium">
           {author.title}
-          {mergeTarget && <span className="text-default-500 font-normal"> → {mergeTarget.title}</span>}
+          {mergeTarget && <span className="text-muted font-normal"> → {mergeTarget.title}</span>}
         </span>
       )}
       {target &&
         (target.href ? (
-          <Link href={target.href} size="sm" isExternal>
+          <Link href={target.href} target="_blank" rel="noopener noreferrer" className="text-sm">
             {target.label}
+            <Link.Icon />
           </Link>
         ) : (
           <span>{target.label}</span>
         ))}
       {copyUrl && (
-        <Link href={copyUrl} size="sm" isExternal className="text-default-500">
+        <Link href={copyUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-muted">
           {hostLabel(copyUrl)}
+          <Link.Icon />
         </Link>
       )}
     </div>
@@ -148,14 +152,109 @@ const noteLabel = (note: string | null): string => {
   return parts.join(": ");
 };
 
+const yearLabel = (y: YearRange) => `${y.start_year}–${y.end_year}`;
+
+/** Section header + one line per proposed change. */
+const reportSectionLines = (report: ReportNotePayload): { label: string; lines: React.ReactNode[] }[] => {
+  const sections: { label: string; lines: React.ReactNode[] }[] = [];
+
+  if (report.tree) {
+    const codes = [report.tree.archive?.code, report.tree.fond?.code, report.tree.inventory?.code];
+    const label = catalogItemLabel(codes);
+    const href = catalogItemHref(codes);
+    sections.push({
+      label: REPORT_SECTION_LABELS.tree,
+      lines: [
+        href ? (
+          <Link key="tree" href={href} target="_blank" rel="noopener noreferrer" className="text-sm">
+            {label}
+            <Link.Icon />
+          </Link>
+        ) : (
+          label
+        ),
+      ],
+    });
+  }
+
+  if (report.online_copy) {
+    const { id, url } = report.online_copy;
+    sections.push({
+      label: REPORT_SECTION_LABELS.online_copy,
+      lines: [
+        url ? (
+          <Link key="copy" href={url} target="_blank" rel="noopener noreferrer" className="text-sm">
+            {hostLabel(url)}
+            <Link.Icon />
+          </Link>
+        ) : null,
+        id ? `id: ${id.slice(0, 8)}` : null,
+      ].filter(Boolean),
+    });
+  }
+
+  if (report.data) {
+    const lines: React.ReactNode[] = [];
+    if (report.data.title) lines.push(`назва: "${report.data.title.old ?? ""}" → "${report.data.title.value}"`);
+    if (report.data.info) lines.push(`опис: "${report.data.info.old ?? ""}" → "${report.data.info.value}"`);
+    if (report.data.years) {
+      const { add, remove } = report.data.years;
+      const parts = [...add.map((y) => `+${yearLabel(y)}`), ...remove.map((y) => `−${yearLabel(y)}`)];
+      if (parts.length) lines.push(`роки: ${parts.join(" ")}`);
+    }
+    sections.push({ label: REPORT_SECTION_LABELS.data, lines });
+  }
+
+  if (report.geo) {
+    const lines: React.ReactNode[] = [];
+    if (report.geo.authors?.length) {
+      lines.push(`автори: ${report.geo.authors.map((a) => a.title).join(", ")}`);
+    }
+    if (report.geo.locations?.length) {
+      lines.push(
+        `локації: ${report.geo.locations
+          .map((l) => `${l.lat.toFixed(4)},${l.lng.toFixed(4)}${l.radius_m ? ` ±${l.radius_m}м` : ""}`)
+          .join(" · ")}`,
+      );
+    }
+    sections.push({ label: REPORT_SECTION_LABELS.geo, lines });
+  }
+
+  return sections.filter((s) => s.lines.length > 0);
+};
+
+const noteCell = (note: string | null): React.ReactNode => {
+  const decoded = decodeNote(note);
+  const report = decoded && !("raw" in decoded) ? decoded.report : undefined;
+  if (!report) {
+    return noteLabel(note);
+  }
+  const sections = reportSectionLines(report);
+  return (
+    <div className="flex flex-col gap-1.5">
+      {sections.map((section) => (
+        <div key={section.label} className="flex flex-col gap-0.5">
+          <span className="text-xs text-muted">{section.label}</span>
+          {section.lines.map((line, i) => (
+            <span key={i} className="text-sm">
+              {line}
+            </span>
+          ))}
+        </div>
+      ))}
+      {report.text && <span className="text-sm text-muted italic">{report.text}</span>}
+    </div>
+  );
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isPending = (data: any): boolean => !data?.resolved_at;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const statusChip = (data: any) => {
-  if (isPending(data)) return <Chip size="sm" color="warning" variant="flat">{ACTION_STATUS_LABELS.pending}</Chip>;
-  if (data.is_rejected) return <Chip size="sm" color="danger" variant="flat">{ACTION_STATUS_LABELS.rejected}</Chip>;
-  return <Chip size="sm" color="success" variant="flat">{ACTION_STATUS_LABELS.executed}</Chip>;
+  if (isPending(data)) return <Chip size="sm" color="warning" variant="soft">{ACTION_STATUS_LABELS.pending}</Chip>;
+  if (data.is_rejected) return <Chip size="sm" color="danger" variant="soft">{ACTION_STATUS_LABELS.rejected}</Chip>;
+  return <Chip size="sm" color="success" variant="soft">{ACTION_STATUS_LABELS.executed}</Chip>;
 };
 
 const ITEMS_PER_PAGE = 100;
@@ -212,26 +311,32 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
         <div className="flex items-center gap-2 flex-wrap">
           <ButtonGroup size="sm">
             {STATUSES.map((s) => (
-              <Button key={s} variant={status === s ? "solid" : "flat"} color={status === s ? "primary" : "default"} onPress={() => setStatusAndReset(s)}>
+              <Button key={s} variant={status === s ? "primary" : "tertiary"} onPress={() => setStatusAndReset(s)}>
                 {STATUS_FILTER_LABELS[s]}
               </Button>
             ))}
           </ButtonGroup>
-          <Button size="sm" color="success" isDisabled={selectedIds.length === 0} isLoading={isResolving} onPress={() => resolve(selectedIds, "execute")}>
+          <PendingButton size="sm" isDisabled={selectedIds.length === 0} isPending={isResolving} onPress={() => resolve(selectedIds, "execute")}>
             Виконати обрані ({selectedIds.length})
-          </Button>
-          <Button size="sm" color="danger" variant="flat" isDisabled={selectedIds.length === 0} isLoading={isResolving} onPress={() => resolve(selectedIds, "reject")}>
+          </PendingButton>
+          <PendingButton size="sm" variant="danger-soft" isDisabled={selectedIds.length === 0} isPending={isResolving} onPress={() => resolve(selectedIds, "reject")}>
             Відхилити обрані ({selectedIds.length})
-          </Button>
+          </PendingButton>
         </div>
       </div>
 
-      <div className="overflow-x-auto border border-default-200 rounded-medium">
+      <div className="overflow-x-auto border border-default rounded-md">
         <table className="w-full text-sm">
-          <thead className="bg-default-100">
+          <thead className="bg-surface-secondary">
             <tr className="text-left">
               <th className="p-2 w-10">
-                <Checkbox isSelected={allSelected} isDisabled={pendingIds.length === 0} onValueChange={toggleAll} aria-label="Обрати всі" />
+                <Checkbox isSelected={allSelected} isDisabled={pendingIds.length === 0} onChange={toggleAll} aria-label="Обрати всі">
+                  <Checkbox.Content>
+                    <Checkbox.Control>
+                      <Checkbox.Indicator />
+                    </Checkbox.Control>
+                  </Checkbox.Content>
+                </Checkbox>
               </th>
               <th className="p-2">Дія</th>
               <th className="p-2">Ціль</th>
@@ -243,67 +348,64 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
           <tbody>
             {isLoading && (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-default-400">Завантаження…</td>
+                <td colSpan={6} className="p-4 text-center text-muted">Завантаження…</td>
               </tr>
             )}
             {!isLoading && rows.length === 0 && (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-default-400">Немає дій</td>
+                <td colSpan={6} className="p-4 text-center text-muted">Немає дій</td>
               </tr>
             )}
             {paginatedRows.map((row) => {
               const pending = isPending(row);
               return (
-                <tr key={row.id} className="border-t border-default-100 align-top">
+                <tr key={row.id} className="border-t border-default align-top">
                   <td className="p-2">
-                    {pending && <Checkbox isSelected={selected.has(row.id)} onValueChange={() => toggle(row.id)} aria-label="Обрати" />}
+                    {pending && <Checkbox isSelected={selected.has(row.id)} onChange={() => toggle(row.id)} aria-label="Обрати">
+                        <Checkbox.Content>
+                          <Checkbox.Control>
+                            <Checkbox.Indicator />
+                          </Checkbox.Control>
+                        </Checkbox.Content>
+                      </Checkbox>}
                   </td>
                   <td className="p-2">{ACTION_TYPE_LABELS[row.type as ActionType] ?? row.type}</td>
                   <td className="p-2">{targetCell(row)}</td>
-                  <td className="p-2 max-w-xs break-words">{noteLabel(row.note)}</td>
+                  <td className="p-2 max-w-xs break-words">{noteCell(row.note)}</td>
                   <td className="p-2">{statusChip(row)}</td>
                   <td className="p-2">
                     {pending && (
                       <div className="flex gap-1 justify-end">
-                        <Button
+                        <PendingButton
                           isIconOnly
                           size="sm"
-                          color="success"
-                          title="Виконати"
                           aria-label="Виконати"
-                          isLoading={isResolving}
+                          isPending={isResolving}
                           onPress={() => resolve([row.id], "execute")}
                         >
                           <FaCheck />
-                        </Button>
+                        </PendingButton>
                         {editorHref(entity, row) && (
-                          <Button
-                            isIconOnly
-                            as="a"
+                          <Link
                             href={editorHref(entity, row) as string}
                             target="_blank"
                             rel="noopener noreferrer"
-                            size="sm"
-                            color="primary"
-                            variant="flat"
-                            title="Редагувати вручну"
                             aria-label="Редагувати вручну"
+                            className="button button--secondary button--sm button--icon-only"
                           >
                             <FaPen />
-                          </Button>
+                          </Link>
                         )}
-                        <Button
+                        <PendingButton
                           isIconOnly
                           size="sm"
-                          color="danger"
-                          variant="flat"
-                          title="Відхилити"
+                          variant="danger-soft"
                           aria-label="Відхилити"
-                          isLoading={isResolving}
+                          isPending={isResolving}
                           onPress={() => resolve([row.id], "reject")}
                         >
                           <FaTimes />
-                        </Button>
+                        </PendingButton>
                       </div>
                     )}
                   </td>
@@ -318,19 +420,19 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
         <div className="flex items-center justify-center gap-2">
           <Button
             isIconOnly
-            variant="flat"
+            variant="tertiary"
             size="sm"
             isDisabled={page === 1}
             onPress={() => setPage(page - 1)}
           >
             ←
           </Button>
-          <span className="text-sm text-default-600">
+          <span className="text-sm text-muted">
             {page} / {totalPages}
           </span>
           <Button
             isIconOnly
-            variant="flat"
+            variant="tertiary"
             size="sm"
             isDisabled={page === totalPages}
             onPress={() => setPage(page + 1)}

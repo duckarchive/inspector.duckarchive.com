@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { FaSearch } from "react-icons/fa";
 import { useRef, useState } from "react";
 import SearchInputGuideModal from "./search-input-guide-modal";
@@ -140,7 +140,7 @@ const SearchInput: React.FC = () => {
           <SearchInputGuideModal />
         </div>
         <div className="flex justify-between items-end w-full py-2 border-2 rounded-xl overflow-hidden bg-background">
-          <div className="flex flex-col items-center flex-shrink-0 basis-1/4">
+          <div className="flex flex-col items-center shrink-0 basis-1/4">
             <span className="text-gray-500">{t("archive-label")}</span>
             <input
               ref={aInputRef}
@@ -153,7 +153,7 @@ const SearchInput: React.FC = () => {
             />
           </div>
           <span className="text-xl md:text-4xl">-</span>
-          <div className="flex flex-col items-center flex-grow basis-1/4">
+          <div className="flex flex-col items-center grow basis-1/4">
             <span className="text-gray-500">{t("fund-label")}</span>
             <input
               ref={fInputRef}
@@ -167,7 +167,7 @@ const SearchInput: React.FC = () => {
             />
           </div>
           <span className="text-xl md:text-4xl">-</span>
-          <div className="flex flex-col items-center flex-grow basis-1/4">
+          <div className="flex flex-col items-center grow basis-1/4">
             <span className="text-gray-500">{t("description-label")}</span>
             <input
               ref={dInputRef}
@@ -181,7 +181,7 @@ const SearchInput: React.FC = () => {
             />
           </div>
           <span className="text-xl md:text-4xl">-</span>
-          <div className="flex flex-col items-center flex-grow basis-1/4">
+          <div className="flex flex-col items-center grow basis-1/4">
             <span className="text-gray-500">{t("case-label")}</span>
             <input
               ref={cInputRef}
@@ -195,13 +195,8 @@ const SearchInput: React.FC = () => {
             />
           </div>
         </div>
-        <Button
-          type="submit"
-          color="primary"
-          size="lg"
-          className="w-full mt-2 font-bold text-lg"
-          startContent={<FaSearch />}
-        >
+        <Button type="submit" size="lg" className="w-full mt-2 font-bold text-lg">
+          <FaSearch />
           {t("submit-button")}
         </Button>
       </form>

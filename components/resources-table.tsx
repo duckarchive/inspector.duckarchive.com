@@ -4,7 +4,7 @@ import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import ResourceBadge from "./resource-badge";
 import { Resource } from "@generated/prisma/client/client";
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
 
 type TableItem = Resources[number];
 
@@ -34,8 +34,9 @@ const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
           headerName: "Назва",
           flex: 8,
           cellRenderer: (row: { value: string; data: TableItem }) => (
-            <Link href={row.data.url || ""} isExternal>
+            <Link href={row.data.url || ""} target="_blank" rel="noopener noreferrer">
               {row.value || "Без назви"}
+              <Link.Icon />
             </Link>
           ),
           filter: true,

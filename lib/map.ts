@@ -55,22 +55,28 @@ const tag2icon: Record<string, string> = {
   протестантизм: "christianCrossIcon",
   баптизм: "christianCrossIcon",
   євангелізм: "christianCrossIcon",
+  "цивільний стан": "buildingIcon",
+  "суд": "courtIcon",
 };
 
 export const prepareLocations = (
-  locations: (Pick<Author, "lat" | "lng" | "title" | "tags"> | Pick<CaseLocation, "lat" | "lng" | "radius_m">)[],
+  locations: (
+    | Pick<Author, "id" | "lat" | "lng" | "title" | "tags">
+    | Pick<CaseLocation, "lat" | "lng" | "radius_m">
+  )[],
 ): GeoDuckMapProps["positions"] => {
   const markers: GeoDuckMapProps["positions"] = locations.map(({ lat, lng, ...rest }) => {
     const latitude = lat || 0;
     const longitude = lng || 0;
     const radius = "radius_m" in rest ? rest.radius_m : 0;
     const title = "title" in rest ? rest.title : undefined;
+    const id = "id" in rest ? rest.id : undefined;
     let iconName: string | undefined = undefined;
     if ("tags" in rest) {
       const iconTag = rest.tags.find((tag) => tag in tag2icon);
       iconName = iconTag ? tag2icon[iconTag] : undefined;
     }
-    return [latitude, longitude, radius, title, iconName];
+    return [latitude, longitude, radius, title, iconName, id];
   });
   return randomizeCoordinates(markers);
 };

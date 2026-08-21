@@ -2,7 +2,7 @@ import DGSArchiveTable from "@/components/dgs-archive-table";
 import { NextPage } from "next";
 import prisma from "@/lib/db";
 import { getDGSListByArchive } from "@/data/dgs-archive-list";
-import { Snippet } from "@heroui/snippet";
+import CopyableCode from "@/components/copyable-code";
 
 export const dynamic = "force-static";
 export const revalidate = false;
@@ -116,12 +116,11 @@ const DGSArchivePage: NextPage<DGSArchivePageProps> = async ({ params }) => {
             <h4 className="text-md font-semibold mb-2">
               Сторінка {i + 1} з {total}
             </h4>
-            <Snippet
-              symbol={null}
-              className="wrap whitespace-pre-wrap bg-gray-100 p-4 rounded-md"
-            >{`<iframe src="https://inspector.duckarchive.com/iframe/family-search-dgs-list/${archiveCode}${DELIMITER}${
-              i + 1
-            }-${total}" width="100%" height="600" frameborder="0"></iframe>`}</Snippet>
+            <CopyableCode
+              code={`<iframe src="https://inspector.duckarchive.com/iframe/family-search-dgs-list/${archiveCode}${DELIMITER}${
+                i + 1
+              }-${total}" width="100%" height="600" frameborder="0"></iframe>`}
+            />
           </div>
         ))}
       </div>

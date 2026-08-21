@@ -1,30 +1,49 @@
 "use client";
 
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
+import NextLink from "next/link";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import ReportButton from "./report-button";
+import CsvDownloadButton from "./csv-download-button";
 import { sortByCode } from "@/lib/table";
 import useInventory from "@/hooks/useInventory";
 import { GetInventoryResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/route";
 import { getYearsString } from "@/lib/text";
+import { editorInventoryHref } from "@/lib/editor-links";
+import { catalogItemLabel } from "@/lib/catalog-links";
 
 type TableItem = GetInventoryResponse["files"][number];
+
+const prepareToDownload = (items: TableItem[]) =>
+  items.map((item) => ({
+    code: item.code,
+    title: item.title,
+    years: getYearsString(item.years),
+  }));
 
 const Details: React.FC<{
   inventory?: GetInventoryResponse;
 }> = ({ inventory }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {inventory?.info && <p>{inventory.info}</p>}
     {inventory?.years.length || inventory?.online_copies?.length ? (
-      <ul className="list-disc list-inside py-2">
-        {Boolean(inventory.years.length) && <li>Роки: {getYearsString(inventory.years)}</li>}
+      <ul className="list-inside py-2">
+        {Boolean(inventory.years.length) && (
+          <li>
+            Роки:&nbsp;<span className="text-foreground">{getYearsString(inventory.years)}</span>
+          </li>
+        )}
         {(inventory.online_copies.filter((copy) => copy.url) as { url: string }[]).map((copy) => (
           <li key={copy.url}>
-            <Link href={copy.url} target="_blank" className="text-inherit text-sm underline">
+            <Link
+              href={copy.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground text-sm underline"
+            >
               {copy.url}
             </Link>
           </li>
@@ -36,27 +55,47 @@ const Details: React.FC<{
 
 interface InventoryTableProps {
   resources: Resources;
+  isAdmin?: boolean;
 }
 
-const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
+const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) => {
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fondCode = params["fond-code"];
   const code = params["inventory-code"];
   const isMobile = useIsMobile();
   const { inventory, isLoading, page } = useInventory(archiveCode, fondCode, code);
+  const files = inventory?.files?.sort(sortByCode) || [];
 
   // if (isError) return <Error error={} />
   return (
     <>
       <PagePanel
-        title={`${code} опис`}
+        code={`${code} опис`}
         breadcrumbs={[archiveCode, fondCode, code]}
-        basePath="/catalog/"
-        description={inventory?.title || "Без назви"}
+        title={inventory?.title || undefined}
+        description={inventory?.info || undefined}
         message={<Details inventory={inventory} />}
       >
-        <ReportButton entity="inventory" targetId={inventory?.id} />
+        <CsvDownloadButton
+          filename={catalogItemLabel([archiveCode, fondCode, code])}
+          rows={prepareToDownload(files)}
+          isDisabled={isLoading}
+        />
+        <ReportButton
+          entity="inventory"
+          targetId={inventory?.id}
+          current={{
+            title: inventory?.title ?? null,
+            info: inventory?.info ?? null,
+            years: inventory?.years?.map(({ start_year, end_year }) => ({ start_year, end_year })) ?? [],
+            codes: { archive: archiveCode, fond: fondCode, inventory: code },
+            onlineCopies: inventory?.online_copies?.map(({ id, url }) => ({ id, url })) ?? [],
+          }}
+          editorHref={
+            isAdmin && inventory?.id ? editorInventoryHref(archiveCode, inventory.fond_id, inventory.id) : undefined
+          }
+        />
       </PagePanel>
       <InspectorDuckTable<TableItem>
         id="inventory-table"
@@ -74,9 +113,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
-              <Link href={`/catalog/${archiveCode}/${fondCode}/${code}/${row.data.code}`}>
+              <NextLink href={`/archives/${archiveCode}/${fondCode}/${code}/${row.data.code}`} className="link">
                 {row.value || `Справа ${row.data.code}`}
-              </Link>
+              </NextLink>
             ),
           },
           {
@@ -87,7 +126,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources }) => {
             hide: isMobile,
           },
         ]}
-        rows={inventory?.files?.sort(sortByCode) || []}
+        rows={files}
       />
     </>
   );

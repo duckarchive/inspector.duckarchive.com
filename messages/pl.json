@@ -2,16 +2,40 @@
   "home-page": {
     "title": "Znajdź sprawy archiwalne online łatwo!",
     "description": "Duck Inspector to serwis wyszukiwarki, który pozwala znaleźć archiwalne sprawy online. Wystarczy wpisać dane dotyczące archiwum, funduszu, opisu i sprawy, aby uzyskać link do źródła.",
-    "about": {
-      "title": "Duck Inspector to:",
-      "one-place": "zagregowane dane z zasobów archiwalnych w jednym miejscu",
-      "extended-data": "rozszerzone informacje ze współrzędnymi i datami",
-      "form": "prosty formularz wyszukiwania umożliwiający znalezienie potrzebnej sprawy w kilka sekund",
-      "direct-link": "monitorowanie 24/7 linków do kopii online",
-      "free": "napędzane przez społeczność i bezpłatne w użyciu",
-      "universe": "zintegrowane z narzędziami Duck Universe i innymi przyjaznymi serwisami",
-      "notifications": "regularne powiadomienia o nowych sprawach",
-      "open-source": "otwarty kod i otwarte dane dla wszystkich"
+    "search-label": "Szukaj po nazwie jednostki",
+    "search-button": "Szukaj",
+    "search-footer": "{count} rekordów",
+    "process": {
+      "title": "Jak to działa",
+      "subtitle": "Duck Inspector nie przechowuje archiwów — obserwuje, gdzie już się znajdują, i daje jedno wejście do wszystkich.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Archiwa publikują skany",
+          "description": "Archiwa państwowe i platformy partnerskie digitalizują sprawy i publikują je online, każde na własnej stronie."
+        },
+        "index": {
+          "title": "Duck Inspector je indeksuje",
+          "description": "Stale śledzimy każde źródło i dopasowujemy archiwa, fundusze i opisy między nimi."
+        },
+        "search": {
+          "title": "Szukasz tylko raz",
+          "description": "Wpisz nazwisko lub sprawę i otrzymaj bezpośredni link tam, gdzie skan faktycznie się znajduje."
+        }
+      }
+    },
+    "stats": {
+      "title": "W liczbach",
+      "subtitle": "Migawka wszystkiego, co Duck Inspector zaindeksował, wykonana przy ostatniej kompilacji.",
+      "archives": "Archiwa",
+      "fonds": "Fundusze",
+      "inventories": "Opisy",
+      "files": "Sprawy",
+      "authors": "Autorzy",
+      "locations": "Lokalizacje",
+      "onlineCopies": "Kopie online",
+      "checkedLast7Days": "Kopii online sprawdzonych w ciągu ostatnich 7 dni",
+      "communityEditsLast7Days": "Poprawek społeczności zastosowanych w ciągu ostatnich 7 dni"
     }
   },
   "daily-updates-page": {
@@ -31,12 +55,11 @@
   "navigation": {
     "logo": "Inspektor",
     "main": "Strona główna",
-    "resources": "Zasoby",
+    "resources": "Źródła",
     "inspector": "Inspektor",
-    "online-copy-search": "🚧Wyszukiwanie",
     "search": "Wyszukiwanie",
     "archives": "Archiwa",
-    "catalog": "🚧Katalog",
+    "institutions": "Instytucje",
     "daily-updates": "Raport dzienny",
     "stats": "Statystyka",
     "docs": "Dokumentacja"
@@ -58,15 +81,56 @@
     "body-2": "Regularne i stałe darowizny pomagają opłacać usługi niezbędne do działania strony.",
     "cta": "Wesprzyj projekt"
   },
-  "online-copy-search-page": {
-    "title": "Zapytanie wyszukiwania",
-    "hint": "Użyj * dla dowolnej liczby znaków oraz _ dla pojedynczego znaku",
-    "search-button": "Szukaj",
-    "parsed-column": "Sygnatura",
-    "url-column": "Link",
-    "availability-column": "Dostępność",
-    "availability-public": "Dostępne",
-    "availability-restricted": "Dostęp ograniczony",
-    "availability-unknown": "Nieznane"
+  "report-form": {
+    "trigger-button": "Zgłoś błąd",
+    "title": "Zgłoś błąd",
+    "progress": "Krok {current} z {total}",
+    "editor-link": "Edytor",
+    "yes": "Tak",
+    "no": "Nie",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "cancel": "Anuluj",
+    "submit": "Wyślij",
+    "step-tree-question": "Zmienić sygnaturę archiwalną?",
+    "step-tree-hint": "Rekord jest w niewłaściwym archiwum, zespole lub inwentarzu.",
+    "step-copy-question": "Zmienić link do kopii cyfrowej?",
+    "step-copy-hint": "Link nie działa, prowadzi gdzie indziej lub go brakuje.",
+    "step-data-question": "Zmienić dane podstawowe?",
+    "step-data-hint": "Błąd w tytule, opisie lub latach.",
+    "step-geo-question": "Dodać geolokalizację?",
+    "step-geo-hint": "Dodaj autorów rekordu i miejsca, których dotyczy.",
+    "step-text-question": "Opisz problem własnymi słowami",
+    "tree-current-label": "Obecnie",
+    "tree-archive-label": "Archiwum",
+    "tree-fond-label": "Zespół",
+    "tree-inventory-label": "Inwentarz",
+    "tree-unchanged-hint": "Wybierz lokalizację inną niż obecna.",
+    "copy-select-label": "Link z tego rekordu",
+    "copy-url-label": "Inny link",
+    "copy-url-hint": "Jeśli potrzebnego linku nie ma na liście, wklej go tutaj.",
+    "data-title-label": "Tytuł",
+    "data-info-label": "Opis",
+    "data-years-label": "Lata",
+    "data-years-empty": "Brak",
+    "data-years-from": "Od",
+    "data-years-to": "Do",
+    "data-years-remove": "Usuń lata",
+    "data-no-changes-hint": "Zmień co najmniej jedno pole, aby kontynuować.",
+    "geo-authors-legend": "Autorzy",
+    "geo-authors-empty": "Brak",
+    "geo-authors-remove": "Usuń autora",
+    "geo-authors-search-label": "Znajdź autora",
+    "geo-authors-new-label": "Lub podaj nowego autora",
+    "geo-authors-add": "Dodaj",
+    "geo-locations-legend": "Lokalizacje",
+    "geo-locations-empty": "Brak",
+    "geo-locations-remove": "Usuń lokalizację",
+    "geo-locations-add": "Dodaj lokalizację",
+    "text-placeholder": "Opis błędu — na przykład: zły rok, literówka w tytule",
+    "success": "Wysłano do rozpatrzenia",
+    "error-already-pending": "Zgłoszenie tego rekordu już czeka na rozpatrzenie",
+    "error-unauthorized": "Zaloguj się, aby wysłać zgłoszenie",
+    "error-generic": "Nie udało się wysłać zgłoszenia"
   }
 }

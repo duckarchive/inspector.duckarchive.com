@@ -5,13 +5,13 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontComic, fontSans } from "@/config/fonts";
+import { apiJsonLd } from "@/config/api-json-ld";
+import { fontMono, fontSans } from "@duckarchive/framework/fonts";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { DuckLoader } from "@duckarchive/framework";
 import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@/i18n/constants";
-import BgPaperNoiseImg from "@/public/images/bg-paper-noise.png";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
@@ -68,14 +68,19 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
 
   return (
     <html suppressHydrationWarning lang={locale} className="overflow-y-hidden">
-      <head />
+      <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(apiJsonLd) }} />
+      </head>
       <GoogleAnalytics />
       <body
-        className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable, fontComic.variable)}
-        style={{ backgroundImage: `url(${BgPaperNoiseImg.src})` }}
+        className={clsx(
+          "min-h-dvh bg-background bg-dotted font-mono antialiased",
+          fontSans.variable,
+          fontMono.variable,
+        )}
       >
         <Providers i18nMessages={messages} i18nLocale={locale}>
-          <div className="relative flex flex-col h-screen overflow-y-scroll">
+          <div className="relative flex flex-col h-dvh overflow-y-scroll">
             <Suspense fallback={<DuckLoader />}>{children}</Suspense>
           </div>
         </Providers>

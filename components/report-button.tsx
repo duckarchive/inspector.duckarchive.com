@@ -1,65 +1,63 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@heroui/button";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Textarea } from "@heroui/input";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { Button, Modal } from "@heroui/react";
+import { FaBug } from "react-icons/fa";
 import { EditorEntity } from "@/lib/editor-actions";
-import useSubmitAction from "@/hooks/useSubmitAction";
+import ReportWizard from "@/components/report/report-wizard";
+import { ReportCurrentValues } from "@/components/report/types";
 
 interface ReportButtonProps {
   entity: EditorEntity;
   targetId?: string;
+  current: ReportCurrentValues;
+  editorHref?: string;
 }
 
-const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId }) => {
+const ReportButton: React.FC<ReportButtonProps> = ({ entity, targetId, current, editorHref }) => {
+  const t = useTranslations("report-form");
+  const { status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-  const [note, setNote] = useState("");
-  const { submit, isMutating } = useSubmitAction(entity);
 
-  const close = () => {
-    setIsOpen(false);
-    setNote("");
-  };
+  if (status !== "authenticated") {
+    return null;
+  }
 
-  const handleSubmit = async () => {
-    try {
-      await submit({ type: "report", target_id: targetId, note: note.trim() || undefined });
-      close();
-    } catch {
-      // error already toasted by useSubmitAction
-    }
-  };
+  const close = () => setIsOpen(false);
 
   return (
     <>
-      <Button size="sm" variant="light" color="warning" isDisabled={!targetId} onPress={() => setIsOpen(true)}>
-        Повідомити про помилку
+      <Button
+        size="sm"
+        variant="outline"
+        isIconOnly
+        aria-label={t("trigger-button")}
+        isDisabled={!targetId}
+        onPress={() => setIsOpen(true)}
+      >
+        <FaBug />
       </Button>
-      <Modal isOpen={isOpen} onClose={close}>
-        <ModalContent>
-          <ModalHeader>Повідомити про помилку</ModalHeader>
-          <ModalBody className="gap-3">
-            <p className="text-sm text-default-500">
-              Опишіть, що саме є неправильним у цьому записі. Адміністратор розгляне ваше повідомлення.
-            </p>
-            <Textarea
-              label="Опис помилки"
-              placeholder="Наприклад: неправильний рік, помилка в назві тощо"
-              value={note}
-              onValueChange={setNote}
-              minRows={3}
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="light" onPress={close}>
-              Скасувати
-            </Button>
-            <Button color="warning" onPress={handleSubmit} isLoading={isMutating} isDisabled={!note.trim()}>
-              Надіслати
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+      <Modal isOpen={isOpen} onOpenChange={(open) => !open && close()}>
+        <Modal.Backdrop>
+          <Modal.Container size="lg" scroll="inside">
+            <Modal.Dialog>
+              <Modal.CloseTrigger />
+              {/* Remounting on open resets the step stack and draft. */}
+              {targetId ? (
+                <ReportWizard
+                  key={isOpen ? "open" : "closed"}
+                  entity={entity}
+                  targetId={targetId}
+                  current={current}
+                  editorHref={editorHref}
+                  onClose={close}
+                />
+              ) : null}
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
     </>
   );

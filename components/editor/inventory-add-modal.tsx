@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { addToast } from "@heroui/toast";
+import { Button, Input, Modal, TextArea, TextField, toast } from "@heroui/react";
 import YearRangesField from "@/components/editor/year-ranges-field";
 import useSubmitAction from "@/hooks/useSubmitAction";
+import PendingButton from "@/components/pending-button";
 import { AddActionValue, encodeNote, YearRange } from "@/lib/editor-actions";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 
@@ -35,11 +33,11 @@ const InventoryAddModal: React.FC<InventoryAddModalProps> = ({ fond, isOpen, onC
 
   const handleSubmit = async () => {
     if (!code.trim()) {
-      addToast({ title: "Введіть код опису", color: "warning" });
+      toast.warning("Введіть код опису");
       return;
     }
     if (!fond) {
-      addToast({ title: "Фонд не вибраний", color: "warning" });
+      toast.warning("Фонд не вибраний");
       return;
     }
 
@@ -62,24 +60,37 @@ const InventoryAddModal: React.FC<InventoryAddModalProps> = ({ fond, isOpen, onC
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader>Створити новий опис</ModalHeader>
-        <ModalBody className="gap-3">
-          <Input label="Код" value={code} onValueChange={setCode} autoFocus />
-          <Input label="Назва" value={title} onValueChange={setTitle} />
-          <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Створити новий опис</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
+          <TextField value={code} onChange={setCode} autoFocus>
+            <Input placeholder="Код" />
+          </TextField>
+          <TextField value={title} onChange={setTitle}>
+            <Input placeholder="Назва" />
+          </TextField>
+          <TextField value={info} onChange={setInfo}>
+            <TextArea placeholder="Опис" rows={2} />
+          </TextField>
           <YearRangesField value={years} onChange={setYears} />
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isLoading={isMutating} isDisabled={!code.trim()}>
-            Створити
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isPending={isMutating} isDisabled={!code.trim()}>
+                Створити
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

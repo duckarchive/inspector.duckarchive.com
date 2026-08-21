@@ -2,16 +2,40 @@
   "home-page": {
     "title": "Find an archival file online ― easily!",
     "description": "Duck Inspector is a search service that allows you to find an archive file online. Just enter the details of the archive, fund, description, and file and get a link to the source.",
-    "about": {
-      "title": "Duck Inspector is:",
-      "one-place": "aggregated data from archival resources in one place",
-      "extended-data": "extended info with coordinates and dates",
-      "form": "simple search form to find the file you need in seconds",
-      "direct-link": "24/7 monitoring for links to online copies",
-      "free": "community driven and free to use",
-      "universe": "integrated with tools of Duck Universe and other friendly services",
-      "notifications": "regular notifications about new files",
-      "open-source": "open source code and data for everyone"
+    "search-label": "Search by file title",
+    "search-button": "Search",
+    "search-footer": "{count} records",
+    "process": {
+      "title": "How it works",
+      "subtitle": "Duck Inspector doesn't store the archives — it watches where they already live and gives you one door in.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Archives publish scans",
+          "description": "State archives and partner platforms digitize case files and put them online, each on its own site."
+        },
+        "index": {
+          "title": "Duck Inspector indexes them",
+          "description": "We track every source continuously and match up archives, funds and descriptions across all of them."
+        },
+        "search": {
+          "title": "You search once",
+          "description": "Type a name or a case, and get a direct link to wherever the scan actually lives."
+        }
+      }
+    },
+    "stats": {
+      "title": "By the numbers",
+      "subtitle": "A snapshot of everything Duck Inspector has indexed, taken at the last build.",
+      "archives": "Archives",
+      "fonds": "Fonds",
+      "inventories": "Inventories",
+      "files": "Files",
+      "authors": "Authors",
+      "locations": "Locations",
+      "onlineCopies": "Online copies",
+      "checkedLast7Days": "Online copies checked in the last 7 days",
+      "communityEditsLast7Days": "Community edits applied in the last 7 days"
     }
   },
   "daily-updates-page": {
@@ -33,10 +57,9 @@
     "main": "Home",
     "resources": "Resources",
     "inspector": "Inspector",
-    "online-copy-search": "🚧Search",
     "search": "Search",
     "archives": "Archives",
-    "catalog": "🚧Catalog",
+    "institutions": "Institutions",
     "daily-updates": "Daily report",
     "stats": "Statistics",
     "docs": "Documentation"
@@ -47,7 +70,7 @@
     "archive-description": "Search online in archive {archiveCode} ({archiveTitle})",
     "fund-description": "Search for files online in the fund {archiveCode}-{fundCode}{fundTitle} / archive {archiveCode} fund {fundCode} / {archiveCode} f.{fundCode}",
     "description-description": "Search for files online in the description {archiveCode}-{fundCode}-{descriptionCode}{descriptionTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}",
-    "case-description": "File online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{fileTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} file {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
+    "case-description": "File online {archiveCode}-{fundCode}-{descriptionCode}-{caseCode}{caseTitle} / archive {archiveCode} fund {fundCode} description {descriptionCode} file {caseCode} / {archiveCode} f.{fundCode}, d.{descriptionCode}, c.{caseCode}"
   },
   "not-found": {
     "title": "404: Page not found"
@@ -58,15 +81,56 @@
     "body-2": "Regular and steady donations help pay for the services needed to keep the site running.",
     "cta": "Support the project"
   },
-  "online-copy-search-page": {
-    "title": "Search request",
-    "hint": "Use * for any number of characters and _ for a single character",
-    "search-button": "Search",
-    "parsed-column": "Code",
-    "url-column": "Link",
-    "availability-column": "Availability",
-    "availability-public": "Available",
-    "availability-restricted": "Restricted",
-    "availability-unknown": "Unknown"
+  "report-form": {
+    "trigger-button": "Report an error",
+    "title": "Report an error",
+    "progress": "Step {current} of {total}",
+    "editor-link": "Editor",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "next": "Next",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "step-tree-question": "Change the archival reference?",
+    "step-tree-hint": "The record sits in the wrong archive, fond or inventory.",
+    "step-copy-question": "Change the online copy link?",
+    "step-copy-hint": "The link is broken, points elsewhere, or is missing.",
+    "step-data-question": "Change the main data?",
+    "step-data-hint": "The title, description or years are wrong.",
+    "step-geo-question": "Attach a geolocation?",
+    "step-geo-hint": "Add the record's authors and the places it refers to.",
+    "step-text-question": "Describe the problem in your own words",
+    "tree-current-label": "Currently",
+    "tree-archive-label": "Archive",
+    "tree-fond-label": "Fond",
+    "tree-inventory-label": "Inventory",
+    "tree-unchanged-hint": "Pick a location different from the current one.",
+    "copy-select-label": "A link from this record",
+    "copy-url-label": "Another link",
+    "copy-url-hint": "If the link you mean is not in the list, paste it here.",
+    "data-title-label": "Title",
+    "data-info-label": "Description",
+    "data-years-label": "Years",
+    "data-years-empty": "None",
+    "data-years-from": "From",
+    "data-years-to": "To",
+    "data-years-remove": "Remove years",
+    "data-no-changes-hint": "Change at least one field to continue.",
+    "geo-authors-legend": "Authors",
+    "geo-authors-empty": "None",
+    "geo-authors-remove": "Remove author",
+    "geo-authors-search-label": "Find an author",
+    "geo-authors-new-label": "Or name a new author",
+    "geo-authors-add": "Add",
+    "geo-locations-legend": "Locations",
+    "geo-locations-empty": "None",
+    "geo-locations-remove": "Remove location",
+    "geo-locations-add": "Add location",
+    "text-placeholder": "Describe the error — for example: wrong year, typo in the title",
+    "success": "Sent for review",
+    "error-already-pending": "A report on this record is already awaiting review",
+    "error-unauthorized": "Sign in to send a report",
+    "error-generic": "Could not send the report"
   }
 }

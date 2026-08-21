@@ -1,8 +1,10 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
+import NextLink from "next/link";
 import InspectorDuckTable from "@/components/table";
 import Select from "@/components/select";
+import CatalogItemLink from "@/components/editor/catalog-item-link";
 import EditCell from "@/components/editor/edit-cell";
 import FondEditModal from "@/components/editor/fond-edit-modal";
 import FondAddModal from "@/components/editor/fond-add-modal";
@@ -10,8 +12,9 @@ import { useGet } from "@/hooks/useApi";
 import { useEditorFonds } from "@/hooks/useEditor";
 import { GetArchivesResponse } from "@/app/api/archives/route";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
-import { Button } from "@heroui/button";
+import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
+import { editorInventoryHref } from "@/lib/editor-links";
 
 export default function EditorFondsPage() {
   const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
@@ -43,6 +46,7 @@ export default function EditorFondsPage() {
 
       <div className="flex items-center justify-between gap-4">
         <Select
+          className="grow"
           items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
           label="Архів"
           getKey={(a) => a.code}
@@ -61,17 +65,32 @@ export default function EditorFondsPage() {
           }}
         />
 
-        <Button color="success" variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!archiveCode}>
+        <Button variant="ghost" size="lg" onPress={() => setIsAddOpen(true)} isDisabled={!archiveCode}>
           Створити
         </Button>
       </div>
+      <CatalogItemLink codes={[archiveCode]} />
 
       <InspectorDuckTable<EditorFond>
         id="editor-fonds-table"
         isLoading={isLoading}
         rows={fonds ?? []}
         columns={[
-          { field: "code", headerName: "Код" },
+          {
+            field: "code",
+            headerName: "Код",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            cellRenderer: (row: any) => (
+              <NextLink
+                href={editorInventoryHref(archiveCode, row.data.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link"
+              >
+                {row.value}
+              </NextLink>
+            ),
+          },
           { field: "title", headerName: "Назва", flex: 5 },
           { field: "info", headerName: "Опис", flex: 4 },
           { field: "children_count", headerName: "Описи", flex: 1, type: "numericColumn" },

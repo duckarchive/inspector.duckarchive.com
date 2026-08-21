@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addToast } from "@heroui/toast";
+import { toast } from "@heroui/react";
 import { usePost } from "@/hooks/useApi";
 import { EditorEntity, SubmitActionBody } from "@/lib/editor-actions";
 import { SubmitActionResponse } from "@/app/api/editor/actions/[entity]/route";
@@ -14,10 +14,10 @@ const useSubmitAction = (entity: EditorEntity) => {
   const submit = async (body: SubmitActionBody) => {
     try {
       const res = await trigger(body);
-      addToast({ title: "Надіслано на розгляд", color: "success" });
+      toast.success("Надіслано на розгляд");
       return res;
     } catch (error) {
-      addToast({ title: "Помилка", description: (error as Error).message, color: "danger" });
+      toast.danger("Помилка", { description: (error as Error).message });
       throw error;
     }
   };
@@ -35,12 +35,10 @@ const useSubmitAction = (entity: EditorEntity) => {
       }
     }
     if (errors.length === 0) {
-      addToast({ title: `Надіслано на розгляд (${ok})`, color: "success" });
+      toast.success(`Надіслано на розгляд (${ok})`);
     } else {
-      addToast({
-        title: `Надіслано: ${ok}, помилок: ${errors.length}`,
+      toast.warning(`Надіслано: ${ok}, помилок: ${errors.length}`, {
         description: errors.join("; "),
-        color: "warning",
       });
     }
     return { ok, errors };
@@ -65,18 +63,16 @@ const useSubmitAction = (entity: EditorEntity) => {
       const totalErrors = result.errors.length;
 
       if (totalErrors === 0) {
-        addToast({ title: `Надіслано на розгляд (${result.created})`, color: "success" });
+        toast.success(`Надіслано на розгляд (${result.created})`);
       } else {
         const errorSummary = result.errors.slice(0, 3).map((e) => `[${e.index}] ${e.message}`).join("; ");
-        addToast({
-          title: `Надіслано: ${result.created}, помилок: ${totalErrors}`,
+        toast.warning(`Надіслано: ${result.created}, помилок: ${totalErrors}`, {
           description: totalErrors > 3 ? `${errorSummary}...` : errorSummary,
-          color: "warning",
         });
       }
       return result;
     } catch (error) {
-      addToast({ title: "Помилка", description: (error as Error).message, color: "danger" });
+      toast.danger("Помилка", { description: (error as Error).message });
       throw error;
     } finally {
       setIsBatchLoading(false);

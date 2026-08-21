@@ -1,8 +1,8 @@
-import { GetArchiveResponse } from "@/app/api/archives/[archive-code]/route";
+import { GetCatalogArchiveResponse } from "@/app/api/catalog/[archive-code]/route";
 import { useGet } from "@/hooks/useApi";
 
 const useArchive = (code: string) => {
-  const { data, error, isLoading } = useGet<GetArchiveResponse>(`/api/archives/${code}`);
+  const { data, error, isLoading } = useGet<GetCatalogArchiveResponse>(`/api/catalog/${code}`);
 
   return {
     archive: data,

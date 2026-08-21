@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Input } from "@heroui/input";
-import { Chip } from "@heroui/chip";
+import { Chip, SearchField } from "@heroui/react";
 import { FaBaby, FaHeart, FaLink, FaSkull } from "react-icons/fa";
 import { FaHeartCrack } from "react-icons/fa6";
 
@@ -42,14 +41,13 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags, value, onSelectionChange })
 
   return (
     <div className="flex flex-col gap-2">
-      <Input
-        isClearable
-        size="sm"
-        label="Шукати тег"
-        value={filterValue}
-        onValueChange={setFilterValue}
-        onClear={() => setFilterValue("")}
-      />
+      <SearchField value={filterValue} onChange={setFilterValue}>
+        <SearchField.Group>
+          <SearchField.SearchIcon />
+          <SearchField.Input placeholder="Шукати тег" />
+          <SearchField.ClearButton />
+        </SearchField.Group>
+      </SearchField>
       <div className="flex flex-wrap gap-1">
         {filteredTags
           // .sort((a, b) => Number(value.includes(b)) - Number(value.includes(a)) || a.localeCompare(b))
@@ -58,12 +56,12 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags, value, onSelectionChange })
             return (
               <Chip
                 key={tag}
-                variant={isIncluded ? "solid" : "flat"}
-                color={isIncluded ? "secondary" : "default"}
+                variant={isIncluded ? "primary" : "soft"}
+                color={isIncluded ? "accent" : "default"}
                 onClick={() => handleSelectionChange(tag)}
                 className="cursor-pointer"
-                startContent={tagName2tagIcon[tag] || null}
               >
+                {tagName2tagIcon[tag] || null}
                 {tag}
               </Chip>
             );

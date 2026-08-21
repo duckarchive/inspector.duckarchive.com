@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { addToast } from "@heroui/toast";
+import { Button, Input, Modal, TextArea, TextField, toast } from "@heroui/react";
 import useSubmitAction from "@/hooks/useSubmitAction";
+import PendingButton from "@/components/pending-button";
 import { encodeNote, SubmitActionBody } from "@/lib/editor-actions";
 
 interface AuthorAddModalProps {
@@ -22,7 +20,7 @@ const AuthorAddModal: React.FC<AuthorAddModalProps> = ({ isOpen, onClose, onSubm
   const handleSubmit = async () => {
     const trimmedTitle = title.trim();
     if (!trimmedTitle) {
-      addToast({ title: "Введіть назву автора", color: "warning" });
+      toast.warning("Введіть назву автора");
       return;
     }
 
@@ -46,22 +44,33 @@ const AuthorAddModal: React.FC<AuthorAddModalProps> = ({ isOpen, onClose, onSubm
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg">
-      <ModalContent>
-        <ModalHeader>Додати нового автора</ModalHeader>
-        <ModalBody className="gap-3">
-          <Input label="Назва" value={title} onValueChange={setTitle} autoFocus />
-          <Textarea label="Опис" value={info} onValueChange={setInfo} minRows={2} />
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose}>
-            Скасувати
-          </Button>
-          <Button color="primary" onPress={handleSubmit} isLoading={isMutating} isDisabled={!title.trim()}>
-            Додати
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg">
+          <Modal.Dialog>
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Додати нового автора</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-3">
+              <TextField value={title} onChange={setTitle} autoFocus>
+                <Input placeholder="Назва" />
+              </TextField>
+              <TextField value={info} onChange={setInfo}>
+                <TextArea placeholder="Опис" rows={2} />
+              </TextField>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="tertiary" onPress={onClose}>
+                Скасувати
+              </Button>
+              <PendingButton onPress={handleSubmit} isPending={isMutating} isDisabled={!title.trim()}>
+                Додати
+              </PendingButton>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 };

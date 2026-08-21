@@ -1,7 +1,7 @@
 import ArchiveTable from "@/components/archive-table";
 import { Metadata, NextPage } from "next";
 import { getResources } from "@/data/resources";
-import { getArchiveByCode } from "@/app/api/archives/[archive-code]/data";
+import { getCatalogArchiveByCode } from "@/app/api/catalog/[archive-code]/data";
 import { getTranslations } from "next-intl/server";
 
 export interface ArchivePageProps {
@@ -20,7 +20,7 @@ export async function generateMetadata(pageProps: ArchivePageProps): Promise<Met
     const t = await getTranslations("metadata");
     const params = await pageProps.params;
     const code = decodeURIComponent(params["archive-code"]);
-    const archive = (await getArchiveByCode(code)) || fallback;
+    const archive = (await getCatalogArchiveByCode(code)) || fallback;
 
     return {
       title: `${code}`,

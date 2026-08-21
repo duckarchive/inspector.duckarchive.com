@@ -3,18 +3,23 @@
 import "leaflet/dist/leaflet.css";
 import "../node_modules/@duckarchive/map/dist/style.css";
 
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
+import { FaLock } from "react-icons/fa";
+import { Availability } from "@/generated/prisma/client/enums";
 import { Resources } from "@/data/resources";
 import InspectorDuckTable from "@/components/table";
 import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import ReportButton from "./report-button";
+import CsvDownloadButton from "./csv-download-button";
 import { getSyncAtLabel } from "@/lib/table";
 import useFile from "@/hooks/useFile";
-import ResourceBadge from "./resource-badge";
+import ResourceBadge, { TYPE_LABEL } from "./resource-badge";
 import { GetFileResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/[file-code]/route";
 import { getYearsString } from "@/lib/text";
+import { editorFileHref } from "@/lib/editor-links";
+import { catalogItemLabel } from "@/lib/catalog-links";
 import dynamic from "next/dynamic";
 import { findCenter, prepareLocations } from "@/lib/map";
 
@@ -24,11 +29,21 @@ const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.de
 
 type TableItem = GetFileResponse["online_copies"][number];
 
+const prepareToDownload = (copies: TableItem[], resources: Resources) =>
+  copies.map((copy) => {
+    const resourceType = copy.resource_id !== null ? resources[copy.resource_id]?.type : undefined;
+    return {
+      resource: (resourceType && TYPE_LABEL[resourceType]) || "",
+      url: copy.url,
+      availability: copy.availability,
+      updated_at: copy.updated_at ? new Date(copy.updated_at).toISOString() : "",
+    };
+  });
+
 const Details: React.FC<{
   file?: GetFileResponse;
 }> = ({ file }) => (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
-    {file?.info && <p>{file.info}</p>}
     {file?.years?.length || file?.locations?.length || file?.authors?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
         {Boolean(
@@ -39,10 +54,10 @@ const Details: React.FC<{
           <div className="h-64 grow">
             <GeoDuckMap
               key="static-geoduck-map"
-              className="rounded-lg text-primary"
+              className="rounded-lg text-accent"
               center={findCenter([...file.locations, ...file.authors.map(({ author }) => author)])}
               positions={prepareLocations([...file.locations, ...file.authors.map(({ author }) => author)])}
-              year={file.years[0].start_year || undefined}
+              year={file.years[0]?.start_year || undefined}
               hideLayers={{ searchInput: true, historicalLayers: true }}
               zoom={12}
               scrollWheelZoom
@@ -50,10 +65,10 @@ const Details: React.FC<{
             />
           </div>
         )}
-        <ul className="list-disc list-inside basis-1/2">
+        <ul className="list-inside basis-1/2">
           {Boolean(file.years.length) && (
             <li>
-              Рік: <span className="text-primary">{getYearsString(file.years)}</span>
+              Рік: <span className="text-foreground">{getYearsString(file.years)}</span>
             </li>
           )}
           {Boolean(file.authors.length) && (
@@ -62,8 +77,8 @@ const Details: React.FC<{
               {file.authors.map(({ author }, index) => (
                 <span key={author.id}>
                   {index > 0 && ", "}
-                  <span className="text-primary">
-                    {author.title} ({author.info})
+                  <span className="text-foreground">
+                    {author.title}{author.info ? ` (${author.info})` : ""}
                   </span>
                 </span>
               ))}
@@ -75,7 +90,7 @@ const Details: React.FC<{
               {file.tags.map((tag, index) => (
                 <span key={tag}>
                   {index > 0 && ", "}
-                  <span className="text-primary">{tag}</span>
+                  <span className="text-foreground">{tag}</span>
                 </span>
               ))}
             </li>
@@ -88,9 +103,10 @@ const Details: React.FC<{
 
 interface FileTableProps {
   resources: Resources;
+  isAdmin?: boolean;
 }
 
-const FileTable: React.FC<FileTableProps> = ({ resources }) => {
+const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fondCode = params["fond-code"];
@@ -104,13 +120,30 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        title={`${code} справа`}
+        code={`${code} справа`}
         breadcrumbs={[archiveCode, fondCode, inventoryCode, code]}
-        basePath="/catalog/"
-        description={file?.title || "Без назви"}
+        title={file?.title || undefined}
+        description={file?.info || undefined}
         message={<Details file={file} />}
       >
-        <ReportButton entity="file" targetId={file?.id} />
+        <CsvDownloadButton
+          filename={catalogItemLabel([archiveCode, fondCode, inventoryCode, code])}
+          rows={prepareToDownload(file?.online_copies || [], resources)}
+          isDisabled={isLoading}
+        />
+        <ReportButton
+          entity="file"
+          targetId={file?.id}
+          current={{
+            title: file?.title ?? null,
+            info: file?.info ?? null,
+            years: file?.years?.map(({ start_year, end_year }) => ({ start_year, end_year })) ?? [],
+            codes: { archive: archiveCode, fond: fondCode, inventory: inventoryCode, file: code },
+            onlineCopies: file?.online_copies?.map(({ id, url }) => ({ id, url })) ?? [],
+            authors: file?.authors?.map(({ author }) => ({ id: author.id, title: author.title })) ?? [],
+          }}
+          editorHref={isAdmin && file?.id ? editorFileHref(archiveCode, file.inventory.fond_id, file.inventory_id, file.id) : undefined}
+        />
       </PagePanel>
       <InspectorDuckTable<TableItem>
         id="file-table"
@@ -132,11 +165,18 @@ const FileTable: React.FC<FileTableProps> = ({ resources }) => {
             flex: isMobile ? 4 : 9,
             resizable: !isMobile,
             filter: true,
-            cellRenderer: (row: { value: string; data: TableItem }) => (
-              <Link href={row.value} isExternal>
-                {row.value || "Без назви"}
-              </Link>
-            ),
+            cellRenderer: (row: { value: string; data: TableItem }) =>
+              row.data.availability === Availability.PUBLIC ? (
+                <Link href={row.value} target="_blank" rel="noopener noreferrer">
+                  {row.value || "Без назви"}
+                  <Link.Icon />
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 opacity-50">
+                  <FaLock />
+                  {row.value || "Без назви"}
+                </span>
+              ),
           },
           {
             field: "updated_at",

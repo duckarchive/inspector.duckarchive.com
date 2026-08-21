@@ -3,13 +3,18 @@
 import "leaflet/dist/leaflet.css";
 import "../node_modules/@duckarchive/map/dist/style.css";
 
-import { Modal, ModalContent, useDisclosure } from "@heroui/modal";
-import { Accordion, AccordionItem } from "@heroui/accordion";
-import { NumberInput } from "@heroui/number-input";
+import {
+  Accordion,
+  CloseButton,
+  FieldError,
+  InputGroup,
+  Modal,
+  NumberField,
+  TextField,
+  useOverlayState,
+} from "@heroui/react";
 import dynamic from "next/dynamic";
-import { IoChevronDown } from "react-icons/io5";
 import { useEffect, useState } from "react";
-import { Input } from "@heroui/input";
 import { parseMapLinkUrl } from "@/lib/map";
 import type { GeoDuckMapProps } from "@duckarchive/map";
 
@@ -34,7 +39,8 @@ interface CoordinatesInputProps {
 }
 
 const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, year, isLoading, isDisabled }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const state = useOverlayState();
+  const isOpen = state.isOpen;
   const [coordinates, setCoordinates] = useState<Coordinates>(value);
   const [debouncedCoordinates, setDebouncedCoordinates] = useState<Coordinates | undefined>();
   const [formErrors, setFormErrors] = useState<Coordinates>({});
@@ -111,7 +117,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
   const latLng: GeoDuckMapProps["positions"][number] = [
     +(coordinates.lat || UKRAINE_CENTER[0]),
     +(coordinates.lng || UKRAINE_CENTER[1]),
-    coordinates.radius_m || 0,
+    coordinates.radius_m || 5000,
   ];
   const center = latLng.slice(0, 2) as [number, number];
   const title =
@@ -120,98 +126,110 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
       : "Ввести координати вручну";
   return (
     <div className={`h-64 flex flex-col gap-0 ${isDisabled ? "cursor-not-allowed" : ""}`}>
-      <div className={`h-full ${isDisabled ? "pointer-events-none opacity-50" : ""}`} onClick={onOpen}>
+      <div className={`h-full ${isDisabled ? "pointer-events-none opacity-50" : ""}`} onClick={state.open}>
         {!isOpen && (
           <GeoDuckMap
             key={`static-geoduck-map-${center.join(",")}`}
-            className="rounded-lg text-primary z-0"
+            className="rounded-lg text-accent"
             positions={[latLng]}
             center={center}
             year={+(year || 0) || undefined}
             hideLayers={{ searchInput: true, historicalLayers: true }}
-            zoom={12}
+            zoom={5}
           />
         )}
       </div>
-      <Accordion isCompact isDisabled={isDisabled} className="p-0" variant="light">
-        <AccordionItem
-          key="map-help"
-          className="flex flex-col"
-          classNames={{
-            trigger: `p-0 gap-1 w-auto`,
-            content: "p-0 flex flex-col gap-2",
-            title: "text-xs opacity-50",
-            indicator: "inline-flex leading-none",
-          }}
-          disableIndicatorAnimation
-          indicator={({ isOpen }) => (
-            <IoChevronDown size={16} className={`${isOpen ? "rotate-180" : ""} transition-transform inline`} />
-          )}
-          title={title}
-        >
-          <fieldset aria-label="Ручне введення координат" className="flex flex-col gap-2">
-            <Input
-              size="sm"
-              isDisabled={isLoading}
-              isInvalid={!!formErrors.lat}
-              errorMessage={formErrors.lat}
-              label="Широта (lat)"
-              isClearable
-              value={coordinates.lat}
-              onValueChange={handleLatChange}
-              onClear={() => setCoordinates({ ...coordinates, lat: undefined })}
-              onPaste={handlePaste}
-              pattern="^-?\d+(\.\d+)?$"
-            />
-            <Input
-              size="sm"
-              isDisabled={isLoading}
-              isInvalid={!!formErrors.lng}
-              errorMessage={formErrors.lng}
-              label="Довгота (lng)"
-              isClearable
-              value={coordinates.lng}
-              onValueChange={handleLngChange}
-              onClear={() => setCoordinates({ ...coordinates, lng: undefined })}
-              onPaste={handlePaste}
-              pattern="^-?\d+(\.\d+)?$"
-            />
-            <NumberInput
-              hideStepper
-              size="sm"
-              className="basis-1/4 shrink-0"
-              isDisabled={isLoading}
-              isInvalid={!!formErrors.radius_m}
-              errorMessage={formErrors.radius_m}
-              label="Радіус"
-              isClearable
-              formatOptions={{
-                style: "unit",
-                unit: "meter",
-                unitDisplay: "short",
-              }}
-              maxValue={10000}
-              value={coordinates.radius_m || 0}
-              onValueChange={handleRadiusChange}
-              onClear={() => setCoordinates({ ...coordinates, radius_m: undefined })}
-              onPaste={handlePaste}
-            />
-          </fieldset>
-        </AccordionItem>
+      <Accordion className="p-0" isDisabled={isDisabled}>
+        <Accordion.Item id="map-help" className="flex flex-col" isDisabled={isDisabled}>
+          <Accordion.Heading>
+            <Accordion.Trigger className="p-0 gap-1 w-auto text-xs opacity-50">
+              {title}
+              <Accordion.Indicator className="inline-flex leading-none" />
+            </Accordion.Trigger>
+          </Accordion.Heading>
+          <Accordion.Panel>
+            <Accordion.Body className="p-1 flex flex-col gap-2">
+              <fieldset aria-label="Ручне введення координат" className="flex flex-col gap-2">
+                <TextField
+                  isDisabled={isLoading}
+                  isInvalid={!!formErrors.lat}
+                  value={coordinates.lat ?? ""}
+                  onChange={handleLatChange}
+                >
+                  <InputGroup>
+                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder="Широта (lat)" />
+                    {coordinates.lat ? (
+                      <InputGroup.Suffix>
+                        <CloseButton
+                          aria-label="Очистити широту"
+                          onPress={() => setCoordinates({ ...coordinates, lat: undefined })}
+                        />
+                      </InputGroup.Suffix>
+                    ) : null}
+                  </InputGroup>
+                  <FieldError>{formErrors.lat}</FieldError>
+                </TextField>
+                <TextField
+                  isDisabled={isLoading}
+                  isInvalid={!!formErrors.lng}
+                  value={coordinates.lng ?? ""}
+                  onChange={handleLngChange}
+                >
+                  <InputGroup>
+                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder="Довгота (lng)" />
+                    {coordinates.lng ? (
+                      <InputGroup.Suffix>
+                        <CloseButton
+                          aria-label="Очистити довготу"
+                          onPress={() => setCoordinates({ ...coordinates, lng: undefined })}
+                        />
+                      </InputGroup.Suffix>
+                    ) : null}
+                  </InputGroup>
+                  <FieldError>{formErrors.lng}</FieldError>
+                </TextField>
+                <NumberField
+                  className="basis-1/4 shrink-0"
+                  isDisabled={isLoading}
+                  isInvalid={!!formErrors.radius_m}
+                  formatOptions={{
+                    style: "unit",
+                    unit: "meter",
+                    unitDisplay: "short",
+                  }}
+                  maxValue={10000}
+                  value={coordinates.radius_m || 0}
+                  onChange={handleRadiusChange}
+                >
+                  <NumberField.Group>
+                    <NumberField.DecrementButton />
+                    <NumberField.Input onPaste={handlePaste} placeholder="Радіус" />
+                    <NumberField.IncrementButton />
+                  </NumberField.Group>
+                  <FieldError>{formErrors.radius_m}</FieldError>
+                </NumberField>
+              </fieldset>
+            </Accordion.Body>
+          </Accordion.Panel>
+        </Accordion.Item>
       </Accordion>
 
-      <Modal isOpen={isOpen} size="5xl" onClose={onClose} title="Виберіть місце на карті">
-        <ModalContent className="h-[80vh] md:h-[90vh]">
-          <GeoDuckMap
-            key="geoduck-map"
-            className="rounded-lg text-primary"
-            positions={[latLng]}
-            onPositionChange={handleGeoChange}
-            year={+(year || 0) || undefined}
-            center={center}
-            zoom={12}
-          />
-        </ModalContent>
+      <Modal isOpen={isOpen} onOpenChange={state.setOpen}>
+        <Modal.Backdrop>
+          <Modal.Container size="cover">
+            <Modal.Dialog aria-label="Виберіть місце на карті" className="h-[80vh] md:h-[90vh]">
+              <GeoDuckMap
+                key="geoduck-map"
+                className="rounded-lg text-accent"
+                positions={[latLng]}
+                onPositionChange={handleGeoChange}
+                year={+(year || 0) || undefined}
+                center={center}
+                zoom={12}
+              />
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
     </div>
   );

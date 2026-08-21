@@ -3,8 +3,7 @@
 import { useDonation } from "@/providers/donation";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { addToast } from "@heroui/toast";
-import { Link } from "@heroui/link";
+import { Link, toast } from "@heroui/react";
 
 // const TO_DATE = new Date("2025-10-01T00:00:00Z");
 
@@ -38,19 +37,22 @@ const useNoRussians = () => {
         router.push("/friends");
       } else if (ruPos > ukPos) {
         // light ukrainization
-        addToast({
-          title: "🇺🇦 Лагідна українізація!",
-          description: `Ви знали, що ваш браузер використовує російську мову в якості запасної?`,
-          timeout: 20000,
-          hideIcon: true,
-          classNames: {
-            base: "flex-col gap-2 items-start",
-          },
-          endContent: (
-            <Link className="flex" size="sm" isExternal href="https://support.google.com/accounts/answer/32047?hl=uk">
-              Як це виправити?
-            </Link>
+        toast("🇺🇦 Лагідна українізація!", {
+          description: (
+            <span className="flex flex-col gap-2 items-start">
+              Ви знали, що ваш браузер використовує російську мову в якості запасної?
+              <Link
+                className="flex text-sm"
+                href="https://support.google.com/accounts/answer/32047?hl=uk"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Як це виправити?
+              </Link>
+            </span>
           ),
+          indicator: null,
+          timeout: 20000,
         });
       } else if (ukPos > ruPos) {
         // hard ukrainization

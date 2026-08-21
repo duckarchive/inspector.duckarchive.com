@@ -53,7 +53,80 @@ export interface ActionNotePayload {
   value?: unknown;
   /** Optional human comment alongside the structured change. */
   text?: string;
+  /** Structured proposal collected by the public report wizard (type "report"). */
+  report?: ReportNotePayload;
 }
+
+/**
+ * What a reporter proposed, section by section. Every section is optional — the
+ * wizard is a linear set of yes/no gates, so a submission carries only the ones
+ * the user opted into. Nothing here is executed: `report` is a no-op on approve,
+ * an admin reads this and applies the real typed actions by hand.
+ */
+export interface ReportNotePayload {
+  /** Proposed new place in the tree. Deepest filled level is the requested parent. */
+  tree?: {
+    archive?: ReportCatalogRef;
+    fond?: ReportCatalogRef;
+    inventory?: ReportCatalogRef;
+  };
+  /** A wrong/missing online copy: a picked copy of this record, and/or a typed URL. */
+  online_copy?: {
+    id?: string;
+    url?: string;
+  };
+  data?: {
+    title?: ReportFieldChange;
+    info?: ReportFieldChange;
+    years?: { add: YearRange[]; remove: YearRange[] };
+  };
+  /** File-only: authors to link and locations to add. */
+  geo?: {
+    /** Existing author (id + title) or a proposed new one (title only). */
+    authors?: ReportCatalogRef[];
+    locations?: ReportLocationValue[];
+  };
+  /** Free-text description, always the last step. */
+  text?: string;
+}
+
+export interface ReportCatalogRef {
+  id?: string;
+  code?: string;
+  title?: string;
+}
+
+export interface ReportFieldChange {
+  old: string | null;
+  value: string;
+}
+
+export interface ReportLocationValue {
+  lat: number;
+  lng: number;
+  radius_m: number;
+}
+
+export type ReportSection = "tree" | "online_copy" | "data" | "geo" | "text";
+
+/** Ukrainian section labels for the (uk-only) editor dashboard. */
+export const REPORT_SECTION_LABELS: Record<ReportSection, string> = {
+  tree: "Реквізити",
+  online_copy: "Онлайн-копія",
+  data: "Основні дані",
+  geo: "Геолокація",
+  text: "Опис проблеми",
+};
+
+/** Sections a reporter actually filled in, in wizard order. */
+export const reportSections = (report: ReportNotePayload): ReportSection[] =>
+  (["tree", "online_copy", "data", "geo", "text"] as ReportSection[]).filter((section) => {
+    const value = report[section];
+    return typeof value === "string" ? Boolean(value.trim()) : Boolean(value);
+  });
+
+/** Server-side cap on the encoded note; the client caps individual inputs. */
+export const MAX_REPORT_NOTE_LENGTH = 10_000;
 
 /** `value` payload of an "add" action: the new entity, held in the note until the
  * action is approved (the FK target column stays NULL — the row doesn't exist yet). */
@@ -232,8 +305,20 @@ export const validateSubmitAction = (entity: EditorEntity, body: SubmitActionBod
     case "change_author_tags":
     case "change_author_location":
     case "remove":
-    case "report":
       return null;
+    case "report": {
+      // Plain-text reports (the legacy shape) stay valid with no target.
+      if (note && note.length > MAX_REPORT_NOTE_LENGTH) {
+        return `"note" задовгий — максимум ${MAX_REPORT_NOTE_LENGTH} символів`;
+      }
+      const decoded = decodeNote(note);
+      const report = decoded && !("raw" in decoded) ? decoded.report : undefined;
+      if (report) {
+        if (!target_id) return '"target_id" обовʼязковий для структурованої скарги';
+        if (reportSections(report).length === 0) return "Скарга порожня";
+      }
+      return null;
+    }
     case "merge_to": {
       if (!note) return `"note" обовʼязковий для "${type}"`;
       // author merge: one action, no file target — {author_id: source, value: target author}

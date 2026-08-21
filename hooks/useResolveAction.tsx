@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addToast } from "@heroui/toast";
+import { toast } from "@heroui/react";
 import { EditorQueue } from "@/lib/editor-actions";
 
 type Resolution = "execute" | "reject";
@@ -45,12 +45,10 @@ const useResolveAction = (entity: EditorQueue) => {
 
       const errorSummary = response.errors.slice(0, 3).map((e) => e.message).join("; ");
       if (response.errors.length === 0) {
-        addToast({ title: `${VERB[resolution]}: ${response.ok}`, color: "success" });
+        toast.success(`${VERB[resolution]}: ${response.ok}`);
       } else {
-        addToast({
-          title: `${VERB[resolution]}: ${response.ok}, помилок: ${response.errors.length}`,
+        toast.warning(`${VERB[resolution]}: ${response.ok}, помилок: ${response.errors.length}`, {
           description: response.errors.length > 3 ? `${errorSummary}...` : errorSummary,
-          color: "warning",
         });
       }
       return response;

@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { Link, LinkProps } from "@heroui/link";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
 import { getSessionDuckUser } from "@/lib/auth";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { ComponentProps } from "react";
+import { AdminProvider } from "@/components/editor/admin-context";
 
 const MODES = [
   { href: "/editor/catalog/fonds", label: "Фонди" },
@@ -11,21 +11,22 @@ const MODES = [
   { href: "/editor/catalog/files", label: "Справи" },
   { href: "/editor/authors", label: "Автори" },
   { href: "/editor/online-copies", label: "Онлайн-копії" },
+  { href: "/editor/years", label: "Роки" },
 ];
 
-const LINK_CLASS = "text-base underline-offset-4 hover:underline hover:opacity-70";
+const LINK_CLASS = "text-base text-foreground underline-offset-4 hover:underline hover:opacity-70";
 
-const NavLink: React.FC<LinkProps> = (props) => (
-  <Link
-    as={NextLink}
-    color="foreground"
-    target={props.href?.startsWith("https") ? "_blank" : undefined}
-    href={props.href}
-    className={clsx(LINK_CLASS, props.className)}
+// HeroUI v3 removed Navbar and dropped router integration from Link, so the
+// editor nav is plain markup over next/link.
+const NavLink: React.FC<ComponentProps<typeof NextLink>> = ({ className, children, href, ...props }) => (
+  <NextLink
+    href={href}
+    target={typeof href === "string" && href.startsWith("https") ? "_blank" : undefined}
+    className={clsx(LINK_CLASS, className)}
     {...props}
   >
-    {props.children}
-  </Link>
+    {children}
+  </NextLink>
 );
 
 const EditorLayout: React.FC<React.PropsWithChildren> = async ({ children }) => {
@@ -37,27 +38,23 @@ const EditorLayout: React.FC<React.PropsWithChildren> = async ({ children }) => 
   }
 
   return (
-    <main className="container mx-auto max-w-7xl p-6 flex-grow flex flex-col gap-4">
-      <Navbar maxWidth="xl" position="sticky">
-        <NavbarContent className="basis-1/5" justify="start">
-          <NavbarBrand as="li" className="h-full relative grow-0">
-            <Link href="/editor" className="text-xl font-bold text-foreground">
-              Редактор
-            </Link>
-          </NavbarBrand>
-          <NavbarItem className="hidden lg:flex ml-2">
-            <ul className="flex gap-4 justify-start">
-              {MODES.map((item) => (
-                <NavbarItem key={item.href} className="px-0">
-                  <NavLink href={item.href}>{item.label}</NavLink>
-                </NavbarItem>
-              ))}
-            </ul>
-          </NavbarItem>
-        </NavbarContent>
-      </Navbar>
-      {children}
-    </main>
+    <AdminProvider isAdmin={Boolean(user.is_admin)}>
+      <main className="container mx-auto max-w-7xl p-6 grow flex flex-col gap-4">
+        <nav className="sticky top-0 z-30 flex items-center gap-4 bg-background/70 py-3 backdrop-blur-md">
+          <NextLink href="/editor" className="text-xl font-bold text-foreground">
+            Редактор
+          </NextLink>
+          <ul className="hidden lg:flex gap-4 justify-start">
+            {MODES.map((item) => (
+              <li key={item.href}>
+                <NavLink href={item.href}>{item.label}</NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        {children}
+      </main>
+    </AdminProvider>
   );
 };
 

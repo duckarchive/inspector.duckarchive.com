@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import ErrorDuckSrc from "@/public/images/error.png";
 import Image from "next/image";
-import { Link } from "@heroui/link";
+import { Link } from "@heroui/react";
 
 interface ErrorComponentProps {
   error: Error;

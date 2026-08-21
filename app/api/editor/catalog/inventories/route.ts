@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { resolveDuckUser } from "@/lib/auth";
 import { ErrorResponse } from "@/types";
 import { EditorInventory, getEditorInventories } from "@/app/api/editor/catalog/inventories/data";
+import { parseCatalogQuery } from "@/app/api/editor/catalog/query";
 
 export type GetEditorInventoriesResponse = EditorInventory[];
 
@@ -16,6 +17,6 @@ export async function GET(req: NextRequest): Promise<NextResponse<GetEditorInven
     return NextResponse.json({ message: '"fond" query param is required' }, { status: 400 });
   }
 
-  const inventories = await getEditorInventories(fond);
+  const inventories = await getEditorInventories(fond, parseCatalogQuery(req));
   return NextResponse.json(inventories);
 }
