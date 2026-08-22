@@ -1,0 +1,14 @@
+{
+ "archive": "ДАХмО",
+ "books": [
+  "mbv8-b1",
+  "mbv8-b2"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-daxmo-tom8",
+ "placeholder_regex": "^Церковні записи, .*",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

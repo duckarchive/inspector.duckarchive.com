@@ -1,0 +1,13 @@
+{
+ "archive": "ДААРК",
+ "books": [
+  "mbv6"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-daark-tom6",
+ "placeholder_regex": "^(Метрическая книга рождения, бракосочетания, смерти.*|Метричні книги Православних церков.*|Метрична книга|Метрическая книга)$",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

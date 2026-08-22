@@ -1,0 +1,22 @@
+mbv1 ДАВоО: offset +0, 6485 справи, fonds ['158', '193', '195', '22', '286', '297', '33', '35']…; - ACTIONS: create files 0, create описи [], add MK tag 10, fill years 0, fill title 0, fond years []
+mbv1 ДАДнО: offset +0, 2479 справи, fonds ['104', '106', '193', '282']; - ACTIONS: create files 1, create описи [], add MK tag 50, fill years 1, fill title 0, fond years []
+mbv1 ДАЗкО: offset +0, 1301 справи, fonds ['Р1372', 'Р151', 'Р1606', 'Р1607', 'Р1696', 'Р606']; - ACTIONS: create files 1, create описи ['Р151-6'], add MK tag 10, fill years 0, fill title 0, fond years []
+mbv3 ДАТО: offset +0, 1324 справи, fonds ['426', '484', '485', '486', '487']; - ACTIONS: create files 117, create описи [], add MK tag 344, fill years 282, fill title 318, fond years [('487', [[1921, 1921]])]
+mbv3 ДАЧкО: offset +0, 6023 справи, fonds ['1', '152', '154', '155', '156', '157', '158', '159']…; - ACTIONS: create files 40, create описи ['162-2', '488-2', '556-16'], add MK tag 5626, fill years 3373, fill title 5480, fond years [('152', [[1784, 1924]]), (
+mbv3 ДАЧвО: offset +0, 1504 справи, fonds ['1245', '605', '987']; - ACTIONS: create files 32, create описи [], add MK tag 624, fill years 415, fill title 489, fond years []
+mbv3 ДАС: offset +0, 328 справи, fonds ['11', '23', '3', '30', '33', '34', '35', '5']…; - ACTIONS: create files 6, create описи [], add MK tag 0, fill years 0, fill title 0, fond years []
+mbv5-b1 ДАХО: offset +0, 1659 справи, fonds ['40']; - ACTIONS: create files 1352, create описи ['40-614'], add MK tag 90, fill years 0, fill title 0, fond years [('958', [[1854, 1917]]), ('965', [[1831, 1919]]), 
+mbv5-b2 ДАХО: offset +0, 1702 справи, fonds ['11', '40', '958', '965', '968']; - ACTIONS: create files 11, create описи [], add MK tag 2, fill years 0, fill title 0, fond years []
+mbv6 ДААРК: offset +0, 6035 справи, fonds ['14', '142', '143', '219', '259', '261', '262', '263']…; - ACTIONS: create files 107, create описи ['142-25', '142-51', '142-6'], add MK tag 848, fill years 25, fill title 787, fond years []
+mbv6 ДАЗпО: offset +0, 3737 справи, fonds ['112', '114', '115', '116', '117', '118', '121', '123']…; - ACTIONS: create files 50, create описи [], add MK tag 122, fill years 57, fill title 112, fond years [('19', [[1774, 1930]]), ('49', [[1838, 1858]]), ('55', [
+mbv6 ДАХеО: offset +0, 2590 справи, fonds ['111', '113', '124', '137', '141', '169', '198', '207']…; - ACTIONS: create files 104, create описи [], add MK tag 5, fill years 2, fill title 2, fond years [('111', [[1802, 1918]]), ('113', [[1836, 1867]]), ('124', [[
+mbv7 ДАВіО: offset +0, 4499 справи, fonds ['109', '113', '116', '124', '130', '131', '133', '139']…; - ACTIONS: create files 43, create описи [], add MK tag 26, fill years 7, fill title 1, fond years [('85', [[1796, 1860]]), ('86', [[1823, 1913]]), ('88', [[180
+mbv7 ДАКрО: offset +0, 3890 справи, fonds ['1', '109', '112', '113', '114', '115', '1160', '117']…; - ACTIONS: create files 5, create описи [], add MK tag 158, fill years 0, fill title 0, fond years []
+mbv8-b1 ДАХмО: offset +0, 2957 справи, fonds ['18', '315', '365', '591', '592', '738', '87', 'Р6379']; - ACTIONS: create files 0, create описи [], add MK tag 1, fill years 0, fill title 0, fond years [('87', [[1768, 1873]]), ('277', [[1844, 1888]]), ('315', [[174
+mbv8-b2 ДАХмО: offset +0, 3095 справи, fonds ['17', '18', '227', '277', '315', '316', '685', '83']…; - ACTIONS: create files 51, create описи ['17-6'], add MK tag 2952, fill years 2, fill title 669, fond years []
+mbv9-b1 ДАЖО: offset +0, 2171 справи, fonds ['1', '579', '581', '582', '583', '584', '590']; - ACTIONS: create files 245, create описи [], add MK tag 1700, fill years 97, fill title 0, fond years []
+mbv9-b2 ДАЖО: offset +0, 4291 справи, fonds ['1', '17', '178', '304', '42', '420', '429', '577']…; - ACTIONS: create files 183, create описи ['1-768', '420-74'], add MK tag 1319, fill years 42, fill title 68, fond years []
+mbv10-b1 ДАЧгО: offset +0, 887 справи, fonds ['1462', '1530', '679', '712']; - ACTIONS: create files 31, create описи [], add MK tag 846, fill years 227, fill title 448, fond years []
+mbv10-b2 ДАЧгО: offset -8, 10034 справи, fonds ['128', '1462', '1530', '6779', '679', '69', '712', 'Р17']…; - ACTIONS: create files 1106, create описи [], add MK tag 8819, fill years 3353, fill title 5432, fond years []
+mbv10-b3 ДАЧгО: offset -8, 362 справи, fonds ['127', '128', '1530', '679', 'Р16', 'Р17', 'Р292', 'Р5315']…; - ACTIONS: create files 36, create описи [], add MK tag 14, fill years 6, fill title 9, fond years []
+ALL DONE

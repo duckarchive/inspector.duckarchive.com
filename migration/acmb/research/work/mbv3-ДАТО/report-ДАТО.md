@@ -1,0 +1,27 @@
+# ДАТО vs catalog — 1324 справи in 5 fonds / 6 описи
+- fond missing in DB: 0 → fonds []
+- inventory missing in DB: 0 → описи []
+- file missing in DB: 117 (by опис: [('486-1', 104), ('426-2', 12), ('487-1', 1)])
+- file exists: 1207 — no title 318, no «метрична книга» tag 344, no years 282, years disagree 100
+    disagree: 486-1-13 DB 1896-1905 / catalog 1885-1888
+    disagree: 486-1-14 DB 1896-1905 / catalog 1889-1892
+    disagree: 486-1-15 DB 1896-1905 / catalog 1893-1895
+    disagree: 486-1-18 DB 1896-1905 / catalog 1904-1907
+    disagree: 486-1-19 DB 1900-1903 / catalog 1870-1884
+    disagree: 486-1-20 DB 1904-1907 / catalog 1885-1893
+    disagree: 426-1-30 DB 1888-1888 / catalog 1883-1888
+    disagree: 426-1-31 DB 1891-1891 / catalog 1886-1891
+    disagree: 486-1-40 DB 1882-1888 / catalog 1903-1905
+    disagree: 486-1-41 DB 1889-1899 / catalog 1880-1887
+    disagree: 486-1-42 DB 1880-1885 / catalog 1888-1896
+    disagree: 486-1-73 DB 1889-1893 / catalog 1879-1885
+- summary fond Ф. 426: DB exists; title DB='Кременецький повітовий римо-католицький деканат, м. Кременец' | catalog='Кременецький римо-католицький деканат'; years DB=1766-1907,1909-1939,1940-1943,1946-1946 | catalog=[[1766, 1946]]
+- summary fond Ф. 484: DB exists; title DB='Єврейська синагога Кременецького повіту Волинської губернії' | catalog='Єврейська синагога Кременецького повіту Волинської губернії'; years DB=1870-1907 | catalog=[[1870, 1938]]
+- summary fond Ф. 485: DB exists; title DB='Повітові римо-католицькі деканати Галицького намісництва' | catalog='Повітові римо-католицькі деканати Галицького намісництва'; years DB=1704-1704,1784-1944 | catalog=[[1784, 1944]]
+- summary fond Ф. 486: DB exists; title DB='Парафіяльні управління православного віросповідання Кременец' | catalog='Православні парафіяльні управління Кременецького повіту'; years DB=1807-1944 | catalog=[[1838, 1942]]
+- summary fond Ф. 487: DB exists; title DB='Греко-католицькі повітові управління Тернопільського краю Га' | catalog='Греко-католицькі повітові управління Тернопільського краю Га'; years DB= | catalog=[[1921, 1921]]
+- DB files in referenced описи not in catalog: 336 (per опис: [(('484', '1'), 148), (('487', '1'), 73), (('426', '1'), 55), (('486', '1'), 42), (('426', '2'), 12), (('485', '1'), 6)])
+- suspicious high codes (>3× catalog max + 50): 1 e.g. [('487-1-1872', '1871-1871', 'Метрична книга. Синагога, м. Кременець В')]
+- year-ordering inversions across referenced описи: 1039
+- описи that look partially loaded (catalog cites справи the DB lacks): 1 → 486-1: DB 376 files (max 673), catalog 444 refs (max 456), missing 104
+- ACTIONS: create files 117, create описи [], add MK tag 344, fill years 282, fill title 318, fond years [('487', [[1921, 1921]])]

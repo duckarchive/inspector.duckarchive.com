@@ -1,0 +1,30 @@
+{
+ "archive": "ДАЗпО",
+ "books": [
+  "mbv6"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dazpo-tom6",
+ "placeholder_regex": "^Метричні книги Православних церков$",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [
+  [
+   "ДАЗпО-121-1-7338",
+   "ДАЗпО-121-1-7"
+  ],
+  [
+   "ДАЗпО-137-1-335",
+   "ДАЗпО-137-1-8"
+  ],
+  [
+   "ДАЗпО-157-1-321",
+   "ДАЗпО-157-1-10"
+  ],
+  [
+   "ДАЗпО-Р5593-2-135318",
+   "ДАЗпО-Р5593-2-135"
+  ]
+ ],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

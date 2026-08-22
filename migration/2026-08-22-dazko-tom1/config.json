@@ -1,0 +1,15 @@
+{
+ "archive": "ДАЗкО",
+ "books": [
+  "mbv1"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dazko-tom1",
+ "placeholder_regex": "^Колекція церковних метричних книг Закарпаття",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": [
+  "Р151-6"
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "archive": "ДАТО",
+ "books": [
+  "mbv3"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dato-tom3",
+ "placeholder_regex": "^\\d+$",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

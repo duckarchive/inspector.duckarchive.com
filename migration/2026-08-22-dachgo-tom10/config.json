@@ -1,0 +1,20 @@
+{
+ "archive": "ДАЧгО",
+ "books": [
+  "mbv10-b1",
+  "mbv10-b2",
+  "mbv10-b3"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dachgo-tom10",
+ "placeholder_regex": "^(Church records, Chernihiv.*|Метричні книги церков .*)$",
+ "exclude_codes": [
+  "1530-2-14020",
+  "679-14-1631",
+  "679-4-136913",
+  "679-4-13704"
+ ],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

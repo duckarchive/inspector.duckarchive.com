@@ -1,0 +1,18 @@
+{
+ "archive": "ДАХеО",
+ "books": [
+  "mbv6"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-daxeo-tom6",
+ "placeholder_regex": "^(Метрическая книга|Метрична книга)$",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [
+  [
+   "ДАХеО-137-15-1603",
+   "ДАХеО-137-15-1"
+  ]
+ ],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

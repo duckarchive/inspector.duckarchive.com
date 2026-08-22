@@ -1,0 +1,15 @@
+{
+ "archive": "ДАЧвО",
+ "books": [
+  "mbv3"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dachvo-tom3",
+ "placeholder_regex": "^(Church Consistory Books, Chernivtsi.*|Church Books, Chernivtsi.*)$",
+ "exclude_codes": [
+  "605-1-1871"
+ ],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

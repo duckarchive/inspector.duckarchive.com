@@ -1,0 +1,13 @@
+{
+ "archive": "ДАК",
+ "books": [
+  "mbv3"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dak-tom3",
+ "placeholder_regex": "^Метричні книги (католиків|костьолів|римо-католицьких костелів) .*$",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

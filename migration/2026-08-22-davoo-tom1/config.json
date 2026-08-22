@@ -1,0 +1,12 @@
+{
+ "archive": "ДАВоО",
+ "books": [
+  "mbv1"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-davoo-tom1",
+ "placeholder_regex": "^Церковні записи, ",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true
+}

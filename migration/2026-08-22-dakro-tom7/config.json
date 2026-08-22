@@ -1,0 +1,15 @@
+{
+ "archive": "ДАКрО",
+ "books": [
+  "mbv7"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dakro-tom7",
+ "placeholder_regex": "^(Метричні книги Православних церков.*|Church boards and churches, Kropyvnytsky.*)$",
+ "exclude_codes": [
+  "149-1-1781"
+ ],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

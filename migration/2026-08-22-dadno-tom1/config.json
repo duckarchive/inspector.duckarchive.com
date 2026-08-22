@@ -1,0 +1,14 @@
+{
+ "archive": "ДАДнО",
+ "books": [
+  "mbv1"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dadno-tom1",
+ "placeholder_regex": "^Метричні книги Православних церков$",
+ "exclude_codes": [
+  "193-3-1900"
+ ],
+ "typos": {},
+ "dups": [],
+ "apply_years_subset": true
+}

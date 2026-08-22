@@ -1,0 +1,19 @@
+{
+ "archive": "ДАХО",
+ "books": [
+  "mbv5-b1",
+  "mbv5-b2"
+ ],
+ "out": "/Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-daxo-tom5",
+ "placeholder_regex": "^Метричні книги православних церков .*$",
+ "exclude_codes": [],
+ "typos": {},
+ "dups": [
+  [
+   "ДАХО-40-109-1355478",
+   "ДАХО-40-109-1355"
+  ]
+ ],
+ "apply_years_subset": true,
+ "create_inventories": []
+}

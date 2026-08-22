@@ -1,0 +1,72 @@
+##### ДАКрО
+mbv7 ДАКрО: offset +0, 3890 справи, fonds ['1', '109', '112', '113', '114', '115', '1160', '117']…; - ACTIONS: create files 5, create описи 
+ДАКрО: A 4 | B 158 | C years 0 titles 0 | D 0 | E 0 | H 416 | G 2873 
+DRY RUN: 0 ['A created | 4', 'B tagged | 158', 'H re-dated | 416', 'G retitled | 2873', 'ROLLBACK']
+APPLY: 0 ['A created | 4', 'B tagged | 158', 'H re-dated | 416', 'G retitled | 2873', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dakro-tom7
+##### ДАЗпО
+mbv6 ДАЗпО: offset +0, 3737 справи, fonds ['112', '114', '115', '116', '117', '118', '121', '123']…; - ACTIONS: create files 50, create опис
+ДАЗпО: A 50 | B 122 | C years 57 titles 112 | D 52 | E 4 | H 239 | G 262 
+DRY RUN: 0 ['A created | 50', 'B tagged | 118', 'D fond-year rows | 472', 'E removed | 4', 'H re-dated | 239', 'G retitled | 262', 'ROLLBACK']
+APPLY: 0 ['A created | 50', 'B tagged | 118', 'D fond-year rows | 472', 'E removed | 4', 'H re-dated | 239', 'G retitled | 262', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dazpo-tom6
+##### ДАК
+mbv3 ДАК: offset +0, 160 справи, fonds ['11', '237', '3', '312', '6', '8']; - ACTIONS: create files 21, create описи [], add MK tag 7, fill 
+ДАК: A 21 | B 7 | C years 0 titles 0 | D 6 | E 0 | H 15 | G 25 
+DRY RUN: 0 ['A created | 21', 'B tagged | 6', 'D fond-year rows | 6', 'H re-dated | 15', 'G retitled | 25', 'ROLLBACK']
+APPLY: 0 ['A created | 21', 'B tagged | 6', 'D fond-year rows | 6', 'H re-dated | 15', 'G retitled | 25', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dak-tom3
+##### ДАТО
+mbv3 ДАТО: offset +0, 1324 справи, fonds ['426', '484', '485', '486', '487']; - ACTIONS: create files 117, create описи [], add MK tag 344, 
+ДАТО: A 117 | B 344 | C years 282 titles 318 | D 1 | E 0 | H 31 | G 37 
+DRY RUN: 0 ['A created | 117', 'B tagged | 323', 'D fond-year rows | 1', 'H re-dated | 31', 'G retitled | 37', 'ROLLBACK']
+APPLY: 0 ['A created | 117', 'B tagged | 323', 'D fond-year rows | 1', 'H re-dated | 31', 'G retitled | 37', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dato-tom3
+##### ДАХО
+mbv5-b1 ДАХО: offset +0, 1659 справи, fonds ['40']; - ACTIONS: create files 1352, create описи ['40-614'], add MK tag 90, fill years 0, fill
+mbv5-b2 ДАХО: offset +0, 1702 справи, fonds ['11', '40', '958', '965', '968']; - ACTIONS: create files 11, create описи [], add MK tag 2, fi
+ДАХО: A 1363 | B 92 | C years 0 titles 0 | D 3 | E 1 | H 97 | G 83 
+DRY RUN: 0 ['A created | 1363', 'B tagged | 91', 'D fond-year rows | 6', 'E removed | 1', 'H re-dated | 97', 'G retitled | 83', 'ROLLBACK']
+APPLY: 0 ['A created | 1363', 'B tagged | 91', 'D fond-year rows | 6', 'E removed | 1', 'H re-dated | 97', 'G retitled | 83', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-daxo-tom5
+##### ДАЧвО
+mbv3 ДАЧвО: offset +0, 1504 справи, fonds ['1245', '605', '987']; - ACTIONS: create files 32, create описи [], add MK tag 624, fill years 41
+ДАЧвО: A 31 | B 624 | C years 415 titles 489 | D 0 | E 0 | H 124 | G 142 
+DRY RUN: 0 ['A created | 31', 'B tagged | 624', 'H re-dated | 124', 'G retitled | 142', 'ROLLBACK']
+APPLY: 0 ['A created | 31', 'B tagged | 624', 'H re-dated | 124', 'G retitled | 142', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dachvo-tom3
+##### ДААРК
+mbv6 ДААРК: offset +0, 6035 справи, fonds ['14', '142', '143', '219', '259', '261', '262', '263']…; - ACTIONS: create files 107, create опис
+ДААРК: A 107 | B 848 | C years 25 titles 787 | D 0 | E 0 | H 35 | G 170 
+DRY RUN: 0 ['A created | 107', 'B tagged | 848', 'H re-dated | 35', 'G retitled | 170', 'ROLLBACK']
+APPLY: 0 ['A created | 107', 'B tagged | 848', 'H re-dated | 35', 'G retitled | 170', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-daark-tom6
+##### ДАЖО
+mbv9-b1 ДАЖО: offset +0, 2171 справи, fonds ['1', '579', '581', '582', '583', '584', '590']; - ACTIONS: create files 245, create описи [], a
+mbv9-b2 ДАЖО: offset +0, 4291 справи, fonds ['1', '17', '178', '304', '42', '420', '429', '577']…; - ACTIONS: create files 183, create описи
+ДАЖО: A 402 | B 2887 | C years 139 titles 68 | D 0 | E 0 | H 2715 | G 2939 
+DRY RUN: 0 ['A created | 402', 'B tagged | 2806', 'H re-dated | 2715', 'G retitled | 2939', 'ROLLBACK']
+APPLY: 0 ['A created | 402', 'B tagged | 2806', 'H re-dated | 2715', 'G retitled | 2939', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dazho-tom9
+##### ДАХмО
+mbv8-b1 ДАХмО: offset +0, 2957 справи, fonds ['18', '315', '365', '591', '592', '738', '87', 'Р6379']; - ACTIONS: create files 0, create опи
+mbv8-b2 ДАХмО: offset +0, 3095 справи, fonds ['17', '18', '227', '277', '315', '316', '685', '83']…; - ACTIONS: create files 51, create опис
+ДАХмО: A 51 | B 2953 | C years 2 titles 669 | D 4 | E 0 | H 154 | G 2516 
+DRY RUN: 0 ['A created | 51', 'B tagged | 2160', 'D fond-year rows | 4', 'H re-dated | 154', 'G retitled | 2516', 'ROLLBACK']
+APPLY: 0 ['A created | 51', 'B tagged | 2160', 'D fond-year rows | 4', 'H re-dated | 154', 'G retitled | 2516', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-daxmo-tom8
+##### ДАЧкО
+mbv3 ДАЧкО: offset +0, 6023 справи, fonds ['1', '152', '154', '155', '156', '157', '158', '159']…; - ACTIONS: create files 40, create описи 
+ДАЧкО: A 40 | B 5626 | C years 3373 titles 5480 | D 192 | E 0 | H 402 | G 48 
+DRY RUN: 0 ['A created | 40', 'B tagged | 5602', 'D fond-year rows | 198', 'H re-dated | 402', 'G retitled | 48', 'ROLLBACK']
+APPLY: 0 ['A created | 40', 'B tagged | 5602', 'D fond-year rows | 198', 'H re-dated | 402', 'G retitled | 48', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dachko-tom3
+##### ДАЧгО
+mbv10-b1 ДАЧгО: offset +0, 887 справи, fonds ['1462', '1530', '679', '712']; - ACTIONS: create files 31, create описи [], add MK tag 846, fi
+mbv10-b2 ДАЧгО: offset -8, 10034 справи, fonds ['128', '1462', '1530', '6779', '679', '69', '712', 'Р17']…; - ACTIONS: create files 1106, cr
+mbv10-b3 ДАЧгО: offset -8, 362 справи, fonds ['127', '128', '1530', '679', 'Р16', 'Р17', 'Р292', 'Р5315']…; - ACTIONS: create files 36, crea
+ДАЧгО: A 1165 | B 9642 | C years 3586 titles 5889 | D 0 | E 0 | H 50 | G 3852 
+DRY RUN: 0 ['A created | 1165', 'B tagged | 9608', 'H re-dated | 50', 'G retitled | 3852', 'ROLLBACK']
+APPLY: 0 ['A created | 1165', 'B tagged | 9608', 'H re-dated | 50', 'G retitled | 3852', 'COMMIT']
+OUT /Users/alexandrtovmach/Developer/duckarchive/inspector.duckarchive.com/migration/2026-08-22-dachgo-tom10
+QUEUE DONE
