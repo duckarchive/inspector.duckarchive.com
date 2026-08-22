@@ -12,7 +12,7 @@ interface PagePanelProps extends PropsWithChildren {
 
 const PagePanel: React.FC<PagePanelProps> = ({ code, title, description, message, children, breadcrumbs }) => {
   return (
-    <div className="flex-col md:flex-row flex justify-between gap-4 w-full">
+    <div className="flex-col md:flex-row flex justify-between gap-4 w-full mb-2">
       <div className="grow">
         {breadcrumbs ? (
           <NavigationBreadcrumbs breadcrumbs={breadcrumbs} code={code || "***"} />
@@ -24,7 +24,7 @@ const PagePanel: React.FC<PagePanelProps> = ({ code, title, description, message
         {description && <p className="flex-shrink-0 text-sm text-gray-500">{description}</p>}
         {message}
       </div>
-      <div>
+      <div className="flex items-start gap-2">
         {children}
       </div>
     </div>

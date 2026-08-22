@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
+    "predev": "npm run stats:generate",
     "build": "next build",
+    "prebuild": "npm run stats:generate",
     "start": "next start",
     "clear": "rm -rf .next",
     "notify:tg": "tsx -r dotenv/config scripts/notification.ts",
     "cache:purge": "tsx -r dotenv/config scripts/purge-cache.ts",
     "fs:dgs": "tsx scripts/to-dgs.ts",
+    "stats:generate": "tsx -r dotenv/config scripts/generate-stats.ts",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "prisma:generate": "PRISMA_CLIENT_OUTPUT=\"$(pwd)/generated/prisma/client\" PRISMA_ZOD_OUTPUT=\"$(pwd)/generated/prisma/zod\" prisma generate",
     "postinstall": "npm run prisma:generate"

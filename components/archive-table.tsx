@@ -62,7 +62,7 @@ const Details: React.FC<{
 );
 
 interface ArchiveTableProps {
-  resources: Resources;
+  resources?: Resources;
 }
 
 const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {

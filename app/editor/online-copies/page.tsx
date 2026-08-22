@@ -82,7 +82,8 @@ export default function EditorOnlineCopiesPage() {
               if (row.data.parsed.includes("+++")) {
                 const match = row.data.parsed.match(/^([^+()]+)-\(([^+]+)\+\+\+([^+]+)\+\+\+([^+]+)\)$/);
                 if (match) {
-                  const [fullMatch, prefix, p1, p2, p3] = match;
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  const [_fullMatch, prefix, p1, p2, p3] = match;
                   return (
                     <div className="flex flex-col gap-1">
                       {[p1, p2, p3].map((part: string, index: number) => (

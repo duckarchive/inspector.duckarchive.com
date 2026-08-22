@@ -2,16 +2,40 @@
   "home-page": {
     "title": "Găsește dosarele de arhivă online ușor!",
     "description": "Duck Inspector este un serviciu de căutare care vă permite să găsiți dosarele de arhivă online. Introduceți pur și simplu detaliile din arhivă, fond, descriere și dosar pentru a obține un link către sursă.",
-    "about": {
-      "title": "Duck Inspector este:",
-      "one-place": "date agregate din resurse de arhivă într-un singur loc",
-      "extended-data": "informații extinse cu coordonate și date",
-      "form": "formular de căutare simplu pentru a găsi dosarul de care ai nevoie în câteva secunde",
-      "direct-link": "monitorizare 24/7 pentru linkurile la copiile online",
-      "free": "condus de comunitate și gratuit de utilizat",
-      "universe": "integrat cu instrumente din cadrul Duck Universe și alte servicii prietenoase",
-      "notifications": "notificări regulate despre cazuri noi",
-      "open-source": "cod sursă deschis și date deschise pentru toți"
+    "search-label": "Caută după titlu",
+    "search-button": "Caută",
+    "search-footer": "{count} înregistrări",
+    "process": {
+      "title": "Cum funcționează",
+      "subtitle": "Duck Inspector nu stochează arhivele — urmărește unde se află deja și îți oferă o singură ușă de acces la toate.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Arhivele publică scanări",
+          "description": "Arhivele de stat și platformele partenere digitizează dosarele și le publică online, fiecare pe propriul site."
+        },
+        "index": {
+          "title": "Duck Inspector le indexează",
+          "description": "Urmărim continuu fiecare sursă și corelăm arhivele, fondurile și descrierile dintre ele."
+        },
+        "search": {
+          "title": "Cauți o singură dată",
+          "description": "Introdu un nume sau un dosar și primești un link direct către locul unde se află scanarea."
+        }
+      }
+    },
+    "stats": {
+      "title": "În cifre",
+      "subtitle": "O instantanee a tot ce a indexat Duck Inspector, realizată la ultima compilare.",
+      "archives": "Arhive",
+      "fonds": "Fonduri",
+      "inventories": "Inventare",
+      "files": "Dosare",
+      "authors": "Autori",
+      "locations": "Locații",
+      "onlineCopies": "Copii online",
+      "checkedLast7Days": "Copii online verificate în ultimele 7 zile",
+      "communityEditsLast7Days": "Modificări ale comunității aplicate în ultimele 7 zile"
     }
   },
   "daily-updates-page": {
@@ -56,5 +80,57 @@
     "body-1": "Duck Inspector este un proiect de voluntariat care nu are nicio sursă de finanțare. Tot ceea ce vedeți pe acest site este oferit utilizatorilor absolut gratuit.",
     "body-2": "Donațiile regulate și constante ajută la plata serviciilor necesare pentru funcționarea site-ului.",
     "cta": "Susțineți proiectul"
+  },
+  "report-form": {
+    "trigger-button": "Raportează o eroare",
+    "title": "Raportează o eroare",
+    "progress": "Pasul {current} din {total}",
+    "editor-link": "Editor",
+    "yes": "Da",
+    "no": "Nu",
+    "back": "Înapoi",
+    "next": "Înainte",
+    "cancel": "Anulează",
+    "submit": "Trimite",
+    "step-tree-question": "Schimbați cota arhivistică?",
+    "step-tree-hint": "Înregistrarea se află în arhiva, fondul sau inventarul greșit.",
+    "step-copy-question": "Schimbați linkul către copia digitală?",
+    "step-copy-hint": "Linkul nu funcționează, duce în altă parte sau lipsește.",
+    "step-data-question": "Schimbați datele principale?",
+    "step-data-hint": "Eroare în titlu, descriere sau ani.",
+    "step-geo-question": "Atașați o geolocalizare?",
+    "step-geo-hint": "Adăugați autorii înregistrării și locurile la care se referă.",
+    "step-text-question": "Descrieți problema în cuvintele dumneavoastră",
+    "tree-current-label": "Acum",
+    "tree-archive-label": "Arhivă",
+    "tree-fond-label": "Fond",
+    "tree-inventory-label": "Inventar",
+    "tree-unchanged-hint": "Alegeți o locație diferită de cea actuală.",
+    "copy-select-label": "Un link din această înregistrare",
+    "copy-url-label": "Alt link",
+    "copy-url-hint": "Dacă linkul dorit nu este în listă, lipiți-l aici.",
+    "data-title-label": "Titlu",
+    "data-info-label": "Descriere",
+    "data-years-label": "Ani",
+    "data-years-empty": "Niciunul",
+    "data-years-from": "De la",
+    "data-years-to": "Până la",
+    "data-years-remove": "Șterge anii",
+    "data-no-changes-hint": "Modificați cel puțin un câmp pentru a continua.",
+    "geo-authors-legend": "Autori",
+    "geo-authors-empty": "Niciunul",
+    "geo-authors-remove": "Elimină autorul",
+    "geo-authors-search-label": "Caută un autor",
+    "geo-authors-new-label": "Sau indicați un autor nou",
+    "geo-authors-add": "Adaugă",
+    "geo-locations-legend": "Locații",
+    "geo-locations-empty": "Niciuna",
+    "geo-locations-remove": "Elimină locația",
+    "geo-locations-add": "Adaugă locație",
+    "text-placeholder": "Descrierea erorii — de exemplu: an greșit, greșeală în titlu",
+    "success": "Trimis spre examinare",
+    "error-already-pending": "O sesizare pentru această înregistrare așteaptă deja examinarea",
+    "error-unauthorized": "Autentificați-vă pentru a trimite o sesizare",
+    "error-generic": "Sesizarea nu a putut fi trimisă"
   }
 }

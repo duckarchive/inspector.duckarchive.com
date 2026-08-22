@@ -16,7 +16,7 @@ import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFilesEndpoint, editorFondsEndpoint } from "@/hooks/useEditor";
 import { useGet } from "@/hooks/useApi";
-import { GetArchivesResponse } from "@/app/api/archives/route";
+import { GetCatalogArchivesResponse } from "@/app/api/catalog/route";
 import { useIsAdmin } from "@/components/editor/admin-context";
 import { FaTrash } from "react-icons/fa";
 
@@ -44,7 +44,7 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
 
   const [convertArchiveCode, setConvertArchiveCode] = useState("");
   const [convertFondId, setConvertFondId] = useState("");
-  const { data: archives } = useGet<GetArchivesResponse>(isOpen ? "/api/archives" : null);
+  const { data: archives } = useGet<GetCatalogArchivesResponse>(isOpen ? "/api/catalog" : null);
   const convertFondPicker = useCatalogPicker<EditorFond>(editorFondsEndpoint(convertArchiveCode), convertFondId);
 
   useEffect(() => {

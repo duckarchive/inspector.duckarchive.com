@@ -6,6 +6,9 @@ export type SearchRequest = Partial<{
   lat: string;
   lng: string;
   radius_m: number;
+  year_from: string;
+  year_to: string;
+  /** @deprecated single year — still honoured for existing links and API callers. */
   year: string;
   title: string;
   place: string;
@@ -51,6 +54,8 @@ export async function POST(request: Request) {
       lat,
       radius_m,
       year,
+      year_from,
+      year_to,
       tags,
       archive,
       fond,
@@ -94,10 +99,21 @@ export async function POST(request: Request) {
       // A file matches through its own coordinates or through those of any author
       // (church/parish) it is attributed to — authors carry the geocoded locations.
       // Only file_locations has its own radius; an author is a bare point.
+      //
+      // Both ST_DWithin calls are served by GiST indexes on the exact expression
+      // ST_SetSRID(ST_MakePoint(lng, lat), 4326)::geography (file_locations_geog_idx,
+      // authors_geog_idx) — keep the expression text identical. A per-row distance
+      // (radius_m + r) can't use the index, so file_locations is first narrowed with
+      // a constant upper bound (r + max radius_m) and then checked exactly.
       ctes.push(Prisma.sql`geo_files AS (
         SELECT l.file_id
         FROM "file_locations" l
         WHERE ST_DWithin(
+          ST_SetSRID(ST_MakePoint(l.lng, l.lat), 4326)::geography,
+          ${target},
+          ${radiusValue} + (SELECT COALESCE(MAX(radius_m), 0) FROM "file_locations")
+        )
+        AND ST_DWithin(
           ST_SetSRID(ST_MakePoint(l.lng, l.lat), 4326)::geography,
           ${target},
           COALESCE(l.radius_m, 0) + ${radiusValue}
@@ -130,8 +146,17 @@ export async function POST(request: Request) {
       )`);
     }
 
-    if (year) {
-      whereParts.push(Prisma.sql`${+year} BETWEEN fy.start_year AND fy.end_year`);
+    // A file matches when its own [start_year, end_year] overlaps the requested
+    // window. With a single `year` (or from === to) that is the old "year falls
+    // inside the file's range" test; an open end leaves that side unbounded.
+    const yearFrom = year_from || year;
+    const yearTo = year_to || year;
+    if (yearFrom && yearTo) {
+      whereParts.push(Prisma.sql`fy.start_year <= ${+yearTo} AND fy.end_year >= ${+yearFrom}`);
+    } else if (yearFrom) {
+      whereParts.push(Prisma.sql`fy.end_year >= ${+yearFrom}`);
+    } else if (yearTo) {
+      whereParts.push(Prisma.sql`fy.start_year <= ${+yearTo}`);
     }
 
     if (archive || fond || inventory || file) {

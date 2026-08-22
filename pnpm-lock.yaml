@@ -13,10 +13,10 @@ importers:
         version: https://codeload.github.com/duckarchive/framework/tar.gz/b3e311faacf324fe67b3c0b47a907b1c3c072b32(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@types/react@19.1.0)(ag-grid-community@33.3.2)(ag-grid-react@33.3.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(date-fns@4.4.0)(next-auth@4.24.15(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next-themes@0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(next@15.5.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-icons@5.7.0(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)
       '@duckarchive/map':
         specifier: github:duckarchive/map
-        version: https://codeload.github.com/duckarchive/map/tar.gz/a28de21f84addb9d39f740f2bd78d17ed624c1d4(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@heroui/styles@3.2.2(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(swr@2.4.2(react@19.2.8))(tailwindcss@4.3.3)
+        version: https://codeload.github.com/duckarchive/map/tar.gz/9ef46d603ab42934760b3a23ff6b99f3cc901b30(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@heroui/styles@3.2.2(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(swr@2.4.2(react@19.2.8))(tailwindcss@4.3.3)
       '@duckarchive/prisma':
         specifier: github:duckarchive/prisma
-        version: https://codeload.github.com/duckarchive/prisma/tar.gz/2cb78c9d98d2ddcee19a43e15d7e57dc45d720f8(@prisma/adapter-pg@7.9.1)(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.9.0(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2)(zod@4.4.3))
+        version: https://codeload.github.com/duckarchive/prisma/tar.gz/9aebaa9baa0b73e4bfc451f42ada3951d9d50f90(@prisma/adapter-pg@7.9.1)(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.9.0(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2)(zod@4.4.3))
       '@heroui/react':
         specifier: ^3.2.2
         version: 3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)
@@ -213,7 +213,7 @@ packages:
     engines: {node: '>=6.9.0'}
 
   '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/b3e311faacf324fe67b3c0b47a907b1c3c072b32':
-    resolution: {integrity: sha512-jcLBA3gzlItoHwIWtgJis+uGbMokFm3T3aiCakcthmX+q3gla8eFq9ZJTGO/gHd8bfvrNTkEggbNCfxc2lVH5A==, tarball: https://codeload.github.com/duckarchive/framework/tar.gz/b3e311faacf324fe67b3c0b47a907b1c3c072b32}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/duckarchive/framework/tar.gz/b3e311faacf324fe67b3c0b47a907b1c3c072b32}
     version: 2.2.5
     peerDependencies:
       '@heroui/react': ^3.2.2
@@ -230,9 +230,9 @@ packages:
       react-icons: ^5.5.0
       tailwindcss: ^4.0.0
 
-  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/a28de21f84addb9d39f740f2bd78d17ed624c1d4':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/duckarchive/map/tar.gz/a28de21f84addb9d39f740f2bd78d17ed624c1d4}
-    version: 1.6.2
+  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/9ef46d603ab42934760b3a23ff6b99f3cc901b30':
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/duckarchive/map/tar.gz/9ef46d603ab42934760b3a23ff6b99f3cc901b30}
+    version: 1.7.1
     peerDependencies:
       '@heroui/react': ^3.2.2
       '@heroui/styles': '*'
@@ -248,9 +248,9 @@ packages:
       tailwindcss:
         optional: true
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/2cb78c9d98d2ddcee19a43e15d7e57dc45d720f8':
-    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/2cb78c9d98d2ddcee19a43e15d7e57dc45d720f8}
-    version: 5.0.1
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/9aebaa9baa0b73e4bfc451f42ada3951d9d50f90':
+    resolution: {tarball: https://codeload.github.com/duckarchive/prisma/tar.gz/9aebaa9baa0b73e4bfc451f42ada3951d9d50f90}
+    version: 6.0.0
     peerDependencies:
       '@prisma/adapter-pg': ^7.2.0
       '@prisma/client': ^7.2.0
@@ -3971,7 +3971,7 @@ snapshots:
       react-icons: 5.7.0(react@19.2.8)
       tailwindcss: 4.3.3
 
-  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/a28de21f84addb9d39f740f2bd78d17ed624c1d4(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@heroui/styles@3.2.2(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(swr@2.4.2(react@19.2.8))(tailwindcss@4.3.3)':
+  '@duckarchive/map@https://codeload.github.com/duckarchive/map/tar.gz/9ef46d603ab42934760b3a23ff6b99f3cc901b30(@heroui/react@3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@heroui/styles@3.2.2(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(swr@2.4.2(react@19.2.8))(tailwindcss@4.3.3)':
     dependencies:
       '@heroui/react': 3.2.2(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)
       leaflet: 1.9.4
@@ -3984,7 +3984,7 @@ snapshots:
       '@heroui/styles': 3.2.2(tailwind-merge@3.4.0)(tailwindcss@4.3.3)
       tailwindcss: 4.3.3
 
-  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/2cb78c9d98d2ddcee19a43e15d7e57dc45d720f8(@prisma/adapter-pg@7.9.1)(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.9.0(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2)(zod@4.4.3))':
+  '@duckarchive/prisma@https://codeload.github.com/duckarchive/prisma/tar.gz/9aebaa9baa0b73e4bfc451f42ada3951d9d50f90(@prisma/adapter-pg@7.9.1)(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2))(prisma-zod-generator@2.9.0(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2)(zod@4.4.3))':
     dependencies:
       '@prisma/adapter-pg': 7.9.1
       '@prisma/client': 7.9.1(prisma@7.9.1(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.8.2))(typescript@5.8.2)

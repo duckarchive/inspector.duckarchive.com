@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
+import { apiJsonLd } from "@/config/api-json-ld";
 import { fontMono, fontSans } from "@duckarchive/framework/fonts";
 import GoogleAnalytics from "@/components/ga";
 import { PropsWithChildren, Suspense } from "react";
@@ -67,17 +68,19 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
 
   return (
     <html suppressHydrationWarning lang={locale} className="overflow-y-hidden">
-      <head />
+      <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(apiJsonLd) }} />
+      </head>
       <GoogleAnalytics />
       <body
         className={clsx(
-          "min-h-screen bg-background bg-dotted font-mono antialiased",
+          "min-h-dvh bg-background bg-dotted font-mono antialiased",
           fontSans.variable,
           fontMono.variable,
         )}
       >
         <Providers i18nMessages={messages} i18nLocale={locale}>
-          <div className="relative flex flex-col h-screen overflow-y-scroll">
+          <div className="relative flex flex-col h-dvh overflow-y-scroll">
             <Suspense fallback={<DuckLoader />}>{children}</Suspense>
           </div>
         </Providers>

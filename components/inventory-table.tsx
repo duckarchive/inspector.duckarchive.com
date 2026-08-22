@@ -8,13 +8,22 @@ import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import ReportButton from "./report-button";
+import CsvDownloadButton from "./csv-download-button";
 import { sortByCode } from "@/lib/table";
 import useInventory from "@/hooks/useInventory";
 import { GetInventoryResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/route";
 import { getYearsString } from "@/lib/text";
 import { editorInventoryHref } from "@/lib/editor-links";
+import { catalogItemLabel } from "@/lib/catalog-links";
 
 type TableItem = GetInventoryResponse["files"][number];
+
+const prepareToDownload = (items: TableItem[]) =>
+  items.map((item) => ({
+    code: item.code,
+    title: item.title,
+    years: getYearsString(item.years),
+  }));
 
 const Details: React.FC<{
   inventory?: GetInventoryResponse;
@@ -45,7 +54,7 @@ const Details: React.FC<{
 );
 
 interface InventoryTableProps {
-  resources: Resources;
+  resources?: Resources;
   isAdmin?: boolean;
 }
 
@@ -56,6 +65,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) =
   const code = params["inventory-code"];
   const isMobile = useIsMobile();
   const { inventory, isLoading, page } = useInventory(archiveCode, fondCode, code);
+  const files = inventory?.files?.sort(sortByCode) || [];
 
   // if (isError) return <Error error={} />
   return (
@@ -67,9 +77,21 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) =
         description={inventory?.info || undefined}
         message={<Details inventory={inventory} />}
       >
+        <CsvDownloadButton
+          filename={catalogItemLabel([archiveCode, fondCode, code])}
+          rows={prepareToDownload(files)}
+          isDisabled={isLoading}
+        />
         <ReportButton
           entity="inventory"
           targetId={inventory?.id}
+          current={{
+            title: inventory?.title ?? null,
+            info: inventory?.info ?? null,
+            years: inventory?.years?.map(({ start_year, end_year }) => ({ start_year, end_year })) ?? [],
+            codes: { archive: archiveCode, fond: fondCode, inventory: code },
+            onlineCopies: inventory?.online_copies?.map(({ id, url }) => ({ id, url })) ?? [],
+          }}
           editorHref={
             isAdmin && inventory?.id ? editorInventoryHref(archiveCode, inventory.fond_id, inventory.id) : undefined
           }
@@ -104,7 +126,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) =
             hide: isMobile,
           },
         ]}
-        rows={inventory?.files?.sort(sortByCode) || []}
+        rows={files}
       />
     </>
   );

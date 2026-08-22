@@ -7,13 +7,22 @@ import useIsMobile from "@/hooks/useIsMobile";
 import useCyrillicParams from "@/hooks/useCyrillicParams";
 import PagePanel from "./page-panel";
 import ReportButton from "./report-button";
+import CsvDownloadButton from "./csv-download-button";
 import { sortByCode } from "@/lib/table";
 import useFond from "@/hooks/useFond";
 import { GetFondResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/route";
 import { getYearsString } from "@/lib/text";
 import { editorFondHref } from "@/lib/editor-links";
+import { catalogItemLabel } from "@/lib/catalog-links";
 
 type TableItem = GetFondResponse["inventories"][number];
+
+const prepareToDownload = (items: TableItem[]) =>
+  items.map((item) => ({
+    code: item.code,
+    title: item.title,
+    years: getYearsString(item.years),
+  }));
 
 const Details: React.FC<{
   fond?: GetFondResponse;
@@ -32,7 +41,7 @@ const Details: React.FC<{
 );
 
 interface FondTableProps {
-  resources: Resources;
+  resources?: Resources;
   isAdmin?: boolean;
 }
 
@@ -42,6 +51,7 @@ const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
   const code = params["fond-code"];
   const isMobile = useIsMobile();
   const { fond, isLoading } = useFond(archiveCode, code);
+  const inventories = fond?.inventories?.sort(sortByCode) || [];
 
   // if (isLoading) return <Loader />;
   // if (isError) return <Error error={} />
@@ -54,9 +64,20 @@ const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
         description={fond?.info || undefined}
         message={<Details fond={fond} />}
       >
+        <CsvDownloadButton
+          filename={catalogItemLabel([archiveCode, code])}
+          rows={prepareToDownload(inventories)}
+          isDisabled={isLoading}
+        />
         <ReportButton
           entity="fond"
           targetId={fond?.id}
+          current={{
+            title: fond?.title ?? null,
+            info: fond?.info ?? null,
+            years: fond?.years?.map(({ start_year, end_year }) => ({ start_year, end_year })) ?? [],
+            codes: { archive: archiveCode, fond: code },
+          }}
           editorHref={isAdmin && fond?.id ? editorFondHref(archiveCode, fond.id) : undefined}
         />
       </PagePanel>
@@ -88,7 +109,7 @@ const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
             hide: isMobile,
           },
         ]}
-        rows={fond?.inventories?.sort(sortByCode) || []}
+        rows={inventories}
       />
     </>
   );

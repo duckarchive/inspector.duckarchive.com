@@ -2,16 +2,40 @@
   "home-page": {
     "title": "¡Encuentra expedientes de archivo en línea fácilmente!",
     "description": "Duck Inspector es un servicio de búsqueda que te permite encontrar expedientes de archivo en línea. Simplemente ingresa los detalles del archivo, fondo, descripción y expediente para obtener un enlace a la fuente.",
-    "about": {
-      "title": "Duck Inspector es:",
-      "one-place": "datos agregados de recursos de archivo en un solo lugar",
-      "extended-data": "información extendida con coordenadas y fechas",
-      "form": "formulario de búsqueda simple para encontrar el caso que necesitas en segundos",
-      "direct-link": "monitoreo 24/7 de enlaces a copias en línea",
-      "free": "impulsado por la comunidad y gratuito para usar",
-      "universe": "integrado con herramientas de Duck Universe y otros servicios amigos",
-      "notifications": "notificaciones regulares sobre nuevos casos",
-      "open-source": "código y datos de código abierto para todos"
+    "search-label": "Buscar por título",
+    "search-button": "Buscar",
+    "search-footer": "{count} registros",
+    "process": {
+      "title": "Cómo funciona",
+      "subtitle": "Duck Inspector no almacena los archivos: vigila dónde ya están y te da una sola puerta de entrada a todos.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Los archivos publican escaneos",
+          "description": "Los archivos estatales y las plataformas asociadas digitalizan los expedientes y los publican en línea, cada uno en su propio sitio."
+        },
+        "index": {
+          "title": "Duck Inspector los indexa",
+          "description": "Rastreamos cada fuente continuamente y relacionamos archivos, fondos y descripciones entre todas ellas."
+        },
+        "search": {
+          "title": "Buscas una sola vez",
+          "description": "Escribe un nombre o un expediente y obtén un enlace directo a donde realmente está el escaneo."
+        }
+      }
+    },
+    "stats": {
+      "title": "En cifras",
+      "subtitle": "Una instantánea de todo lo que Duck Inspector ha indexado, tomada en la última compilación.",
+      "archives": "Archivos",
+      "fonds": "Fondos",
+      "inventories": "Inventarios",
+      "files": "Expedientes",
+      "authors": "Autores",
+      "locations": "Ubicaciones",
+      "onlineCopies": "Copias en línea",
+      "checkedLast7Days": "Copias en línea verificadas en los últimos 7 días",
+      "communityEditsLast7Days": "Ediciones de la comunidad aplicadas en los últimos 7 días"
     }
   },
   "daily-updates-page": {
@@ -56,5 +80,57 @@
     "body-1": "Duck Inspector es un proyecto de voluntariado que no tiene ninguna fuente de financiación. Todo lo que ves en este sitio se ofrece a los usuarios de forma totalmente gratuita.",
     "body-2": "Las donaciones regulares y estables ayudan a pagar los servicios necesarios para el funcionamiento del sitio.",
     "cta": "Apoya el proyecto"
+  },
+  "report-form": {
+    "trigger-button": "Informar de un error",
+    "title": "Informar de un error",
+    "progress": "Paso {current} de {total}",
+    "editor-link": "Editor",
+    "yes": "Sí",
+    "no": "No",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "step-tree-question": "¿Cambiar la signatura archivística?",
+    "step-tree-hint": "El registro está en el archivo, fondo o inventario equivocado.",
+    "step-copy-question": "¿Cambiar el enlace a la copia digital?",
+    "step-copy-hint": "El enlace no funciona, lleva a otro sitio o falta.",
+    "step-data-question": "¿Cambiar los datos principales?",
+    "step-data-hint": "Error en el título, la descripción o los años.",
+    "step-geo-question": "¿Añadir una geolocalización?",
+    "step-geo-hint": "Añada los autores del registro y los lugares a los que se refiere.",
+    "step-text-question": "Describa el problema con sus palabras",
+    "tree-current-label": "Ahora",
+    "tree-archive-label": "Archivo",
+    "tree-fond-label": "Fondo",
+    "tree-inventory-label": "Inventario",
+    "tree-unchanged-hint": "Elija una ubicación distinta de la actual.",
+    "copy-select-label": "Un enlace de este registro",
+    "copy-url-label": "Otro enlace",
+    "copy-url-hint": "Si el enlace que busca no está en la lista, péguelo aquí.",
+    "data-title-label": "Título",
+    "data-info-label": "Descripción",
+    "data-years-label": "Años",
+    "data-years-empty": "Ninguno",
+    "data-years-from": "Desde",
+    "data-years-to": "Hasta",
+    "data-years-remove": "Eliminar los años",
+    "data-no-changes-hint": "Cambie al menos un campo para continuar.",
+    "geo-authors-legend": "Autores",
+    "geo-authors-empty": "Ninguno",
+    "geo-authors-remove": "Quitar autor",
+    "geo-authors-search-label": "Buscar un autor",
+    "geo-authors-new-label": "O indique un autor nuevo",
+    "geo-authors-add": "Añadir",
+    "geo-locations-legend": "Ubicaciones",
+    "geo-locations-empty": "Ninguna",
+    "geo-locations-remove": "Quitar ubicación",
+    "geo-locations-add": "Añadir ubicación",
+    "text-placeholder": "Descripción del error — por ejemplo: año incorrecto, errata en el título",
+    "success": "Enviado para revisión",
+    "error-already-pending": "Ya hay un informe sobre este registro pendiente de revisión",
+    "error-unauthorized": "Inicie sesión para enviar un informe",
+    "error-generic": "No se pudo enviar el informe"
   }
 }

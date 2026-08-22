@@ -7,7 +7,7 @@ import CatalogItemLink from "@/components/editor/catalog-item-link";
 import { useGet } from "@/hooks/useApi";
 import { useCatalogPicker } from "@/hooks/useCatalogPicker";
 import { editorFilesEndpoint, editorFondsEndpoint, editorInventoriesEndpoint } from "@/hooks/useEditor";
-import { GetArchivesResponse } from "@/app/api/archives/route";
+import { GetCatalogArchivesResponse } from "@/app/api/catalog/route";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { EditorInventory } from "@/app/api/editor/catalog/inventories/data";
 import { EditorFile } from "@/app/api/editor/catalog/files/data";
@@ -20,7 +20,7 @@ interface InstancePickerProps {
 }
 
 const InstancePicker: React.FC<InstancePickerProps> = ({ target, onChange }) => {
-  const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
+  const { data: archives } = useGet<GetCatalogArchivesResponse>("/api/catalog");
   const [archiveCode, setArchiveCode] = useState("");
   const [fondId, setFondId] = useState("");
   const [inventoryId, setInventoryId] = useState("");

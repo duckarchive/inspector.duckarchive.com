@@ -1,118 +1,66 @@
 ---
 name: Duck Inspector
 # Tokens below mirror the implementation exactly:
-#   - `themes` → HeroUI plugin config in tailwind.config.js (heroui({ themes }))
-#   - `typography`, `rounded`, `spacing` → tailwind `theme.extend` (fontSize/borderRadius/spacing)
-# Font families are wired through CSS variables set in config/fonts.ts.
+#   - `themes` → HeroUI v3 CSS variables in `styles/globals.css` (@layer theme)
+#   - `typography`, `rounded`, `spacing` → Tailwind v4 `@theme` block in the same file
+# Font families are wired through CSS variables set by @duckarchive/framework.
+# Colours come from a Material 3 palette; each line names the M3 role it maps from.
 themes:
   light:
-    colors:
-      background: '#ffffff'
-      foreground: '#1d1d1f'
-      divider: '#d2d2d7'
-      focus: '#ff5c00'
-      content1: '#ffffff' # Level 2 cards: white + ambient shadow, not a tint
-      content2: '#f5f5f7'
-      content3: '#e8e8ed'
-      content4: '#d2d2d7'
-      default:
-        50: '#f5f5f7'
-        100: '#e8e8ed'
-        200: '#d2d2d7'
-        300: '#aeaeb2'
-        400: '#86868b' # metadata / secondary descriptions
-        500: '#6e6e73'
-        600: '#515154'
-        700: '#424245'
-        800: '#2c2c2e'
-        900: '#1d1d1f'
-        DEFAULT: '#d2d2d7'
-        foreground: '#1d1d1f'
-      primary:
-        50: '#fff3ed'
-        100: '#ffdbce'
-        200: '#ffb59a'
-        300: '#ff9166'
-        400: '#ff7433'
-        500: '#ff5c00' # Crisp Orange — the only accent
-        600: '#d44b00'
-        700: '#a73a00'
-        800: '#802a00'
-        900: '#521800'
-        DEFAULT: '#ff5c00'
-        foreground: '#ffffff'
-      secondary:
-        DEFAULT: '#5f5e60'
-        foreground: '#ffffff'
-      danger:
-        DEFAULT: '#ba1a1a'
-        foreground: '#ffffff'
-    layout:
-      radius:
-        small: 0.25rem # chips, inline elements
-        medium: 0.5rem # buttons, inputs
-        large: 1rem # panels; hero cards go rounded-xl (1.5rem)
-      boxShadow:
-        small: 0px 0px 24px 0px rgb(0 0 0 / 0.03)
-        medium: 0px 0px 40px 0px rgb(0 0 0 / 0.04) # Level 2 — cards
-        large: 0px 10px 50px 0px rgb(0 0 0 / 0.08) # Level 3 — modals/popovers
-  dark:
-    colors:
-      background: '#000000'
-      foreground: '#f5f5f7'
-      divider: '#424245'
-      focus: '#ff5c00'
-      content1: '#1d1d1f'
-      content2: '#2c2c2e'
-      content3: '#3a3a3c'
-      content4: '#48484a'
-      default:
-        50: '#1d1d1f'
-        100: '#2c2c2e'
-        200: '#3a3a3c'
-        300: '#48484a'
-        400: '#636366'
-        500: '#8e8e93'
-        600: '#aeaeb2'
-        700: '#d2d2d7'
-        800: '#e8e8ed'
-        900: '#f5f5f7'
-        DEFAULT: '#3a3a3c'
-        foreground: '#f5f5f7'
-      primary:
-        50: '#521800'
-        100: '#802a00'
-        200: '#a73a00'
-        300: '#d44b00'
-        400: '#ff7433'
-        500: '#ff5c00'
-        600: '#ff9166'
-        700: '#ffb59a'
-        800: '#ffdbce'
-        900: '#fff3ed'
-        DEFAULT: '#ff5c00'
-        foreground: '#ffffff'
-      secondary:
-        DEFAULT: '#c8c6c8'
-        foreground: '#1d1d1f'
-      danger:
-        DEFAULT: '#ff5449'
-        foreground: '#ffffff'
-    layout:
-      radius:
-        small: 0.25rem
-        medium: 0.5rem
-        large: 1rem
-      boxShadow:
-        small: 0px 0px 24px 0px rgb(0 0 0 / 0.3)
-        medium: 0px 0px 40px 0px rgb(0 0 0 / 0.35)
-        large: 0px 10px 50px 0px rgb(0 0 0 / 0.45)
+    background: '#f9f9fc' # background
+    foreground: '#1a1c1e' # on-background
+    surface: '#ffffff' # surface-container-lowest — cards
+    surface-secondary: '#f3f3f6' # surface-container-low
+    surface-tertiary: '#eeeef0' # surface-container
+    overlay: '#ffffff' # surface-container-lowest — modals/popovers
+    default: '#e8e8ea' # surface-container-high — neutral component fills
+    muted: '#5a4136' # on-surface-variant — secondary text
+    accent: '#ff5c00' # brand orange — deliberately NOT the M3 primary (see Colors)
+    accent-foreground: '#ffffff'
+    # accent-soft / -foreground are left to HeroUI, which derives them from accent
+    # status colours — constant across themes, never override in dark
+    danger: '#ba1a1a' # M3 error
+    danger-foreground: '#ffffff'
+    warning: '#b45309'
+    warning-foreground: '#ffffff'
+    success: '#00794f'
+    success-foreground: '#ffffff'
+    field-background: color-mix(in srgb, transparent, var(--default) 50%) # = DuckTable header fill
+    field-foreground: '#1a1c1e' # on-surface
+    field-placeholder: '#74777b' # neutral outline
+    field-border: var(--default) # = DuckTable border (#e8e8ea light / #292a2c dark)
+    field-border-width: 1px # HeroUI ships 0px — fields are borderless without this
+    border: '#e3bfb1' # outline-variant
+    separator: '#e3bfb1' # outline-variant
+    scrollbar-thumb: '#e3bfb1' # outline-variant
+    focus: accent
+    surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.03)
+    overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.08)
+    field-shadow: none # fields sit flat like the DuckTable
+  dark: # M3 dark counterpart of the same palette
+    background: '#131316'
+    foreground: '#e2e2e5'
+    surface: '#1a1c1e'
+    surface-secondary: '#1e1f21'
+    surface-tertiary: '#292a2c'
+    overlay: '#1e1f21'
+    default: '#292a2c'
+    muted: '#d8c3b9' # dark on-surface-variant
+    # no status colours here — accent / danger / warning / success are constant
+    field-placeholder: '#8e9195' # neutral dark outline (background/border follow --default)
+    border: '#53433c'
+    separator: '#53433c'
+    scrollbar-thumb: '#53433c'
+    surface-shadow: 0px 0px 24px 0px rgb(0 0 0 / 0.3)
+    overlay-shadow: 0px 10px 50px 0px rgb(0 0 0 / 0.45)
+radius: # HeroUI derives component radii from --radius
+  base: 1rem # --radius
+  field: 1.5rem # --field-radius = --radius * 1.5 — inputs, selects, textareas
 typography:
   families:
     font-mono: Geist Mono (google, --font-mono) # theme default — all titles/text, body copy, headings
     font-sans: Geist (google, --font-sans) # interactive elements only — Button, Input, Link, TextArea, etc.
     font-label: Geist (google, --font-label) # labels, chips, metadata
-    font-comic: CC Jim Lee (local, --font-comic) # comics easter egg only
   scale: # tailwind fontSize tokens → text-display-lg, text-headline-lg, …
     display-lg:
       fontSize: 4rem # 64px
@@ -151,18 +99,14 @@ typography:
       letterSpacing: 0.05em
 rounded: # tailwind borderRadius scale
   sm: 0.25rem
-  DEFAULT: 0.5rem
   md: 0.75rem
   lg: 1rem
   xl: 1.5rem
-  full: 9999px
 spacing:
-  unit: 8px
-  container-max: 1200px # max-w-container
+  container-max: 75rem # 1200px — max-w-container
   gutter: 32px # gap-gutter
-  margin-mobile: 24px
   section-gap: 128px # gap-section / py-section
-  section-gap-mobile: 64px
+  section-gap-mobile: 64px # gap-section-mobile
 ---
 
 ## Brand & Style
@@ -174,18 +118,22 @@ The target audience consists of professionals who value precision, security, and
 **Key Visual Pillars:**
 - **Extreme Whitespace:** Layouts are intentionally undersaturated with content to heighten focus.
 - **Precision Typography:** High contrast between oversized headlines and tight, functional body text.
-- **Soft Tactility:** Elements feel physically present through subtle shadows rather than borders.
+- **Soft Tactility:** Depth comes from ambient shadows and tonal layering. Borders are hairline and structural — they delimit editable surfaces (fields, separators), never decorate.
 - **Intentional Accents:** Color is used sparingly as a functional tool for direction, not for decoration.
 
 ## Colors
 
-The palette is anchored in a monochromatic spectrum of Apple-inspired neutrals, punctuated by a single, high-energy accent. All colors are expressed as HeroUI semantic tokens so components pick them up automatically (`bg-background`, `text-foreground`, `bg-content2`, `text-default-400`, `bg-primary`…).
+The palette is a **Material 3** scheme: a burnt-orange primary over a warm-neutral surface ramp. All colors are HeroUI v3 CSS variables set in `styles/globals.css`, so components pick them up automatically (`bg-background`, `text-foreground`, `bg-surface-secondary`, `text-muted`, `bg-accent`…). There is no `heroui()` plugin config and no `tailwind.config.js` theme — editing the variables is how you change the theme.
 
-- **Backgrounds:** Pure white `background` for primary surfaces to maximize the "stark" aesthetic, with `content2` (`#F5F5F7`) for subtle depth separation in secondary containers.
-- **Typography:** Deep slate `foreground` (`#1D1D1F`) for headlines to ensure maximum readability and impact. `default-400` (`#86868B`) is reserved for metadata and secondary descriptions.
-- **Accent:** Crisp Orange `primary` (`#FF5C00`) is used exclusively for primary calls to action, active states, and critical status indicators. The deeper `primary-700` (`#A73A00`) exists for pressed states and small text on light surfaces where `primary` fails contrast. `focus` is the same orange — HeroUI applies it to focus rings.
-- **Dark theme** inverts the neutral ramp over pure black, keeps the identical orange, and raises `danger` brightness one step for legibility.
-- `success`/`warning` stay on HeroUI defaults until the system defines them.
+- **Surfaces:** `background` (`#F9F9FC`) is the page ground; `surface` (white) is the card level, with `surface-secondary` / `surface-tertiary` for progressively recessed containers.
+- **Typography:** `foreground` (`#1A1C1E`) for headlines and body. `muted` (`#5A4136`, M3 on-surface-variant) is the warm secondary tone for metadata and descriptions.
+- **Accent:** `accent` (`#FF5C00`, Crisp Orange) is used exclusively for primary calls to action, active states, and critical status indicators. `focus` is the same value — HeroUI applies it to focus rings. `accent-soft` is left undefined so HeroUI derives it from the accent.
+  - This is the **one deliberate departure from the M3 palette**: the scheme's primary (`#A33E00`) reads muddy against the orange logo, so the brand orange is kept in both themes. The tradeoff is contrast — white on `#FF5C00` is ~3.1:1, which clears AA for large text and UI components but not for normal-size body text. Keep accent surfaces to buttons, chips and indicators; don't set long-form copy on it.
+- **Status:** `danger` (`#BA1A1A`), `warning` (`#B45309`) and `success` (`#00794F`) are **theme-independent** — a danger is a danger on any ground. Each fill is mid-tone, so it separates from the light and the dark background alike (≥2.8:1 either way) and carries white text at ≥5:1. Never add `.dark` overrides for them.
+  - `success` is not an M3 tone: the scheme's `#006C47` all but disappears on the dark ground and its dark counterpart `#65DCA3` is too pale to carry white text, so the constant sits between them.
+  - Their `-soft` variants are left to HeroUI, which derives the tint from the base colour, so the hue is constant too. The matching `-soft-foreground` still varies by theme *on purpose*: it is mixed with `--foreground` so label text stays legible on a translucent tint.
+- **Dark theme** is the M3 dark counterpart of the same palette over a `#131316` ground, keeping the identical orange accent.
+- M3 *tertiary* (`#336666`) has no HeroUI slot and is currently unused.
 
 ## Typography
 
@@ -207,40 +155,47 @@ This design system employs a **Fixed Grid** philosophy for desktop to maintain a
 
 ## Elevation & Depth
 
-Depth is conveyed through **Ambient Shadows** and tonal layering. Avoid harsh borders or heavy outlines. Shadows map to the HeroUI layout scale (`shadow-small` / `shadow-medium` / `shadow-large`).
+Depth is conveyed through **Ambient Shadows** and tonal layering, mapped to the HeroUI shadow variables.
 
-- **Level 1 (Base):** Pure `background`.
-- **Level 2 (Cards/Containers):** `content2` fill or `shadow-medium` — a very soft, highly diffused shadow (blur 40px, 4% black).
-- **Level 3 (Modals/Popovers):** `shadow-large` — deeper, with a slight vertical offset to simulate lift (y 10, blur 50, 8% black).
+- **Level 1 (Base):** `background`.
+- **Level 2 (Cards/Containers):** `surface` fill or `surface-shadow` — a very soft, highly diffused shadow (blur 24px, 3% black).
+- **Level 3 (Modals/Popovers):** `overlay` fill with `overlay-shadow` — deeper, with a slight vertical offset to simulate lift (y 10, blur 50, 8% black).
+- **Borders** are reserved for structure, not decoration: a hairline `border` / `separator` (`outline-variant`) delimits fields and divides content. Avoid heavy outlines or multi-pixel strokes.
 - **Interactive:** Hover states should trigger a subtle increase in shadow diffusion rather than a color change, mimicking a physical object moving closer to the user.
 
 ## Shapes
 
-The shape language is defined by "Large Border Radii," giving the UI a friendly yet sophisticated silhouette. HeroUI components inherit `radius.small/medium/large`; raw Tailwind uses the `rounded-*` scale from the tokens above.
+The shape language is defined by "Large Border Radii," giving the UI a friendly yet sophisticated silhouette. HeroUI derives component radii from `--radius` (1rem); fields use `--field-radius` (1.5rem). Raw Tailwind uses the `rounded-*` scale from the tokens above.
 
-- **Primary Elements:** Buttons and Input fields use the base `rounded` / `radius.medium` (0.5rem).
-- **Large Containers:** Cards and major UI sections use `rounded-xl` (1.5rem) to emphasize the soft, premium feel; standard panels use `radius.large` (1rem).
+- **Primary Elements:** Buttons follow `--radius`; input fields are rounder still at `--field-radius`.
+- **Large Containers:** Cards and major UI sections use `rounded-xl` (1.5rem) to emphasize the soft, premium feel.
 - **Icons:** Should follow a similar rounded geometric language, avoiding sharp 90-degree corners.
 
 ## Components
 
 ### Buttons
-- **Primary:** `color="primary"` — Crisp Orange background, white text, bold weight. No border.
-- **Secondary:** `variant="bordered"` — transparent background, `foreground` text, thin 1px `divider` border.
+HeroUI v3 variants: `primary`, `secondary`, `tertiary`, `outline`, `ghost`, `danger`, `danger-soft`.
+- **Primary:** `variant="primary"` — `accent` background, `accent-foreground` text, bold weight. No border.
+- **Secondary:** `variant="outline"` — transparent background, `foreground` text, hairline `border`.
 - **States:** On hover, primary buttons should subtly scale (1.02x) rather than change color.
 
 ### Input Fields
-- Large height (`size="lg"`, 48px+) with subtle `content2` fills.
-- Labels sit above the field (`labelPlacement="outside"`) in `text-label-sm font-label uppercase`.
-- Focus state: HeroUI `focus` ring — 2px in the primary accent with a soft glow.
+- Every field carries a **1px `field-border`** by default. HeroUI ships `--field-border-width: 0px` (borderless), so `styles/globals.css` sets both the width and the color; hover and focus borders derive from `--field-border` automatically via `color-mix`, and invalid state uses `--color-field-border-invalid`.
+- **Fields match the DuckTable.** `--field-border` and `--field-background` point at `--default` and at the same `color-mix(… var(--default) 50%)` the grid uses for its header, because ag-grid derives `--ag-border-color` / `--ag-header-background-color` from that token too. A form and a grid on the same page therefore share one border color and one surface tint in both themes, and stay in sync if `--default` ever moves — don't re-specify these per theme.
+- `InputGroup` addons (`__prefix` / `__suffix`) have their divider border zeroed in `styles/globals.css`. HeroUI sizes that divider from `--field-border-width`, which suits text addons (`https://`); every addon here is an icon or button, where it reads as a stray line inside the field. Only the field's outer border should be visible.
+- Large height (`h-14` / `size="lg"`, 48px+) on primary search surfaces.
+- Border and placeholder are both **neutral greyscale**, not the palette's warm `outline` / `outline-variant` — the warm hue read as a tint on every field.
+- `field-placeholder` sits a step lighter than `muted` so placeholders don't read as filled-in text.
+- Focus state: HeroUI `focus` ring in the accent, plus the derived focus border.
 
 ### Cards
-- `content1` (white) background with `shadow-medium`.
+- `surface` background with `surface-shadow`.
 - Inner padding should be generous (min 32px) to prevent data from feeling cramped.
 
 ### Chips/Tags
-- Small, pill-shaped (`radius="full"`) with `default-100` backgrounds.
+- Small, pill-shaped (`radius="full"`) with `default` backgrounds.
 - Use `font-label` (Geist) to denote system information or metadata.
+- **Resource identity chips** (`components/resource-badge.tsx`) are the one place with a categorical palette: six Tailwind fills in `TYPE_CHIP_CLASS`, all with white labels and **one value per resource across both themes**. Each fill is mid-tone so it separates from the light and dark ground alike, and dark enough for ≥6:1 against its label; hues stay clear of the accent orange. They mark *which* service hosts a copy — an identity, not a status — so they deliberately avoid `accent`, `danger`, `success` and `warning`, which carry meaning elsewhere. Add an entry to that map rather than reaching for a semantic color when a resource type is added.
 
 ### Status Indicators
-- Use small, glowing dots for security status. A "Pulse" animation on the `primary` accent indicates active verification or "scanning" processes.
+- Use small, glowing dots for security status. A "Pulse" animation on the `accent` indicates active verification or "scanning" processes.

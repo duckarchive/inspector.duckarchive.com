@@ -6,7 +6,8 @@ import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import PendingButton from "@/components/pending-button";
-import { useAuthorFiles, useEditorAuthors } from "@/hooks/useEditor";
+import { useAuthorFiles } from "@/hooks/useEditor";
+import { useAuthors } from "@/hooks/useAuthors";
 import { encodeNote, SubmitActionBody } from "@/lib/editor-actions";
 import { EditorAuthor } from "@/app/api/editor/authors/data";
 import { useIsAdmin } from "@/components/editor/admin-context";
@@ -37,7 +38,7 @@ const AuthorEditModal: React.FC<AuthorEditModalProps> = ({ author, isOpen, onClo
 
   const [mergeQuery, setMergeQuery] = useState("");
   const [mergeTargetId, setMergeTargetId] = useState<string>("");
-  const { data: mergeCandidates } = useEditorAuthors(mergeQuery || undefined);
+  const { data: mergeCandidates } = useAuthors(mergeQuery || undefined);
 
   useEffect(() => {
     if (author) {

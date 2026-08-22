@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import groupBy from "lodash/groupBy.js";
 import prisma from "@/lib/db";
-import { Archive, Case, DailyStat, Description, Fund } from "@generated/prisma/client/client";
+import { Archive, DailyStat } from "@generated/prisma/client/client";
 
 process.env.TZ = "UTC";
 
@@ -22,7 +22,7 @@ export type Report = any[];
 export type ReportSummary = {
   archive_code: Archive["code"];
   funds: {
-    fund_code: Fund["code"];
+    fund_code: string;
     count: number;
   }[];
 }[];

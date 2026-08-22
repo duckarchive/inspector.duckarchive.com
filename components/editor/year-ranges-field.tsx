@@ -5,12 +5,30 @@ import { Button, Chip, CloseButton, NumberField } from "@heroui/react";
 import { sameYearRange, YearRange } from "@/lib/editor-actions";
 import { FaPlus } from "react-icons/fa";
 
+export interface YearRangesFieldLabels {
+  legend: string;
+  empty: string;
+  from: string;
+  to: string;
+  removeAria: string;
+}
+
+const DEFAULT_LABELS: YearRangesFieldLabels = {
+  legend: "Роки",
+  empty: "Немає",
+  from: "Від",
+  to: "До",
+  removeAria: "Видалити роки",
+};
+
 interface YearRangesFieldProps {
   value: YearRange[];
   onChange: (next: YearRange[]) => void;
+  /** Editor call sites keep the uk defaults; the localized wizard passes its own. */
+  labels?: YearRangesFieldLabels;
 }
 
-const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange }) => {
+const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange, labels = DEFAULT_LABELS }) => {
   const [start, setStart] = useState<number | undefined>();
   const [end, setEnd] = useState<number | undefined>();
 
@@ -33,13 +51,13 @@ const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange }) =>
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm text-muted">Роки</span>
+      <span className="text-sm text-muted">{labels.legend}</span>
       <div className="flex flex-wrap gap-1">
-        {value.length === 0 && <span className="text-muted text-sm">Немає</span>}
+        {value.length === 0 && <span className="text-muted text-sm">{labels.empty}</span>}
         {value.map((r) => (
           <Chip key={`${r.start_year}-${r.end_year}`} variant="soft">
             {r.start_year}–{r.end_year}
-            <CloseButton aria-label="Видалити роки" onPress={() => remove(r)} />
+            <CloseButton aria-label={labels.removeAria} onPress={() => remove(r)} />
           </Chip>
         ))}
       </div>
@@ -47,14 +65,14 @@ const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange }) =>
         <NumberField className="grow" value={start} onChange={setStart} formatOptions={{ useGrouping: false }}>
           <NumberField.Group>
             <NumberField.DecrementButton />
-            <NumberField.Input placeholder="Від" />
+            <NumberField.Input placeholder={labels.from} />
             <NumberField.IncrementButton />
           </NumberField.Group>
         </NumberField>
         <NumberField className="grow" value={end} onChange={setEnd} formatOptions={{ useGrouping: false }}>
           <NumberField.Group>
             <NumberField.DecrementButton />
-            <NumberField.Input placeholder="До" />
+            <NumberField.Input placeholder={labels.to} />
             <NumberField.IncrementButton />
           </NumberField.Group>
         </NumberField>

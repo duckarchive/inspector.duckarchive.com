@@ -3,7 +3,7 @@
 import { Key, useMemo, useState } from "react";
 import { Button, Chip, CloseButton, Input, TextField } from "@heroui/react";
 import Select from "@/components/select";
-import { useEditorAuthors } from "@/hooks/useEditor";
+import { useAuthors } from "@/hooks/useAuthors";
 
 export interface AuthorOps {
   /** author ids to unlink from the file */
@@ -30,7 +30,7 @@ interface AuthorsFieldProps {
 const AuthorsField: React.FC<AuthorsFieldProps> = ({ linked, ops, onChange }) => {
   const [query, setQuery] = useState("");
   const [newTitle, setNewTitle] = useState("");
-  const { data: authors } = useEditorAuthors(query || undefined);
+  const { data: authors } = useAuthors(query || undefined);
 
   const titleById = useMemo(() => {
     const map = new Map<string, string>();

@@ -10,14 +10,14 @@ import FondEditModal from "@/components/editor/fond-edit-modal";
 import FondAddModal from "@/components/editor/fond-add-modal";
 import { useGet } from "@/hooks/useApi";
 import { useEditorFonds } from "@/hooks/useEditor";
-import { GetArchivesResponse } from "@/app/api/archives/route";
+import { GetCatalogArchivesResponse } from "@/app/api/catalog/route";
 import { EditorFond } from "@/app/api/editor/catalog/fonds/data";
 import { Button } from "@heroui/react";
 import { syncEditorUrl } from "@/lib/editor-url";
 import { editorInventoryHref } from "@/lib/editor-links";
 
 export default function EditorFondsPage() {
-  const { data: archives } = useGet<GetArchivesResponse>("/api/archives");
+  const { data: archives } = useGet<GetCatalogArchivesResponse>("/api/catalog");
   const [archiveCode, setArchiveCode] = useState<string>("");
   const { data: fonds, isLoading, mutate } = useEditorFonds(archiveCode || undefined);
   const [selected, setSelected] = useState<EditorFond | null>(null);
@@ -79,6 +79,7 @@ export default function EditorFondsPage() {
           {
             field: "code",
             headerName: "Код",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cellRenderer: (row: any) => (
               <NextLink
                 href={editorInventoryHref(archiveCode, row.data.id)}

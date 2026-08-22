@@ -1,6 +1,5 @@
 import FondTable from "@/components/fond-table";
 import { Metadata, NextPage, ResolvingMetadata } from "next";
-import { getResources } from "@/data/resources";
 import { getFondByCode } from "@/app/api/catalog/[archive-code]/[fond-code]/data";
 import { getTranslations } from "next-intl/server";
 import { getSessionDuckUser } from "@/lib/auth";
@@ -44,10 +43,9 @@ export async function generateMetadata(pageProps: FondPageProps, parent: Resolvi
 }
 
 const FondPage: NextPage = async () => {
-  const resources = await getResources();
   const user = await getSessionDuckUser();
 
-  return <FondTable resources={resources} isAdmin={Boolean(user?.is_admin)} />;
+  return <FondTable isAdmin={Boolean(user?.is_admin)} />;
 };
 
 export default FondPage;

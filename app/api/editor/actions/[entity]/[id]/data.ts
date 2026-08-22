@@ -285,12 +285,6 @@ const mergeAuthorInto = async (tx: Tx, sourceId: string, targetId: string): Prom
     SELECT file_id, ${targetId}::uuid FROM file_authors WHERE author_id = ${sourceId}::uuid
     ON CONFLICT DO NOTHING`;
   await tx.$executeRaw`DELETE FROM file_authors WHERE author_id = ${sourceId}::uuid`;
-  // the legacy junction (case_authors) references authors with RESTRICT — re-point
-  // it too, so legacy case links survive on the target and the delete can proceed
-  await tx.$executeRaw`INSERT INTO case_authors (case_id, author_id)
-    SELECT case_id, ${targetId}::uuid FROM case_authors WHERE author_id = ${sourceId}::uuid
-    ON CONFLICT DO NOTHING`;
-  await tx.$executeRaw`DELETE FROM case_authors WHERE author_id = ${sourceId}::uuid`;
 
   // fill empty coords as a pair, and only when the resulting (title, lat, lng)
   // wouldn't collide with another author (exact-title twins may already hold them)
@@ -504,7 +498,6 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     case "remove_author": {
       if (!payload?.author_id) throw new ActionExecutionError("Дія не містить автора");
       await tx.fileAuthor.deleteMany({ where: { author_id: payload.author_id } });
-      await tx.caseAuthor.deleteMany({ where: { author_id: payload.author_id } });
       await tx.author.delete({ where: { id: payload.author_id } });
       return null;
     }

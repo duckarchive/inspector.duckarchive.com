@@ -11,7 +11,7 @@ import { sortText } from "@duckarchive/framework";
 type TableItem = Archives[number];
 
 interface ArchivesTableProps {
-  resources: Resources;
+  resources?: Resources;
   archives: Archives;
 }
 

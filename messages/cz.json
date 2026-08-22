@@ -2,16 +2,40 @@
   "home-page": {
     "title": "Vyhledávejte archivní spisy online snadno!",
     "description": "Duck Inspector je vyhledávací služba, která vám umožňuje vyhledávat archivní spisy online. Stačí zadat údaje o archivu, fondu, popisu a spisu a získáte odkaz na zdroj.",
-    "about": {
-      "title": "Duck Inspector je:",
-      "one-place": "agregovaná data z archivních zdrojů na jednom místě",
-      "extended-data": "rozšířené informace se souřadnicemi a daty",
-      "form": "jednoduchý vyhledávací formulář pro nalezení případu, který potřebujete, během sekund",
-      "direct-link": "24/7 monitorování odkazů na online kopie",
-      "free": "komunita řízena a svobodná pro použití",
-      "universe": "integrováno s nástroji Duck Universe a dalšími přátelskými službami",
-      "notifications": "pravidelná oznámení o nových případech",
-      "open-source": "otevřený kód a otevřená data pro všechny"
+    "search-label": "Hledat podle názvu",
+    "search-button": "Hledat",
+    "search-footer": "{count} záznamů",
+    "process": {
+      "title": "Jak to funguje",
+      "subtitle": "Duck Inspector archivy neukládá — sleduje, kde už existují, a dává vám jeden vstup ke všem.",
+      "duckLabel": "Duck Inspector",
+      "steps": {
+        "publish": {
+          "title": "Archivy zveřejňují skeny",
+          "description": "Státní archivy a partnerské platformy digitalizují spisy a zveřejňují je online, každý na svém webu."
+        },
+        "index": {
+          "title": "Duck Inspector je indexuje",
+          "description": "Průběžně sledujeme každý zdroj a propojujeme archivy, fondy a popisy napříč nimi."
+        },
+        "search": {
+          "title": "Hledáte jen jednou",
+          "description": "Zadejte jméno nebo spis a získáte přímý odkaz tam, kde se sken skutečně nachází."
+        }
+      }
+    },
+    "stats": {
+      "title": "V číslech",
+      "subtitle": "Přehled všeho, co Duck Inspector zaindexoval — stav k poslednímu sestavení.",
+      "archives": "Archivy",
+      "fonds": "Fondy",
+      "inventories": "Inventáře",
+      "files": "Spisy",
+      "authors": "Autoři",
+      "locations": "Lokality",
+      "onlineCopies": "Online kopie",
+      "checkedLast7Days": "Online kopií zkontrolováno za posledních 7 dní",
+      "communityEditsLast7Days": "Úprav komunity provedeno za posledních 7 dní"
     }
   },
   "daily-updates-page": {
@@ -56,5 +80,57 @@
     "body-1": "Duck Inspector je dobrovolnický projekt bez jakéhokoli zdroje financování. Vše, co na těchto stránkách vidíte, je uživatelům poskytováno zcela zdarma.",
     "body-2": "Pravidelné a stabilní dary pomáhají platit služby potřebné k provozu webu.",
     "cta": "Podpořte projekt"
+  },
+  "report-form": {
+    "trigger-button": "Nahlásit chybu",
+    "title": "Nahlásit chybu",
+    "progress": "Krok {current} z {total}",
+    "editor-link": "Editor",
+    "yes": "Ano",
+    "no": "Ne",
+    "back": "Zpět",
+    "next": "Dále",
+    "cancel": "Zrušit",
+    "submit": "Odeslat",
+    "step-tree-question": "Změnit archivní zařazení?",
+    "step-tree-hint": "Záznam je v nesprávném archivu, fondu nebo inventáři.",
+    "step-copy-question": "Změnit odkaz na digitální kopii?",
+    "step-copy-hint": "Odkaz nefunguje, vede jinam nebo chybí.",
+    "step-data-question": "Změnit základní údaje?",
+    "step-data-hint": "Chyba v názvu, popisu nebo letech.",
+    "step-geo-question": "Připojit geolokaci?",
+    "step-geo-hint": "Přidejte autory záznamu a místa, kterých se týká.",
+    "step-text-question": "Popište problém vlastními slovy",
+    "tree-current-label": "Nyní",
+    "tree-archive-label": "Archiv",
+    "tree-fond-label": "Fond",
+    "tree-inventory-label": "Inventář",
+    "tree-unchanged-hint": "Vyberte jiné umístění, než je současné.",
+    "copy-select-label": "Odkaz z tohoto záznamu",
+    "copy-url-label": "Jiný odkaz",
+    "copy-url-hint": "Pokud potřebný odkaz není v seznamu, vložte jej sem.",
+    "data-title-label": "Název",
+    "data-info-label": "Popis",
+    "data-years-label": "Roky",
+    "data-years-empty": "Žádné",
+    "data-years-from": "Od",
+    "data-years-to": "Do",
+    "data-years-remove": "Odstranit roky",
+    "data-no-changes-hint": "Změňte alespoň jedno pole, abyste mohli pokračovat.",
+    "geo-authors-legend": "Autoři",
+    "geo-authors-empty": "Žádní",
+    "geo-authors-remove": "Odebrat autora",
+    "geo-authors-search-label": "Najít autora",
+    "geo-authors-new-label": "Nebo uveďte nového autora",
+    "geo-authors-add": "Přidat",
+    "geo-locations-legend": "Lokality",
+    "geo-locations-empty": "Žádné",
+    "geo-locations-remove": "Odebrat lokalitu",
+    "geo-locations-add": "Přidat lokalitu",
+    "text-placeholder": "Popis chyby — například: špatný rok, překlep v názvu",
+    "success": "Odesláno k posouzení",
+    "error-already-pending": "Hlášení k tomuto záznamu už čeká na posouzení",
+    "error-unauthorized": "Přihlaste se, abyste mohli odeslat hlášení",
+    "error-generic": "Hlášení se nepodařilo odeslat"
   }
 }
