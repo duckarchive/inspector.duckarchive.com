@@ -39,11 +39,11 @@ type TableItem = SearchResponse[number];
 // Every description illustrates the same base word ("Київ") so the five levels
 // read as one progression instead of five unrelated examples.
 const FUZZINESS_OPTIONS = [
-  { percent: 100, label: "100 % — повний збіг", description: "Київ: Київ" },
-  { percent: 90, label: "90 % — кілька помилок", description: "Київ: Київ, Кийв, Кієв" },
-  { percent: 75, label: "75 % — схожі слова", description: "Київ: Києв, Киев, Київ, Киив" },
-  { percent: 50, label: "50 % — широкі варіації", description: "Київ: Києва, Києві, Києво-Печерська" },
-  { percent: 30, label: "30 % — мені пощастить", description: "Київ: Київський, Киянка, Кийчик, кінь" },
+  { percent: 100, label: "100% — повний збіг", description: "Київ: Київ" },
+  { percent: 90, label: "90% — кілька помилок", description: "Київ: Київ, Кийв, Кієв" },
+  { percent: 75, label: "75% — схожі слова", description: "Київ: Києв, Киев, Київ, Киив" },
+  { percent: 50, label: "50% — широкі варіації", description: "Київ: Києва, Києві, Києво-Печерська" },
+  { percent: 30, label: "30% — мені пощастить", description: "Київ: Київський, Киянка, Кийчик, кінь" },
 ];
 
 const DEFAULT_FUZZINESS_PERCENT = 90;
