@@ -1,6 +1,7 @@
 import { Prisma } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { isCatalogCode } from "@/lib/validate";
 import { getFondByCode } from "@/app/api/catalog/[archive-code]/[fond-code]/data";
 
 export type GetFondResponse = Prisma.FondGetPayload<{
@@ -32,6 +33,10 @@ export async function GET(
     const params = await props.params;
     const archiveCode = params["archive-code"];
     const fondCode = params["fond-code"];
+    // catalog codes are Cyrillic/digits — a Latin letter is never a valid code (and never reaches the DB)
+    if (!isCatalogCode(archiveCode) || !isCatalogCode(fondCode)) {
+      return NextResponse.json({ message: "invalid catalog code" }, { status: 400 });
+    }
 
     if (!archiveCode || !fondCode) {
       return NextResponse.json({ message: '"archive-code" and "fond-code" params are required' }, { status: 400 });

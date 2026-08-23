@@ -1,6 +1,7 @@
 import { Prisma } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { isCatalogCode } from "@/lib/validate";
 import { getInventoryByCode } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/data";
 
 export type GetInventoryResponse = Prisma.InventoryGetPayload<{
@@ -35,6 +36,10 @@ export async function GET(
     const archiveCode = params["archive-code"];
     const fondCode = params["fond-code"];
     const inventoryCode = params["inventory-code"];
+    // catalog codes are Cyrillic/digits — a Latin letter is never a valid code (and never reaches the DB)
+    if (!isCatalogCode(archiveCode) || !isCatalogCode(fondCode) || !isCatalogCode(inventoryCode)) {
+      return NextResponse.json({ message: "invalid catalog code" }, { status: 400 });
+    }
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page") || "0");
 

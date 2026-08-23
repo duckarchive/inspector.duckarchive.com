@@ -5,8 +5,22 @@ import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import InspectorDuckTable from "@/components/table";
-import { Accordion, Button, CloseButton, Input, InputGroup, Link, TextField } from "@heroui/react";
-import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
+import type { Selection } from "@heroui/react";
+import {
+  Accordion,
+  Button,
+  ButtonGroup,
+  CloseButton,
+  Description,
+  Dropdown,
+  Header,
+  Input,
+  InputGroup,
+  Label,
+  Link,
+  TextField,
+} from "@heroui/react";
+import { FaCalendar, FaFolder, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
@@ -17,6 +31,28 @@ import isEmpty from "lodash/isEmpty.js";
 const ONLINE_TAG = "доступні онлайн копії";
 
 type TableItem = SearchResponse[number];
+
+/**
+ * Presets for the match strictness. The percentage is what the user sees and
+ * equals the pg_trgm word-similarity threshold × 100 the API gets as
+ * `fuzziness`; 100 % = plain substring match (no `fuzziness` at all).
+ */
+// Every description illustrates the same base word ("Київ") so the five levels
+// read as one progression instead of five unrelated examples.
+const FUZZINESS_OPTIONS = [
+  { percent: 100, label: "100 % — повний збіг", description: "Київ: Київ" },
+  { percent: 90, label: "90 % — кілька помилок", description: "Київ: Київ, Кийв, Кієв" },
+  { percent: 75, label: "75 % — схожі слова", description: "Київ: Києв, Киев, Київ, Киив" },
+  { percent: 50, label: "50 % — широкі варіації", description: "Київ: Києва, Києві, Києво-Печерська" },
+  { percent: 30, label: "30 % — мені пощастить", description: "Київ: Київський, Киянка, Кийчик, кінь" },
+];
+
+/** The form is worth sending only with an actual criterion — the tolerance alone is not one. */
+const hasSearchCriteria = (values: SearchRequest) => {
+  const criteria: SearchRequest = { ...values };
+  delete criteria.fuzziness;
+  return !isEmpty(criteria);
+};
 
 interface SearchProps {
   archives: Archives;
@@ -30,7 +66,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
 
   useEffect(() => {
-    if (!isEmpty(searchValues)) {
+    if (hasSearchCriteria(searchValues)) {
       trigger(searchValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,6 +102,16 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     setSearchValues((prev) => ({ ...prev, ...value, place: hasPoint ? undefined : prev.place }));
   };
 
+  /** 100 % = no `fuzziness` in the request (substring match); otherwise threshold × 100. */
+  const fuzzinessPercent = searchValues.fuzziness ? Math.round(searchValues.fuzziness * 100) : 100;
+  const handleFuzzinessChange = (keys: Selection) => {
+    const percent = keys === "all" ? 100 : Number(Array.from(keys)[0] ?? 100);
+    const next = { ...searchValues, fuzziness: percent < 100 ? Number((percent / 100).toFixed(2)) : undefined };
+    setSearchValues(next);
+    // a changed strictness re-runs the search — but only if there is something to search for
+    if (hasSearchCriteria(next)) trigger(next);
+  };
+
   const handleTagsChange = (values: string[]) => {
     if (values.includes(ONLINE_TAG)) {
       values = values.filter((v) => v !== ONLINE_TAG);
@@ -77,37 +123,35 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    trigger(searchValues);
+    if (hasSearchCriteria(searchValues)) trigger(searchValues);
   };
-
-  /* One control: the year fields share a single border, so the pair reads as a
-     range rather than two unrelated inputs. -ml-px collapses the touching
-     borders into one line; focus-within lifts the active field's ring above
-     its neighbour. `form` is set because on mobile these render outside the
-     <form>, inside the accordion. */
-  const yearRange = (
-    <div className="flex grow-0 shrink">
-      <TextField
-        type="number"
-        className="min-w-0 relative focus-within:z-10"
-        value={searchValues.year_from || ""}
-        onChange={handleYearChange("year_from")}
-      >
-        <Input form="search-form" className="rounded-r-none" placeholder="Рік від" />
-      </TextField>
-      <TextField
-        type="number"
-        className="min-w-0 relative -ml-px focus-within:z-10"
-        value={searchValues.year_to || ""}
-        onChange={handleYearChange("year_to")}
-      >
-        <Input form="search-form" className="rounded-l-none" placeholder="Рік до" />
-      </TextField>
-    </div>
-  );
 
   const filters = (
     <>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="select-archive" className="font-bold flex items-center">
+          <FaCalendar className="inline mr-1" />
+          Роки
+        </label>
+        <div className="flex grow-0 shrink">
+          <TextField
+            type="number"
+            className="min-w-0 relative focus-within:z-10"
+            value={searchValues.year_from || ""}
+            onChange={handleYearChange("year_from")}
+          >
+            <Input form="search-form" className="rounded-r-none" placeholder="Від" />
+          </TextField>
+          <TextField
+            type="number"
+            className="min-w-0 relative -ml-px focus-within:z-10"
+            value={searchValues.year_to || ""}
+            onChange={handleYearChange("year_to")}
+          >
+            <Input form="search-form" className="rounded-l-none" placeholder="До" />
+          </TextField>
+        </div>
+      </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="select-archive" className="font-bold flex items-center">
           <FaFolder className="inline mr-1" />
@@ -152,11 +196,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         </label>
         <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
           <InputGroup>
-            <InputGroup.Input
-              form="search-form"
-              pattern="[Ѐ-ӿԀ-ԯ]+"
-              placeholder="Назва населеного пункту"
-            />
+            <InputGroup.Input form="search-form" pattern="[Ѐ-ӿԀ-ԯ]+" placeholder="Назва населеного пункту" />
             {searchValues.place ? (
               <InputGroup.Suffix>
                 <CloseButton
@@ -195,20 +235,48 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   return (
     <>
       <form id="search-form" className="flex gap-2" onSubmit={handleSubmit}>
-        <TextField
-          className="grow"
-          value={searchValues.title || ""}
-          onChange={handleInputChange("title")}
-        >
-          <Input placeholder="Заголовок справи" />
+        <TextField className="grow" value={searchValues.title || ""} onChange={handleInputChange("title")}>
+          <Input className="text-lg md:text-xl" placeholder="Пошуковий запит" />
         </TextField>
-        {/* On mobile the row keeps only the title and the submit button; the years
-            move into the accordion below rather than disappearing. */}
-        {isMobile ? null : yearRange}
-        <Button type="submit" size="lg" className="basis-1/6 h-auto font-bold text-lg" isIconOnly={isMobile}>
-          <FaSearch />
-          {isMobile ? undefined : "Пошук"}
-        </Button>
+        {/* Split button: submit on the left, the fuzziness presets behind the chevron.
+            The chosen tolerance shows on the main button so it is never a hidden state. */}
+        <ButtonGroup size="lg" className="basis-1/6 h-full shrink-0">
+          <Button type="submit" className="h-full font-bold text-lg grow" isIconOnly={isMobile}>
+            <FaSearch />
+            {isMobile ? undefined : fuzzinessPercent < 100 ? `Пошук ${fuzzinessPercent}%` : "Пошук"}
+          </Button>
+          <Dropdown>
+            <Button isIconOnly aria-label="Нечіткість пошуку" className="h-full">
+              <ButtonGroup.Separator />
+              <FaChevronDown />
+            </Button>
+            <Dropdown.Popover className="min-w-[280px]" placement="bottom end">
+              <Dropdown.Menu
+                selectionMode="single"
+                selectedKeys={new Set([String(fuzzinessPercent)])}
+                onSelectionChange={handleFuzzinessChange}
+                disallowEmptySelection
+              >
+                <Dropdown.Section>
+                  {FUZZINESS_OPTIONS.map(({ percent, label, description }) => (
+                    <Dropdown.Item
+                      key={percent}
+                      id={String(percent)}
+                      textValue={label}
+                      className="flex flex-col items-start gap-0.5"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Dropdown.ItemIndicator />
+                        <Label>{label}</Label>
+                      </div>
+                      <Description>{description}</Description>
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Section>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
+          </Dropdown>
+        </ButtonGroup>
       </form>
       {/* Mobile: everything except the title and the submit button collapses into
           one accordion, so results stay near the top of the screen. Desktop keeps
@@ -223,10 +291,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               </Accordion.Trigger>
             </Accordion.Heading>
             <Accordion.Panel>
-              <Accordion.Body className="flex flex-col gap-8 p-0">
-                {yearRange}
-                {filters}
-              </Accordion.Body>
+              <Accordion.Body className="flex flex-col gap-8 p-0">{filters}</Accordion.Body>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>
