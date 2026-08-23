@@ -5,6 +5,7 @@ import "../node_modules/@duckarchive/map/dist/style.css";
 
 import {
   Accordion,
+  Button,
   CloseButton,
   FieldError,
   InputGroup,
@@ -103,6 +104,14 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
 
   const handleRadiusChange = (radius: number) => {
     setCoordinates({ ...coordinates, radius_m: radius });
+  };
+
+  // Closing already propagates the picked point (see the effect above), but that path
+  // waits on the 300 ms debounce; flushing here means the value the user just clicked is
+  // in the parent the moment the modal closes, with no dependence on timing.
+  const handleComplete = () => {
+    onChange(coordinates);
+    state.close();
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -218,15 +227,29 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
         <Modal.Backdrop>
           <Modal.Container size="cover">
             <Modal.Dialog aria-label="Виберіть місце на карті" className="h-[80vh] md:h-[90vh]">
-              <GeoDuckMap
-                key="geoduck-map"
-                className="rounded-lg text-accent"
-                positions={[latLng]}
-                onPositionChange={handleGeoChange}
-                year={+(year || 0) || undefined}
-                center={center}
-                zoom={12}
-              />
+              {/* `relative` anchors the overlay button; the map still fills the dialog. */}
+              <div className="relative h-full">
+                <GeoDuckMap
+                  key="geoduck-map"
+                  className="rounded-lg text-accent"
+                  positions={[latLng]}
+                  onPositionChange={handleGeoChange}
+                  year={+(year || 0) || undefined}
+                  center={center}
+                  zoom={12}
+                />
+                {/* Bottom-centre is the one free spot: the map puts its search top-left,
+                    the year top-right, the hovered-region tooltip bottom-left and
+                    Leaflet's attribution bottom-right. The z-index clears Leaflet's
+                    control panes (1000) and the map's own loading spinner (1001). */}
+                <Button
+                  className="absolute bottom-4 left-1/2 z-[1002] -translate-x-1/2 shadow-lg"
+                  size="lg"
+                  onPress={handleComplete}
+                >
+                  Готово
+                </Button>
+              </div>
             </Modal.Dialog>
           </Modal.Container>
         </Modal.Backdrop>

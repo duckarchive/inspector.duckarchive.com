@@ -13,7 +13,6 @@ import {
   CloseButton,
   Description,
   Dropdown,
-  Header,
   Input,
   InputGroup,
   Label,
@@ -47,6 +46,16 @@ const FUZZINESS_OPTIONS = [
   { percent: 30, label: "30 % — мені пощастить", description: "Київ: Київський, Киянка, Кийчик, кінь" },
 ];
 
+const DEFAULT_FUZZINESS_PERCENT = 90;
+const fuzzinessToPercent = (fuzziness: SearchRequest["fuzziness"]) =>
+  fuzziness === undefined ? DEFAULT_FUZZINESS_PERCENT : Math.round(Number(fuzziness) * 100);
+
+const toSearchRequest = ({ fuzziness, ...rest }: SearchRequest): SearchRequest => {
+  const percent = fuzzinessToPercent(fuzziness);
+
+  return percent >= 100 ? rest : { ...rest, fuzziness: percent / 100 };
+};
+
 /** The form is worth sending only with an actual criterion — the tolerance alone is not one. */
 const hasSearchCriteria = (values: SearchRequest) => {
   const criteria: SearchRequest = { ...values };
@@ -67,7 +76,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   useEffect(() => {
     if (hasSearchCriteria(searchValues)) {
-      trigger(searchValues);
+      trigger(toSearchRequest(searchValues));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -102,14 +111,14 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     setSearchValues((prev) => ({ ...prev, ...value, place: hasPoint ? undefined : prev.place }));
   };
 
-  /** 100 % = no `fuzziness` in the request (substring match); otherwise threshold × 100. */
-  const fuzzinessPercent = searchValues.fuzziness ? Math.round(searchValues.fuzziness * 100) : 100;
+  const fuzzinessPercent = fuzzinessToPercent(searchValues.fuzziness);
   const handleFuzzinessChange = (keys: Selection) => {
-    const percent = keys === "all" ? 100 : Number(Array.from(keys)[0] ?? 100);
-    const next = { ...searchValues, fuzziness: percent < 100 ? Number((percent / 100).toFixed(2)) : undefined };
+    const percent =
+      keys === "all" ? DEFAULT_FUZZINESS_PERCENT : Number(Array.from(keys)[0] ?? DEFAULT_FUZZINESS_PERCENT);
+    const next = { ...searchValues, fuzziness: Number((percent / 100).toFixed(2)) };
     setSearchValues(next);
     // a changed strictness re-runs the search — but only if there is something to search for
-    if (hasSearchCriteria(next)) trigger(next);
+    if (hasSearchCriteria(next)) trigger(toSearchRequest(next));
   };
 
   const handleTagsChange = (values: string[]) => {
@@ -123,7 +132,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (hasSearchCriteria(searchValues)) trigger(searchValues);
+    if (hasSearchCriteria(searchValues)) trigger(toSearchRequest(searchValues));
   };
 
   const filters = (
@@ -243,7 +252,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         <ButtonGroup size="lg" className="basis-1/6 h-full shrink-0">
           <Button type="submit" className="h-full font-bold text-lg grow" isIconOnly={isMobile}>
             <FaSearch />
-            {isMobile ? undefined : fuzzinessPercent < 100 ? `Пошук ${fuzzinessPercent}%` : "Пошук"}
+            {isMobile ? undefined : fuzzinessPercent < 100 ? `Збіг ${fuzzinessPercent}%` : "Повний збіг"}
           </Button>
           <Dropdown>
             <Button isIconOnly aria-label="Нечіткість пошуку" className="h-full">
