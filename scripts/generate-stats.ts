@@ -75,7 +75,7 @@ const collectStats = async () => {
     prisma.author.count(),
     prisma.fileLocation.count(),
     prisma.onlineCopy.count(),
-    prisma.onlineCopy.count({ where: { updated_at: { gte: sevenDaysAgo } } }),
+    prisma.onlineCopy.count({ where: { checked_availability_at: { gte: sevenDaysAgo } } }),
     prisma.fondActions.count({ where: appliedInLast7Days }),
     prisma.inventoryActions.count({ where: appliedInLast7Days }),
     prisma.fileActions.count({ where: appliedInLast7Days }),

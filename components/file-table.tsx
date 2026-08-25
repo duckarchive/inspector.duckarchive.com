@@ -179,7 +179,7 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
               ),
           },
           {
-            field: "updated_at",
+            field: "checked_availability_at",
             headerName: "Перевірено",
             flex: 2,
             hide: isMobile,
