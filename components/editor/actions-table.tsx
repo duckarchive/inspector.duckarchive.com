@@ -257,7 +257,7 @@ const statusChip = (data: any) => {
   return <Chip size="sm" color="success" variant="soft">{ACTION_STATUS_LABELS.executed}</Chip>;
 };
 
-const ITEMS_PER_PAGE = 100;
+const ITEMS_PER_PAGE = 2000;
 
 const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
   const [status, setStatus] = useState<ActionStatus | "all">("pending");

@@ -6,6 +6,7 @@ import { GetEditorFilesResponse } from "@/app/api/editor/catalog/files/route";
 import { GetEditorAuthorsResponse } from "@/app/api/editor/authors/route";
 import { GetAuthorFilesResponse } from "@/app/api/editor/authors/[id]/route";
 import { GetEditorOnlineCopiesResponse } from "@/app/api/editor/online-copies/route";
+import { GetAutolinkPreviewResponse } from "@/app/api/editor/online-copies/autolink/route";
 import { ListActionsResponse } from "@/app/api/editor/actions/[entity]/route";
 import { GetYearOverlapsResponse } from "@/app/api/editor/years/overlaps/route";
 import { GetYearAnomaliesResponse } from "@/app/api/editor/years/anomalies/route";
@@ -44,6 +45,15 @@ export const useEditorOnlineCopies = (unlinkedOnly = true, query?: string) =>
   useGet<GetEditorOnlineCopiesResponse>(
     `/api/editor/online-copies?unlinked=${unlinkedOnly}${query ? `&q=${encodeURIComponent(query)}` : ""}`,
   );
+
+/** ~20s scan matching unlinked copies to files — fetched only while the
+ * autolink modal is open, and recalculated on every open (counts go stale as
+ * soon as actions are created). */
+export const useAutolinkPreview = (enabled: boolean) =>
+  useGet<GetAutolinkPreviewResponse>(enabled ? "/api/editor/online-copies/autolink" : null, {
+    revalidateOnMount: true,
+    keepPreviousData: false,
+  });
 
 /** Both analyses are expensive scans over multi-million-row tables, so they only
  * fetch once the admin presses "Аналізувати" — pass `enabled` from that click. */

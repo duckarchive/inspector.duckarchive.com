@@ -6,6 +6,7 @@ import { FaLink, FaTimes } from "react-icons/fa";
 import InspectorDuckTable from "@/components/table";
 import OnlineCopyLinkModal from "@/components/editor/online-copy-link-modal";
 import OnlineCopyAddModal from "@/components/editor/online-copy-add-modal";
+import OnlineCopyAutolinkModal from "@/components/editor/online-copy-autolink-modal";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import { useEditorOnlineCopies } from "@/hooks/useEditor";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
@@ -21,6 +22,7 @@ export default function EditorOnlineCopiesPage() {
   const { submit } = useSubmitAction("file");
   const [selected, setSelected] = useState<EditorOnlineCopy | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isAutolinkOpen, setIsAutolinkOpen] = useState(false);
 
   const handleRemove = async (copy: EditorOnlineCopy) => {
     await submit({ type: "remove_online_copy", online_copy_id: copy.id });
@@ -31,7 +33,12 @@ export default function EditorOnlineCopiesPage() {
     <section className="flex flex-col gap-4 h-full">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h1 className="text-2xl font-bold">Онлайн-копії без прив&apos;язки</h1>
-        <Button onPress={() => setIsAddOpen(true)}>Додати онлайн-копію</Button>
+        <div className="flex gap-2">
+          <Button variant="tertiary" onPress={() => setIsAutolinkOpen(true)}>
+            Автоприв&apos;язка
+          </Button>
+          <Button onPress={() => setIsAddOpen(true)}>Додати онлайн-копію</Button>
+        </div>
       </div>
 
       <div className="flex items-center gap-4 flex-wrap">
@@ -136,6 +143,7 @@ export default function EditorOnlineCopiesPage() {
         onSubmitted={mutate}
       />
       <OnlineCopyAddModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onSubmitted={mutate} />
+      <OnlineCopyAutolinkModal isOpen={isAutolinkOpen} onClose={() => setIsAutolinkOpen(false)} onSubmitted={mutate} />
     </section>
   );
 }
