@@ -10,6 +10,7 @@ import {
   Accordion,
   Button,
   ButtonGroup,
+  Chip,
   CloseButton,
   Description,
   Dropdown,
@@ -19,7 +20,7 @@ import {
   Link,
   TextField,
 } from "@heroui/react";
-import { FaCalendar, FaFolder, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown } from "react-icons/fa";
+import { FaCalendar, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
@@ -319,49 +320,49 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 sortable: false,
                 filter: false,
                 resizable: false,
-                cellRenderer: (row: { value: string; data: TableItem }) => (
-                  <div className="flex flex-col py-2 gap-1">
-                    <Link
-                      href={`/archives/${row.value.replace(/\-/g, "/")}`}
-                      className="text-lg leading-none font-bold inline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {row.data.title || "Без назви"}
-                    </Link>
-                    <div>
-                      {row.value}
-                      {row.data.is_online && <span className="opacity-60"> (доступні онлайн копії)</span>}
+                cellRenderer: (row: { value: string; data: TableItem }) => {
+                  const yearLabel = row.data.years.length
+                    ? row.data.years
+                        .map((y) => (y.start_year === y.end_year ? `${y.start_year}` : `${y.start_year}–${y.end_year}`))
+                        .join(", ")
+                    : null;
+
+                  return (
+                    <div className="flex flex-col gap-1 py-3">
+                      <Link
+                        href={`/archives/${row.value.replace(/\-/g, "/")}`}
+                        className="text-lg leading-tight font-bold"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {row.data.title || "Без назви"}
+                      </Link>
+                      <span className="font-mono text-sm">
+                        {row.value}
+                      </span>
+                      <div className="flex flex-wrap items-center gap-1">
+                        {row.data.is_online ? (
+                          <Chip size="sm" variant="primary" color="accent">
+                            <FaLink />
+                            доступні онлайн копії
+                          </Chip>
+                        ) : null}
+                        {yearLabel ? (
+                          <Chip size="sm" variant="soft">
+                            <FaCalendar />
+                            {yearLabel}
+                          </Chip>
+                        ) : null}
+                        {row.data.tags.map((tag) => (
+                          <Chip key={tag} size="sm" variant="soft">
+                            {tag}
+                          </Chip>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ),
+                  );
+                },
               },
-              // {
-              //   headerName: "Назва",
-              //   field: "title",
-              //   resizable: true,
-              //   flex: 3,
-              // },
-              // {
-              //   headerName: "Рік",
-              //   field: "years",
-              //   hide: isMobile,
-              //   valueGetter: (row) =>
-              //     row.data?.years
-              //       .map((y) => (y.start_year === y.end_year ? y.start_year : `${y.start_year}-${y.end_year}`))
-              //       .join(", "),
-              // },
-              // {
-              //   headerName: "Теги",
-              //   field: "tags",
-              //   cellRenderer: (row: { value: string[] }) => (
-              //     <>
-              //       {row.value.map((tag) => (
-              //         <TagChip key={tag} label={tag} />
-              //       ))}
-              //     </>
-              //   ),
-              // },
             ]}
             rows={searchResults || []}
           />
