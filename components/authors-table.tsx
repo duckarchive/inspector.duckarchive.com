@@ -104,46 +104,55 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
               {
                 headerName: "Автори",
                 field: "title",
+                flex: 4,
+                sortable: false,
+                filter: false,
+                resizable: false,
+                cellRenderer: (row: { data: PublicAuthor }) => (
+                  <div className="flex flex-col gap-1 min-w-0 grow">
+                    <span className="text-base leading-tight font-bold">{row.data.title}</span>
+                    {row.data.info ? <span className="text-sm opacity-70">{row.data.info}</span> : null}
+                    <div className="flex flex-wrap items-center gap-1">
+                      {row.data.tags.map((tag) => (
+                        <Chip key={tag} size="sm" variant="soft">
+                          {tag}
+                        </Chip>
+                      ))}
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                colId: "actions",
+                cellStyle: { display: "flex", justifyContent: "flex-end", textAlign: "right" },
+                headerStyle: { display: "flex", justifyContent: "flex-end", textAlign: "right" },
                 flex: 1,
                 sortable: false,
                 filter: false,
                 resizable: false,
                 cellRenderer: (row: { data: PublicAuthor }) => (
-                  <div className="flex justify-between gap-2 w-full py-2">
-                    <div className="flex flex-col gap-1 min-w-0 grow">
-                      <span className="text-base leading-tight font-bold">{row.data.title}</span>
-                      {row.data.info ? <span className="text-sm opacity-70">{row.data.info}</span> : null}
-                      <div className="flex flex-wrap items-center gap-1">
-                        {row.data.tags.map((tag) => (
-                          <Chip key={tag} size="sm" variant="soft">
-                            {tag}
-                          </Chip>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex shrink-0 gap-1">
+                  <div className="flex shrink-0 gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      aria-label="Знайти справи цього автора"
+                      onPress={() => handleSearch(row.data)}
+                    >
+                      <FaSearch />
+                      {row.data._count.file_authors}
+                    </Button>
+                    {/* Proposals need an account to attribute them to — same rule as the record report button. */}
+                    {status === "authenticated" ? (
                       <Button
                         size="sm"
                         variant="outline"
-                        aria-label="Знайти справи цього автора"
-                        onPress={() => handleSearch(row.data)}
+                        isIconOnly
+                        aria-label="Повідомити про помилку"
+                        onPress={() => setReported(row.data)}
                       >
-                        <FaSearch />
-                        {row.data._count.file_authors}
+                        <FaBug />
                       </Button>
-                      {/* Proposals need an account to attribute them to — same rule as the record report button. */}
-                      {status === "authenticated" ? (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          isIconOnly
-                          aria-label="Повідомити про помилку"
-                          onPress={() => setReported(row.data)}
-                        >
-                          <FaBug />
-                        </Button>
-                      ) : null}
-                    </div>
+                    ) : null}
                   </div>
                 ),
               },

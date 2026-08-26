@@ -110,7 +110,7 @@ const AuthorReportModal: React.FC<AuthorReportModalProps> = ({ author, isOpen, o
             <Modal.Header>
               <Modal.Heading>Виправити автора</Modal.Heading>
             </Modal.Header>
-            <Modal.Body className="gap-3">
+            <Modal.Body className="flex flex-col gap-3">
               <TextField value={title} onChange={setTitle}>
                 <Input placeholder="Назва" />
               </TextField>

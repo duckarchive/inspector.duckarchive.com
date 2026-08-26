@@ -10,7 +10,7 @@ const AuthorsPage: NextPage = async () => {
     <>
       <PagePanel
         title="Автори"
-        description="Список установ, що були авторами справ: церква, РАЦС, прокуратура, суд, поліція тощо"
+        description="Установи, що є фактичними авторами справ, наприклад: церква, РАЦС, прокуратура, суд, поліція тощо"
       />
       <AuthorsTable mapAuthors={mapAuthors} />
     </>
