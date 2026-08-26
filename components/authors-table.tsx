@@ -109,7 +109,7 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
                 filter: false,
                 resizable: false,
                 cellRenderer: (row: { data: PublicAuthor }) => (
-                  <div className="flex flex-col gap-1 min-w-0 grow">
+                  <div className="flex flex-col gap-1 min-w-0 grow py-2">
                     <span className="text-base leading-tight font-bold">{row.data.title}</span>
                     {row.data.info ? <span className="text-sm opacity-70">{row.data.info}</span> : null}
                     <div className="flex flex-wrap items-center gap-1">
