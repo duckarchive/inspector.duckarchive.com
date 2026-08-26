@@ -20,7 +20,7 @@ import {
   Link,
   TextField,
 } from "@heroui/react";
-import { FaCalendar, FaChurch, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown } from "react-icons/fa";
+import { FaCalendar, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown, FaFeather } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
@@ -221,7 +221,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="select-author" className="font-bold flex items-center">
-          <FaChurch className="inline mr-1" />
+          <FaFeather className="inline mr-1" />
           Автор
         </label>
         <Select
@@ -243,19 +243,6 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
           <FaMapMarkerAlt className="inline mr-1" />
           Локація
         </label>
-        <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
-          <InputGroup>
-            <InputGroup.Input form="search-form" pattern="[Ѐ-ӿԀ-ԯ]+" placeholder="Назва населеного пункту" />
-            {searchValues.place ? (
-              <InputGroup.Suffix>
-                <CloseButton
-                  aria-label="Очистити населений пункт"
-                  onPress={() => setSearchValues({ ...searchValues, place: undefined })}
-                />
-              </InputGroup.Suffix>
-            ) : null}
-          </InputGroup>
-        </TextField>
         <CoordinatesInput
           isLoading={isMutating}
           year={searchValues.year_from || searchValues.year_to || undefined}
@@ -340,13 +327,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               </Accordion.Trigger>
             </Accordion.Heading>
             <Accordion.Panel>
-              <Accordion.Body className="flex flex-col gap-8 p-0">{filters}</Accordion.Body>
+              <Accordion.Body className="flex flex-col gap-6 p-0">{filters}</Accordion.Body>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>
       ) : null}
       <div className="flex md:flex-row flex-col grow gap-4 mt-4">
-        {isMobile ? null : <div className="flex flex-col gap-8 pb-8 basis-1/4 min-w-0 h-full">{filters}</div>}
+        {isMobile ? null : <div className="flex flex-col gap-6 pb-8 basis-1/4 min-w-0 h-full">{filters}</div>}
         <div className="min-h-[75vh] md:min-h-[300px] grow flex flex-col">
           <InspectorDuckTable<TableItem>
             id="search-table"

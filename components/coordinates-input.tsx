@@ -123,6 +123,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
     }
   };
 
+  const hasPoint = Boolean(coordinates.lat && coordinates.lng);
   const latLng: GeoDuckMapProps["positions"][number] = [
     +(coordinates.lat || UKRAINE_CENTER[0]),
     +(coordinates.lng || UKRAINE_CENTER[1]),
@@ -140,7 +141,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
           <GeoDuckMap
             key={`static-geoduck-map-${center.join(",")}`}
             className="rounded-lg text-accent"
-            positions={[latLng]}
+            positions={hasPoint ? [latLng] : []}
             center={center}
             year={+(year || 0) || undefined}
             hideLayers={{ searchInput: true, historicalLayers: true }}
