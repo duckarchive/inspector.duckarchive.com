@@ -21,6 +21,8 @@ export const TYPE_CHIP_CLASS: Record<ResourceType, string> = {
   [ResourceType.BABYN_YAR]: "bg-[#336666] text-white",
   [ResourceType.WEBSITE]: "bg-[#7c4a63] text-white",
   [ResourceType.GOOGLE_DRIVE]: "bg-[#1a5fb4] text-white",
+  [ResourceType.USHMM]: "bg-[#7c7c7c] text-white",
+  [ResourceType.AROLSEN]: "bg-[#7c7c7c] text-white",
 };
 
 export const TYPE_LABEL: Record<ResourceType, string> = {
@@ -30,6 +32,8 @@ export const TYPE_LABEL: Record<ResourceType, string> = {
   [ResourceType.BABYN_YAR]: 'Архів Бабин Яр',
   [ResourceType.WEBSITE]: "Вебсайт",
   [ResourceType.GOOGLE_DRIVE]: "Google Drive",
+  [ResourceType.USHMM]: "United States Holocaust Memorial Museum",
+  [ResourceType.AROLSEN]: "Arolsen Archives",
 };
 
 interface ResourceBadgeProps {
