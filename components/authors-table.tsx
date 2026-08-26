@@ -109,15 +109,11 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
                 filter: false,
                 resizable: false,
                 cellRenderer: (row: { data: PublicAuthor }) => (
-                  <div className="flex items-center gap-2 w-full py-2">
+                  <div className="flex justify-between gap-2 w-full py-2">
                     <div className="flex flex-col gap-1 min-w-0 grow">
                       <span className="text-base leading-tight font-bold">{row.data.title}</span>
                       {row.data.info ? <span className="text-sm opacity-70">{row.data.info}</span> : null}
                       <div className="flex flex-wrap items-center gap-1">
-                        <Chip size="sm" variant="soft">
-                          <FaFolder />
-                          {row.data._count.file_authors}
-                        </Chip>
                         {row.data.tags.map((tag) => (
                           <Chip key={tag} size="sm" variant="soft">
                             {tag}
@@ -129,11 +125,11 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
                       <Button
                         size="sm"
                         variant="outline"
-                        isIconOnly
                         aria-label="Знайти справи цього автора"
                         onPress={() => handleSearch(row.data)}
                       >
                         <FaSearch />
+                        {row.data._count.file_authors}
                       </Button>
                       {/* Proposals need an account to attribute them to — same rule as the record report button. */}
                       {status === "authenticated" ? (
