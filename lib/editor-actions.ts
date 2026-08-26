@@ -232,8 +232,9 @@ const AUTHOR_ID_TYPES: ActionType[] = [
 /**
  * Action types a non-admin authenticated user may propose directly, in
  * addition to "report" — every structured section the public report wizard
- * can produce a 1:1 action for. Like "report", these sit pending until an
- * admin approves them, so allowing the create (not the apply) is safe.
+ * and the public authors page can produce a 1:1 action for. Like "report",
+ * these sit pending until an admin approves them, so allowing the create (not
+ * the apply) is safe.
  */
 export const SELF_SERVICE_TYPES: ActionType[] = [
   "change_title",
@@ -245,6 +246,12 @@ export const SELF_SERVICE_TYPES: ActionType[] = [
   "add_author",
   "connect_to_author",
   "add_online_copy",
+  // the public /authors page proposes these; merging and deleting an author
+  // stay admin-only
+  "change_author_title",
+  "change_author_info",
+  "change_author_tags",
+  "change_author_location",
 ];
 
 /**

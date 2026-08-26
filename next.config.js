@@ -17,6 +17,14 @@ const mapEsmEntry = path.join(
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  // /institutions was renamed to /authors; keep old links (and the localized
+  // variants the middleware produces) working.
+  async redirects() {
+    return [
+      { source: '/institutions', destination: '/authors', permanent: true },
+      { source: '/:locale(en|pl|cz|ro|es|it)/institutions', destination: '/:locale/authors', permanent: true },
+    ];
+  },
   staticPageGenerationTimeout: 300,
   serverExternalPackages: ['ag-grid-community'],
   transpilePackages: ['@duckarchive/map', '@duckarchive/framework'],

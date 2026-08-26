@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { Key, useState, useEffect } from "react";
 
 import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
@@ -20,12 +20,13 @@ import {
   Link,
   TextField,
 } from "@heroui/react";
-import { FaCalendar, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown } from "react-icons/fa";
+import { FaCalendar, FaChurch, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import useIsMobile from "@/hooks/useIsMobile";
 import TagsInput from "@/components/tags-input";
+import { useAuthors } from "@/hooks/useAuthors";
 import isEmpty from "lodash/isEmpty.js";
 
 const ONLINE_TAG = "доступні онлайн копії";
@@ -73,6 +74,11 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   const isMobile = useIsMobile();
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
+  // The author box is a free-text field with suggestions: the API matches
+  // `author` against authors.title, so a half-typed name is a valid criterion
+  // and picking a suggestion just fills the box with its full title.
+  const [authorQuery, setAuthorQuery] = useState(defaultValues.author || "");
+  const { data: authorOptions } = useAuthors(authorQuery || undefined);
   const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
 
   useEffect(() => {
@@ -103,6 +109,20 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       }
     }
     setSearchValues({ ...searchValues, lat: undefined, lng: undefined, radius_m: undefined, place: value });
+  };
+
+  const handleAuthorInputChange = (value: string) => {
+    setAuthorQuery(value);
+    setSearchValues((prev) => ({ ...prev, author: value || undefined }));
+  };
+
+  // Select suppresses onInputChange for an exact option match (it would spend a
+  // request re-searching the row just picked), so the pick has to write both.
+  const handleAuthorSelect = (key: Key | null) => {
+    const author = (authorOptions ?? []).find((a) => a.id === String(key ?? ""));
+    if (!author) return;
+    setAuthorQuery(author.title);
+    setSearchValues((prev) => ({ ...prev, author: author.title }));
   };
 
   // Place name and coordinates are alternative ways to say the same thing, and the
@@ -198,6 +218,25 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             <Input form="search-form" placeholder="Справа" />
           </TextField>
         </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="select-author" className="font-bold flex items-center">
+          <FaChurch className="inline mr-1" />
+          Автор
+        </label>
+        <Select
+          id="select-author"
+          form="search-form"
+          items={authorOptions ?? []}
+          label="Церква, РАЦС, суд тощо"
+          virtualized
+          getKey={(a) => a.id}
+          getTextValue={(a) => a.title}
+          renderItem={(a) => a.title}
+          inputValue={authorQuery}
+          onInputChange={handleAuthorInputChange}
+          onChange={handleAuthorSelect}
+        />
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="coordinates-input" className="font-bold flex items-center">
