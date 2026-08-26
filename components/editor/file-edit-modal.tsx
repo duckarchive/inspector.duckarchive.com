@@ -133,18 +133,21 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
     if (info !== (file.info ?? "")) {
       bodies.push({ type: "change_info", target_id: id, note: encodeNote({ v: 1, field: "info", value: info }) });
     }
-    for (const removed of file.years.filter((o) => !years.some((y) => sameYearRange(y, o)))) {
+    // Batched into one action per type — see the note on authors/locations below.
+    const removedYears = file.years.filter((o) => !years.some((y) => sameYearRange(y, o)));
+    if (removedYears.length > 0) {
       bodies.push({
         type: "remove_year_range",
         target_id: id,
-        note: encodeNote({ v: 1, field: "year_range", value: removed }),
+        note: encodeNote({ v: 1, field: "year_range", value: removedYears }),
       });
     }
-    for (const added of years.filter((y) => !file.years.some((o) => sameYearRange(o, y)))) {
+    const addedYears = years.filter((y) => !file.years.some((o) => sameYearRange(o, y)));
+    if (addedYears.length > 0) {
       bodies.push({
         type: "add_year_range",
         target_id: id,
-        note: encodeNote({ v: 1, field: "year_range", value: added }),
+        note: encodeNote({ v: 1, field: "year_range", value: addedYears }),
       });
     }
 
@@ -157,33 +160,45 @@ const FileEditModal: React.FC<FileEditModalProps> = ({ file, isOpen, onClose, on
     }
 
     // authors
-    for (const authorId of authorOps.disconnect) {
-      bodies.push({ type: "disconnect_from_author", target_id: id, note: encodeNote({ v: 1, author_id: authorId }) });
+    if (authorOps.disconnect.length > 0) {
+      bodies.push({
+        type: "disconnect_from_author",
+        target_id: id,
+        note: encodeNote({ v: 1, value: authorOps.disconnect }),
+      });
     }
-    for (const authorId of authorOps.connect) {
-      bodies.push({ type: "connect_to_author", target_id: id, note: encodeNote({ v: 1, author_id: authorId }) });
+    if (authorOps.connect.length > 0) {
+      bodies.push({ type: "connect_to_author", target_id: id, note: encodeNote({ v: 1, value: authorOps.connect }) });
     }
-    for (const authorTitle of authorOps.addNew) {
+    // Batched into one action per type: only one pending action of a given type
+    // can exist per file at a time, so N separate "add_author" actions for N new
+    // authors added in the same save would collide on the 2nd+ one and be dropped.
+    if (authorOps.addNew.length > 0) {
       bodies.push({
         type: "add_author",
         target_id: id,
-        note: encodeNote({ v: 1, field: "title", value: authorTitle }),
+        note: encodeNote({ v: 1, field: "title", value: authorOps.addNew }),
       });
     }
 
-    // locations
-    for (const locId of locationOps.remove) {
-      const loc = file.locations.find((l) => l.id === locId);
-      if (loc) {
-        bodies.push({
-          type: "remove_location",
-          target_id: id,
-          note: encodeNote({ v: 1, field: "location", value: { lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m } }),
-        });
-      }
+    // locations — batched for the same reason as authors above.
+    const removedLocations = locationOps.remove
+      .map((locId) => file.locations.find((l) => l.id === locId))
+      .filter((loc): loc is NonNullable<typeof loc> => Boolean(loc))
+      .map((loc) => ({ lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m }));
+    if (removedLocations.length > 0) {
+      bodies.push({
+        type: "remove_location",
+        target_id: id,
+        note: encodeNote({ v: 1, field: "location", value: removedLocations }),
+      });
     }
-    for (const loc of locationOps.add) {
-      bodies.push({ type: "add_location", target_id: id, note: encodeNote({ v: 1, field: "location", value: loc }) });
+    if (locationOps.add.length > 0) {
+      bodies.push({
+        type: "add_location",
+        target_id: id,
+        note: encodeNote({ v: 1, field: "location", value: locationOps.add }),
+      });
     }
 
     if (bodies.length === 0) {

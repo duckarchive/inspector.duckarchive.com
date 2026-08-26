@@ -147,7 +147,16 @@ const noteLabel = (note: string | null): string => {
   }
   const parts: string[] = [];
   if (decoded.field) parts.push(decoded.field);
-  if (decoded.value !== undefined) parts.push(typeof decoded.value === "object" ? JSON.stringify(decoded.value) : String(decoded.value));
+  if (decoded.value !== undefined) {
+    // Several new items batched from one save (e.g. add_location/add_author) — one line per item.
+    parts.push(
+      Array.isArray(decoded.value)
+        ? decoded.value.map((item) => (typeof item === "object" ? JSON.stringify(item) : String(item))).join("; ")
+        : typeof decoded.value === "object"
+          ? JSON.stringify(decoded.value)
+          : String(decoded.value),
+    );
+  }
   if (decoded.author_id) parts.push(`автор=${decoded.author_id.slice(0, 8)}`);
   return parts.join(": ");
 };

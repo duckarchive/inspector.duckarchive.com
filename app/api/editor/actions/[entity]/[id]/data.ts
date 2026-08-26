@@ -414,18 +414,25 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
 
     case "add_year_range": {
       const id = requireTarget();
-      const data = { start_year: value.start_year, end_year: value.end_year };
-      if (entity === "fond") await tx.fondYear.create({ data: { fond_id: id, ...data } });
-      else if (entity === "inventory") await tx.inventoryYear.create({ data: { inventory_id: id, ...data } });
-      else await tx.fileYear.create({ data: { file_id: id, ...data } });
+      // `value` is a single {start_year,end_year} (legacy shape) or an array batched from one save.
+      const ranges = Array.isArray(value) ? value : [value];
+      for (const range of ranges) {
+        const data = { start_year: range.start_year, end_year: range.end_year };
+        if (entity === "fond") await tx.fondYear.create({ data: { fond_id: id, ...data } });
+        else if (entity === "inventory") await tx.inventoryYear.create({ data: { inventory_id: id, ...data } });
+        else await tx.fileYear.create({ data: { file_id: id, ...data } });
+      }
       return null;
     }
     case "remove_year_range": {
       const id = requireTarget();
-      const where = { start_year: value.start_year, end_year: value.end_year };
-      if (entity === "fond") await tx.fondYear.deleteMany({ where: { fond_id: id, ...where } });
-      else if (entity === "inventory") await tx.inventoryYear.deleteMany({ where: { inventory_id: id, ...where } });
-      else await tx.fileYear.deleteMany({ where: { file_id: id, ...where } });
+      const ranges = Array.isArray(value) ? value : [value];
+      for (const range of ranges) {
+        const where = { start_year: range.start_year, end_year: range.end_year };
+        if (entity === "fond") await tx.fondYear.deleteMany({ where: { fond_id: id, ...where } });
+        else if (entity === "inventory") await tx.inventoryYear.deleteMany({ where: { inventory_id: id, ...where } });
+        else await tx.fileYear.deleteMany({ where: { file_id: id, ...where } });
+      }
       return null;
     }
 
@@ -473,26 +480,35 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     case "connect_to_author": {
       if (entity !== "file") throw new ActionExecutionError("Автори підтримуються лише для справ");
       const fileId = requireTarget();
-      if (!payload?.author_id) throw new ActionExecutionError("Дія не містить автора");
-      await tx.fileAuthor.upsert({
-        where: { file_id_author_id: { file_id: fileId, author_id: payload.author_id } },
-        create: { file_id: fileId, author_id: payload.author_id },
-        update: {},
-      });
+      // A single author_id (legacy shape) or several batched from one save into `value`.
+      const authorIds: string[] = payload?.author_id ? [payload.author_id] : Array.isArray(value) ? value : [];
+      if (authorIds.length === 0) throw new ActionExecutionError("Дія не містить автора");
+      for (const authorId of authorIds) {
+        await tx.fileAuthor.upsert({
+          where: { file_id_author_id: { file_id: fileId, author_id: authorId } },
+          create: { file_id: fileId, author_id: authorId },
+          update: {},
+        });
+      }
       return null;
     }
     case "disconnect_from_author": {
       if (entity !== "file") throw new ActionExecutionError("Автори підтримуються лише для справ");
       const fileId = requireTarget();
-      if (!payload?.author_id) throw new ActionExecutionError("Дія не містить автора");
-      await tx.fileAuthor.deleteMany({ where: { file_id: fileId, author_id: payload.author_id } });
+      const authorIds: string[] = payload?.author_id ? [payload.author_id] : Array.isArray(value) ? value : [];
+      if (authorIds.length === 0) throw new ActionExecutionError("Дія не містить автора");
+      await tx.fileAuthor.deleteMany({ where: { file_id: fileId, author_id: { in: authorIds } } });
       return null;
     }
     case "add_author": {
       if (entity !== "file") throw new ActionExecutionError("Автори підтримуються лише для справ");
       const fileId = requireTarget();
-      const author = await tx.author.create({ data: { title: value } });
-      await tx.fileAuthor.create({ data: { file_id: fileId, author_id: author.id } });
+      // `value` is a single title (legacy shape) or an array batched from one save.
+      const titles: string[] = Array.isArray(value) ? value : [value];
+      for (const title of titles) {
+        const author = await tx.author.create({ data: { title } });
+        await tx.fileAuthor.create({ data: { file_id: fileId, author_id: author.id } });
+      }
       return null;
     }
     case "remove_author": {
@@ -520,13 +536,20 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
     case "add_location": {
       if (entity !== "file") throw new ActionExecutionError("Локації підтримуються лише для справ");
       const fileId = requireTarget();
-      await tx.fileLocation.create({ data: { file_id: fileId, lat: value.lat, lng: value.lng, radius_m: value.radius_m ?? 0 } });
+      // `value` is a single {lat,lng,radius_m} (legacy shape) or an array batched from one save.
+      const locations = Array.isArray(value) ? value : [value];
+      for (const loc of locations) {
+        await tx.fileLocation.create({ data: { file_id: fileId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m ?? 0 } });
+      }
       return null;
     }
     case "remove_location": {
       if (entity !== "file") throw new ActionExecutionError("Локації підтримуються лише для справ");
       const fileId = requireTarget();
-      await tx.fileLocation.deleteMany({ where: { file_id: fileId, lat: value.lat, lng: value.lng, radius_m: value.radius_m ?? 0 } });
+      const locations = Array.isArray(value) ? value : [value];
+      for (const loc of locations) {
+        await tx.fileLocation.deleteMany({ where: { file_id: fileId, lat: loc.lat, lng: loc.lng, radius_m: loc.radius_m ?? 0 } });
+      }
       return null;
     }
 

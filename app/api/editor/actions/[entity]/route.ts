@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@generated/prisma/client/client";
 import { resolveDuckUser } from "@/lib/auth";
-import { ActionStatus, isEditorEntity, isEditorQueue, SubmitActionBody, validateSubmitAction } from "@/lib/editor-actions";
+import {
+  ActionStatus,
+  isEditorEntity,
+  isEditorQueue,
+  SELF_SERVICE_TYPES,
+  SubmitActionBody,
+  validateSubmitAction,
+} from "@/lib/editor-actions";
 import { ErrorResponse } from "@/types";
 import { ActionRow, createAction, listActions, targetExists } from "@/app/api/editor/actions/[entity]/data";
 
@@ -36,9 +43,11 @@ export async function POST(
     return NextResponse.json({ message: "Invalid JSON body" }, { status: 422 });
   }
 
-  // "report" is open to any authenticated user; all other types require admin.
+  // "report" and the self-service proposal types (what the report wizard maps
+  // structured sections to) are open to any authenticated user; everything
+  // else requires admin. Both still sit pending until an admin approves them.
   // TODO: allow editors once the Duck API exposes is_editor.
-  if (body.type !== "report" && !user.is_admin) {
+  if (body.type !== "report" && !SELF_SERVICE_TYPES.includes(body.type) && !user.is_admin) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
 

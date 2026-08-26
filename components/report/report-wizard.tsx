@@ -10,9 +10,9 @@ import StepData from "@/components/report/step-data";
 import StepGeo from "@/components/report/step-geo";
 import useSubmitReport from "@/components/report/use-submit-report";
 import { ApiError } from "@/lib/api";
-import { EditorEntity, encodeNote, SubmitActionBody } from "@/lib/editor-actions";
+import { EditorEntity } from "@/lib/editor-actions";
 import {
-  draftToPayload,
+  buildReportActionBodies,
   emptyDraft,
   hasStructuredContent,
   ReportCurrentValues,
@@ -73,30 +73,40 @@ const ReportWizard: React.FC<ReportWizardProps> = ({ entity, targetId, current, 
   const canSubmit = hasStructuredContent(draft) || Boolean(draft.text.trim());
 
   const handleSubmit = async () => {
-    const payload = draftToPayload(draft);
-    const isPlainTextOnly = !hasStructuredContent(draft);
-    const body: SubmitActionBody = {
-      type: "report",
-      target_id: targetId,
-      // A text-only report keeps the legacy plain-string note.
-      note: isPlainTextOnly ? draft.text.trim() : encodeNote({ v: 1, report: payload }),
-    };
+    // A structured draft splits into one action per field with a matching
+    // action type (change_title, add_location, ...) instead of one opaque
+    // "report" note — see buildReportActionBodies. Submitted sequentially
+    // (not the batch endpoint, which is admin-only) since a reporter isn't.
+    const bodies = buildReportActionBodies(entity, targetId, draft);
 
-    try {
-      await trigger(body);
+    let succeeded = 0;
+    let lastError: unknown;
+    for (const body of bodies) {
+      try {
+        await trigger(body);
+        succeeded += 1;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    // At least one change got recorded — good enough to report success even
+    // if a sibling proposal (e.g. an identical pending edit) was rejected.
+    if (succeeded > 0) {
       toast.success(t("success"));
       onClose();
-    } catch (error) {
-      const status = error instanceof ApiError ? error.status : undefined;
-      if (status === 409) {
-        toast.warning(t("error-already-pending"));
-      } else if (status === 401 || status === 403) {
-        toast.danger(t("error-unauthorized"));
-      } else {
-        toast.danger(t("error-generic"), {
-          description: error instanceof Error ? error.message : undefined,
-        });
-      }
+      return;
+    }
+
+    const status = lastError instanceof ApiError ? lastError.status : undefined;
+    if (status === 409) {
+      toast.warning(t("error-already-pending"));
+    } else if (status === 401 || status === 403) {
+      toast.danger(t("error-unauthorized"));
+    } else {
+      toast.danger(t("error-generic"), {
+        description: lastError instanceof Error ? lastError.message : undefined,
+      });
     }
   };
 

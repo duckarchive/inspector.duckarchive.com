@@ -321,7 +321,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 filter: false,
                 resizable: false,
                 cellRenderer: (row: { value: string; data: TableItem }) => {
-                  const yearLabel = row.data.years.length
+                  const yearLabel = row.data.years?.length
                     ? row.data.years
                         .map((y) => (y.start_year === y.end_year ? `${y.start_year}` : `${y.start_year}–${y.end_year}`))
                         .join(", ")
@@ -353,7 +353,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                             {yearLabel}
                           </Chip>
                         ) : null}
-                        {row.data.tags.map((tag) => (
+                        {(row.data.tags ?? []).map((tag) => (
                           <Chip key={tag} size="sm" variant="soft">
                             {tag}
                           </Chip>

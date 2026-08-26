@@ -260,7 +260,11 @@ export async function POST(request: Request) {
         )
       : await prisma.$queryRaw<SearchResponse>(query);
 
-    return NextResponse.json(rawResults);
+    // `f.*` carries the raw column, and `files.tags` is nullable in the DB —
+    // normalise it so consumers can always iterate the array.
+    const results = rawResults.map((row) => ({ ...row, tags: row.tags ?? [] }));
+
+    return NextResponse.json(results);
   } catch (error) {
     console.error("Search API Error:", error);
 

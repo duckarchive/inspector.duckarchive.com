@@ -1,4 +1,4 @@
-import { EditorEntity, ReportNotePayload, YearRange } from "@/lib/editor-actions";
+import { EditorEntity, encodeNote, ReportNotePayload, SubmitActionBody, YearRange } from "@/lib/editor-actions";
 
 export interface ReportOnlineCopy {
   id: string;
@@ -60,16 +60,95 @@ export const stepsForEntity = (entity: EditorEntity): StepId[] => {
   return steps;
 };
 
-/** The wizard's payload, minus the sections the reporter skipped. */
-export const draftToPayload = (draft: ReportDraft): ReportNotePayload => {
-  const payload: ReportNotePayload = {};
-  if (draft.tree) payload.tree = draft.tree;
-  if (draft.onlineCopy) payload.online_copy = draft.onlineCopy;
-  if (draft.data) payload.data = draft.data;
-  if (draft.geo) payload.geo = draft.geo;
-  if (draft.text.trim()) payload.text = draft.text.trim();
-  return payload;
-};
-
 export const hasStructuredContent = (draft: ReportDraft): boolean =>
   Boolean(draft.tree || draft.onlineCopy || draft.data || draft.geo);
+
+/**
+ * Turns a submitted draft into the bodies to POST. A pure free-text comment
+ * (no structured section filled) keeps the legacy plain-string "report" note.
+ * A structured draft is instead split into one proper typed action per field
+ * that has a matching action type (change_title, add_year_range, add_location,
+ * connect_to_author, ...) — so it lands in the normal review queue and an
+ * admin can approve it directly instead of re-typing it by hand from a report.
+ * Anything without a matching action type (an existing online copy flagged as
+ * wrong — there's no "change copy url" action) and any free-text comment
+ * alongside structured fields stay a lightweight "report" note.
+ */
+export const buildReportActionBodies = (
+  entity: EditorEntity,
+  targetId: string,
+  draft: ReportDraft,
+): SubmitActionBody[] => {
+  if (!hasStructuredContent(draft)) {
+    const text = draft.text.trim();
+    return text ? [{ type: "report", target_id: targetId, note: text }] : [];
+  }
+
+  const bodies: SubmitActionBody[] = [];
+  const leftover: ReportNotePayload = {};
+
+  if (draft.tree) {
+    const parentId =
+      entity === "fond" ? draft.tree.archive?.id : entity === "inventory" ? draft.tree.fond?.id : draft.tree.inventory?.id;
+    if (parentId) {
+      bodies.push({ type: "change_parent", target_id: targetId, note: encodeNote({ v: 1, field: "parent", value: parentId }) });
+    } else {
+      // Couldn't resolve a real catalog id for the proposed parent — leave it for a human to read.
+      leftover.tree = draft.tree;
+    }
+  }
+
+  if (draft.onlineCopy) {
+    if (draft.onlineCopy.url && !draft.onlineCopy.id) {
+      // A brand-new copy: add_online_copy stores the URL as a plain-text note, not JSON.
+      bodies.push({ type: "add_online_copy", target_id: targetId, note: draft.onlineCopy.url });
+    } else {
+      // Flagging an existing copy as wrong has no matching action type (no "change url").
+      leftover.online_copy = draft.onlineCopy;
+    }
+  }
+
+  if (draft.data?.title) {
+    bodies.push({ type: "change_title", target_id: targetId, note: encodeNote({ v: 1, field: "title", value: draft.data.title.value }) });
+  }
+  if (draft.data?.info) {
+    bodies.push({ type: "change_info", target_id: targetId, note: encodeNote({ v: 1, field: "info", value: draft.data.info.value }) });
+  }
+  if (draft.data?.years?.remove.length) {
+    bodies.push({
+      type: "remove_year_range",
+      target_id: targetId,
+      note: encodeNote({ v: 1, field: "year_range", value: draft.data.years.remove }),
+    });
+  }
+  if (draft.data?.years?.add.length) {
+    bodies.push({
+      type: "add_year_range",
+      target_id: targetId,
+      note: encodeNote({ v: 1, field: "year_range", value: draft.data.years.add }),
+    });
+  }
+
+  if (draft.geo?.authors?.length) {
+    const existingIds = draft.geo.authors.filter((a) => a.id).map((a) => a.id as string);
+    const newTitles = draft.geo.authors.filter((a) => !a.id && a.title).map((a) => a.title as string);
+    if (existingIds.length > 0) {
+      bodies.push({ type: "connect_to_author", target_id: targetId, note: encodeNote({ v: 1, value: existingIds }) });
+    }
+    if (newTitles.length > 0) {
+      bodies.push({ type: "add_author", target_id: targetId, note: encodeNote({ v: 1, field: "title", value: newTitles }) });
+    }
+  }
+  if (draft.geo?.locations?.length) {
+    bodies.push({ type: "add_location", target_id: targetId, note: encodeNote({ v: 1, field: "location", value: draft.geo.locations }) });
+  }
+
+  if (draft.text.trim()) {
+    leftover.text = draft.text.trim();
+  }
+  if (Object.keys(leftover).length > 0) {
+    bodies.push({ type: "report", target_id: targetId, note: encodeNote({ v: 1, report: leftover }) });
+  }
+
+  return bodies;
+};
