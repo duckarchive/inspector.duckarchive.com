@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import qs from "qs";
 import { Button, Chip, CloseButton, InputGroup, TextField } from "@heroui/react";
 import { useSession } from "next-auth/react";
-import { FaBug, FaFolder, FaSearch } from "react-icons/fa";
+import { FaBug, FaSearch } from "react-icons/fa";
 import type { Map as LeafletMap } from "leaflet";
 import type { MarkerValue } from "@duckarchive/map";
 import { prepareLocations } from "@/lib/map";

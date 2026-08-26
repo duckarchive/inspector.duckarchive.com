@@ -11,11 +11,9 @@ import {
   Button,
   ButtonGroup,
   Chip,
-  CloseButton,
   Description,
   Dropdown,
   Input,
-  InputGroup,
   Label,
   Link,
   TextField,
@@ -99,16 +97,6 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   const handleYearChange = (key: "year_from" | "year_to") => (value: string) => {
     setSearchValues((prev) => ({ ...prev, [key]: value || undefined }));
-  };
-
-  const handlePlaceInputChange = (value: string) => {
-    if (searchValues.lat || searchValues.lng) {
-      const isConfirmed = window.confirm("Поля 'Широта' та 'Довгота' будуть очищені. Продовжити?");
-      if (!isConfirmed) {
-        return;
-      }
-    }
-    setSearchValues({ ...searchValues, lat: undefined, lng: undefined, radius_m: undefined, place: value });
   };
 
   const handleAuthorInputChange = (value: string) => {
