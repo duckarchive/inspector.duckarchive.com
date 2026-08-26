@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Link, Modal, TextArea, TextField, toast } from "@heroui/react";
+import { Accordion, Button, Chip, Link, Modal, TextArea, TextField, toast } from "@heroui/react";
+import { FaCheck } from "react-icons/fa";
 import PendingButton from "@/components/pending-button";
 import StepTree from "@/components/report/step-tree";
 import StepOnlineCopy from "@/components/report/step-online-copy";
 import StepData from "@/components/report/step-data";
-import StepGeo from "@/components/report/step-geo";
+import StepAuthors from "@/components/report/step-authors";
+import StepLocation from "@/components/report/step-location";
 import useSubmitReport from "@/components/report/use-submit-report";
 import { ApiError } from "@/lib/api";
 import { EditorEntity } from "@/lib/editor-actions";
@@ -29,46 +31,39 @@ interface ReportWizardProps {
   onClose: () => void;
 }
 
-/** Steps 1–4 are yes/no gates; "text" is the terminal free-text step. */
-const GATE_STEPS: Record<Exclude<StepId, "text">, { question: string; hint: string }> = {
+type SectionId = Exclude<StepId, "text">;
+
+const SECTIONS: Record<SectionId, { question: string; hint: string }> = {
   tree: { question: "step-tree-question", hint: "step-tree-hint" },
   "online-copy": { question: "step-copy-question", hint: "step-copy-hint" },
   data: { question: "step-data-question", hint: "step-data-hint" },
-  geo: { question: "step-geo-question", hint: "step-geo-hint" },
+  authors: { question: "step-authors-question", hint: "step-authors-hint" },
+  location: { question: "step-location-question", hint: "step-location-hint" },
 };
 
+/**
+ * One-screen report form. Every section the entity supports is a collapsed
+ * accordion item; expanding one is the opt-in (the old wizard's yes/no gate),
+ * and a section left untouched emits nothing — each Step diffs against the
+ * current values and yields `undefined` when unchanged. The free-text comment
+ * always sits at the bottom.
+ */
 const ReportWizard: React.FC<ReportWizardProps> = ({ entity, targetId, current, editorHref, onClose }) => {
   const t = useTranslations("report-form");
   const { trigger, isMutating } = useSubmitReport(entity);
 
-  const steps = stepsForEntity(entity);
-  const [index, setIndex] = useState(0);
+  const sections = stepsForEntity(entity).filter((s): s is SectionId => s !== "text");
   const [draft, setDraft] = useState<ReportDraft>(emptyDraft);
-  const [answers, setAnswers] = useState<Partial<Record<StepId, boolean>>>({});
-
-  const step = steps[index];
-  const isLast = index === steps.length - 1;
-  const answer = answers[step];
 
   const patch = (next: Partial<ReportDraft>) => setDraft((prev) => ({ ...prev, ...next }));
 
-  const answerNo = () => {
-    // Skipping a gate drops whatever it had collected, so Back stays truthful.
-    setAnswers((prev) => ({ ...prev, [step]: false }));
-    if (step === "tree") patch({ tree: undefined });
-    if (step === "online-copy") patch({ onlineCopy: undefined });
-    if (step === "data") patch({ data: undefined });
-    if (step === "geo") patch({ geo: undefined });
-    setIndex((i) => Math.min(i + 1, steps.length - 1));
+  const sectionFilled: Record<SectionId, boolean> = {
+    tree: Boolean(draft.tree),
+    "online-copy": Boolean(draft.onlineCopy),
+    data: Boolean(draft.data),
+    authors: Boolean(draft.authors?.length),
+    location: Boolean(draft.locations?.length),
   };
-
-  const answerYes = () => setAnswers((prev) => ({ ...prev, [step]: true }));
-
-  const sectionFilled =
-    (step === "tree" && Boolean(draft.tree)) ||
-    (step === "online-copy" && Boolean(draft.onlineCopy)) ||
-    (step === "data" && Boolean(draft.data)) ||
-    (step === "geo" && Boolean(draft.geo));
 
   const canSubmit = hasStructuredContent(draft) || Boolean(draft.text.trim());
 
@@ -112,81 +107,79 @@ const ReportWizard: React.FC<ReportWizardProps> = ({ entity, targetId, current, 
 
   return (
     <>
-      <Modal.Header className="flex flex-col gap-0.5">
+      <Modal.Header>
         <Modal.Heading>{t("title")}</Modal.Heading>
-        <span className="text-xs font-normal text-muted">
-          {t("progress", { current: index + 1, total: steps.length })}
-        </span>
       </Modal.Header>
       <Modal.Body className="gap-3">
-        {step === "text" ? (
-          <>
-            <p className="text-sm">{t("step-text-question")}</p>
-            <TextField value={draft.text} onChange={(text) => patch({ text })}>
-              <TextArea placeholder={t("text-placeholder")} rows={4} maxLength={2000} />
-            </TextField>
-          </>
-        ) : (
-          <>
-            <p className="text-foreground">{t(GATE_STEPS[step as Exclude<StepId, "text">].question)}</p>
-            <p className="text-xs text-muted">{t(GATE_STEPS[step as Exclude<StepId, "text">].hint)}</p>
-            <div className="flex gap-2 mt-2">
-              <Button className="grow" variant={answer ? "primary" : "outline"} onPress={answerYes}>
-                {t("yes")}
-              </Button>
-              <Button className="grow" variant={answer === false ? "primary" : "outline"} onPress={answerNo}>
-                {t("no")}
-              </Button>
-            </div>
-            {answer && step === "tree" && (
-              <StepTree entity={entity} current={current} value={draft.tree} onChange={(tree) => patch({ tree })} />
-            )}
-            {answer && step === "online-copy" && (
-              <StepOnlineCopy
-                current={current}
-                value={draft.onlineCopy}
-                onChange={(onlineCopy) => patch({ onlineCopy })}
-              />
-            )}
-            {answer && step === "data" && (
-              <StepData current={current} value={draft.data} onChange={(data) => patch({ data })} />
-            )}
-            {answer && step === "geo" && (
-              <StepGeo current={current} value={draft.geo} onChange={(geo) => patch({ geo })} />
-            )}
-          </>
-        )}
+        <Accordion allowsMultipleExpanded>
+          {sections.map((section) => (
+            <Accordion.Item key={section} id={section}>
+              <Accordion.Heading>
+                <Accordion.Trigger className="px-0 items-center">
+                  <span className="flex flex-col items-start gap-0.5 text-left">
+                    <span className="flex items-center gap-2">
+                      {t(SECTIONS[section].question)}
+                      {sectionFilled[section] && (
+                        <Chip size="sm" color="success" variant="soft">
+                          <FaCheck />
+                        </Chip>
+                      )}
+                    </span>
+                    <span className="text-xs font-normal text-muted">{t(SECTIONS[section].hint)}</span>
+                  </span>
+                  <Accordion.Indicator />
+                </Accordion.Trigger>
+              </Accordion.Heading>
+              <Accordion.Panel>
+                <Accordion.Body className="px-0 pb-4">
+                  {section === "tree" && (
+                    <StepTree entity={entity} current={current} value={draft.tree} onChange={(tree) => patch({ tree })} />
+                  )}
+                  {section === "online-copy" && (
+                    <StepOnlineCopy
+                      current={current}
+                      value={draft.onlineCopy}
+                      onChange={(onlineCopy) => patch({ onlineCopy })}
+                    />
+                  )}
+                  {section === "data" && (
+                    <StepData current={current} value={draft.data} onChange={(data) => patch({ data })} />
+                  )}
+                  {section === "authors" && (
+                    <StepAuthors current={current} value={draft.authors} onChange={(authors) => patch({ authors })} />
+                  )}
+                  {section === "location" && (
+                    <StepLocation current={current} value={draft.locations} onChange={(locations) => patch({ locations })} />
+                  )}
+                </Accordion.Body>
+              </Accordion.Panel>
+            </Accordion.Item>
+          ))}
+        </Accordion>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm">{t("step-text-question")}</p>
+          <TextField value={draft.text} onChange={(text) => patch({ text })}>
+            <TextArea placeholder={t("text-placeholder")} rows={3} maxLength={2000} />
+          </TextField>
+        </div>
       </Modal.Body>
       <Modal.Footer>
-        <div className="flex gap-2 mr-auto">
-          {editorHref ? (
-            <Link
-              href={editorHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="button button--secondary button--sm"
-            >
-              {t("editor-link")}
-            </Link>
-          ) : null}
-          {index > 0 && (
-            <Button variant="tertiary" onPress={() => setIndex((i) => i - 1)}>
-              {t("back")}
-            </Button>
-          )}
-        </div>
+        {editorHref ? (
+          <Link
+            href={editorHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button button--secondary button--sm mr-auto"
+          >
+            {t("editor-link")}
+          </Link>
+        ) : null}
         <Button variant="tertiary" onPress={onClose}>
           {t("cancel")}
         </Button>
-        {isLast ? (
-          <PendingButton onPress={handleSubmit} isPending={isMutating} isDisabled={!canSubmit}>
-            {t("submit")}
-          </PendingButton>
-        ) : (
-          <Button onPress={() => setIndex((i) => i + 1)} isDisabled={!answer || !sectionFilled}>
-            {t("next")}
-          </Button>
-        )}
+        <PendingButton onPress={handleSubmit} isPending={isMutating} isDisabled={!canSubmit}>
+          {t("submit")}
+        </PendingButton>
       </Modal.Footer>
     </>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Chip, CloseButton, NumberField } from "@heroui/react";
+import { Button, Chip, CloseButton, Input, TextField } from "@heroui/react";
 import { sameYearRange, YearRange } from "@/lib/editor-actions";
 import { FaPlus } from "react-icons/fa";
 
@@ -28,21 +28,32 @@ interface YearRangesFieldProps {
   labels?: YearRangesFieldLabels;
 }
 
+const parseYear = (raw: string): number | undefined => {
+  const trimmed = raw.trim();
+  if (!trimmed) return undefined;
+  const year = Number(trimmed);
+  return Number.isInteger(year) ? year : undefined;
+};
+
 const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange, labels = DEFAULT_LABELS }) => {
-  const [start, setStart] = useState<number | undefined>();
-  const [end, setEnd] = useState<number | undefined>();
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+
+  const startYear = parseYear(start);
+  const endYear = parseYear(end);
+  const canAdd = startYear !== undefined && endYear !== undefined && startYear <= endYear;
 
   const add = () => {
-    if (start === undefined || end === undefined || start > end) {
+    if (!canAdd) {
       return;
     }
-    const range: YearRange = { start_year: start, end_year: end };
+    const range: YearRange = { start_year: startYear, end_year: endYear };
     if (value.some((r) => sameYearRange(r, range))) {
       return;
     }
     onChange([...value, range]);
-    setStart(undefined);
-    setEnd(undefined);
+    setStart("");
+    setEnd("");
   };
 
   const remove = (range: YearRange) => {
@@ -61,22 +72,17 @@ const YearRangesField: React.FC<YearRangesFieldProps> = ({ value, onChange, labe
           </Chip>
         ))}
       </div>
-      <div className="flex items-end gap-2">
-        <NumberField className="grow" value={start} onChange={setStart} formatOptions={{ useGrouping: false }}>
-          <NumberField.Group>
-            <NumberField.DecrementButton />
-            <NumberField.Input placeholder={labels.from} />
-            <NumberField.IncrementButton />
-          </NumberField.Group>
-        </NumberField>
-        <NumberField className="grow" value={end} onChange={setEnd} formatOptions={{ useGrouping: false }}>
-          <NumberField.Group>
-            <NumberField.DecrementButton />
-            <NumberField.Input placeholder={labels.to} />
-            <NumberField.IncrementButton />
-          </NumberField.Group>
-        </NumberField>
-        <Button isIconOnly size="sm" onPress={add} isDisabled={start === undefined || end === undefined}>
+      <div className="flex items-center gap-2">
+        {/* the same joined from–to pair the search filters use */}
+        <div className="flex grow min-w-0">
+          <TextField type="number" className="min-w-0 flex-1 relative focus-within:z-10" value={start} onChange={setStart}>
+            <Input className="rounded-r-none" placeholder={labels.from} />
+          </TextField>
+          <TextField type="number" className="min-w-0 flex-1 relative -ml-px focus-within:z-10" value={end} onChange={setEnd}>
+            <Input className="rounded-l-none" placeholder={labels.to} />
+          </TextField>
+        </div>
+        <Button isIconOnly size="sm" onPress={add} isDisabled={!canAdd}>
           <FaPlus />
         </Button>
       </div>

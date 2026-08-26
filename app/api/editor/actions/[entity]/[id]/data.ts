@@ -483,7 +483,15 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       // A single author_id (legacy shape) or several batched from one save into `value`.
       const authorIds: string[] = payload?.author_id ? [payload.author_id] : Array.isArray(value) ? value : [];
       if (authorIds.length === 0) throw new ActionExecutionError("Дія не містить автора");
-      for (const authorId of authorIds) {
+      // An author can vanish between create and approve (deleted, or merged into
+      // another — the merge target may already be linked). Connect the survivors
+      // instead of letting one dead id fail the whole batch on the FK.
+      const existing = await tx.author.findMany({ where: { id: { in: authorIds } }, select: { id: true } });
+      const existingIds = existing.map((a) => a.id);
+      if (existingIds.length === 0) {
+        throw new ActionExecutionError("Жодного з авторів дії вже не існує (видалені або об'єднані)");
+      }
+      for (const authorId of existingIds) {
         await tx.fileAuthor.upsert({
           where: { file_id_author_id: { file_id: fileId, author_id: authorId } },
           create: { file_id: fileId, author_id: authorId },

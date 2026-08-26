@@ -1,4 +1,12 @@
-import { EditorEntity, encodeNote, ReportNotePayload, SubmitActionBody, YearRange } from "@/lib/editor-actions";
+import {
+  EditorEntity,
+  encodeNote,
+  ReportCatalogRef,
+  ReportLocationValue,
+  ReportNotePayload,
+  SubmitActionBody,
+  YearRange,
+} from "@/lib/editor-actions";
 
 export interface ReportOnlineCopy {
   id: string;
@@ -31,20 +39,22 @@ export interface ReportCurrentValues {
   authors?: ReportAuthor[];
 }
 
-export type StepId = "tree" | "online-copy" | "data" | "geo" | "text";
+export type StepId = "tree" | "online-copy" | "data" | "authors" | "location" | "text";
 
 export interface ReportDraft {
   tree?: ReportNotePayload["tree"];
   onlineCopy?: ReportNotePayload["online_copy"];
   data?: ReportNotePayload["data"];
-  geo?: ReportNotePayload["geo"];
+  /** Existing authors (id + title) or proposed new ones (title only). */
+  authors?: ReportCatalogRef[];
+  locations?: ReportLocationValue[];
   text: string;
 }
 
 export const emptyDraft = (): ReportDraft => ({ text: "" });
 
 /**
- * Steps that can apply to the entity: online copies hang off inventories and
+ * Sections that can apply to the entity: online copies hang off inventories and
  * files (never fonds), authors and locations off files only.
  */
 export const stepsForEntity = (entity: EditorEntity): StepId[] => {
@@ -54,14 +64,14 @@ export const stepsForEntity = (entity: EditorEntity): StepId[] => {
   }
   steps.push("data");
   if (entity === "file") {
-    steps.push("geo");
+    steps.push("authors", "location");
   }
   steps.push("text");
   return steps;
 };
 
 export const hasStructuredContent = (draft: ReportDraft): boolean =>
-  Boolean(draft.tree || draft.onlineCopy || draft.data || draft.geo);
+  Boolean(draft.tree || draft.onlineCopy || draft.data || draft.authors?.length || draft.locations?.length);
 
 /**
  * Turns a submitted draft into the bodies to POST. A pure free-text comment
@@ -88,13 +98,20 @@ export const buildReportActionBodies = (
   const leftover: ReportNotePayload = {};
 
   if (draft.tree) {
-    const parentId =
-      entity === "fond" ? draft.tree.archive?.id : entity === "inventory" ? draft.tree.fond?.id : draft.tree.inventory?.id;
-    if (parentId) {
-      bodies.push({ type: "change_parent", target_id: targetId, note: encodeNote({ v: 1, field: "parent", value: parentId }) });
-    } else {
-      // Couldn't resolve a real catalog id for the proposed parent — leave it for a human to read.
-      leftover.tree = draft.tree;
+    const { code, ...parentRefs } = draft.tree;
+    if (code) {
+      bodies.push({ type: "change_code", target_id: targetId, note: encodeNote({ v: 1, field: "code", value: code }) });
+    }
+    const hasParentProposal = Boolean(parentRefs.archive || parentRefs.fond || parentRefs.inventory);
+    if (hasParentProposal) {
+      const parentId =
+        entity === "fond" ? parentRefs.archive?.id : entity === "inventory" ? parentRefs.fond?.id : parentRefs.inventory?.id;
+      if (parentId) {
+        bodies.push({ type: "change_parent", target_id: targetId, note: encodeNote({ v: 1, field: "parent", value: parentId }) });
+      } else {
+        // Couldn't resolve a real catalog id for the proposed parent — leave it for a human to read.
+        leftover.tree = parentRefs;
+      }
     }
   }
 
@@ -129,9 +146,9 @@ export const buildReportActionBodies = (
     });
   }
 
-  if (draft.geo?.authors?.length) {
-    const existingIds = draft.geo.authors.filter((a) => a.id).map((a) => a.id as string);
-    const newTitles = draft.geo.authors.filter((a) => !a.id && a.title).map((a) => a.title as string);
+  if (draft.authors?.length) {
+    const existingIds = draft.authors.filter((a) => a.id).map((a) => a.id as string);
+    const newTitles = draft.authors.filter((a) => !a.id && a.title).map((a) => a.title as string);
     if (existingIds.length > 0) {
       bodies.push({ type: "connect_to_author", target_id: targetId, note: encodeNote({ v: 1, value: existingIds }) });
     }
@@ -139,8 +156,8 @@ export const buildReportActionBodies = (
       bodies.push({ type: "add_author", target_id: targetId, note: encodeNote({ v: 1, field: "title", value: newTitles }) });
     }
   }
-  if (draft.geo?.locations?.length) {
-    bodies.push({ type: "add_location", target_id: targetId, note: encodeNote({ v: 1, field: "location", value: draft.geo.locations }) });
+  if (draft.locations?.length) {
+    bodies.push({ type: "add_location", target_id: targetId, note: encodeNote({ v: 1, field: "location", value: draft.locations }) });
   }
 
   if (draft.text.trim()) {

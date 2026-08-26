@@ -69,6 +69,8 @@ export interface ReportNotePayload {
     archive?: ReportCatalogRef;
     fond?: ReportCatalogRef;
     inventory?: ReportCatalogRef;
+    /** Proposed new code of the record itself (change_code). */
+    code?: string;
   };
   /** A wrong/missing online copy: a picked copy of this record, and/or a typed URL. */
   online_copy?: {
@@ -239,6 +241,7 @@ const AUTHOR_ID_TYPES: ActionType[] = [
 export const SELF_SERVICE_TYPES: ActionType[] = [
   "change_title",
   "change_info",
+  "change_code",
   "change_parent",
   "add_year_range",
   "remove_year_range",

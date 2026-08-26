@@ -182,6 +182,7 @@ const reportSectionLines = (report: ReportNotePayload): { label: string; lines: 
         ) : (
           label
         ),
+        ...(report.tree.code ? [`індекс → ${report.tree.code}`] : []),
       ],
     });
   }

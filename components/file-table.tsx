@@ -16,11 +16,15 @@ import CsvDownloadButton from "./csv-download-button";
 import { getSyncAtLabel } from "@/lib/table";
 import useFile from "@/hooks/useFile";
 import ResourceBadge, { TYPE_LABEL } from "./resource-badge";
+import CollapsibleText from "./collapsible-text";
 import { GetFileResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/[file-code]/route";
 import { getYearsString } from "@/lib/text";
 import { editorFileHref } from "@/lib/editor-links";
 import { catalogItemLabel } from "@/lib/catalog-links";
 import dynamic from "next/dynamic";
+import qs from "qs";
+import { useCallback, useMemo } from "react";
+import type { Map as LeafletMap } from "leaflet";
 import { findCenter, prepareLocations } from "@/lib/map";
 
 const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.default), {
@@ -40,22 +44,55 @@ const prepareToDownload = (copies: TableItem[], resources: Resources) =>
     };
   });
 
+/** New-tab link into the search page with the given prefilled criteria. */
+const SearchLink: React.FC<React.PropsWithChildren<{ query: Record<string, unknown> }>> = ({ query, children }) => (
+  <Link
+    href={`/search?${qs.stringify(query, { skipNulls: true })}`}
+    className="inline text-foreground"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {children}
+  </Link>
+);
+
 const Details: React.FC<{
   file?: GetFileResponse;
-}> = ({ file }) => (
+}> = ({ file }) => {
+  const geoPoints = useMemo(
+    () =>
+      [...(file?.locations ?? []), ...(file?.authors ?? []).map(({ author }) => author)].filter(
+        (loc): loc is typeof loc & { lat: number; lng: number } => loc.lat !== null && loc.lng !== null,
+      ),
+    [file],
+  );
+
+  // Fit the initial view to every marker. A callback ref (instead of an effect)
+  // because the map mounts late — dynamic import + client-only — and react-leaflet
+  // invokes the ref once the Leaflet instance is actually ready.
+  const fitMapToMarkers = useCallback(
+    (map: LeafletMap | null) => {
+      if (!map || geoPoints.length === 0) return;
+      map.fitBounds(
+        geoPoints.map((loc) => [loc.lat, loc.lng] as [number, number]),
+        // maxZoom keeps a single marker from being zoomed to rooftop level
+        { padding: [10, 10], maxZoom: 10 },
+      );
+    },
+    [geoPoints],
+  );
+
+  return (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {file?.years?.length || file?.locations?.length || file?.authors?.length ? (
       <div className="flex flex-col md:flex-row justify-between py-2 gap-4">
-        {Boolean(
-          [...file.locations, ...file.authors.map(({ author }) => author)].some(
-            (loc) => loc.lat !== null && loc.lng !== null,
-          ),
-        ) && (
+        {Boolean(geoPoints.length) && (
           <div className="h-64 grow">
             <GeoDuckMap
               key="static-geoduck-map"
+              ref={fitMapToMarkers}
               className="rounded-lg text-accent"
-              center={findCenter([...file.locations, ...file.authors.map(({ author }) => author)])}
+              center={findCenter(geoPoints)}
               positions={prepareLocations([...file.locations, ...file.authors.map(({ author }) => author)])}
               year={file.years[0]?.start_year || undefined}
               hideLayers={{ searchInput: true, historicalLayers: true }}
@@ -68,30 +105,45 @@ const Details: React.FC<{
         <ul className="list-inside basis-1/2">
           {Boolean(file.years.length) && (
             <li>
-              Рік: <span className="text-foreground">{getYearsString(file.years)}</span>
+              Рік:&nbsp;
+              {file.years.filter(({ start_year, end_year }) => start_year || end_year).length ? (
+                file.years
+                  .filter(({ start_year, end_year }) => Boolean(start_year) || Boolean(end_year))
+                  .map(({ start_year, end_year }, index) => (
+                    <SearchLink
+                      key={`${start_year}-${end_year}`}
+                      query={{ year_from: start_year, year_to: end_year || start_year }}
+                    >
+                      {index > 0 && ", "}
+                      {getYearsString([{ start_year, end_year }])}
+                    </SearchLink>
+                  ))
+              ) : (
+                <span className="text-foreground">невідомо</span>
+              )}
             </li>
           )}
           {Boolean(file.authors.length) && (
             <li>
-              Автори:&nbsp;
-              {file.authors.map(({ author }, index) => (
-                <span key={author.id}>
-                  {index > 0 && ", "}
-                  <span className="text-foreground">
-                    {author.title}{author.info ? ` (${author.info})` : ""}
-                  </span>
-                </span>
-              ))}
+              <CollapsibleText>
+                Автори:&nbsp;
+                {file.authors.map(({ author }, index) => (
+                  <SearchLink key={author.id} query={{ author: author.title }}>
+                    {index > 0 && ", "}
+                    {author.title}
+                  </SearchLink>
+                ))}
+              </CollapsibleText>
             </li>
           )}
           {Boolean(file.tags.length) && (
             <li>
               Теги:&nbsp;
               {file.tags.map((tag, index) => (
-                <span key={tag}>
+                <SearchLink key={tag} query={{ tags: [tag] }}>
                   {index > 0 && ", "}
-                  <span className="text-foreground">{tag}</span>
-                </span>
+                  {tag}
+                </SearchLink>
               ))}
             </li>
           )}
@@ -99,7 +151,8 @@ const Details: React.FC<{
       </div>
     ) : null}
   </div>
-);
+  );
+};
 
 interface FileTableProps {
   resources: Resources;
@@ -142,7 +195,11 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
             onlineCopies: file?.online_copies?.map(({ id, url }) => ({ id, url })) ?? [],
             authors: file?.authors?.map(({ author }) => ({ id: author.id, title: author.title })) ?? [],
           }}
-          editorHref={isAdmin && file?.id ? editorFileHref(archiveCode, file.inventory.fond_id, file.inventory_id, file.id) : undefined}
+          editorHref={
+            isAdmin && file?.id
+              ? editorFileHref(archiveCode, file.inventory.fond_id, file.inventory_id, file.id)
+              : undefined
+          }
         />
       </PagePanel>
       <InspectorDuckTable<TableItem>
