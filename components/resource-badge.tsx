@@ -22,7 +22,8 @@ export const TYPE_CHIP_CLASS: Record<ResourceType, string> = {
   [ResourceType.WEBSITE]: "bg-[#7c4a63] text-white",
   [ResourceType.GOOGLE_DRIVE]: "bg-[#1a5fb4] text-white",
   [ResourceType.USHMM]: "bg-[#7c7c7c] text-white",
-  [ResourceType.AROLSEN]: "bg-[#7c7c7c] text-white",
+  [ResourceType.AROLSEN]: "bg-[#4a567c] text-white",
+  [ResourceType.LIBRARY]: "bg-[#00586c] text-white",
 };
 
 export const TYPE_LABEL: Record<ResourceType, string> = {
@@ -34,6 +35,7 @@ export const TYPE_LABEL: Record<ResourceType, string> = {
   [ResourceType.GOOGLE_DRIVE]: "Google Drive",
   [ResourceType.USHMM]: "United States Holocaust Memorial Museum",
   [ResourceType.AROLSEN]: "Arolsen Archives",
+  [ResourceType.LIBRARY]: "Бібліотека",
 };
 
 interface ResourceBadgeProps {
