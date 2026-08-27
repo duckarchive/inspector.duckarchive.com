@@ -1,5 +1,6 @@
 import { JSX, PropsWithChildren } from "react";
 import NavigationBreadcrumbs from "./breadcrumbs";
+import CollapsibleText from "./collapsible-text";
 
 interface PagePanelProps extends PropsWithChildren {
   code?: string;
@@ -21,7 +22,7 @@ const PagePanel: React.FC<PagePanelProps> = ({ code, title, description, message
         )}
 
         {title && <h1 className="flex-shrink-0 text-2xl font-bold font-mono">{title}</h1>}
-        {description && <p className="flex-shrink-0 text-sm text-gray-500">{description}</p>}
+        {description && <CollapsibleText className="flex-shrink-0 text-sm text-gray-500">{description}</CollapsibleText>}
         {message}
       </div>
       <div className="flex items-start gap-2">

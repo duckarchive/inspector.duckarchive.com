@@ -1,6 +1,7 @@
 import { Prisma } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { isCatalogCode } from "@/lib/validate";
 import { getCatalogArchiveByCode } from "@/app/api/catalog/[archive-code]/data";
 
 export type GetCatalogArchiveResponse = Prisma.ArchiveGetPayload<{
@@ -29,6 +30,10 @@ export async function GET(
   try {
     const params = await props.params;
     const archiveCode = params["archive-code"];
+    // catalog codes are Cyrillic/digits — a Latin letter is never a valid code (and never reaches the DB)
+    if (!isCatalogCode(archiveCode)) {
+      return NextResponse.json({ message: "invalid catalog code" }, { status: 400 });
+    }
 
     if (!archiveCode) {
       return NextResponse.json({ message: '"archive-code" query param is required' }, { status: 400 });

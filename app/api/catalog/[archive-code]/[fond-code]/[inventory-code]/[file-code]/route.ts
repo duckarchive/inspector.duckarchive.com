@@ -1,6 +1,7 @@
 import { Prisma } from "@generated/prisma/client/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/types";
+import { isCatalogCode } from "@/lib/validate";
 import { getFileByCode } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/[file-code]/data";
 
 export type GetFileResponse = Prisma.FileGetPayload<{
@@ -47,6 +48,10 @@ export async function GET(
     const fondCode = params["fond-code"];
     const inventoryCode = params["inventory-code"];
     const fileCode = params["file-code"];
+    // catalog codes are Cyrillic/digits — a Latin letter is never a valid code (and never reaches the DB)
+    if (!isCatalogCode(archiveCode) || !isCatalogCode(fondCode) || !isCatalogCode(inventoryCode) || !isCatalogCode(fileCode)) {
+      return NextResponse.json({ message: "invalid catalog code" }, { status: 400 });
+    }
 
     if (!archiveCode || !fondCode || !inventoryCode || !fileCode) {
       return NextResponse.json(

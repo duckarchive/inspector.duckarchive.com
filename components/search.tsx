@@ -1,22 +1,67 @@
 "use client";
-import { useState, useEffect } from "react";
+import { Key, useState, useEffect } from "react";
 
 import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
 import { SearchRequest, SearchResponse } from "@/app/api/search/route";
 import InspectorDuckTable from "@/components/table";
-import { Accordion, Button, CloseButton, Input, InputGroup, Link, TextField } from "@heroui/react";
-import { FaFolder, FaListUl, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
+import type { Selection } from "@heroui/react";
+import {
+  Accordion,
+  Button,
+  ButtonGroup,
+  Chip,
+  Description,
+  Dropdown,
+  Input,
+  Label,
+  Link,
+  TextField,
+} from "@heroui/react";
+import { FaCalendar, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown, FaFeather } from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import useIsMobile from "@/hooks/useIsMobile";
 import TagsInput from "@/components/tags-input";
+import { useAuthors } from "@/hooks/useAuthors";
 import isEmpty from "lodash/isEmpty.js";
 
 const ONLINE_TAG = "доступні онлайн копії";
 
 type TableItem = SearchResponse[number];
+
+/**
+ * Presets for the match strictness. The percentage is what the user sees and
+ * equals the pg_trgm word-similarity threshold × 100 the API gets as
+ * `fuzziness`; 100 % = plain substring match (no `fuzziness` at all).
+ */
+// Every description illustrates the same base word ("Київ") so the five levels
+// read as one progression instead of five unrelated examples.
+const FUZZINESS_OPTIONS = [
+  { percent: 100, label: "100% — повний збіг", description: "Київ: Київ" },
+  { percent: 90, label: "90% — кілька помилок", description: "Київ: Київ, Кийв, Кієв" },
+  { percent: 75, label: "75% — схожі слова", description: "Київ: Києв, Киев, Київ, Киив" },
+  { percent: 50, label: "50% — широкі варіації", description: "Київ: Києва, Києві, Києво-Печерська" },
+  { percent: 30, label: "30% — мені пощастить", description: "Київ: Київський, Киянка, Кийчик, кінь" },
+];
+
+const DEFAULT_FUZZINESS_PERCENT = 90;
+const fuzzinessToPercent = (fuzziness: SearchRequest["fuzziness"]) =>
+  fuzziness === undefined ? DEFAULT_FUZZINESS_PERCENT : Math.round(Number(fuzziness) * 100);
+
+const toSearchRequest = ({ fuzziness, ...rest }: SearchRequest): SearchRequest => {
+  const percent = fuzzinessToPercent(fuzziness);
+
+  return percent >= 100 ? rest : { ...rest, fuzziness: percent / 100 };
+};
+
+/** The form is worth sending only with an actual criterion — the tolerance alone is not one. */
+const hasSearchCriteria = (values: SearchRequest) => {
+  const criteria: SearchRequest = { ...values };
+  delete criteria.fuzziness;
+  return !isEmpty(criteria);
+};
 
 interface SearchProps {
   archives: Archives;
@@ -27,11 +72,16 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   const isMobile = useIsMobile();
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
+  // The author box is a free-text field with suggestions: the API matches
+  // `author` against authors.title, so a half-typed name is a valid criterion
+  // and picking a suggestion just fills the box with its full title.
+  const [authorQuery, setAuthorQuery] = useState(defaultValues.author || "");
+  const { data: authorOptions } = useAuthors(authorQuery || undefined);
   const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
 
   useEffect(() => {
-    if (!isEmpty(searchValues)) {
-      trigger(searchValues);
+    if (hasSearchCriteria(searchValues)) {
+      trigger(toSearchRequest(searchValues));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -49,14 +99,18 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     setSearchValues((prev) => ({ ...prev, [key]: value || undefined }));
   };
 
-  const handlePlaceInputChange = (value: string) => {
-    if (searchValues.lat || searchValues.lng) {
-      const isConfirmed = window.confirm("Поля 'Широта' та 'Довгота' будуть очищені. Продовжити?");
-      if (!isConfirmed) {
-        return;
-      }
-    }
-    setSearchValues({ ...searchValues, lat: undefined, lng: undefined, radius_m: undefined, place: value });
+  const handleAuthorInputChange = (value: string) => {
+    setAuthorQuery(value);
+    setSearchValues((prev) => ({ ...prev, author: value || undefined }));
+  };
+
+  // Select suppresses onInputChange for an exact option match (it would spend a
+  // request re-searching the row just picked), so the pick has to write both.
+  const handleAuthorSelect = (key: Key | null) => {
+    const author = (authorOptions ?? []).find((a) => a.id === String(key ?? ""));
+    if (!author) return;
+    setAuthorQuery(author.title);
+    setSearchValues((prev) => ({ ...prev, author: author.title }));
   };
 
   // Place name and coordinates are alternative ways to say the same thing, and the
@@ -64,6 +118,16 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   const handleCoordinatesChange = (value: Pick<SearchRequest, "lat" | "lng" | "radius_m">) => {
     const hasPoint = Boolean(value.lat && value.lng);
     setSearchValues((prev) => ({ ...prev, ...value, place: hasPoint ? undefined : prev.place }));
+  };
+
+  const fuzzinessPercent = fuzzinessToPercent(searchValues.fuzziness);
+  const handleFuzzinessChange = (keys: Selection) => {
+    const percent =
+      keys === "all" ? DEFAULT_FUZZINESS_PERCENT : Number(Array.from(keys)[0] ?? DEFAULT_FUZZINESS_PERCENT);
+    const next = { ...searchValues, fuzziness: Number((percent / 100).toFixed(2)) };
+    setSearchValues(next);
+    // a changed strictness re-runs the search — but only if there is something to search for
+    if (hasSearchCriteria(next)) trigger(toSearchRequest(next));
   };
 
   const handleTagsChange = (values: string[]) => {
@@ -77,37 +141,35 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    trigger(searchValues);
+    if (hasSearchCriteria(searchValues)) trigger(toSearchRequest(searchValues));
   };
-
-  /* One control: the year fields share a single border, so the pair reads as a
-     range rather than two unrelated inputs. -ml-px collapses the touching
-     borders into one line; focus-within lifts the active field's ring above
-     its neighbour. `form` is set because on mobile these render outside the
-     <form>, inside the accordion. */
-  const yearRange = (
-    <div className="flex grow-0 shrink">
-      <TextField
-        type="number"
-        className="min-w-0 relative focus-within:z-10"
-        value={searchValues.year_from || ""}
-        onChange={handleYearChange("year_from")}
-      >
-        <Input form="search-form" className="rounded-r-none" placeholder="Рік від" />
-      </TextField>
-      <TextField
-        type="number"
-        className="min-w-0 relative -ml-px focus-within:z-10"
-        value={searchValues.year_to || ""}
-        onChange={handleYearChange("year_to")}
-      >
-        <Input form="search-form" className="rounded-l-none" placeholder="Рік до" />
-      </TextField>
-    </div>
-  );
 
   const filters = (
     <>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="select-archive" className="font-bold flex items-center">
+          <FaCalendar className="inline mr-1" />
+          Роки
+        </label>
+        <div className="flex grow-0 shrink">
+          <TextField
+            type="number"
+            className="min-w-0 relative focus-within:z-10"
+            value={searchValues.year_from || ""}
+            onChange={handleYearChange("year_from")}
+          >
+            <Input form="search-form" className="rounded-r-none" placeholder="Від" />
+          </TextField>
+          <TextField
+            type="number"
+            className="min-w-0 relative -ml-px focus-within:z-10"
+            value={searchValues.year_to || ""}
+            onChange={handleYearChange("year_to")}
+          >
+            <Input form="search-form" className="rounded-l-none" placeholder="До" />
+          </TextField>
+        </div>
+      </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="select-archive" className="font-bold flex items-center">
           <FaFolder className="inline mr-1" />
@@ -146,27 +208,29 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         </div>
       </div>
       <div className="flex flex-col gap-2">
+        <label htmlFor="select-author" className="font-bold flex items-center">
+          <FaFeather className="inline mr-1" />
+          Автор
+        </label>
+        <Select
+          id="select-author"
+          form="search-form"
+          items={authorOptions ?? []}
+          label="Церква, РАЦС, суд, ім'я тощо"
+          virtualized
+          getKey={(a) => a.id}
+          getTextValue={(a) => a.title}
+          renderItem={(a) => a.title}
+          inputValue={authorQuery}
+          onInputChange={handleAuthorInputChange}
+          onChange={handleAuthorSelect}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
         <label htmlFor="coordinates-input" className="font-bold flex items-center">
           <FaMapMarkerAlt className="inline mr-1" />
           Локація
         </label>
-        <TextField id="coordinates-input" value={searchValues.place || ""} onChange={handlePlaceInputChange}>
-          <InputGroup>
-            <InputGroup.Input
-              form="search-form"
-              pattern="[Ѐ-ӿԀ-ԯ]+"
-              placeholder="Назва населеного пункту"
-            />
-            {searchValues.place ? (
-              <InputGroup.Suffix>
-                <CloseButton
-                  aria-label="Очистити населений пункт"
-                  onPress={() => setSearchValues({ ...searchValues, place: undefined })}
-                />
-              </InputGroup.Suffix>
-            ) : null}
-          </InputGroup>
-        </TextField>
         <CoordinatesInput
           isLoading={isMutating}
           year={searchValues.year_from || searchValues.year_to || undefined}
@@ -195,20 +259,48 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   return (
     <>
       <form id="search-form" className="flex gap-2" onSubmit={handleSubmit}>
-        <TextField
-          className="grow"
-          value={searchValues.title || ""}
-          onChange={handleInputChange("title")}
-        >
-          <Input placeholder="Заголовок справи" />
+        <TextField className="grow" value={searchValues.title || ""} onChange={handleInputChange("title")}>
+          <Input className="text-lg md:text-xl" placeholder="Пошуковий запит" />
         </TextField>
-        {/* On mobile the row keeps only the title and the submit button; the years
-            move into the accordion below rather than disappearing. */}
-        {isMobile ? null : yearRange}
-        <Button type="submit" size="lg" className="basis-1/6 h-auto font-bold text-lg" isIconOnly={isMobile}>
-          <FaSearch />
-          {isMobile ? undefined : "Пошук"}
-        </Button>
+        {/* Split button: submit on the left, the fuzziness presets behind the chevron.
+            The chosen tolerance shows on the main button so it is never a hidden state. */}
+        <ButtonGroup size="lg" className="basis-1/6 h-full shrink-0">
+          <Button type="submit" className="h-full font-bold text-lg grow" isIconOnly={isMobile}>
+            <FaSearch />
+            {isMobile ? undefined : fuzzinessPercent < 100 ? `Збіг ${fuzzinessPercent}%` : "Повний збіг"}
+          </Button>
+          <Dropdown>
+            <Button isIconOnly aria-label="Нечіткість пошуку" className="h-full">
+              <ButtonGroup.Separator />
+              <FaChevronDown />
+            </Button>
+            <Dropdown.Popover className="min-w-[280px]" placement="bottom end">
+              <Dropdown.Menu
+                selectionMode="single"
+                selectedKeys={new Set([String(fuzzinessPercent)])}
+                onSelectionChange={handleFuzzinessChange}
+                disallowEmptySelection
+              >
+                <Dropdown.Section>
+                  {FUZZINESS_OPTIONS.map(({ percent, label, description }) => (
+                    <Dropdown.Item
+                      key={percent}
+                      id={String(percent)}
+                      textValue={label}
+                      className="flex flex-col items-start gap-0.5"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Dropdown.ItemIndicator />
+                        <Label>{label}</Label>
+                      </div>
+                      <Description>{description}</Description>
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Section>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
+          </Dropdown>
+        </ButtonGroup>
       </form>
       {/* Mobile: everything except the title and the submit button collapses into
           one accordion, so results stay near the top of the screen. Desktop keeps
@@ -223,16 +315,13 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
               </Accordion.Trigger>
             </Accordion.Heading>
             <Accordion.Panel>
-              <Accordion.Body className="flex flex-col gap-8 p-0">
-                {yearRange}
-                {filters}
-              </Accordion.Body>
+              <Accordion.Body className="flex flex-col gap-6 p-0">{filters}</Accordion.Body>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>
       ) : null}
       <div className="flex md:flex-row flex-col grow gap-4 mt-4">
-        {isMobile ? null : <div className="flex flex-col gap-8 pb-8 basis-1/4 min-w-0 h-full">{filters}</div>}
+        {isMobile ? null : <div className="flex flex-col gap-6 pb-8 basis-1/4 min-w-0 h-full">{filters}</div>}
         <div className="min-h-[75vh] md:min-h-[300px] grow flex flex-col">
           <InspectorDuckTable<TableItem>
             id="search-table"
@@ -245,49 +334,49 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 sortable: false,
                 filter: false,
                 resizable: false,
-                cellRenderer: (row: { value: string; data: TableItem }) => (
-                  <div className="flex flex-col py-2 gap-1">
-                    <Link
-                      href={`/archives/${row.value.replace(/\-/g, "/")}`}
-                      className="text-lg leading-none font-bold inline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {row.data.title || "Без назви"}
-                    </Link>
-                    <div>
-                      {row.value}
-                      {row.data.is_online && <span className="opacity-60"> (доступні онлайн копії)</span>}
+                cellRenderer: (row: { value: string; data: TableItem }) => {
+                  const yearLabel = row.data.years?.length
+                    ? row.data.years
+                        .map((y) => (y.start_year === y.end_year ? `${y.start_year}` : `${y.start_year}–${y.end_year}`))
+                        .join(", ")
+                    : null;
+
+                  return (
+                    <div className="flex flex-col gap-1 py-3">
+                      <Link
+                        href={`/archives/${row.value.replace(/\-/g, "/")}`}
+                        className="text-lg leading-tight font-bold"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {row.data.title || "Без назви"}
+                      </Link>
+                      <span className="font-mono text-sm">
+                        {row.value}
+                      </span>
+                      <div className="flex flex-wrap items-center gap-1">
+                        {row.data.is_online ? (
+                          <Chip size="sm" variant="primary" color="accent">
+                            <FaLink />
+                            доступні онлайн копії
+                          </Chip>
+                        ) : null}
+                        {yearLabel ? (
+                          <Chip size="sm" variant="soft">
+                            <FaCalendar />
+                            {yearLabel}
+                          </Chip>
+                        ) : null}
+                        {(row.data.tags ?? []).map((tag) => (
+                          <Chip key={tag} size="sm" variant="soft">
+                            {tag}
+                          </Chip>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ),
+                  );
+                },
               },
-              // {
-              //   headerName: "Назва",
-              //   field: "title",
-              //   resizable: true,
-              //   flex: 3,
-              // },
-              // {
-              //   headerName: "Рік",
-              //   field: "years",
-              //   hide: isMobile,
-              //   valueGetter: (row) =>
-              //     row.data?.years
-              //       .map((y) => (y.start_year === y.end_year ? y.start_year : `${y.start_year}-${y.end_year}`))
-              //       .join(", "),
-              // },
-              // {
-              //   headerName: "Теги",
-              //   field: "tags",
-              //   cellRenderer: (row: { value: string[] }) => (
-              //     <>
-              //       {row.value.map((tag) => (
-              //         <TagChip key={tag} label={tag} />
-              //       ))}
-              //     </>
-              //   ),
-              // },
             ]}
             rows={searchResults || []}
           />

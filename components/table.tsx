@@ -1,7 +1,7 @@
 "use client";
 
 import { DuckTable, sortCode } from "@duckarchive/framework";
-import { ColDef } from "ag-grid-community";
+import { ColDef, RowClickedEvent } from "ag-grid-community";
 import { useEffect, useState } from "react";
 import { Resource } from "@generated/prisma/client/client";
 import { useTheme } from "next-themes";
@@ -51,9 +51,19 @@ interface DuckTableProps<T> {
   isFiltersEnabled?: boolean;
   isLoading?: boolean;
   loadingPage?: number;
+  /** Forwarded to ag-grid; note it also fires for clicks on controls inside a cell. */
+  onRowClicked?: (event: RowClickedEvent<T>) => void;
 }
 
-const InspectorDuckTable = <T,>({ id, columns, rows, isFiltersEnabled, isLoading, loadingPage }: DuckTableProps<T>) => {
+const InspectorDuckTable = <T,>({
+  id,
+  columns,
+  rows,
+  isFiltersEnabled,
+  isLoading,
+  loadingPage,
+  onRowClicked,
+}: DuckTableProps<T>) => {
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
@@ -142,6 +152,7 @@ const InspectorDuckTable = <T,>({ id, columns, rows, isFiltersEnabled, isLoading
       rows={rows}
       isLoading={isLoading}
       loadingPage={loadingPage}
+      onRowClicked={onRowClicked}
       defaultColDef={{
         wrapText: true,
         autoHeight: true,

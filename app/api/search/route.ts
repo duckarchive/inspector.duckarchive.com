@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { Prisma } from "@generated/prisma/client/client";
+import { escapeLike, firstIssue, searchRequestSchema } from "@/lib/validate";
 
 export type SearchRequest = Partial<{
   lat: string;
@@ -8,8 +9,6 @@ export type SearchRequest = Partial<{
   radius_m: number;
   year_from: string;
   year_to: string;
-  /** @deprecated single year — still honoured for existing links and API callers. */
-  year: string;
   title: string;
   place: string;
   author: string;
@@ -19,6 +18,12 @@ export type SearchRequest = Partial<{
   inventory: string;
   file: string;
   is_online: boolean;
+  /**
+   * Fuzzy matching for the text fields (title, place, author) — a trigram
+   * word-similarity threshold, 1 = exact words … 0.3 = very loose (floor). Absent
+   * or 0 = plain substring match.
+   */
+  fuzziness: number;
 }>;
 
 export type SearchResponse = {
@@ -46,23 +51,21 @@ const isFiniteNumber = (value: string) => value.trim() !== "" && Number.isFinite
 
 export async function POST(request: Request) {
   try {
-    const {
-      title,
-      place,
-      author,
-      lng,
-      lat,
-      radius_m,
-      year,
-      year_from,
-      year_to,
-      tags,
-      archive,
-      fond,
-      inventory,
-      file,
-      is_online,
-    }: SearchRequest = await request.json();
+    const parsed = searchRequestSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
+      return NextResponse.json({ message: firstIssue(parsed.error) }, { status: 400 });
+    }
+    const { title, place, author, lng, lat, radius_m, year_from, year_to, tags, archive, fond, inventory, file, is_online } =
+      parsed.data;
+    const fuzziness = parsed.data.fuzziness && parsed.data.fuzziness > 0 ? Math.max(0.3, parsed.data.fuzziness) : 0;
+    /**
+     * Text predicate on one column: substring (ILIKE, `%` and `_` escaped) or,
+     * in fuzzy mode, trigram word similarity — `needle <% column` is served by
+     * the GIN trgm indexes on files.title / files.info / authors.title and
+     * honours pg_trgm.word_similarity_threshold, which is set per request below.
+     */
+    const textMatch = (column: Prisma.Sql, needle: string) =>
+      fuzziness ? Prisma.sql`${needle} <% ${column}` : Prisma.sql`${column} ILIKE ${`%${escapeLike(needle)}%`}`;
 
     const hasOnlineCopy = Prisma.sql`EXISTS (
       SELECT 1
@@ -79,17 +82,16 @@ export async function POST(request: Request) {
     // by id, instead of scanning 3.3M files. Search is allowed either by place
     // name or by geographical coordinates, never both.
     if (place) {
-      const pattern = `%${place}%`;
 
       ctes.push(Prisma.sql`place_files AS (
         SELECT id AS file_id
         FROM "files"
-        WHERE info ILIKE ${pattern}
+        WHERE ${textMatch(Prisma.sql`info`, place)}
         UNION
         SELECT fa.file_id
         FROM "authors" a
         JOIN "file_authors" fa ON fa.author_id = a.id
-        WHERE a.title ILIKE ${pattern}
+        WHERE ${textMatch(Prisma.sql`a.title`, place)}
       )`);
       whereParts.push(Prisma.sql`f.id IN (SELECT file_id FROM place_files)`);
     } else if (lat && lng && isFiniteNumber(lat) && isFiniteNumber(lng)) {
@@ -134,7 +136,24 @@ export async function POST(request: Request) {
     }
 
     if (title) {
-      whereParts.push(Prisma.sql`f.title ILIKE ${`%${title}%`}`);
+      // "title" is the free-text box: it looks at the file's own title and
+      // info and at the name/info of every author (church, parish) linked to
+      // it, so a church or place written only in the author record still hits.
+      // One UNION CTE (like place_files) rather than `… OR f.id IN (subquery)`
+      // in the WHERE: the OR form made the planner abandon the trigram bitmap
+      // scans and walk all 3.3M files (20–80 s per query); this shape keeps every
+      // arm on its index and reaches `files` by id.
+      ctes.push(Prisma.sql`title_files AS (
+        SELECT id AS file_id
+        FROM "files"
+        WHERE ${textMatch(Prisma.sql`title`, title)} OR ${textMatch(Prisma.sql`info`, title)}
+        UNION
+        SELECT fa.file_id
+        FROM "authors" a
+        JOIN "file_authors" fa ON fa.author_id = a.id
+        WHERE ${textMatch(Prisma.sql`a.title`, title)} OR ${textMatch(Prisma.sql`a.info`, title)}
+      )`);
+      whereParts.push(Prisma.sql`f.id IN (SELECT file_id FROM title_files)`);
     }
 
     if (author) {
@@ -142,21 +161,19 @@ export async function POST(request: Request) {
         SELECT 1
         FROM "file_authors" fa
         JOIN "authors" a ON a.id = fa.author_id
-        WHERE fa.file_id = f.id AND a.title ILIKE ${`%${author}%`}
+        WHERE fa.file_id = f.id AND ${textMatch(Prisma.sql`a.title`, author)}
       )`);
     }
 
     // A file matches when its own [start_year, end_year] overlaps the requested
-    // window. With a single `year` (or from === to) that is the old "year falls
-    // inside the file's range" test; an open end leaves that side unbounded.
-    const yearFrom = year_from || year;
-    const yearTo = year_to || year;
-    if (yearFrom && yearTo) {
-      whereParts.push(Prisma.sql`fy.start_year <= ${+yearTo} AND fy.end_year >= ${+yearFrom}`);
-    } else if (yearFrom) {
-      whereParts.push(Prisma.sql`fy.end_year >= ${+yearFrom}`);
-    } else if (yearTo) {
-      whereParts.push(Prisma.sql`fy.start_year <= ${+yearTo}`);
+    // window (from === to is the "year falls inside the file's range" test); an
+    // open end leaves that side unbounded.
+    if (year_from && year_to) {
+      whereParts.push(Prisma.sql`fy.start_year <= ${+year_to} AND fy.end_year >= ${+year_from}`);
+    } else if (year_from) {
+      whereParts.push(Prisma.sql`fy.end_year >= ${+year_from}`);
+    } else if (year_to) {
+      whereParts.push(Prisma.sql`fy.start_year <= ${+year_to}`);
     }
 
     if (archive || fond || inventory || file) {
@@ -195,6 +212,10 @@ export async function POST(request: Request) {
       whereParts.push(hasOnlineCopy);
     }
 
+    if (whereParts.length === 0) {
+      return NextResponse.json({ message: "at least one search criterion is required" }, { status: 400 });
+    }
+
     const withQuery = ctes.length > 0 ? Prisma.sql`WITH ${Prisma.join(ctes, ", ")}` : Prisma.sql``;
     const bodyQuery = whereParts.length > 0 ? Prisma.sql`WHERE ${Prisma.join(whereParts, " AND ")}` : Prisma.sql``;
 
@@ -226,9 +247,24 @@ export async function POST(request: Request) {
       LIMIT 50
     `;
 
-    const rawResults = await prisma.$queryRaw<SearchResponse>(query);
+    // The similarity threshold is a session GUC, so it must travel on the same
+    // connection as the query: SET LOCAL inside one transaction. The value is a
+    // validated number (0.3–1), never user text, hence the unsafe variant.
+    const rawResults = fuzziness
+      ? await prisma.$transaction(
+          async (tx) => {
+            await tx.$executeRawUnsafe(`SET LOCAL pg_trgm.word_similarity_threshold = ${fuzziness.toFixed(2)}`);
+            return tx.$queryRaw<SearchResponse>(query);
+          },
+          { timeout: 20_000 },
+        )
+      : await prisma.$queryRaw<SearchResponse>(query);
 
-    return NextResponse.json(rawResults);
+    // `f.*` carries the raw column, and `files.tags` is nullable in the DB —
+    // normalise it so consumers can always iterate the array.
+    const results = rawResults.map((row) => ({ ...row, tags: row.tags ?? [] }));
+
+    return NextResponse.json(results);
   } catch (error) {
     console.error("Search API Error:", error);
 

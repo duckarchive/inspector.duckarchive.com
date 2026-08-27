@@ -390,7 +390,17 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Substring match on file title.
+                  description: >
+                    Free-text match on the file's title and info and on the
+                    name/info of its linked authors (church, parish).
+                fuzziness:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  description: >
+                    Optional trigram word-similarity threshold applied to title,
+                    place and author (1 = exact words, 0.3 = very loose; lower values are raised to 0.3). Absent
+                    or 0 = plain substring match.
                 author:
                   type: string
                   description: Substring match on a linked author's name.
@@ -414,10 +424,6 @@ paths:
                 year_to:
                   type: string
                   description: End of the year range (inclusive, overlap match).
-                year:
-                  type: string
-                  deprecated: true
-                  description: Single-year shorthand for year_from/year_to. Still honoured.
                 tags:
                   type: array
                   items:
@@ -439,6 +445,15 @@ paths:
                   type: boolean
                   description: Only files with a publicly available online copy.
       responses:
+        "400":
+          description: >
+            Invalid input — any Latin letter in a text value, an unknown field,
+            a non-numeric year/coordinate. The public API only accepts Cyrillic
+            catalog data.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
         "200":
           description: Up to 50 matching files.
           content:

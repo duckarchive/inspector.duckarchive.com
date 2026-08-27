@@ -2,6 +2,7 @@
 
 import { Key, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Input, TextField } from "@heroui/react";
 import Select from "@/components/select";
 import { useGet } from "@/hooks/useApi";
 import { EditorEntity, ReportNotePayload } from "@/lib/editor-actions";
@@ -19,8 +20,9 @@ interface StepTreeProps {
 }
 
 /**
- * Proposes a new parent for the record. Reads the public catalog endpoints,
- * which return a whole level at a time — so the selects filter client-side.
+ * Proposes a new parent and/or a new own code for the record. Reads the public
+ * catalog endpoints, which return a whole level at a time — so the selects
+ * filter client-side.
  */
 const StepTree: React.FC<StepTreeProps> = ({ entity, current, value, onChange }) => {
   const t = useTranslations("report-form");
@@ -32,6 +34,11 @@ const StepTree: React.FC<StepTreeProps> = ({ entity, current, value, onChange })
 
   const needsFond = entity !== "fond";
   const needsInventory = entity === "file";
+
+  // the record's own code (the last segment of the full code)
+  const currentOwnCode =
+    (entity === "fond" ? current.codes.fond : entity === "inventory" ? current.codes.inventory : current.codes.file) ?? "";
+  const [ownCode, setOwnCode] = useState(value?.code ?? currentOwnCode);
 
   const { data: archives, isLoading: isLoadingArchives } = useGet<GetCatalogArchivesResponse>("/api/catalog");
   const { data: archive, isLoading: isLoadingFonds } = useGet<GetCatalogArchiveResponse>(
@@ -48,17 +55,27 @@ const StepTree: React.FC<StepTreeProps> = ({ entity, current, value, onChange })
     needsFond ? current.codes.fond : undefined,
     needsInventory ? current.codes.inventory : undefined,
   ]);
+  const currentFull = catalogItemLabel([
+    current.codes.archive,
+    ...(needsFond ? [current.codes.fond] : []),
+    ...(needsInventory ? [current.codes.inventory] : []),
+    currentOwnCode || undefined,
+  ]);
 
-  const emit = (next: { archiveCode: string; fondCode: string; inventoryCode: string }) => {
+  const emit = (next: { archiveCode: string; fondCode: string; inventoryCode: string; ownCode: string }) => {
     const nextParent = catalogItemLabel([
       next.archiveCode,
       needsFond ? next.fondCode : undefined,
       needsInventory ? next.inventoryCode : undefined,
     ]);
-    // Nothing to propose until the chain is complete and actually different.
+    // A parent proposal counts only once the chain is complete and actually different.
     const isComplete =
       Boolean(next.archiveCode) && (!needsFond || Boolean(next.fondCode)) && (!needsInventory || Boolean(next.inventoryCode));
-    if (!isComplete || nextParent === currentParent) {
+    const parentChanged = isComplete && nextParent !== currentParent;
+    const nextOwnCode = next.ownCode.trim();
+    const codeChanged = Boolean(nextOwnCode) && nextOwnCode !== currentOwnCode;
+
+    if (!parentChanged && !codeChanged) {
       onChange(undefined);
       return;
     }
@@ -68,13 +85,18 @@ const StepTree: React.FC<StepTreeProps> = ({ entity, current, value, onChange })
     const inventoryMatch = fond?.inventories.find((i) => i.code === next.inventoryCode);
 
     onChange({
-      archive: { id: archiveMatch?.id, code: next.archiveCode, title: archiveMatch?.title ?? undefined },
-      ...(needsFond
-        ? { fond: { id: fondMatch?.id, code: next.fondCode, title: fondMatch?.title ?? undefined } }
+      ...(parentChanged
+        ? {
+            archive: { id: archiveMatch?.id, code: next.archiveCode, title: archiveMatch?.title ?? undefined },
+            ...(needsFond
+              ? { fond: { id: fondMatch?.id, code: next.fondCode, title: fondMatch?.title ?? undefined } }
+              : {}),
+            ...(needsInventory
+              ? { inventory: { id: inventoryMatch?.id, code: next.inventoryCode, title: inventoryMatch?.title ?? undefined } }
+              : {}),
+          }
         : {}),
-      ...(needsInventory
-        ? { inventory: { id: inventoryMatch?.id, code: next.inventoryCode, title: inventoryMatch?.title ?? undefined } }
-        : {}),
+      ...(codeChanged ? { code: nextOwnCode } : {}),
     });
   };
 
@@ -83,26 +105,31 @@ const StepTree: React.FC<StepTreeProps> = ({ entity, current, value, onChange })
     setArchiveCode(code);
     setFondCode("");
     setInventoryCode("");
-    emit({ archiveCode: code, fondCode: "", inventoryCode: "" });
+    emit({ archiveCode: code, fondCode: "", inventoryCode: "", ownCode });
   };
 
   const selectFond = (key: Key | null) => {
     const code = String(key ?? "");
     setFondCode(code);
     setInventoryCode("");
-    emit({ archiveCode, fondCode: code, inventoryCode: "" });
+    emit({ archiveCode, fondCode: code, inventoryCode: "", ownCode });
+  };
+
+  const changeOwnCode = (code: string) => {
+    setOwnCode(code);
+    emit({ archiveCode, fondCode, inventoryCode, ownCode: code });
   };
 
   const selectInventory = (key: Key | null) => {
     const code = String(key ?? "");
     setInventoryCode(code);
-    emit({ archiveCode, fondCode, inventoryCode: code });
+    emit({ archiveCode, fondCode, inventoryCode: code, ownCode });
   };
 
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-muted">
-        {t("tree-current-label")}: <span className="text-foreground font-mono">{currentParent}</span>
+        {t("tree-current-label")}: <span className="text-foreground font-mono">{currentFull}</span>
       </p>
       <Select
         label={t("tree-archive-label")}
@@ -141,6 +168,9 @@ const StepTree: React.FC<StepTreeProps> = ({ entity, current, value, onChange })
           onChange={selectInventory}
         />
       )}
+      <TextField value={ownCode} onChange={changeOwnCode}>
+        <Input placeholder={t("tree-code-label")} maxLength={40} />
+      </TextField>
       {!value && <p className="text-xs text-muted">{t("tree-unchanged-hint")}</p>}
     </div>
   );

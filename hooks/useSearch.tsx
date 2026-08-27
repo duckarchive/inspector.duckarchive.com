@@ -41,8 +41,8 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
       }
     });
 
-    // A single "year" used to mean "this year falls inside the file's range";
-    // it now seeds both ends of the range so old links keep their meaning.
+    // The API no longer accepts a single "year" (it would be rejected as an
+    // unknown field); old links are rewritten to the range it used to mean.
     if ("year" in raw && typeof raw.year === "string") {
       if (!("year_from" in raw)) {
         raw.year_from = raw.year;

@@ -9,33 +9,27 @@ import prisma from "@/lib/db";
  */
 const OUTPUT_PATH = path.join(process.cwd(), "generated", "home-stats.json");
 /**
- * Archive codes and the tag vocabulary, for the home page's on-device query
- * parser (lib/prompt-search.ts): they become JSON-schema enums so the model can
- * only pick real filter values. Snapshotted here so the home page never hits
- * the DB at request time for them.
+ * Tag vocabulary for the search page's tag filter (components/search.tsx).
+ * Snapshotted here so the search page never hits the DB at request time for it.
  */
 const VOCAB_OUTPUT_PATH = path.join(process.cwd(), "generated", "search-vocab.json");
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 const FALLBACK_VOCAB = {
-  archives: [] as Array<{ code: string; title: string | null }>,
   tags: [] as string[],
 };
 
 const collectVocab = async () => {
-  const [archives, tagRows] = await Promise.all([
-    prisma.archive.findMany({ select: { code: true, title: true }, orderBy: { code: "asc" } }),
-    prisma.$queryRaw<Array<{ tag: string }>>`
-      SELECT DISTINCT tag FROM (
-        SELECT UNNEST("tags") AS tag FROM "files" WHERE cardinality("tags") > 0
-        UNION
-        SELECT UNNEST("tags") AS tag FROM "authors" WHERE cardinality("tags") > 0
-      ) t
-      ORDER BY tag
-    `,
-  ]);
+  const tagRows = await prisma.$queryRaw<Array<{ tag: string }>>`
+    SELECT DISTINCT tag FROM (
+      SELECT UNNEST("tags") AS tag FROM "files" WHERE cardinality("tags") > 0
+      UNION
+      SELECT UNNEST("tags") AS tag FROM "authors" WHERE cardinality("tags") > 0
+    ) t
+    ORDER BY tag
+  `;
 
-  return { archives, tags: tagRows.map((row) => row.tag) };
+  return { tags: tagRows.map((row) => row.tag) };
 };
 
 const FALLBACK_STATS = {
@@ -75,7 +69,7 @@ const collectStats = async () => {
     prisma.author.count(),
     prisma.fileLocation.count(),
     prisma.onlineCopy.count(),
-    prisma.onlineCopy.count({ where: { updated_at: { gte: sevenDaysAgo } } }),
+    prisma.onlineCopy.count({ where: { checked_availability_at: { gte: sevenDaysAgo } } }),
     prisma.fondActions.count({ where: appliedInLast7Days }),
     prisma.inventoryActions.count({ where: appliedInLast7Days }),
     prisma.fileActions.count({ where: appliedInLast7Days }),
@@ -102,7 +96,7 @@ const main = async () => {
   try {
     [stats, vocab] = await Promise.all([collectStats(), collectVocab()]);
     console.log("Generated home stats:", stats);
-    console.log(`Generated search vocab: ${vocab.archives.length} archives, ${vocab.tags.length} tags`);
+    console.log(`Generated search vocab: ${vocab.tags.length} tags`);
   } catch (error) {
     // A build must still succeed if the DB is briefly unreachable — ship zeroed stats
     // and an empty vocabulary rather than failing `next build`/`next dev` outright.

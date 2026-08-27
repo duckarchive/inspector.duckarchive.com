@@ -69,6 +69,8 @@ export interface ReportNotePayload {
     archive?: ReportCatalogRef;
     fond?: ReportCatalogRef;
     inventory?: ReportCatalogRef;
+    /** Proposed new code of the record itself (change_code). */
+    code?: string;
   };
   /** A wrong/missing online copy: a picked copy of this record, and/or a typed URL. */
   online_copy?: {
@@ -230,6 +232,32 @@ const AUTHOR_ID_TYPES: ActionType[] = [
 ];
 
 /**
+ * Action types a non-admin authenticated user may propose directly, in
+ * addition to "report" — every structured section the public report wizard
+ * and the public authors page can produce a 1:1 action for. Like "report",
+ * these sit pending until an admin approves them, so allowing the create (not
+ * the apply) is safe.
+ */
+export const SELF_SERVICE_TYPES: ActionType[] = [
+  "change_title",
+  "change_info",
+  "change_code",
+  "change_parent",
+  "add_year_range",
+  "remove_year_range",
+  "add_location",
+  "add_author",
+  "connect_to_author",
+  "add_online_copy",
+  // the public /authors page proposes these; merging and deleting an author
+  // stay admin-only
+  "change_author_title",
+  "change_author_info",
+  "change_author_tags",
+  "change_author_location",
+];
+
+/**
  * Server-side validation for a submitted action. Returns an error message, or
  * null when valid. Enforces entity applicability and required fields per type.
  */
@@ -250,7 +278,12 @@ export const validateSubmitAction = (entity: EditorEntity, body: SubmitActionBod
   // Author id payload check for author-targeting types.
   if (AUTHOR_ID_TYPES.includes(type)) {
     const decoded = decodeNote(note);
-    if (!decoded || "raw" in decoded || !decoded.author_id) {
+    const hasSingle = Boolean(decoded && !("raw" in decoded) && decoded.author_id);
+    // connect/disconnect can batch several ids from one save into `value`.
+    const hasBatch =
+      (type === "connect_to_author" || type === "disconnect_from_author") &&
+      Boolean(decoded && !("raw" in decoded) && Array.isArray(decoded.value) && decoded.value.length > 0);
+    if (!hasSingle && !hasBatch) {
       return `Дія "${type}" потребує author_id у note`;
     }
   }

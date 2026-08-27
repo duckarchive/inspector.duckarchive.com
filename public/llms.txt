@@ -38,9 +38,15 @@ endpoint below.
 
 `POST /api/search`
 
-JSON body, all fields optional and combinable (AND'ed together) unless noted:
+JSON body, all fields optional and combinable (AND'ed together) unless noted.
+Text values must be Cyrillic: any Latin letter → HTTP 400 (the catalog has
+no Latin data, so this is a hard input rule, not a heuristic):
 
-- `title` (string) — substring match on file title
+- `title` (string) — free-text match on the file's title and info and on its
+  linked authors' name/info (church, parish)
+- `fuzziness` (number 0–1, optional) — trigram word-similarity threshold for
+  `title`/`place`/`author` (1 = exact words, 0.3 = very loose; lower values are raised to 0.3); omit for plain
+  substring match
 - `author` (string) — substring match on a linked author's name
 - `place` (string) — substring match on file or author location text;
   mutually exclusive with `lat`/`lng`/`radius_m`
