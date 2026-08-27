@@ -216,7 +216,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
           id="select-author"
           form="search-form"
           items={authorOptions ?? []}
-          label="Церква, РАЦС, суд тощо"
+          label="Церква, РАЦС, суд, ім'я тощо"
           virtualized
           getKey={(a) => a.id}
           getTextValue={(a) => a.title}

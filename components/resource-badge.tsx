@@ -4,26 +4,18 @@ import { PropsWithChildren } from "react";
 import { Chip, Tooltip } from "@heroui/react";
 import { ResourceType } from "@generated/prisma/client/enums";
 import { Resource } from "@generated/prisma/client/client";
+import clsx from "clsx";
 
-/**
- * A resource is an identity, not a status, so these are categorical fills rather
- * than HeroUI's semantic chip colors (accent/danger/success carry meaning
- * elsewhere and shouldn't be spent here).
- *
- * One fill per resource, theme-independent: each is mid-tone, so it separates
- * from both the light (#f9f9fc) and dark (#131316) ground, and dark enough to
- * clear 4.5:1 against the white label. Hues avoid the accent orange.
- */
 export const TYPE_CHIP_CLASS: Record<ResourceType, string> = {
-  [ResourceType.ARCHIUM]: "bg-[#6b3fa0] text-white",
-  [ResourceType.FAMILY_SEARCH]: "bg-[#006c47] text-white",
-  [ResourceType.WIKIPEDIA]: "bg-[#5b6470] text-white",
-  [ResourceType.BABYN_YAR]: "bg-[#336666] text-white",
-  [ResourceType.WEBSITE]: "bg-[#7c4a63] text-white",
-  [ResourceType.GOOGLE_DRIVE]: "bg-[#1a5fb4] text-white",
-  [ResourceType.USHMM]: "bg-[#7c7c7c] text-white",
-  [ResourceType.AROLSEN]: "bg-[#4a567c] text-white",
-  [ResourceType.LIBRARY]: "bg-[#00586c] text-white",
+  [ResourceType.ARCHIUM]: "bg-[#c74c13] text-white",
+  [ResourceType.FAMILY_SEARCH]: "bg-[#0a8338] text-white",
+  [ResourceType.WIKIPEDIA]: "bg-[#005174] text-white",
+  [ResourceType.BABYN_YAR]: "bg-[#000] text-white",
+  [ResourceType.WEBSITE]: "bg-[#6e0f38] text-white",
+  [ResourceType.GOOGLE_DRIVE]: "bg-[#106d56] text-white",
+  [ResourceType.USHMM]: "bg-[#10061f] text-white",
+  [ResourceType.AROLSEN]: "bg-[#79221c] text-white",
+  [ResourceType.LIBRARY]: "bg-[#2c3441] text-white",
 };
 
 export const TYPE_LABEL: Record<ResourceType, string> = {
@@ -33,8 +25,8 @@ export const TYPE_LABEL: Record<ResourceType, string> = {
   [ResourceType.BABYN_YAR]: 'Архів Бабин Яр',
   [ResourceType.WEBSITE]: "Вебсайт",
   [ResourceType.GOOGLE_DRIVE]: "Google Drive",
-  [ResourceType.USHMM]: "United States Holocaust Memorial Museum",
-  [ResourceType.AROLSEN]: "Arolsen Archives",
+  [ResourceType.USHMM]: "USHMM",
+  [ResourceType.AROLSEN]: "Arolsen",
   [ResourceType.LIBRARY]: "Бібліотека",
 };
 
@@ -55,7 +47,7 @@ const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({
   const prettyResource = resource && TYPE_LABEL[resource];
   const content = children !== undefined ? children : prettyResource;
   const inner = (
-    <Chip variant="soft" className={resource ? TYPE_CHIP_CLASS[resource] : undefined}>
+    <Chip variant="soft" className={clsx("py-1", resource && [TYPE_CHIP_CLASS[resource]])} style={{ lineHeight: 1 }}>
       {content || "Невідомий ресурс"}
     </Chip>
   );
