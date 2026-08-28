@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import { Button, ButtonGroup, Checkbox, Chip, Link } from "@heroui/react";
 import PendingButton from "@/components/pending-button";
-import { FaCheck, FaPen, FaTimes } from "react-icons/fa";
+import ActionPreviewModal from "@/components/editor/action-preview-modal";
+import { FaCheck, FaEye, FaPen, FaTimes } from "react-icons/fa";
 import { useEditorActions } from "@/hooks/useEditor";
 import useResolveAction from "@/hooks/useResolveAction";
 import {
@@ -273,6 +274,7 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
   const [status, setStatus] = useState<ActionStatus | "all">("pending");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1);
+  const [previewId, setPreviewId] = useState<string | null>(null);
   const { data: actions, isLoading, mutate } = useEditorActions(entity, status === "all" ? undefined : { status });
   const { resolveMany, isResolving } = useResolveAction(entity);
 
@@ -386,6 +388,17 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
                   <td className="p-2">
                     {pending && (
                       <div className="flex gap-1 justify-end">
+                        {row.type !== "report" && (
+                          <Button
+                            isIconOnly
+                            size="sm"
+                            variant="tertiary"
+                            aria-label="Попередній перегляд"
+                            onPress={() => setPreviewId(row.id)}
+                          >
+                            <FaEye />
+                          </Button>
+                        )}
                         <PendingButton
                           isIconOnly
                           size="sm"
@@ -451,6 +464,8 @@ const ActionsTable: React.FC<ActionsTableProps> = ({ entity, title }) => {
           </Button>
         </div>
       )}
+
+      <ActionPreviewModal entity={entity} actionId={previewId} onClose={() => setPreviewId(null)} />
     </div>
   );
 };

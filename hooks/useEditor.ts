@@ -8,6 +8,7 @@ import { GetAuthorFilesResponse } from "@/app/api/editor/authors/[id]/route";
 import { GetEditorOnlineCopiesResponse } from "@/app/api/editor/online-copies/route";
 import { GetAutolinkPreviewResponse } from "@/app/api/editor/online-copies/autolink/route";
 import { ListActionsResponse } from "@/app/api/editor/actions/[entity]/route";
+import { GetActionPreviewResponse } from "@/app/api/editor/actions/[entity]/[id]/preview/route";
 import { GetYearOverlapsResponse } from "@/app/api/editor/years/overlaps/route";
 import { GetYearAnomaliesResponse } from "@/app/api/editor/years/anomalies/route";
 
@@ -62,6 +63,15 @@ export const useYearOverlaps = (enabled: boolean) =>
 
 export const useYearAnomalies = (enabled: boolean) =>
   useGet<GetYearAnomaliesResponse>(enabled ? "/api/editor/years/anomalies" : null);
+
+/** Before/after diff of one pending action, fetched while the preview modal is
+ * open. The plain fetcher doesn't throw on HTTP errors, so an error body
+ * ({ message }) comes back through `data` and the modal branches on it. */
+export const useActionPreview = (entity: EditorQueue, actionId?: string | null) =>
+  useGet<GetActionPreviewResponse | { message: string }>(
+    actionId ? `/api/editor/actions/${entity}/${actionId}/preview` : null,
+    { keepPreviousData: false },
+  );
 
 export const useEditorActions = (
   entity: EditorQueue,

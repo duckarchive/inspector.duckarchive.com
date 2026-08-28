@@ -12,7 +12,7 @@ export class ActionExecutionError extends Error {
 
 type Tx = Prisma.TransactionClient;
 
-interface ActionRecord {
+export interface ActionRecord {
   id: string;
   type: string;
   note: string | null;
@@ -23,7 +23,7 @@ interface ActionRecord {
   file_id?: string | null;
 }
 
-const loadAction = async (entity: EditorEntity, id: string): Promise<ActionRecord | null> => {
+export const loadAction = async (entity: EditorEntity, id: string): Promise<ActionRecord | null> => {
   switch (entity) {
     case "fond":
       return prisma.fondActions.findUnique({ where: { id } });
