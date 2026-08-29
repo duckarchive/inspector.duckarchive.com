@@ -10,7 +10,7 @@ const ResourcesPage: NextPage = async () => {
     <>
       <PagePanel
         title="Джерела"
-        description="Список вебсайтів та інших сервісів, де можна знайти справи онлайн"
+        description="Список вебсайтів та сервісів, на яких розміщені онлайн копії"
       />
       <ResourcesTable resources={resources} />
     </>

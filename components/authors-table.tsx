@@ -42,6 +42,13 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
 
   const positions = useMemo(() => prepareLocations(mapAuthors), [mapAuthors]);
 
+  // Empty search: every geocoded author. Otherwise: only the ones the list is showing.
+  const filteredPositions = useMemo(() => {
+    if (!query) return positions;
+    const shownIds = new Set((authors ?? []).map((author) => author.id));
+    return positions.filter(([, , , , , id]) => id !== undefined && shownIds.has(id));
+  }, [positions, authors, query]);
+
   // Markers sharing one point are spread over a small disc, so flying to an
   // author's raw coordinates would land next to its marker rather than on it.
   const markerById = useMemo(() => {
@@ -76,7 +83,7 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
             key="static-geoduck-map"
             ref={mapRef}
             className="rounded-lg text-accent"
-            positions={positions}
+            positions={filteredPositions}
             onMarkerClick={handleMarkerClick}
             hideLayers={{ searchInput: true, historicalLayers: true }}
             scrollWheelZoom

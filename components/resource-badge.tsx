@@ -16,6 +16,7 @@ export const TYPE_CHIP_CLASS: Record<ResourceType, string> = {
   [ResourceType.USHMM]: "bg-[#10061f] text-white",
   [ResourceType.AROLSEN]: "bg-[#79221c] text-white",
   [ResourceType.LIBRARY]: "bg-[#2c3441] text-white",
+  [ResourceType.LIBRARIA]: "bg-[#00235b] text-white",
 };
 
 export const TYPE_LABEL: Record<ResourceType, string> = {
@@ -28,6 +29,7 @@ export const TYPE_LABEL: Record<ResourceType, string> = {
   [ResourceType.USHMM]: "USHMM",
   [ResourceType.AROLSEN]: "Arolsen",
   [ResourceType.LIBRARY]: "Бібліотека",
+  [ResourceType.LIBRARIA]: "LIBRARIA",
 };
 
 interface ResourceBadgeProps {
