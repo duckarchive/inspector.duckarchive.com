@@ -1,0 +1,13 @@
+Timing is on.
+BEGIN
+Time: 30.855 ms
+      step       | count  
+-----------------+--------
+ titles prefixed | 133453
+(1 row)
+
+Time: 423769.082 ms (07:03.769)
+DO
+Time: 1295.294 ms (00:01.295)
+COMMIT
+Time: 42.755 ms

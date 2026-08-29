@@ -1,0 +1,31 @@
+Timing is on.
+BEGIN
+Time: 31.909 ms
+SELECT 133453
+Time: 2069.666 ms (00:02.070)
+DO
+Time: 248.776 ms
+SELECT 133453
+Time: 1463.333 ms (00:01.463)
+DO
+Time: 667.425 ms
+            step             | count  
+-----------------------------+--------
+ suffixed codes              |   3184
+ б/н codes                   |     11
+ unchanged-shape plain codes | 130258
+(3 rows)
+
+Time: 251.751 ms
+COPY 133453
+Time: 3394.956 ms (00:03.395)
+UPDATE 133453
+Time: 371673.759 ms (06:11.674)
+UPDATE 133453
+Time: 383294.199 ms (06:23.294)
+DO
+Time: 3052.419 ms (00:03.052)
+COPY 133453
+Time: 3084.371 ms (00:03.084)
+COMMIT
+Time: 33.884 ms
