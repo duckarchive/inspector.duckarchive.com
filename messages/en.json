@@ -371,5 +371,12 @@
     "ocr": "OCR",
     "community": "Community work",
     "ai": "AI"
+  },
+  "content-translation": {
+    "toggle-off": "Translate",
+    "toggle-on": "Translated",
+    "downloading": "Downloading… {percent}%",
+    "hint": "On-device machine translation of catalog descriptions. The Ukrainian original stays visible.",
+    "original": "Original"
   }
 }

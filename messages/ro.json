@@ -371,5 +371,12 @@
     "ocr": "OCR",
     "community": "Munca comunității",
     "ai": "IA"
+  },
+  "content-translation": {
+    "toggle-off": "Tradu",
+    "toggle-on": "Tradus",
+    "downloading": "Se descarcă… {percent}%",
+    "hint": "Traducere automată a descrierilor în browser. Originalul ucrainean rămâne vizibil.",
+    "original": "Original"
   }
 }

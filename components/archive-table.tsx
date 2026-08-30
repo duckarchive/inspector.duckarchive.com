@@ -80,6 +80,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
     <>
       <PagePanel
         code={t("archive-code-label", { code })}
+        isTranslatable
         breadcrumbs={[code]}
         title={archive?.title || undefined}
         description={archive?.info || undefined}

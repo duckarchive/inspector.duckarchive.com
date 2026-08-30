@@ -64,6 +64,7 @@ const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
     <>
       <PagePanel
         code={t("fond-code-label", { code })}
+        isTranslatable
         breadcrumbs={[archiveCode, code]}
         title={fond?.title || undefined}
         description={fond?.info || undefined}

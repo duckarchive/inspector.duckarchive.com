@@ -371,5 +371,12 @@
     "ocr": "OCR",
     "community": "Praca społeczności",
     "ai": "AI"
+  },
+  "content-translation": {
+    "toggle-off": "Tłumacz",
+    "toggle-on": "Przetłumaczono",
+    "downloading": "Pobieranie… {percent}%",
+    "hint": "Tłumaczenie maszynowe opisów w przeglądarce. Ukraiński oryginał pozostaje widoczny.",
+    "original": "Oryginał"
   }
 }

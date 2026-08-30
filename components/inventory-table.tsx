@@ -77,6 +77,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) =
     <>
       <PagePanel
         code={t("inventory-code-label", { code })}
+        isTranslatable
         breadcrumbs={[archiveCode, fondCode, code]}
         title={inventory?.title || undefined}
         description={inventory?.info || undefined}

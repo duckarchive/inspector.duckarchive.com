@@ -27,6 +27,7 @@ import { useCallback, useMemo } from "react";
 import type { Map as LeafletMap } from "leaflet";
 import { findCenter, prepareLocations } from "@/lib/map";
 import { useLocale, useTranslations } from "next-intl";
+import TranslatableText from "./translatable-text";
 
 const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.default), {
   ssr: false,
@@ -133,7 +134,7 @@ const Details: React.FC<{
                 {file.authors.map(({ author }, index) => (
                   <SearchLink key={author.id} query={{ author: author.title }}>
                     {index > 0 && ", "}
-                    {author.title}
+                    <TranslatableText>{author.title}</TranslatableText>
                   </SearchLink>
                 ))}
               </CollapsibleText>
@@ -180,6 +181,7 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
     <>
       <PagePanel
         code={t("file-code-label", { code })}
+        isTranslatable
         breadcrumbs={[archiveCode, fondCode, inventoryCode, code]}
         title={file?.title || undefined}
         description={file?.info || undefined}

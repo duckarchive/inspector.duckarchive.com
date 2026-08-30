@@ -371,5 +371,12 @@
     "ocr": "OCR",
     "community": "Práce komunity",
     "ai": "AI"
+  },
+  "content-translation": {
+    "toggle-off": "Přeložit",
+    "toggle-on": "Přeloženo",
+    "downloading": "Stahování… {percent}%",
+    "hint": "Strojový překlad popisů přímo v prohlížeči. Ukrajinský originál zůstává viditelný.",
+    "original": "Originál"
   }
 }
