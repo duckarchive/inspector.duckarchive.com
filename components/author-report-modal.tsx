@@ -7,6 +7,7 @@ import PendingButton from "@/components/pending-button";
 import useSubmitAction from "@/hooks/useSubmitAction";
 import { encodeNote, SubmitActionBody } from "@/lib/editor-actions";
 import { PublicAuthor } from "@/app/api/authors/data";
+import { useTranslations } from "next-intl";
 
 interface AuthorReportModalProps {
   author: PublicAuthor | null;
@@ -22,6 +23,7 @@ const sameNum = (a: number | null, b: number | null) => (a ?? null) === (b ?? nu
  * applied on submit — every action waits in the review queue.
  */
 const AuthorReportModal: React.FC<AuthorReportModalProps> = ({ author, isOpen, onClose }) => {
+  const t = useTranslations("author-report-modal");
   // Author edits are stored in file_actions; anchoring to a linked file makes
   // the (type, file_id) partial unique index apply per-file instead of globally.
   const { submitMany, isMutating } = useSubmitAction("file");
@@ -93,7 +95,7 @@ const AuthorReportModal: React.FC<AuthorReportModalProps> = ({ author, isOpen, o
     }
 
     if (bodies.length === 0) {
-      toast("Немає змін");
+      toast(t("no-changes"));
       return;
     }
 
@@ -108,33 +110,33 @@ const AuthorReportModal: React.FC<AuthorReportModalProps> = ({ author, isOpen, o
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>Виправити автора</Modal.Heading>
+              <Modal.Heading>{t("title")}</Modal.Heading>
             </Modal.Header>
             <Modal.Body className="flex flex-col gap-3">
               <TextField value={title} onChange={setTitle}>
-                <Input placeholder="Назва" />
+                <Input placeholder={t("name-placeholder")} />
               </TextField>
               <TextField value={info} onChange={setInfo}>
-                <TextArea placeholder="Опис" rows={2} />
+                <TextArea placeholder={t("info-placeholder")} rows={2} />
               </TextField>
 
               <div className="flex flex-col gap-2">
-                <span className="text-sm text-muted">Теги</span>
+                <span className="text-sm text-muted">{t("tags-label")}</span>
                 <div className="flex flex-wrap gap-1">
-                  {tags.length === 0 && <span className="text-muted text-sm">Немає</span>}
-                  {tags.map((t) => (
-                    <Chip key={t} variant="soft">
-                      {t}
-                      <CloseButton aria-label="Видалити тег" onPress={() => setTags(tags.filter((x) => x !== t))} />
+                  {tags.length === 0 && <span className="text-muted text-sm">{t("none")}</span>}
+                  {tags.map((tag) => (
+                    <Chip key={tag} variant="soft">
+                      {tag}
+                      <CloseButton aria-label={t("remove-tag-aria")} onPress={() => setTags(tags.filter((x) => x !== tag))} />
                     </Chip>
                   ))}
                 </div>
                 <div className="flex items-end gap-2">
                   <TextField value={tagDraft} onChange={setTagDraft}>
-                    <Input placeholder="Новий тег" />
+                    <Input placeholder={t("new-tag-placeholder")} />
                   </TextField>
                   <Button size="sm" onPress={addTag} isDisabled={!tagDraft.trim()}>
-                    Додати
+                    {t("add")}
                   </Button>
                 </div>
               </div>
@@ -143,10 +145,10 @@ const AuthorReportModal: React.FC<AuthorReportModalProps> = ({ author, isOpen, o
             </Modal.Body>
             <Modal.Footer>
               <Button variant="tertiary" onPress={onClose}>
-                Скасувати
+                {t("cancel")}
               </Button>
               <PendingButton onPress={handleSubmit} isPending={isMutating}>
-                Надіслати на розгляд
+                {t("submit")}
               </PendingButton>
             </Modal.Footer>
           </Modal.Dialog>

@@ -11,18 +11,21 @@ import useArchive from "@/hooks/useArchive";
 import { sortByCode } from "@/lib/table";
 import { GetCatalogArchiveResponse } from "@/app/api/catalog/[archive-code]/route";
 import { getYearsString } from "@/lib/text";
+import { useTranslations } from "next-intl";
 
 type TableItem = GetCatalogArchiveResponse["fonds"][number];
 
 const Details: React.FC<{
   archive?: GetCatalogArchiveResponse;
-}> = ({ archive }) => (
+}> = ({ archive }) => {
+  const t = useTranslations("catalog");
+  return (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto mb-4">
     {archive?.url || archive?.address || archive?.phone_number || archive?.email ? (
       <ul className="list-inside">
         {archive.address && (
           <li>
-            Адреса:&nbsp;
+            {t("address-label")}&nbsp;
             <Link
               href={`https://www.google.com/maps/place/${archive.address.split(/,?\s+/).join("+")}`}
               target="_blank"
@@ -34,7 +37,7 @@ const Details: React.FC<{
         )}
         {archive.url && (
           <li>
-            Офіційний сайт:&nbsp;
+            {t("website-label")}&nbsp;
             <Link href={archive.url} target="_blank">
               {archive.url}
             </Link>
@@ -42,7 +45,7 @@ const Details: React.FC<{
         )}
         {archive.phone_number && (
           <li>
-            Телефон:&nbsp;
+            {t("phone-label")}&nbsp;
             <Link href={`tel:${archive.phone_number}`}>
               {archive.phone_number}
             </Link>
@@ -59,13 +62,15 @@ const Details: React.FC<{
       </ul>
     ) : null}
   </div>
-);
+  );
+};
 
 interface ArchiveTableProps {
   resources?: Resources;
 }
 
 const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
+  const t = useTranslations("catalog");
   const params = useCyrillicParams();
   const code = params["archive-code"];
   const isMobile = useIsMobile();
@@ -74,7 +79,7 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
   return (
     <>
       <PagePanel
-        code={`${code} архів`}
+        code={t("archive-code-label", { code })}
         breadcrumbs={[code]}
         title={archive?.title || undefined}
         description={archive?.info || undefined}
@@ -90,20 +95,20 @@ const ArchiveTable: React.FC<ArchiveTableProps> = ({ resources }) => {
           },
           {
             field: "title",
-            headerName: "Назва фонду",
+            headerName: t("fond-title-header"),
             flex: isMobile ? 4 : 9,
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <NextLink href={`/archives/${code}/${row.data.code}`} className="link">
-                {row.value || `Фонд ${row.data.code}`}
+                {row.value || t("untitled-fond", { code: row.data.code })}
               </NextLink>
             ),
           },
           {
             field: "years",
-            headerName: "Роки",
-            valueGetter: (params) => (params.data ? getYearsString(params.data.years) : ""),
+            headerName: t("years-header"),
+            valueGetter: (params) => (params.data ? getYearsString(params.data.years, t("unknown")) : ""),
             filter: true,
             hide: isMobile,
           },

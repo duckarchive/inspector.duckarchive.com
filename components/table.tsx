@@ -5,12 +5,13 @@ import { ColDef, RowClickedEvent } from "ag-grid-community";
 import { useEffect, useState } from "react";
 import { Resource } from "@generated/prisma/client/client";
 import { useTheme } from "next-themes";
+import { useLocale, useTranslations } from "next-intl";
 import useIsMobile from "@/hooks/useIsMobile";
 
 const INSPECTOR_FILTERS = [
   {
     id: "PRE_USSR_FUNDS",
-    title: "Фонди до 1917",
+    title: "pre-ussr-fonds",
     value: {
       conditions: [
         {
@@ -27,7 +28,7 @@ const INSPECTOR_FILTERS = [
   },
   {
     id: "USSR_FUNDS",
-    title: "Фонди після 1917",
+    title: "ussr-fonds",
     value: {
       type: "startsWith",
       filter: "Р",
@@ -35,7 +36,7 @@ const INSPECTOR_FILTERS = [
   },
   {
     id: "PART_FUNDS",
-    title: "Фонди ПРУ",
+    title: "part-fonds",
     value: {
       type: "startsWith",
       filter: "П",
@@ -64,6 +65,8 @@ const InspectorDuckTable = <T,>({
   loadingPage,
   onRowClicked,
 }: DuckTableProps<T>) => {
+  const t = useTranslations("table");
+  const locale = useLocale();
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
@@ -101,12 +104,12 @@ const InspectorDuckTable = <T,>({
     <DuckTable<T>
       id={id}
       appTheme={theme}
-      filters={isFiltersEnabled ? INSPECTOR_FILTERS : []}
+      filters={isFiltersEnabled ? INSPECTOR_FILTERS.map((f) => ({ ...f, title: t(f.title) })) : []}
       activeFilterId={activeQuickFilter}
       setActiveFilterId={setActiveQuickFilter}
       columns={[
         {
-          headerName: "Індекс",
+          headerName: t("index-header"),
           flex: isMobile ? 2 : 1,
           resizable: isMobile ? true : false,
           filter: true,
@@ -153,6 +156,9 @@ const InspectorDuckTable = <T,>({
       isLoading={isLoading}
       loadingPage={loadingPage}
       onRowClicked={onRowClicked}
+      // DuckTable defaults localeText to its Ukrainian AG Grid locale; any
+      // other UI language falls back to AG Grid's built-in English.
+      {...(locale === "uk" ? {} : { localeText: undefined })}
       defaultColDef={{
         wrapText: true,
         autoHeight: true,

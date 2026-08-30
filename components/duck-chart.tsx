@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { Archives } from "@/data/archives";
 import Select from "./select";
 import { useTheme } from "next-themes";
-import { TYPE_LABEL } from "./resource-badge";
 import { ResourceType } from "@generated/prisma/client/enums";
+import { useTranslations } from "next-intl";
 
 interface DuckChartProps {
   archives: Archives;
@@ -15,6 +15,8 @@ interface DuckChartProps {
 }
 
 const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
+  const t = useTranslations("stats-page");
+  const tBadge = useTranslations("resource-badge");
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 
@@ -40,7 +42,7 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
     <div className="flex flex-col gap-2 mt-4 h-full">
       <Select
         items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
-        label="Архів"
+        label={t("archive-label")}
         getKey={(a) => a.code}
         getTextValue={(a) => a.code}
         renderItem={(a) => (
@@ -62,7 +64,7 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
               },
             },
             title: {
-              text: filteredData[0]?.archive?.title || "Архів не вибрано",
+              text: filteredData[0]?.archive?.title || t("no-archive"),
             },
             data: filteredData,
             series: [
@@ -70,35 +72,35 @@ const DuckChart: React.FC<DuckChartProps> = ({ data, archives }) => {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "family_search_count",
-                yName: TYPE_LABEL[ResourceType.FAMILY_SEARCH],
+                yName: tBadge(ResourceType.FAMILY_SEARCH),
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "archium_count",
-                yName: TYPE_LABEL[ResourceType.ARCHIUM],
+                yName: tBadge(ResourceType.ARCHIUM),
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "wikipedia_count",
-                yName: TYPE_LABEL[ResourceType.WIKIPEDIA],
+                yName: tBadge(ResourceType.WIKIPEDIA),
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "babyn_yar_count",
-                yName: TYPE_LABEL[ResourceType.BABYN_YAR],
+                yName: tBadge(ResourceType.BABYN_YAR),
                 stackGroup: "resources",
               },
               {
                 type: "bar",
                 xKey: "created_at",
                 yKey: "website_count",
-                yName: TYPE_LABEL[ResourceType.WEBSITE],
+                yName: tBadge(ResourceType.WEBSITE),
                 stackGroup: "resources",
               },
             ],

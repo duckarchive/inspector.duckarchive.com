@@ -6,6 +6,7 @@ import qs from "qs";
 
 import { SearchRequest } from "@/app/api/search/route";
 import { Archives } from "@/data/archives";
+import { buildArchiveCodeResolver, foldCodeInput } from "@/lib/translit";
 
 /** Query params from before the fond→inventory→file rename; still honoured on inbound links. */
 const LEGACY_KEYS: Record<string, keyof SearchRequest> = {
@@ -14,17 +15,16 @@ const LEGACY_KEYS: Record<string, keyof SearchRequest> = {
   case: "file",
 };
 
-const standardizeArchiveCode = (code: string, archives: Archives) => {
-  const archive = archives.find((archive) => archive.code.toLocaleLowerCase() === code.toLocaleLowerCase());
-
-  return archive ? archive.code : "";
-};
-
 const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => void] => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const query = searchParams.toString();
+
+  const resolveArchiveCode = useMemo(
+    () => buildArchiveCodeResolver(archives.map((archive) => archive.code)),
+    [archives],
+  );
 
   const [values, canonicalQuery] = useMemo(() => {
     const parsed: SearchRequest = {};
@@ -54,14 +54,17 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
       needsRewrite = true;
     }
 
-    // "q" is the shorthand the search boxes push: a single dash-joined full code
+    // "q" is the shorthand the search boxes push: a single dash-joined full
+    // code. Latin input is welcome here — the archive code resolves against
+    // the known-code aliases (DAKHMO → ДАХмО) and the rest is folded to
+    // Cyrillic — because the API itself rejects Latin letters outright.
     if ("q" in raw && typeof raw.q === "string") {
       const [a, f, i, file] = raw.q.toLocaleUpperCase().split("-");
 
-      parsed.archive = standardizeArchiveCode(a, archives);
-      parsed.fond = f || "";
-      parsed.inventory = i || "";
-      parsed.file = file || "";
+      parsed.archive = resolveArchiveCode(a || "") || "";
+      parsed.fond = f ? foldCodeInput(f) : "";
+      parsed.inventory = i ? foldCodeInput(i) : "";
+      parsed.file = file ? foldCodeInput(file) : "";
       delete raw.q;
       needsRewrite = true;
     }
@@ -69,7 +72,7 @@ const useSearch = (archives: Archives): [SearchRequest, (val: SearchRequest) => 
     const values = { ...parsed, ...raw };
 
     return [values, needsRewrite ? qs.stringify(values, { skipNulls: true }) : null] as const;
-  }, [query, archives]);
+  }, [query, resolveArchiveCode]);
 
   // Rewriting the URL is a side effect: doing it while rendering throws on the
   // server ("location is not defined") for any shared/bookmarked search link.

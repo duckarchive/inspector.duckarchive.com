@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ResourceType } from "@generated/prisma/client/enums";
-import { TYPE_CHIP_CLASS, TYPE_LABEL } from "@/components/resource-badge";
+import { TYPE_CHIP_CLASS } from "@/components/resource-badge";
+import { useTranslations } from "next-intl";
 
 const RESOURCE_ORDER: ResourceType[] = [
   ResourceType.ARCHIUM,
@@ -13,9 +14,8 @@ const RESOURCE_ORDER: ResourceType[] = [
   ResourceType.GOOGLE_DRIVE,
 ];
 
-/** What Duck Inspector actually does with what it pulls in — real product surfaces, not translated
- *  like TYPE_LABEL above: archival vocabulary stays Ukrainian across every locale in this app. */
-const OUTPUT_LABELS = ["Каталоги", "Описи", "OCR", "Робота спільноти", "ШІ"];
+/** What Duck Inspector actually does with what it pulls in — message keys under process-diagram. */
+const OUTPUT_KEYS = ["catalogs", "inventories", "ocr", "community", "ai"];
 
 /** Solid categorical fill per resource, lifted from TYPE_CHIP_CLASS (`bg-[#hex] text-white`). */
 const RESOURCE_COLOR: Record<ResourceType, string> = Object.fromEntries(
@@ -72,6 +72,8 @@ const FlowNode: React.FC<FlowNodeProps> = ({ label, pos, className, truncate, co
  * across resizes; only the SVG paths are converted to pixels.
  */
 const ProcessDiagram: React.FC<{ duckLabel: string }> = ({ duckLabel }) => {
+  const t = useTranslations("process-diagram");
+  const tBadge = useTranslations("resource-badge");
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -97,7 +99,7 @@ const ProcessDiagram: React.FC<{ duckLabel: string }> = ({ duckLabel }) => {
 
   const isCompact = size.width > 0 && size.width < COMPACT_BREAKPOINT;
   const inputPositions = rowLayout(RESOURCE_ORDER, { single: 10, row1: 8, row2: 26 }, isCompact);
-  const outputPositions = rowLayout(OUTPUT_LABELS, { single: 90, row1: 74, row2: 92 }, isCompact);
+  const outputPositions = rowLayout(OUTPUT_KEYS, { single: 90, row1: 74, row2: 92 }, isCompact);
 
   const toPx = (pt: Point) => ({ x: (pt.x / 100) * size.width, y: (pt.y / 100) * size.height });
 
@@ -133,13 +135,13 @@ const ProcessDiagram: React.FC<{ duckLabel: string }> = ({ duckLabel }) => {
               </g>
             );
           })}
-          {OUTPUT_LABELS.map((label, i) => {
+          {OUTPUT_KEYS.map((key, i) => {
             const d = flowPath(DUCK_POS, outputPositions[i]);
             // Pulse travels the opposite way of the base line — up into Duck Inspector,
             // not down out of it — so it needs its own path drawn output-first.
             const dPulse = flowPath(outputPositions[i], DUCK_POS);
             return (
-              <g key={label}>
+              <g key={key}>
                 <path d={d} fill="none" style={{ stroke: "var(--border)" }} strokeWidth={1.5} />
                 <path
                   className={prefersReducedMotion ? undefined : "duck-flow-pulse"}
@@ -161,7 +163,7 @@ const ProcessDiagram: React.FC<{ duckLabel: string }> = ({ duckLabel }) => {
           key={type}
           className="text-label-sm md:text-body-md font-label font-semibold uppercase tracking-wide"
           color={RESOURCE_COLOR[type]}
-          label={TYPE_LABEL[type]}
+          label={tBadge(type)}
           pos={inputPositions[i]}
           truncate={isCompact}
         />
@@ -174,11 +176,11 @@ const ProcessDiagram: React.FC<{ duckLabel: string }> = ({ duckLabel }) => {
         truncate={false}
       />
 
-      {OUTPUT_LABELS.map((label, i) => (
+      {OUTPUT_KEYS.map((key, i) => (
         <FlowNode
-          key={label}
+          key={key}
           className="text-label-sm md:text-body-md font-label font-semibold uppercase tracking-wide text-foreground"
-          label={label}
+          label={t(key)}
           pos={outputPositions[i]}
           truncate={isCompact}
         />

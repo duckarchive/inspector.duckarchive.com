@@ -7,6 +7,7 @@ import InspectorDuckTable from "@/components/table";
 import { sortByTitle } from "@/lib/table";
 import useIsMobile from "@/hooks/useIsMobile";
 import { sortText } from "@duckarchive/framework";
+import { useTranslations } from "next-intl";
 
 type TableItem = Archives[number];
 
@@ -16,6 +17,7 @@ interface ArchivesTableProps {
 }
 
 const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) => {
+  const t = useTranslations("catalog");
   const isMobile = useIsMobile();
 
   return (
@@ -29,7 +31,7 @@ const ArchivesTable: React.FC<ArchivesTableProps> = ({ resources, archives }) =>
         },
         {
           field: "title",
-          headerName: "Назва",
+          headerName: t("title-header"),
           flex: isMobile ? 4 : 9,
           filter: true,
           comparator: sortText,

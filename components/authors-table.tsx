@@ -19,6 +19,8 @@ import { SearchRequest } from "@/app/api/search/route";
 import { useAuthors } from "@/hooks/useAuthors";
 import InspectorDuckTable from "@/components/table";
 import AuthorReportModal from "@/components/author-report-modal";
+import { useLocale, useTranslations } from "next-intl";
+import { toCyrillicQuery } from "@/lib/translit";
 
 const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.default), {
   ssr: false,
@@ -32,13 +34,17 @@ interface AuthorsTableProps {
 }
 
 const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
+  const t = useTranslations("authors-page");
+  const tTags = useTranslations("tags");
+  const locale = useLocale();
   const router = useRouter();
   const { status } = useSession();
   const mapRef = useRef<LeafletMap | null>(null);
   /** Drives the list: typed by hand, or written by a click on a marker. */
   const [query, setQuery] = useState("");
   const [reported, setReported] = useState<PublicAuthor | null>(null);
-  const { data: authors, isLoading } = useAuthors(query || undefined);
+  // The API rejects Latin letters, so a Latin query is transliterated first.
+  const { data: authors, isLoading } = useAuthors(query ? toCyrillicQuery(query, locale) : undefined);
 
   const positions = useMemo(() => prepareLocations(mapAuthors), [mapAuthors]);
 
@@ -94,10 +100,10 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
         <div className="basis-1/2 min-w-0 flex flex-col gap-2">
           <TextField value={query} onChange={setQuery}>
             <InputGroup>
-              <InputGroup.Input placeholder="Пошук автора" />
+              <InputGroup.Input placeholder={t("search-placeholder")} />
               {query ? (
                 <InputGroup.Suffix>
-                  <CloseButton aria-label="Очистити пошук" onPress={() => setQuery("")} />
+                  <CloseButton aria-label={t("clear-search-aria")} onPress={() => setQuery("")} />
                 </InputGroup.Suffix>
               ) : null}
             </InputGroup>
@@ -109,7 +115,7 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
             onRowClicked={(event) => event.data && focusOnMap(event.data)}
             columns={[
               {
-                headerName: "Автори",
+                headerName: t("authors-header"),
                 field: "title",
                 flex: 4,
                 sortable: false,
@@ -122,7 +128,7 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
                     <div className="flex flex-wrap items-center gap-1">
                       {row.data.tags.map((tag) => (
                         <Chip key={tag} size="sm" variant="soft">
-                          {tag}
+                          {tTags.has(tag) ? tTags(tag) : tag}
                         </Chip>
                       ))}
                     </div>
@@ -142,7 +148,7 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
                     <Button
                       size="sm"
                       variant="outline"
-                      aria-label="Знайти справи цього автора"
+                      aria-label={t("find-files-aria")}
                       onPress={() => handleSearch(row.data)}
                     >
                       <FaSearch />
@@ -154,7 +160,7 @@ const AuthorsTable: React.FC<AuthorsTableProps> = ({ mapAuthors }) => {
                         size="sm"
                         variant="outline"
                         isIconOnly
-                        aria-label="Повідомити про помилку"
+                        aria-label={t("report-aria")}
                         onPress={() => setReported(row.data)}
                       >
                         <FaBug />

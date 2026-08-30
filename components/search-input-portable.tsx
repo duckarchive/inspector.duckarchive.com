@@ -6,8 +6,10 @@ import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import SearchInputGuideModal from "./search-input-guide-modal";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useTranslations } from "next-intl";
 
 const SearchInputPortable: React.FC = () => {
+  const t = useTranslations("search-input");
   const router = useRouter();
   const [search, setSearch] = useState("");
 
@@ -28,7 +30,7 @@ const SearchInputPortable: React.FC = () => {
     <form className="flex flex-wrap" onSubmit={handleSearch}>
       <TextField
         name="search-case"
-        aria-label="Поле для реквізитів"
+        aria-label={t("portable-aria")}
         type="search"
         value={search}
         onChange={handleChange}

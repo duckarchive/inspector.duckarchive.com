@@ -5,6 +5,7 @@ import { Chip, Tooltip } from "@heroui/react";
 import { ResourceType } from "@generated/prisma/client/enums";
 import { Resource } from "@generated/prisma/client/client";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 export const TYPE_CHIP_CLASS: Record<ResourceType, string> = {
   [ResourceType.ARCHIUM]: "bg-[#c74c13] text-white",
@@ -45,12 +46,13 @@ const ResourceBadge: React.FC<PropsWithChildren<ResourceBadgeProps>> = ({
   tooltip,
   ...rest
 }) => {
+  const t = useTranslations("resource-badge");
   const resource = resources[resourceId]?.type;
-  const prettyResource = resource && TYPE_LABEL[resource];
+  const prettyResource = resource && t(resource);
   const content = children !== undefined ? children : prettyResource;
   const inner = (
     <Chip variant="soft" className={clsx("py-1", resource && [TYPE_CHIP_CLASS[resource]])} style={{ lineHeight: 1 }}>
-      {content || "Невідомий ресурс"}
+      {content || t("unknown-resource")}
     </Chip>
   );
 

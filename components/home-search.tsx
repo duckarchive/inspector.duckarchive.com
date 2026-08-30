@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { InputGroup, TextField } from "@heroui/react";
 import { FaSearch } from "react-icons/fa";
 import { sendGAEvent } from "@next/third-parties/google";
 import qs from "qs";
 import PendingButton from "@/components/pending-button";
+import { hasLatin, toCyrillicQuery } from "@/lib/translit";
 
 /** Real document types from the catalog, so the examples return actual results. */
 const TITLE_EXAMPLES = ["київ", "шевченко", "ревізька казка", "рацс", "1921"];
@@ -72,6 +73,8 @@ const usePrefersReducedMotion = (): boolean => {
  */
 const HomeSearch: React.FC = () => {
   const t = useTranslations("home-page");
+  const tSearch = useTranslations("search-page");
+  const locale = useLocale();
   const router = useRouter();
   const [query, setQuery] = useState("");
 
@@ -81,14 +84,20 @@ const HomeSearch: React.FC = () => {
   const isAnimated = !prefersReducedMotion && !query;
   const typed = useTypewriter(TITLE_EXAMPLES, isAnimated);
 
+  // The catalog is Cyrillic-only and the API rejects Latin letters, so a
+  // Latin query is transliterated before it is sent — and previewed below the
+  // box while typing, so the conversion is never a surprise.
+  const converted = trimmed && hasLatin(trimmed) ? toCyrillicQuery(trimmed, locale) : null;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!trimmed) {
       return;
     }
 
-    sendGAEvent("event", "home-search", { value: trimmed });
-    router.push(`/search?${qs.stringify({ title: trimmed }, { skipNulls: true })}`);
+    const title = converted ?? trimmed;
+    sendGAEvent("event", "home-search", { value: title });
+    router.push(`/search?${qs.stringify({ title }, { skipNulls: true })}`);
   };
 
   return (
@@ -117,6 +126,9 @@ const HomeSearch: React.FC = () => {
           ) : null}
         </InputGroup>
       </TextField>
+      {converted ? (
+        <p className="text-xs opacity-60 px-1">{tSearch("translit-hint", { query: converted })}</p>
+      ) : null}
     </form>
   );
 };

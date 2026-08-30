@@ -5,26 +5,28 @@ import { Button, Modal, useOverlayState } from "@heroui/react";
 import NextLink from "next/link";
 import { handleSendMessageTG, LIMIT_FUNDS } from "@/lib/sendNotification";
 import { siteConfig } from "@/config/site";
+import { useTranslations } from "next-intl";
 
 interface ReportModalProps {
   data: ReportSummary;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
+  const t = useTranslations("report-modal");
   const state = useOverlayState();
   const telegramBotToken = typeof window !== "undefined" && window.localStorage.getItem("duck_fs_tg_token");
 
   return (
     <Modal state={state}>
       <Button size="sm" onPress={state.open}>
-        Звіт по архівах
+        {t("trigger")}
       </Button>
       <Modal.Backdrop>
         <Modal.Container>
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>Нові справи за минулу добу</Modal.Heading>
+              <Modal.Heading>{t("title")}</Modal.Heading>
             </Modal.Header>
             <Modal.Body className="max-h-96 overflow-y-scroll">
               <ul>
@@ -46,7 +48,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
                             : {count}
                           </li>
                         ))}
-                      {funds.length > LIMIT_FUNDS && <li>та інші</li>}
+                      {funds.length > LIMIT_FUNDS && <li>{t("and-others")}</li>}
                     </ul>
                   </li>
                 ))}
@@ -55,7 +57,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ data }) => {
             {telegramBotToken && (
               <Modal.Footer>
                 <Button onPress={() => handleSendMessageTG(telegramBotToken, data, siteConfig.url)}>
-                  Відправити в групу
+                  {t("send")}
                 </Button>
               </Modal.Footer>
             )}

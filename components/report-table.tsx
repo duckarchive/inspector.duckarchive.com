@@ -7,6 +7,7 @@ import InspectorDuckTable from "@/components/table";
 import { getSyncAtLabel } from "@/lib/table";
 import ResourceBadge from "./resource-badge";
 import { sortCode } from "@duckarchive/framework";
+import { useLocale, useTranslations } from "next-intl";
 
 type TableItem = Report[number];
 
@@ -16,6 +17,9 @@ interface ReportTableProps {
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
+  const t = useTranslations("report-table");
+  const tTable = useTranslations("table");
+  const locale = useLocale();
   return (
     <InspectorDuckTable<TableItem>
       id="report-table"
@@ -31,7 +35,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
           filter: false,
           cellRenderer: (row: { value: TableItem["resource_id"]; data: TableItem }) => (
             <div className="flex h-10 w-full items-center justify-center">
-              <ResourceBadge resourceId={row.value} resources={resources} tooltip={getSyncAtLabel(row.data.updated_at)}>
+              <ResourceBadge resourceId={row.value} resources={resources} tooltip={getSyncAtLabel(row.data.updated_at, { locale, prefix: tTable("checked-prefix"), notSynced: tTable("not-synced") })}>
                 &nbsp;
               </ResourceBadge>
             </div>
@@ -39,7 +43,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
         },
         {
           field: "archive_code",
-          headerName: "Архів",
+          headerName: t("archive-header"),
           filter: true,
           flex: 1,
           cellRenderer: (row: { value: TableItem["archive_code"]; data: TableItem }) => (
@@ -50,7 +54,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
         },
         {
           field: "fund_code",
-          headerName: "Фонд",
+          headerName: t("fond-header"),
           filter: true,
           flex: 1,
           comparator: sortCode,
@@ -67,7 +71,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
         },
         {
           field: "description_code",
-          headerName: "Опис",
+          headerName: t("inventory-header"),
           filter: true,
           flex: 1,
           comparator: sortCode,
@@ -84,7 +88,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
         },
         {
           field: "case_code",
-          headerName: "Справа",
+          headerName: t("file-header"),
           filter: true,
           flex: 1,
           comparator: sortCode,
@@ -101,12 +105,12 @@ const ReportTable: React.FC<ReportTableProps> = ({ resources, report }) => {
         },
         {
           field: "url",
-          headerName: "Посилання",
+          headerName: t("url-header"),
           flex: 4,
           sortable: false,
           cellRenderer: (row: { value: string; data: TableItem }) => (
             <Link href={row.value || "#"} target="_blank" rel="noopener noreferrer">
-              {row.value || "Щось пішло не так"}
+              {row.value || t("broken-link")}
               <Link.Icon />
             </Link>
           ),
