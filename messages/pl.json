@@ -138,6 +138,8 @@
     "error-generic": "Nie udało się wysłać zgłoszenia"
   },
   "search-page": {
+    "title": "Wyszukiwanie",
+    "description": "Znajdź jednostki archiwalne według tytułu, sygnatury, autora, lokalizacji, lat i tagów.",
     "query-placeholder": "Zapytanie wyszukiwania",
     "translit-hint": "Szukamy w języku ukraińskim jako: {query}",
     "submit-match": "Zgodność {percent}%",
@@ -284,8 +286,8 @@
     "checked-header": "Sprawdzono"
   },
   "archives-page": {
-    "title": "Archiwa",
-    "description": "Archiwa w bazie Inspektora"
+    "title": "Archiwa, biblioteki i projekty",
+    "description": "Podlegają Państwowej Służbie Archiwalnej Ukrainy lub Ministerstwu Kultury Ukrainy."
   },
   "authors-page": {
     "title": "Autorzy",
@@ -373,10 +375,8 @@
     "ai": "AI"
   },
   "content-translation": {
-    "toggle-off": "Tłumacz",
-    "toggle-on": "Przetłumaczono",
     "downloading": "Pobieranie… {percent}%",
-    "hint": "Tłumaczenie maszynowe opisów w przeglądarce. Ukraiński oryginał pozostaje widoczny.",
+    "hint": "Tłumaczenie maszynowe treści katalogu w przeglądarce. Sformułowania mogą być przybliżone.",
     "original": "Oryginał"
   }
 }

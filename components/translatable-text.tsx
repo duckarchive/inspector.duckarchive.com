@@ -18,7 +18,7 @@ interface TranslatableTextProps {
  */
 const TranslatableText: React.FC<TranslatableTextProps> = ({ children, className }) => {
   const t = useTranslations("content-translation");
-  const { status, translate } = useContentTranslation();
+  const { status, targetLanguage, translate } = useContentTranslation();
   const [translated, setTranslated] = useState<string | null>(null);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const TranslatableText: React.FC<TranslatableTextProps> = ({ children, className
   }
 
   return (
-    <span className={className} lang="en" title={`${t("original")}: ${children}`}>
+    <span className={className} lang={targetLanguage} title={`${t("original")}: ${children}`}>
       {translated}
     </span>
   );

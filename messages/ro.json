@@ -138,6 +138,8 @@
     "error-generic": "Sesizarea nu a putut fi trimisă"
   },
   "search-page": {
+    "title": "Căutare",
+    "description": "Găsiți dosare de arhivă după titlu, cotă, autor, localitate, ani și etichete.",
     "query-placeholder": "Interogare de căutare",
     "translit-hint": "Vom căuta în ucraineană ca: {query}",
     "submit-match": "Potrivire {percent}%",
@@ -284,8 +286,8 @@
     "checked-header": "Verificat"
   },
   "archives-page": {
-    "title": "Arhive",
-    "description": "Arhivele din baza de date a Inspectorului"
+    "title": "Arhive, biblioteci și proiecte",
+    "description": "În subordinea Serviciului Arhivistic de Stat al Ucrainei sau a Ministerului Culturii al Ucrainei."
   },
   "authors-page": {
     "title": "Autori",
@@ -373,10 +375,8 @@
     "ai": "IA"
   },
   "content-translation": {
-    "toggle-off": "Tradu",
-    "toggle-on": "Tradus",
     "downloading": "Se descarcă… {percent}%",
-    "hint": "Traducere automată a descrierilor în browser. Originalul ucrainean rămâne vizibil.",
+    "hint": "Traducere automată a conținutului catalogului în browser. Formulările pot fi aproximative.",
     "original": "Original"
   }
 }

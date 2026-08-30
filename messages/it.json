@@ -138,6 +138,8 @@
     "error-generic": "Impossibile inviare la segnalazione"
   },
   "search-page": {
+    "title": "Ricerca",
+    "description": "Trova fascicoli d'archivio per titolo, segnatura, autore, luogo, anni e tag.",
     "query-placeholder": "Query di ricerca",
     "translit-hint": "Cercheremo in ucraino come: {query}",
     "submit-match": "Corrispondenza {percent}%",
@@ -284,8 +286,8 @@
     "checked-header": "Verificato"
   },
   "archives-page": {
-    "title": "Archivi",
-    "description": "Gli archivi nel database di Inspector"
+    "title": "Archivi, biblioteche e progetti",
+    "description": "Sotto l'autorità del Servizio archivistico statale dell'Ucraina o del Ministero della Cultura dell'Ucraina."
   },
   "authors-page": {
     "title": "Autori",
@@ -373,10 +375,8 @@
     "ai": "IA"
   },
   "content-translation": {
-    "toggle-off": "Traduci",
-    "toggle-on": "Tradotto",
     "downloading": "Download… {percent}%",
-    "hint": "Traduzione automatica delle descrizioni nel browser. L'originale ucraino resta visibile.",
+    "hint": "Traduzione automatica dei contenuti del catalogo nel browser. La formulazione può essere approssimativa.",
     "original": "Originale"
   }
 }

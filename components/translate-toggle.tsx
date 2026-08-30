@@ -26,17 +26,16 @@ const TranslateToggle: React.FC = () => {
       <Tooltip.Trigger>
         <Button
           size="sm"
-          variant={isOn ? "primary" : "outline"}
+          variant={isOn ? "secondary" : "outline"}
           isDisabled={isBusy}
           aria-pressed={isOn}
+          isIconOnly
           onPress={() => (isOn ? disable() : enable())}
         >
           <FaLanguage />
           {isBusy
             ? t("downloading", { percent: Math.round(progress * 100) })
-            : isOn
-              ? t("toggle-on")
-              : t("toggle-off")}
+            : null}
         </Button>
       </Tooltip.Trigger>
       <Tooltip.Content showArrow placement="bottom">

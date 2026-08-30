@@ -19,7 +19,16 @@ import {
   Link,
   TextField,
 } from "@heroui/react";
-import { FaCalendar, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown, FaFeather } from "react-icons/fa";
+import {
+  FaCalendar,
+  FaFolder,
+  FaLink,
+  FaListUl,
+  FaMapMarkerAlt,
+  FaSearch,
+  FaChevronDown,
+  FaFeather,
+} from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
@@ -27,6 +36,7 @@ import useIsMobile from "@/hooks/useIsMobile";
 import TagsInput from "@/components/tags-input";
 import { useAuthors } from "@/hooks/useAuthors";
 import { foldCodeInput, hasLatin, toCyrillicQuery } from "@/lib/translit";
+import TranslatableText from "@/components/translatable-text";
 import isEmpty from "lodash/isEmpty.js";
 
 const ONLINE_TAG = "доступні онлайн копії";
@@ -167,9 +177,8 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   // Live preview of what a Latin query will be searched as, shown before the
   // user submits so the conversion is never a surprise.
-  const titlePreview = searchValues.title && hasLatin(searchValues.title)
-    ? toCyrillicQuery(searchValues.title, locale)
-    : null;
+  const titlePreview =
+    searchValues.title && hasLatin(searchValues.title) ? toCyrillicQuery(searchValues.title, locale) : null;
 
   const filters = (
     <>
@@ -207,12 +216,15 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
           form="search-form"
           items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
           label={t("archive-label")}
+          virtualized
           getKey={(a) => a.code}
           getTextValue={(a) => a.code}
           renderItem={(a) => (
             <div>
               <p>{a.code}</p>
-              <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+              <p className="opacity-70 text-sm text-wrap">
+                {a.title ? <TranslatableText>{a.title}</TranslatableText> : null}
+              </p>
             </div>
           )}
           value={searchValues.archive}
@@ -383,11 +395,9 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {row.data.title || t("no-title")}
+                        {row.data.title ? <TranslatableText>{row.data.title}</TranslatableText> : t("no-title")}
                       </Link>
-                      <span className="font-mono text-sm">
-                        {row.value}
-                      </span>
+                      <span className="font-mono text-sm">{row.value}</span>
                       <div className="flex flex-wrap items-center gap-1">
                         {row.data.is_online ? (
                           <Chip size="sm" variant="primary" color="accent">

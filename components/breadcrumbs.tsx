@@ -11,7 +11,7 @@ interface NavigationBreadcrumbsProps {
   code: string;
 }
 
-const ITEM_CLASS = "text-gray-500 text-lg aria-[current=page]:font-bold";
+const ITEM_CLASS = "h-[28px] text-gray-500 text-lg aria-[current=page]:font-bold";
 
 const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, code }) => {
   const t = useTranslations("breadcrumbs");

@@ -138,6 +138,8 @@
     "error-generic": "Hlášení se nepodařilo odeslat"
   },
   "search-page": {
+    "title": "Vyhledávání",
+    "description": "Najděte archivní spisy podle názvu, signatury, autora, lokality, let a štítků.",
     "query-placeholder": "Vyhledávací dotaz",
     "translit-hint": "Budeme hledat v ukrajinštině: {query}",
     "submit-match": "Shoda {percent}%",
@@ -284,8 +286,8 @@
     "checked-header": "Zkontrolováno"
   },
   "archives-page": {
-    "title": "Archivy",
-    "description": "Archivy v databázi Inspektora"
+    "title": "Archivy, knihovny a projekty",
+    "description": "Spadají pod Státní archivní službu Ukrajiny nebo Ministerstvo kultury Ukrajiny."
   },
   "authors-page": {
     "title": "Autoři",
@@ -373,10 +375,8 @@
     "ai": "AI"
   },
   "content-translation": {
-    "toggle-off": "Přeložit",
-    "toggle-on": "Přeloženo",
     "downloading": "Stahování… {percent}%",
-    "hint": "Strojový překlad popisů přímo v prohlížeči. Ukrajinský originál zůstává viditelný.",
+    "hint": "Strojový překlad obsahu katalogu přímo v prohlížeči. Formulace mohou být přibližné.",
     "original": "Originál"
   }
 }

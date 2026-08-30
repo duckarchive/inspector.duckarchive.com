@@ -138,6 +138,8 @@
     "error-generic": "Could not send the report"
   },
   "search-page": {
+    "title": "Search",
+    "description": "Find archival files by title, reference code, author, location, years and tags.",
     "query-placeholder": "Search query",
     "translit-hint": "Searching in Ukrainian as: {query}",
     "submit-match": "{percent}% match",
@@ -284,8 +286,8 @@
     "checked-header": "Checked"
   },
   "archives-page": {
-    "title": "Archives",
-    "description": "Archives in the Inspector database"
+    "title": "Archives, libraries and projects",
+    "description": "Under the authority of the State Archival Service of Ukraine or the Ministry of Culture of Ukraine."
   },
   "authors-page": {
     "title": "Authors",
@@ -373,10 +375,8 @@
     "ai": "AI"
   },
   "content-translation": {
-    "toggle-off": "Translate",
-    "toggle-on": "Translated",
     "downloading": "Downloading… {percent}%",
-    "hint": "On-device machine translation of catalog descriptions. The Ukrainian original stays visible.",
+    "hint": "On-device machine translation of catalog text. Wording may be approximate.",
     "original": "Original"
   }
 }

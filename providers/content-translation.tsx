@@ -12,6 +12,8 @@ type Status = "unsupported" | "off" | "downloading" | "on";
 interface ContentTranslationValue {
   /** False on mobile, non-Chromium desktop, and unsupported language pairs. */
   isOffered: boolean;
+  /** BCP-47 tag translations are produced in — for the `lang` attribute. */
+  targetLanguage: string;
   status: Status;
   /** 0–1 while a language pack downloads. */
   progress: number;
@@ -24,7 +26,8 @@ interface ContentTranslationValue {
 const ContentTranslationContext = createContext<ContentTranslationValue | null>(null);
 
 /**
- * Read-time translation of catalog content, off by default.
+ * Read-time translation of catalog content, on by default for foreign readers
+ * whose browser already holds the language model.
  *
  * The catalog itself stays Ukrainian — this only offers foreign visitors a gist
  * of free-text titles and descriptions, computed on-device. Ukrainian speakers
@@ -54,15 +57,18 @@ export const ContentTranslationProvider: React.FC<PropsWithChildren> = ({ childr
         setStatus("unsupported");
         return;
       }
-      // Restore the reader's preference, but only when the model is already on
-      // disk — resuming a download needs a gesture we do not have on load.
-      let remembered = false;
+      // Translation is on by default for foreign readers, but only once the
+      // model is on disk: Chrome refuses to *download* one outside a user
+      // gesture, so a "downloadable" pair has to wait for the button. The
+      // stored preference is tri-state — "0" is an explicit opt-out we honour,
+      // absent means "never chose", which now defaults to on.
+      let preference: string | null = null;
       try {
-        remembered = window.localStorage.getItem(STORAGE_KEY) === "1";
+        preference = window.localStorage.getItem(STORAGE_KEY);
       } catch {
-        // Private mode / blocked storage: fall back to off.
+        // Private mode / blocked storage: treat as no preference.
       }
-      setStatus(remembered && availability === "available" ? "on" : "off");
+      setStatus(preference !== "0" && availability === "available" ? "on" : "off");
     });
 
     return () => {
@@ -92,7 +98,8 @@ export const ContentTranslationProvider: React.FC<PropsWithChildren> = ({ childr
   const disable = useCallback(() => {
     setStatus("off");
     try {
-      window.localStorage.removeItem(STORAGE_KEY);
+      // Recorded explicitly so the default-on rule does not switch it back.
+      window.localStorage.setItem(STORAGE_KEY, "0");
     } catch {
       // ignore
     }
@@ -101,8 +108,8 @@ export const ContentTranslationProvider: React.FC<PropsWithChildren> = ({ childr
   const translate = useCallback((text: string) => translateContent(text, target), [target]);
 
   const value = useMemo<ContentTranslationValue>(
-    () => ({ isOffered: status !== "unsupported", status, progress, enable, disable, translate }),
-    [status, progress, enable, disable, translate],
+    () => ({ isOffered: status !== "unsupported", targetLanguage: target, status, progress, enable, disable, translate }),
+    [status, target, progress, enable, disable, translate],
   );
 
   return <ContentTranslationContext.Provider value={value}>{children}</ContentTranslationContext.Provider>;
@@ -111,6 +118,7 @@ export const ContentTranslationProvider: React.FC<PropsWithChildren> = ({ childr
 export const useContentTranslation = (): ContentTranslationValue =>
   useContext(ContentTranslationContext) ?? {
     isOffered: false,
+    targetLanguage: "en",
     status: "unsupported",
     progress: 0,
     enable: async () => {},
