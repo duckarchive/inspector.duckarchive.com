@@ -5,6 +5,13 @@
     "search-label": "Caută după titlu",
     "search-button": "Caută",
     "search-footer": "{count} înregistrări",
+    "search-examples": [
+      "șevcenco",
+      "kharkiv",
+      "poltava",
+      "odesa",
+      "1921"
+    ],
     "process": {
       "title": "Cum funcționează",
       "subtitle": "Duck Inspector nu stochează arhivele — urmărește unde se află deja și îți oferă o singură ușă de acces la toate.",

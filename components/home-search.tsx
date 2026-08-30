@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { InputGroup, TextField } from "@heroui/react";
@@ -10,7 +10,12 @@ import qs from "qs";
 import PendingButton from "@/components/pending-button";
 import { hasLatin, toCyrillicQuery } from "@/lib/translit";
 
-/** Real document types from the catalog, so the examples return actual results. */
+/**
+ * Fallback examples if the locale's `home-page.search-examples` list is
+ * missing. The per-locale lists live in messages/*.json; every entry must
+ * transliterate to an EXACT catalog term via toCyrillicQuery (verify with
+ * lib/translit.ts before editing), so typing an example returns real results.
+ */
 const TITLE_EXAMPLES = ["київ", "шевченко", "ревізька казка", "рацс", "1921"];
 
 const TYPE_MS = 90;
@@ -69,7 +74,8 @@ const usePrefersReducedMotion = (): boolean => {
 /**
  * Home search. The query is sent as a plain title match, which the search
  * page reads straight off the query string (hooks/useSearch.tsx). The
- * placeholder stays Ukrainian in every locale because the catalog is.
+ * animated placeholder examples are per-locale (Latin for foreign locales —
+ * the transliteration layer turns them into the exact Cyrillic catalog terms).
  */
 const HomeSearch: React.FC = () => {
   const t = useTranslations("home-page");
@@ -78,11 +84,18 @@ const HomeSearch: React.FC = () => {
   const router = useRouter();
   const [query, setQuery] = useState("");
 
+  // Memoized: useTypewriter resets its animation whenever the array identity
+  // changes, so a fresh array per render would freeze it at zero length.
+  const examples = useMemo(() => {
+    const raw = t.raw("search-examples");
+    return Array.isArray(raw) && raw.length > 0 ? raw.map(String) : TITLE_EXAMPLES;
+  }, [t]);
+
   const trimmed = query.trim();
   const prefersReducedMotion = usePrefersReducedMotion();
   // Nothing to animate once the user is typing — the placeholder is hidden then.
   const isAnimated = !prefersReducedMotion && !query;
-  const typed = useTypewriter(TITLE_EXAMPLES, isAnimated);
+  const typed = useTypewriter(examples, isAnimated);
 
   // The catalog is Cyrillic-only and the API rejects Latin letters, so a
   // Latin query is transliterated before it is sent — and previewed below the
@@ -114,7 +127,7 @@ const HomeSearch: React.FC = () => {
           {/* Keep type="search" semantics, drop Chrome's native ✕ — the CTA is the only control here. */}
           <InputGroup.Input
             className="text-lg md:text-xl [&::-webkit-search-cancel-button]:hidden"
-            placeholder={isAnimated ? `${typed}|` : TITLE_EXAMPLES[0]}
+            placeholder={isAnimated ? `${typed}|` : examples[0]}
             autoComplete="off"
           />
           {trimmed ? (

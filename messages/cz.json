@@ -5,6 +5,13 @@
     "search-label": "Hledat podle názvu",
     "search-button": "Hledat",
     "search-footer": "{count} záznamů",
+    "search-examples": [
+      "ševčenko",
+      "charkiv",
+      "metryčna knyha",
+      "poltava",
+      "1921"
+    ],
     "process": {
       "title": "Jak to funguje",
       "subtitle": "Duck Inspector archivy neukládá — sleduje, kde už existují, a dává vám jeden vstup ke všem.",

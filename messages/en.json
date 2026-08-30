@@ -5,6 +5,13 @@
     "search-label": "Search by file title",
     "search-button": "Search",
     "search-footer": "{count} records",
+    "search-examples": [
+      "shevchenko",
+      "kharkiv",
+      "metrychna knyha",
+      "poltava",
+      "1921"
+    ],
     "process": {
       "title": "How it works",
       "subtitle": "Duck Inspector doesn't store the archives — it watches where they already live and gives you one door in.",

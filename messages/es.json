@@ -5,6 +5,13 @@
     "search-label": "Buscar por título",
     "search-button": "Buscar",
     "search-footer": "{count} registros",
+    "search-examples": [
+      "shevchenko",
+      "járkiv",
+      "poltava",
+      "odesa",
+      "1921"
+    ],
     "process": {
       "title": "Cómo funciona",
       "subtitle": "Duck Inspector no almacena los archivos: vigila dónde ya están y te da una sola puerta de entrada a todos.",

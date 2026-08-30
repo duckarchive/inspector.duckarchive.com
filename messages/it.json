@@ -5,6 +5,13 @@
     "search-label": "Cerca per titolo",
     "search-button": "Cerca",
     "search-footer": "{count} record",
+    "search-examples": [
+      "scevcenco",
+      "kharkiv",
+      "poltava",
+      "odesa",
+      "1921"
+    ],
     "process": {
       "title": "Come funziona",
       "subtitle": "Duck Inspector non conserva gli archivi: osserva dove già si trovano e ti offre un unico punto d'accesso a tutti.",

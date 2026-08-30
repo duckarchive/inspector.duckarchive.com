@@ -5,6 +5,13 @@
     "search-label": "Szukaj po nazwie jednostki",
     "search-button": "Szukaj",
     "search-footer": "{count} rekordów",
+    "search-examples": [
+      "szewczenko",
+      "charkiw",
+      "metryczna knyha",
+      "połtawa",
+      "1921"
+    ],
     "process": {
       "title": "Jak to działa",
       "subtitle": "Duck Inspector nie przechowuje archiwów — obserwuje, gdzie już się znajdują, i daje jedno wejście do wszystkich.",
