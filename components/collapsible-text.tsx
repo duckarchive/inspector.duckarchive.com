@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface CollapsibleTextProps extends React.PropsWithChildren {
   /** Visible rows while collapsed. */
@@ -14,6 +15,7 @@ interface CollapsibleTextProps extends React.PropsWithChildren {
  * and re-measured on resize), so short text stays untouched.
  */
 const CollapsibleText: React.FC<CollapsibleTextProps> = ({ lines = 3, className, children }) => {
+  const t = useTranslations("collapsible-text");
   const contentRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -49,7 +51,7 @@ const CollapsibleText: React.FC<CollapsibleTextProps> = ({ lines = 3, className,
           className="link text-xs opacity-70 hover:opacity-100"
           onClick={() => setIsExpanded((prev) => !prev)}
         >
-          {isExpanded ? "Згорнути" : "Показати більше"}
+          {isExpanded ? t("collapse") : t("expand")}
         </button>
       )}
     </div>

@@ -5,6 +5,13 @@
     "search-label": "Cerca per titolo",
     "search-button": "Cerca",
     "search-footer": "{count} record",
+    "search-examples": [
+      "scevcenco",
+      "kharkiv",
+      "poltava",
+      "odesa",
+      "1921"
+    ],
     "process": {
       "title": "Come funziona",
       "subtitle": "Duck Inspector non conserva gli archivi: osserva dove già si trovano e ti offre un unico punto d'accesso a tutti.",
@@ -50,7 +57,8 @@
     "description-label": "Descrizione",
     "case-label": "Fascicolo",
     "hint": "Usa * per un numero qualsiasi di caratteri e _ per un singolo carattere",
-    "submit-button": "Cerca"
+    "submit-button": "Cerca",
+    "portable-aria": "Campo della segnatura"
   },
   "navigation": {
     "logo": "Inspector",
@@ -128,5 +136,247 @@
     "error-already-pending": "Una segnalazione su questo record è già in attesa di revisione",
     "error-unauthorized": "Accedi per inviare una segnalazione",
     "error-generic": "Impossibile inviare la segnalazione"
+  },
+  "search-page": {
+    "title": "Ricerca",
+    "description": "Trova fascicoli d'archivio per titolo, segnatura, autore, luogo, anni e tag.",
+    "query-placeholder": "Query di ricerca",
+    "translit-hint": "Cercheremo in ucraino come: {query}",
+    "submit-match": "Corrispondenza {percent}%",
+    "submit-full-match": "Corrispondenza esatta",
+    "fuzziness-aria": "Tolleranza di corrispondenza",
+    "fuzziness-p100-label": "100% — corrispondenza esatta",
+    "fuzziness-p100-description": "Київ: Київ",
+    "fuzziness-p90-label": "90% — qualche refuso",
+    "fuzziness-p90-description": "Київ: Київ, Кийв, Кієв",
+    "fuzziness-p75-label": "75% — parole simili",
+    "fuzziness-p75-description": "Київ: Києв, Киев, Київ, Киив",
+    "fuzziness-p50-label": "50% — variazioni ampie",
+    "fuzziness-p50-description": "Київ: Києва, Києві, Києво-Печерська",
+    "fuzziness-p30-label": "30% — mi sento fortunato",
+    "fuzziness-p30-description": "Київ: Київський, Киянка, Кийчик, кінь",
+    "filters": "Filtri",
+    "years-label": "Anni",
+    "year-from": "Da",
+    "year-to": "A",
+    "requisites-label": "Segnatura",
+    "archive-label": "Archivio",
+    "fond-placeholder": "Fondo",
+    "inventory-placeholder": "Inventario",
+    "file-placeholder": "Fascicolo",
+    "author-label": "Autore",
+    "author-select-label": "Chiesa, ufficio di stato civile, tribunale, un nome, ecc.",
+    "location-label": "Località",
+    "tags-label": "Tag",
+    "results-header": "Risultati",
+    "no-title": "Senza titolo"
+  },
+  "tags": {
+    "доступні онлайн копії": "copie online disponibili",
+    "адміністрація": "amministrazione",
+    "військомат": "ufficio di leva",
+    "вірмено-католицизм": "cattolicesimo armeno",
+    "греко-католицизм": "cattolicesimo greco",
+    "іслам": "islam",
+    "іудаїзм": "ebraismo",
+    "колгосп": "kolchoz",
+    "лютеранство": "luteranesimo",
+    "метрична книга": "registro parrocchiale",
+    "народження": "nascite",
+    "нотаріат": "notariato",
+    "освіта": "istruzione",
+    "поліція": "polizia",
+    "православ'я": "ortodossia",
+    "прокуратура": "procura",
+    "протестантизм": "protestantesimo",
+    "римо-католицизм": "cattolicesimo romano",
+    "розірвання шлюбу": "scioglimento del matrimonio",
+    "розлучення": "divorzi",
+    "смерть": "decessi",
+    "спецслужби": "servizi segreti",
+    "списки священослужителів": "elenchi del clero",
+    "сповідальні відомості": "liste di confessione",
+    "старообрядництво": "vecchi credenti",
+    "суд": "tribunale",
+    "цивільний стан": "stato civile",
+    "шлюб": "matrimoni",
+    "шлюбні обшуки": "esami prematrimoniali"
+  },
+  "tags-input": {
+    "search-placeholder": "Filtra i tag"
+  },
+  "coordinates-input": {
+    "lat-error": "La latitudine deve essere un numero",
+    "lng-error": "La longitudine deve essere un numero",
+    "manual-title": "Inserisci le coordinate manualmente",
+    "fieldset-aria": "Inserimento manuale delle coordinate",
+    "lat-placeholder": "Latitudine (lat)",
+    "lng-placeholder": "Longitudine (lng)",
+    "radius-placeholder": "Raggio",
+    "clear-lat-aria": "Cancella latitudine",
+    "clear-lng-aria": "Cancella longitudine",
+    "map-dialog-aria": "Scegli un punto sulla mappa",
+    "done": "Fatto"
+  },
+  "search-guide": {
+    "trigger-aria": "Apri la guida",
+    "trigger-label": "Come cercare?",
+    "title": "Guida",
+    "format-title": "Formato",
+    "format-note": "Questa guida descrive il formato del campo di Ricerca rapida. Per la ricerca avanzata usa il modulo nella",
+    "format-note-link": "pagina di ricerca",
+    "format-intro": "Inserisci la segnatura in questo formato:",
+    "part-archive": "codice dell'archivio",
+    "part-archive-short": "archivio",
+    "part-dash": "trattino",
+    "part-fond": "codice del fondo",
+    "part-fond-short": "fondo",
+    "part-inventory": "codice dell'inventario",
+    "part-inventory-short": "inventario",
+    "part-file": "codice del fascicolo",
+    "part-file-short": "fascicolo",
+    "examples": "Esempi:",
+    "scope-title": "La ricerca funziona solo per segnature",
+    "scope-p1": "Duck Inspector non si propone di catalogare i fascicoli in sé: serve esclusivamente a verificare se i fascicoli sono disponibili online nelle varie fonti. Per questo non raccoglie nulla oltre alle segnature dei fascicoli.",
+    "scope-p2": "Per trovare la segnatura di un fascicolo per località, periodo o titolo, usa i cataloghi degli archivi stessi o altre risorse, ad esempio:",
+    "letters-title": "Codici con lettere (fondi Р e altri)",
+    "letters-p1": "Inserisci tutti i codici con lettere in maiuscolo, senza spazi né trattini.",
+    "letters-r-fonds": "Fondi Р",
+    "letters-subcodes": "Sottofondi/inventari/fascicoli",
+    "letters-volumes": "Volumi/sezioni",
+    "partial-title": "Ricerca parziale",
+    "partial-p1": "Per una ricerca parziale ometti la parte sconosciuta della segnatura, ad esempio:",
+    "symbols-title": "Caratteri",
+    "symbols-p1": "Usa lettere cirilliche, cifre e trattini. Le lettere latine vengono convertite automaticamente in cirillico (DAKHMO → ДАХмО).",
+    "link-custos": "Il progetto Custos",
+    "link-ridni": "Il progetto Ridni"
+  },
+  "table": {
+    "index-header": "Codice",
+    "checked-prefix": "Verificato",
+    "not-synced": "Non ancora sincronizzato",
+    "pre-ussr-fonds": "Fondi anteriori al 1917",
+    "ussr-fonds": "Fondi posteriori al 1917",
+    "part-fonds": "Fondi del partito comunista"
+  },
+  "catalog": {
+    "archive-code-label": "{code} archivio",
+    "fond-code-label": "{code} fondo",
+    "inventory-code-label": "{code} inventario",
+    "file-code-label": "{code} fascicolo",
+    "fond-title-header": "Titolo del fondo",
+    "inventory-title-header": "Titolo dell'inventario",
+    "file-title-header": "Titolo del fascicolo",
+    "untitled-fond": "Fondo {code}",
+    "untitled-inventory": "Inventario {code}",
+    "untitled-file": "Fascicolo {code}",
+    "title-header": "Titolo",
+    "years-header": "Anni",
+    "years-label": "Anni:",
+    "year-label": "Anno:",
+    "unknown": "sconosciuto",
+    "authors-label": "Autori:",
+    "tags-label": "Tag:",
+    "address-label": "Indirizzo:",
+    "website-label": "Sito ufficiale:",
+    "phone-label": "Telefono:",
+    "resource-header": "Risorsa",
+    "url-header": "Link",
+    "no-title": "Senza titolo",
+    "checked-header": "Verificato"
+  },
+  "archives-page": {
+    "title": "Archivi, biblioteche e progetti",
+    "description": "Sotto l'autorità del Servizio archivistico statale dell'Ucraina o del Ministero della Cultura dell'Ucraina."
+  },
+  "authors-page": {
+    "title": "Autori",
+    "description": "Istituzioni e persone che hanno effettivamente creato i fascicoli — ad esempio una chiesa, un ufficio di stato civile, una procura, un tribunale, la polizia o Taras Ševčenko",
+    "search-placeholder": "Cerca autori",
+    "clear-search-aria": "Cancella la ricerca",
+    "authors-header": "Autori",
+    "find-files-aria": "Trova i fascicoli di questo autore",
+    "report-aria": "Segnala un errore"
+  },
+  "resources-page": {
+    "title": "Fonti",
+    "description": "Siti web e servizi che ospitano le copie online",
+    "type-header": "Tipo",
+    "copies-header": "Fascicoli online"
+  },
+  "stats-page": {
+    "title": "Statistiche sulla disponibilità dei fascicoli",
+    "description": "Scegli un archivio per vedere le statistiche per giorno e fonte",
+    "archive-label": "Archivio",
+    "no-archive": "Nessun archivio selezionato"
+  },
+  "report-table": {
+    "archive-header": "Archivio",
+    "fond-header": "Fondo",
+    "inventory-header": "Inventario",
+    "file-header": "Fascicolo",
+    "url-header": "Link",
+    "broken-link": "Qualcosa è andato storto"
+  },
+  "report-modal": {
+    "trigger": "Rapporto sugli archivi",
+    "title": "Nuovi fascicoli nelle ultime 24 ore",
+    "and-others": "e altri",
+    "send": "Invia al gruppo"
+  },
+  "author-report-modal": {
+    "title": "Correggi questo autore",
+    "no-changes": "Nessuna modifica",
+    "name-placeholder": "Nome",
+    "info-placeholder": "Descrizione",
+    "tags-label": "Tag",
+    "none": "Nessuno",
+    "remove-tag-aria": "Rimuovi tag",
+    "new-tag-placeholder": "Nuovo tag",
+    "add": "Aggiungi",
+    "cancel": "Annulla",
+    "submit": "Invia per la revisione"
+  },
+  "online-copies-meter": {
+    "public": "Pubblico",
+    "restricted": "Limitato",
+    "paywall": "A pagamento",
+    "unknown": "Sconosciuto"
+  },
+  "resource-badge": {
+    "unknown-resource": "Risorsa sconosciuta",
+    "ARCHIUM": "ARCHIUM",
+    "FAMILY_SEARCH": "Family Search",
+    "WIKIPEDIA": "Wikisource",
+    "BABYN_YAR": "Archivio di Babyn Yar",
+    "WEBSITE": "Sito web",
+    "GOOGLE_DRIVE": "Google Drive",
+    "USHMM": "USHMM",
+    "AROLSEN": "Arolsen",
+    "LIBRARY": "Biblioteca",
+    "LIBRARIA": "LIBRARIA"
+  },
+  "breadcrumbs": {
+    "home-aria": "Torna all'elenco degli archivi"
+  },
+  "collapsible-text": {
+    "collapse": "Mostra meno",
+    "expand": "Mostra di più"
+  },
+  "copyable-code": {
+    "copy": "Copia",
+    "copied": "Copiato!"
+  },
+  "process-diagram": {
+    "catalogs": "Cataloghi",
+    "inventories": "Inventari",
+    "ocr": "OCR",
+    "community": "Lavoro della comunità",
+    "ai": "IA"
+  },
+  "content-translation": {
+    "downloading": "Download… {percent}%",
+    "hint": "Traduzione automatica dei contenuti del catalogo nel browser. La formulazione può essere approssimativa.",
+    "original": "Originale"
   }
 }

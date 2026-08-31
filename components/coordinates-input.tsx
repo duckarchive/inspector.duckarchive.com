@@ -15,6 +15,7 @@ import {
   useOverlayState,
 } from "@heroui/react";
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { parseMapLinkUrl } from "@/lib/map";
 import type { GeoDuckMapProps } from "@duckarchive/map";
@@ -40,6 +41,7 @@ interface CoordinatesInputProps {
 }
 
 const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, year, isLoading, isDisabled }) => {
+  const t = useTranslations("coordinates-input");
   const state = useOverlayState();
   const isOpen = state.isOpen;
   const [coordinates, setCoordinates] = useState<Coordinates>(value);
@@ -83,7 +85,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
   const handleLatChange = (lat: string) => {
     const latNum = parseFloat(lat);
     if (lat && isNaN(latNum)) {
-      setFormErrors({ ...formErrors, lat: "Широта має бути числом" });
+      setFormErrors({ ...formErrors, lat: t("lat-error") });
     } else {
       delete formErrors.lat;
       setFormErrors(formErrors);
@@ -94,7 +96,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
   const handleLngChange = (lng: string) => {
     const lngNum = parseFloat(lng);
     if (lng && isNaN(lngNum)) {
-      setFormErrors({ ...formErrors, lng: "Довгота має бути числом" });
+      setFormErrors({ ...formErrors, lng: t("lng-error") });
     } else {
       delete formErrors.lng;
       setFormErrors(formErrors);
@@ -133,7 +135,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
   const title =
     coordinates.lat && coordinates.lng
       ? `${coordinates.lat},${coordinates.lng}${coordinates.radius_m ? ` ±${coordinates.radius_m}м` : ""}`
-      : "Ввести координати вручну";
+      : t("manual-title");
   return (
     <div className={`h-64 flex flex-col gap-0 ${isDisabled ? "cursor-not-allowed" : ""}`}>
       <div className={`h-full ${isDisabled ? "pointer-events-none opacity-50" : ""}`} onClick={state.open}>
@@ -159,7 +161,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
           </Accordion.Heading>
           <Accordion.Panel>
             <Accordion.Body className="p-1 flex flex-col gap-2">
-              <fieldset aria-label="Ручне введення координат" className="flex flex-col gap-2">
+              <fieldset aria-label={t("fieldset-aria")} className="flex flex-col gap-2">
                 <TextField
                   isDisabled={isLoading}
                   isInvalid={!!formErrors.lat}
@@ -167,11 +169,11 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
                   onChange={handleLatChange}
                 >
                   <InputGroup>
-                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder="Широта (lat)" />
+                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder={t("lat-placeholder")} />
                     {coordinates.lat ? (
                       <InputGroup.Suffix>
                         <CloseButton
-                          aria-label="Очистити широту"
+                          aria-label={t("clear-lat-aria")}
                           onPress={() => setCoordinates({ ...coordinates, lat: undefined })}
                         />
                       </InputGroup.Suffix>
@@ -186,11 +188,11 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
                   onChange={handleLngChange}
                 >
                   <InputGroup>
-                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder="Довгота (lng)" />
+                    <InputGroup.Input onPaste={handlePaste} pattern="^-?\d+(\.\d+)?$" placeholder={t("lng-placeholder")} />
                     {coordinates.lng ? (
                       <InputGroup.Suffix>
                         <CloseButton
-                          aria-label="Очистити довготу"
+                          aria-label={t("clear-lng-aria")}
                           onPress={() => setCoordinates({ ...coordinates, lng: undefined })}
                         />
                       </InputGroup.Suffix>
@@ -213,7 +215,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
                 >
                   <NumberField.Group>
                     <NumberField.DecrementButton />
-                    <NumberField.Input onPaste={handlePaste} placeholder="Радіус" />
+                    <NumberField.Input onPaste={handlePaste} placeholder={t("radius-placeholder")} />
                     <NumberField.IncrementButton />
                   </NumberField.Group>
                   <FieldError>{formErrors.radius_m}</FieldError>
@@ -227,7 +229,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
       <Modal isOpen={isOpen} onOpenChange={state.setOpen}>
         <Modal.Backdrop>
           <Modal.Container size="cover">
-            <Modal.Dialog aria-label="Виберіть місце на карті" className="h-[80vh] md:h-[90vh]">
+            <Modal.Dialog aria-label={t("map-dialog-aria")} className="h-[80vh] md:h-[90vh]">
               {/* `relative` anchors the overlay button; the map still fills the dialog. */}
               <div className="relative h-full">
                 <GeoDuckMap
@@ -248,7 +250,7 @@ const CoordinatesInput: React.FC<CoordinatesInputProps> = ({ value, onChange, ye
                   size="lg"
                   onPress={handleComplete}
                 >
-                  Готово
+                  {t("done")}
                 </Button>
               </div>
             </Modal.Dialog>

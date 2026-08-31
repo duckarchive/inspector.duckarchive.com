@@ -2,6 +2,7 @@
 
 import { Breadcrumbs, BreadcrumbsItem } from "@heroui/react";
 import { FaHome } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 const BASE_PATH = "/archives/";
 
@@ -10,11 +11,13 @@ interface NavigationBreadcrumbsProps {
   code: string;
 }
 
-const ITEM_CLASS = "text-gray-500 text-lg aria-[current=page]:font-bold";
+const ITEM_CLASS = "h-[28px] text-gray-500 text-lg aria-[current=page]:font-bold";
 
-const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, code }) => (
+const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrumbs, code }) => {
+  const t = useTranslations("breadcrumbs");
+  return (
   <Breadcrumbs separator="/">
-    <BreadcrumbsItem href={BASE_PATH} aria-label="Повернутись на список архівів" className={ITEM_CLASS}>
+    <BreadcrumbsItem href={BASE_PATH} aria-label={t("home-aria")} className={ITEM_CLASS}>
       <FaHome />
     </BreadcrumbsItem>
     {breadcrumbs.map((item, index) =>
@@ -33,6 +36,7 @@ const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({ breadcrum
       ),
     )}
   </Breadcrumbs>
-);
+  );
+};
 
 export default NavigationBreadcrumbs;

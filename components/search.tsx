@@ -1,5 +1,6 @@
 "use client";
 import { Key, useState, useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { usePost } from "@/hooks/useApi";
 import useSearch from "@/hooks/useSearch";
@@ -18,13 +19,24 @@ import {
   Link,
   TextField,
 } from "@heroui/react";
-import { FaCalendar, FaFolder, FaLink, FaListUl, FaMapMarkerAlt, FaSearch, FaChevronDown, FaFeather } from "react-icons/fa";
+import {
+  FaCalendar,
+  FaFolder,
+  FaLink,
+  FaListUl,
+  FaMapMarkerAlt,
+  FaSearch,
+  FaChevronDown,
+  FaFeather,
+} from "react-icons/fa";
 import { Archives } from "@/data/archives";
 import Select from "@/components/select";
 import CoordinatesInput from "@/components/coordinates-input";
 import useIsMobile from "@/hooks/useIsMobile";
 import TagsInput from "@/components/tags-input";
 import { useAuthors } from "@/hooks/useAuthors";
+import { foldCodeInput, hasLatin, toCyrillicQuery } from "@/lib/translit";
+import TranslatableText from "@/components/translatable-text";
 import isEmpty from "lodash/isEmpty.js";
 
 const ONLINE_TAG = "доступні онлайн копії";
@@ -35,16 +47,11 @@ type TableItem = SearchResponse[number];
  * Presets for the match strictness. The percentage is what the user sees and
  * equals the pg_trgm word-similarity threshold × 100 the API gets as
  * `fuzziness`; 100 % = plain substring match (no `fuzziness` at all).
+ * Labels and descriptions live in messages (search-page.fuzziness.*); every
+ * description illustrates the same base word («Київ») so the five levels read
+ * as one progression instead of five unrelated examples.
  */
-// Every description illustrates the same base word ("Київ") so the five levels
-// read as one progression instead of five unrelated examples.
-const FUZZINESS_OPTIONS = [
-  { percent: 100, label: "100% — повний збіг", description: "Київ: Київ" },
-  { percent: 90, label: "90% — кілька помилок", description: "Київ: Київ, Кийв, Кієв" },
-  { percent: 75, label: "75% — схожі слова", description: "Київ: Києв, Киев, Київ, Киив" },
-  { percent: 50, label: "50% — широкі варіації", description: "Київ: Києва, Києві, Києво-Печерська" },
-  { percent: 30, label: "30% — мені пощастить", description: "Київ: Київський, Киянка, Кийчик, кінь" },
-];
+const FUZZINESS_PERCENTS = [100, 90, 75, 50, 30];
 
 const DEFAULT_FUZZINESS_PERCENT = 90;
 const fuzzinessToPercent = (fuzziness: SearchRequest["fuzziness"]) =>
@@ -69,6 +76,9 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ archives, tags }) => {
+  const t = useTranslations("search-page");
+  const tTags = useTranslations("tags");
+  const locale = useLocale();
   const isMobile = useIsMobile();
   const [defaultValues, setQueryParams] = useSearch(archives);
   const [searchValues, setSearchValues] = useState<SearchRequest>(defaultValues);
@@ -76,12 +86,35 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   // `author` against authors.title, so a half-typed name is a valid criterion
   // and picking a suggestion just fills the box with its full title.
   const [authorQuery, setAuthorQuery] = useState(defaultValues.author || "");
-  const { data: authorOptions } = useAuthors(authorQuery || undefined);
+  // The API rejects Latin letters, so the suggestion request is transliterated;
+  // the box keeps whatever the user typed until they submit.
+  const { data: authorOptions } = useAuthors(authorQuery ? toCyrillicQuery(authorQuery, locale) : undefined);
   const { trigger, isMutating, data: searchResults } = usePost<SearchResponse, SearchRequest>(`/api/search`);
+
+  // The catalog is Cyrillic and the API refuses Latin input, so every submit
+  // path converts first (free text phonetically per locale, codes by glyph)
+  // and the converted value replaces the field — the user always sees the
+  // query that actually ran.
+  const normalizeValues = (values: SearchRequest): SearchRequest => ({
+    ...values,
+    title: values.title ? toCyrillicQuery(values.title, locale) : values.title,
+    place: values.place ? toCyrillicQuery(values.place, locale) : values.place,
+    author: values.author ? toCyrillicQuery(values.author, locale) : values.author,
+    fond: values.fond ? foldCodeInput(values.fond) : values.fond,
+    inventory: values.inventory ? foldCodeInput(values.inventory) : values.inventory,
+    file: values.file ? foldCodeInput(values.file) : values.file,
+  });
+
+  const submit = (values: SearchRequest) => {
+    const next = normalizeValues(values);
+    setSearchValues(next);
+    if (next.author !== values.author) setAuthorQuery(next.author || "");
+    if (hasSearchCriteria(next)) trigger(toSearchRequest(next));
+  };
 
   useEffect(() => {
     if (hasSearchCriteria(searchValues)) {
-      trigger(toSearchRequest(searchValues));
+      submit(searchValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -124,10 +157,8 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
   const handleFuzzinessChange = (keys: Selection) => {
     const percent =
       keys === "all" ? DEFAULT_FUZZINESS_PERCENT : Number(Array.from(keys)[0] ?? DEFAULT_FUZZINESS_PERCENT);
-    const next = { ...searchValues, fuzziness: Number((percent / 100).toFixed(2)) };
-    setSearchValues(next);
     // a changed strictness re-runs the search — but only if there is something to search for
-    if (hasSearchCriteria(next)) trigger(toSearchRequest(next));
+    submit({ ...searchValues, fuzziness: Number((percent / 100).toFixed(2)) });
   };
 
   const handleTagsChange = (values: string[]) => {
@@ -141,15 +172,20 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (hasSearchCriteria(searchValues)) trigger(toSearchRequest(searchValues));
+    submit(searchValues);
   };
+
+  // Live preview of what a Latin query will be searched as, shown before the
+  // user submits so the conversion is never a surprise.
+  const titlePreview =
+    searchValues.title && hasLatin(searchValues.title) ? toCyrillicQuery(searchValues.title, locale) : null;
 
   const filters = (
     <>
       <div className="flex flex-col gap-2">
         <label htmlFor="select-archive" className="font-bold flex items-center">
           <FaCalendar className="inline mr-1" />
-          Роки
+          {t("years-label")}
         </label>
         <div className="flex grow-0 shrink">
           <TextField
@@ -158,7 +194,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             value={searchValues.year_from || ""}
             onChange={handleYearChange("year_from")}
           >
-            <Input form="search-form" className="rounded-r-none" placeholder="Від" />
+            <Input form="search-form" className="rounded-r-none" placeholder={t("year-from")} />
           </TextField>
           <TextField
             type="number"
@@ -166,26 +202,29 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             value={searchValues.year_to || ""}
             onChange={handleYearChange("year_to")}
           >
-            <Input form="search-form" className="rounded-l-none" placeholder="До" />
+            <Input form="search-form" className="rounded-l-none" placeholder={t("year-to")} />
           </TextField>
         </div>
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="select-archive" className="font-bold flex items-center">
           <FaFolder className="inline mr-1" />
-          Реквізити
+          {t("requisites-label")}
         </label>
         <Select
           id="select-archive"
           form="search-form"
           items={(archives ?? []).sort((a, b) => a.code.localeCompare(b.code))}
-          label="Архів"
+          label={t("archive-label")}
+          virtualized
           getKey={(a) => a.code}
           getTextValue={(a) => a.code}
           renderItem={(a) => (
             <div>
               <p>{a.code}</p>
-              <p className="opacity-70 text-sm text-wrap">{a.title}</p>
+              <p className="opacity-70 text-sm text-wrap">
+                {a.title ? <TranslatableText>{a.title}</TranslatableText> : null}
+              </p>
             </div>
           )}
           value={searchValues.archive}
@@ -193,30 +232,30 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
         />
         <div className="flex gap-2">
           <TextField className="min-w-0 flex-1" value={searchValues.fond || ""} onChange={handleInputChange("fond")}>
-            <Input form="search-form" placeholder="Фонд" />
+            <Input form="search-form" placeholder={t("fond-placeholder")} />
           </TextField>
           <TextField
             className="min-w-0 flex-1"
             value={searchValues.inventory || ""}
             onChange={handleInputChange("inventory")}
           >
-            <Input form="search-form" placeholder="Опис" />
+            <Input form="search-form" placeholder={t("inventory-placeholder")} />
           </TextField>
           <TextField className="min-w-0 flex-1" value={searchValues.file || ""} onChange={handleInputChange("file")}>
-            <Input form="search-form" placeholder="Справа" />
+            <Input form="search-form" placeholder={t("file-placeholder")} />
           </TextField>
         </div>
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="select-author" className="font-bold flex items-center">
           <FaFeather className="inline mr-1" />
-          Автор
+          {t("author-label")}
         </label>
         <Select
           id="select-author"
           form="search-form"
           items={authorOptions ?? []}
-          label="Церква, РАЦС, суд, ім'я тощо"
+          label={t("author-select-label")}
           virtualized
           getKey={(a) => a.id}
           getTextValue={(a) => a.title}
@@ -229,7 +268,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       <div className="flex flex-col gap-2">
         <label htmlFor="coordinates-input" className="font-bold flex items-center">
           <FaMapMarkerAlt className="inline mr-1" />
-          Локація
+          {t("location-label")}
         </label>
         <CoordinatesInput
           isLoading={isMutating}
@@ -245,7 +284,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
       <div className="flex flex-col gap-2">
         <label className="font-bold flex items-center">
           <FaListUl className="inline mr-1" />
-          Теги
+          {t("tags-label")}
         </label>
         <TagsInput
           tags={[ONLINE_TAG, ...tags]}
@@ -260,17 +299,24 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
     <>
       <form id="search-form" className="flex gap-2" onSubmit={handleSubmit}>
         <TextField className="grow" value={searchValues.title || ""} onChange={handleInputChange("title")}>
-          <Input className="text-lg md:text-xl" placeholder="Пошуковий запит" />
+          <Input className="text-lg md:text-xl" placeholder={t("query-placeholder")} />
+          {titlePreview ? (
+            <Description className="text-xs">{t("translit-hint", { query: titlePreview })}</Description>
+          ) : null}
         </TextField>
         {/* Split button: submit on the left, the fuzziness presets behind the chevron.
             The chosen tolerance shows on the main button so it is never a hidden state. */}
         <ButtonGroup size="lg" className="basis-1/6 h-full shrink-0">
           <Button type="submit" className="h-full font-bold text-lg grow" isIconOnly={isMobile}>
             <FaSearch />
-            {isMobile ? undefined : fuzzinessPercent < 100 ? `Збіг ${fuzzinessPercent}%` : "Повний збіг"}
+            {isMobile
+              ? undefined
+              : fuzzinessPercent < 100
+                ? t("submit-match", { percent: fuzzinessPercent })
+                : t("submit-full-match")}
           </Button>
           <Dropdown>
-            <Button isIconOnly aria-label="Нечіткість пошуку" className="h-full">
+            <Button isIconOnly aria-label={t("fuzziness-aria")} className="h-full">
               <ButtonGroup.Separator />
               <FaChevronDown />
             </Button>
@@ -282,18 +328,18 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                 disallowEmptySelection
               >
                 <Dropdown.Section>
-                  {FUZZINESS_OPTIONS.map(({ percent, label, description }) => (
+                  {FUZZINESS_PERCENTS.map((percent) => (
                     <Dropdown.Item
                       key={percent}
                       id={String(percent)}
-                      textValue={label}
+                      textValue={t(`fuzziness-p${percent}-label`)}
                       className="flex flex-col items-start gap-0.5"
                     >
                       <div className="flex items-center gap-2">
                         <Dropdown.ItemIndicator />
-                        <Label>{label}</Label>
+                        <Label>{t(`fuzziness-p${percent}-label`)}</Label>
                       </div>
-                      <Description>{description}</Description>
+                      <Description>{t(`fuzziness-p${percent}-description`)}</Description>
                     </Dropdown.Item>
                   ))}
                 </Dropdown.Section>
@@ -310,7 +356,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
           <Accordion.Item id="search-filters">
             <Accordion.Heading>
               <Accordion.Trigger className="font-bold px-0">
-                Фільтри
+                {t("filters")}
                 <Accordion.Indicator />
               </Accordion.Trigger>
             </Accordion.Heading>
@@ -328,7 +374,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
             isLoading={isMutating}
             columns={[
               {
-                headerName: "Результати",
+                headerName: t("results-header"),
                 field: "full_code",
                 flex: 1,
                 sortable: false,
@@ -349,16 +395,14 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {row.data.title || "Без назви"}
+                        {row.data.title ? <TranslatableText>{row.data.title}</TranslatableText> : t("no-title")}
                       </Link>
-                      <span className="font-mono text-sm">
-                        {row.value}
-                      </span>
+                      <span className="font-mono text-sm">{row.value}</span>
                       <div className="flex flex-wrap items-center gap-1">
                         {row.data.is_online ? (
                           <Chip size="sm" variant="primary" color="accent">
                             <FaLink />
-                            доступні онлайн копії
+                            {tTags.has(ONLINE_TAG) ? tTags(ONLINE_TAG) : ONLINE_TAG}
                           </Chip>
                         ) : null}
                         {yearLabel ? (
@@ -369,7 +413,7 @@ const Search: React.FC<SearchProps> = ({ archives, tags }) => {
                         ) : null}
                         {(row.data.tags ?? []).map((tag) => (
                           <Chip key={tag} size="sm" variant="soft">
-                            {tag}
+                            {tTags.has(tag) ? tTags(tag) : tag}
                           </Chip>
                         ))}
                       </div>

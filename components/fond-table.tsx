@@ -12,6 +12,7 @@ import { sortByCode } from "@/lib/table";
 import useFond from "@/hooks/useFond";
 import { GetFondResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/route";
 import { getYearsString } from "@/lib/text";
+import { useTranslations } from "next-intl";
 import { editorFondHref } from "@/lib/editor-links";
 import { catalogItemLabel } from "@/lib/catalog-links";
 
@@ -26,19 +27,22 @@ const prepareToDownload = (items: TableItem[]) =>
 
 const Details: React.FC<{
   fond?: GetFondResponse;
-}> = ({ fond }) => (
+}> = ({ fond }) => {
+  const t = useTranslations("catalog");
+  return (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {fond?.years.length ? (
       <ul className="list-inside py-2">
         {fond?.years.length ? (
           <li>
-            Роки:&nbsp;<span className="text-foreground">{getYearsString(fond.years)}</span>
+            {t("years-label")}&nbsp;<span className="text-foreground">{getYearsString(fond.years)}</span>
           </li>
         ) : null}
       </ul>
     ) : null}
   </div>
-);
+  );
+};
 
 interface FondTableProps {
   resources?: Resources;
@@ -46,6 +50,7 @@ interface FondTableProps {
 }
 
 const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
+  const t = useTranslations("catalog");
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const code = params["fond-code"];
@@ -58,7 +63,8 @@ const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
   return (
     <>
       <PagePanel
-        code={`${code} фонд`}
+        code={t("fond-code-label", { code })}
+        isTranslatable
         breadcrumbs={[archiveCode, code]}
         title={fond?.title || undefined}
         description={fond?.info || undefined}
@@ -91,20 +97,20 @@ const FondTable: React.FC<FondTableProps> = ({ resources, isAdmin }) => {
           },
           {
             field: "title",
-            headerName: "Назва опису",
+            headerName: t("inventory-title-header"),
             flex: isMobile ? 4 : 9,
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <NextLink href={`/archives/${archiveCode}/${code}/${row.data.code}`} className="link">
-                {row.value || `Опис ${row.data.code}`}
+                {row.value || t("untitled-inventory", { code: row.data.code })}
               </NextLink>
             ),
           },
           {
             field: "years",
-            headerName: "Роки",
-            valueGetter: (params) => (params.data ? getYearsString(params.data.years) : ""),
+            headerName: t("years-header"),
+            valueGetter: (params) => (params.data ? getYearsString(params.data.years, t("unknown")) : ""),
             filter: true,
             hide: isMobile,
           },

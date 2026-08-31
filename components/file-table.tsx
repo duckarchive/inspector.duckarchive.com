@@ -26,6 +26,8 @@ import qs from "qs";
 import { useCallback, useMemo } from "react";
 import type { Map as LeafletMap } from "leaflet";
 import { findCenter, prepareLocations } from "@/lib/map";
+import { useLocale, useTranslations } from "next-intl";
+import TranslatableText from "./translatable-text";
 
 const GeoDuckMap = dynamic(() => import("@duckarchive/map").then((mod) => mod.default), {
   ssr: false,
@@ -59,6 +61,8 @@ const SearchLink: React.FC<React.PropsWithChildren<{ query: Record<string, unkno
 const Details: React.FC<{
   file?: GetFileResponse;
 }> = ({ file }) => {
+  const t = useTranslations("catalog");
+  const tTags = useTranslations("tags");
   const geoPoints = useMemo(
     () =>
       [...(file?.locations ?? []), ...(file?.authors ?? []).map(({ author }) => author)].filter(
@@ -105,7 +109,7 @@ const Details: React.FC<{
         <ul className="list-inside basis-1/2">
           {Boolean(file.years.length) && (
             <li>
-              Рік:&nbsp;
+              {t("year-label")}&nbsp;
               {file.years.filter(({ start_year, end_year }) => start_year || end_year).length ? (
                 file.years
                   .filter(({ start_year, end_year }) => Boolean(start_year) || Boolean(end_year))
@@ -119,18 +123,18 @@ const Details: React.FC<{
                     </SearchLink>
                   ))
               ) : (
-                <span className="text-foreground">невідомо</span>
+                <span className="text-foreground">{t("unknown")}</span>
               )}
             </li>
           )}
           {Boolean(file.authors.length) && (
             <li>
               <CollapsibleText>
-                Автори:&nbsp;
+                {t("authors-label")}&nbsp;
                 {file.authors.map(({ author }, index) => (
                   <SearchLink key={author.id} query={{ author: author.title }}>
                     {index > 0 && ", "}
-                    {author.title}
+                    <TranslatableText>{author.title}</TranslatableText>
                   </SearchLink>
                 ))}
               </CollapsibleText>
@@ -138,11 +142,11 @@ const Details: React.FC<{
           )}
           {Boolean(file.tags.length) && (
             <li>
-              Теги:&nbsp;
+              {t("tags-label")}&nbsp;
               {file.tags.map((tag, index) => (
                 <SearchLink key={tag} query={{ tags: [tag] }}>
                   {index > 0 && ", "}
-                  {tag}
+                  {tTags.has(tag) ? tTags(tag) : tag}
                 </SearchLink>
               ))}
             </li>
@@ -160,6 +164,9 @@ interface FileTableProps {
 }
 
 const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
+  const t = useTranslations("catalog");
+  const tTable = useTranslations("table");
+  const locale = useLocale();
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fondCode = params["fond-code"];
@@ -173,7 +180,8 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
   return (
     <>
       <PagePanel
-        code={`${code} справа`}
+        code={t("file-code-label", { code })}
+        isTranslatable
         breadcrumbs={[archiveCode, fondCode, inventoryCode, code]}
         title={file?.title || undefined}
         description={file?.info || undefined}
@@ -209,7 +217,7 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
         columns={[
           {
             field: "resource_id",
-            headerName: "Ресурс",
+            headerName: t("resource-header"),
             flex: 1.5,
             hide: isMobile,
             cellRenderer: (row: { value: TableItem["resource_id"] }) => (
@@ -218,29 +226,29 @@ const FileTable: React.FC<FileTableProps> = ({ resources, isAdmin }) => {
           },
           {
             field: "url",
-            headerName: "Посилання",
+            headerName: t("url-header"),
             flex: isMobile ? 4 : 9,
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: string; data: TableItem }) =>
               row.data.availability === Availability.PUBLIC ? (
                 <Link href={row.value} target="_blank" rel="noopener noreferrer">
-                  {row.value || "Без назви"}
+                  {row.value || t("no-title")}
                   <Link.Icon />
                 </Link>
               ) : (
                 <span className="inline-flex items-center gap-1.5 opacity-50">
                   <FaLock />
-                  {row.value || "Без назви"}
+                  {row.value || t("no-title")}
                 </span>
               ),
           },
           {
             field: "checked_availability_at",
-            headerName: "Перевірено",
+            headerName: t("checked-header"),
             flex: 2,
             hide: isMobile,
-            cellRenderer: (row: { value: string; data: TableItem }) => getSyncAtLabel(row.value, true),
+            cellRenderer: (row: { value: string; data: TableItem }) => getSyncAtLabel(row.value, { locale, notSynced: tTable("not-synced") }),
             comparator: undefined,
           },
         ]}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button, Tooltip } from "@heroui/react";
 import { FaCheck, FaRegCopy } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 interface CopyableCodeProps {
   code: string;
@@ -14,6 +15,7 @@ interface CopyableCodeProps {
  * with a copy-to-clipboard button.
  */
 const CopyableCode: React.FC<CopyableCodeProps> = ({ code, className }) => {
+  const t = useTranslations("copyable-code");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -31,11 +33,11 @@ const CopyableCode: React.FC<CopyableCodeProps> = ({ code, className }) => {
       <pre className="flex-1 min-w-0 whitespace-pre-wrap break-all font-mono text-sm">{code}</pre>
       <Tooltip delay={0}>
         <Tooltip.Trigger>
-          <Button isIconOnly size="sm" variant="ghost" aria-label="Копіювати" onPress={handleCopy}>
+          <Button isIconOnly size="sm" variant="ghost" aria-label={t("copy")} onPress={handleCopy}>
             {copied ? <FaCheck /> : <FaRegCopy />}
           </Button>
         </Tooltip.Trigger>
-        <Tooltip.Content>{copied ? "Скопійовано!" : "Копіювати"}</Tooltip.Content>
+        <Tooltip.Content>{copied ? t("copied") : t("copy")}</Tooltip.Content>
       </Tooltip>
     </div>
   );

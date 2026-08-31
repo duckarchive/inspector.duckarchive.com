@@ -5,6 +5,13 @@
     "search-label": "Hledat podle názvu",
     "search-button": "Hledat",
     "search-footer": "{count} záznamů",
+    "search-examples": [
+      "ševčenko",
+      "charkiv",
+      "metryčna knyha",
+      "poltava",
+      "1921"
+    ],
     "process": {
       "title": "Jak to funguje",
       "subtitle": "Duck Inspector archivy neukládá — sleduje, kde už existují, a dává vám jeden vstup ke všem.",
@@ -50,7 +57,8 @@
     "description-label": "Popis",
     "case-label": "Spis",
     "hint": "Použijte * pro libovolný počet znaků a _ pro jeden znak",
-    "submit-button": "Hledat"
+    "submit-button": "Hledat",
+    "portable-aria": "Pole pro signaturu"
   },
   "navigation": {
     "logo": "Inspektor",
@@ -128,5 +136,247 @@
     "error-already-pending": "Hlášení k tomuto záznamu už čeká na posouzení",
     "error-unauthorized": "Přihlaste se, abyste mohli odeslat hlášení",
     "error-generic": "Hlášení se nepodařilo odeslat"
+  },
+  "search-page": {
+    "title": "Vyhledávání",
+    "description": "Najděte archivní spisy podle názvu, signatury, autora, lokality, let a štítků.",
+    "query-placeholder": "Vyhledávací dotaz",
+    "translit-hint": "Budeme hledat v ukrajinštině: {query}",
+    "submit-match": "Shoda {percent}%",
+    "submit-full-match": "Přesná shoda",
+    "fuzziness-aria": "Tolerance shody",
+    "fuzziness-p100-label": "100% — přesná shoda",
+    "fuzziness-p100-description": "Київ: Київ",
+    "fuzziness-p90-label": "90% — pár překlepů",
+    "fuzziness-p90-description": "Київ: Київ, Кийв, Кієв",
+    "fuzziness-p75-label": "75% — podobná slova",
+    "fuzziness-p75-description": "Київ: Києв, Киев, Київ, Киив",
+    "fuzziness-p50-label": "50% — volné variace",
+    "fuzziness-p50-description": "Київ: Києва, Києві, Києво-Печерська",
+    "fuzziness-p30-label": "30% — zkusím štěstí",
+    "fuzziness-p30-description": "Київ: Київський, Киянка, Кийчик, кінь",
+    "filters": "Filtry",
+    "years-label": "Roky",
+    "year-from": "Od",
+    "year-to": "Do",
+    "requisites-label": "Signatura",
+    "archive-label": "Archiv",
+    "fond-placeholder": "Fond",
+    "inventory-placeholder": "Inventář",
+    "file-placeholder": "Spis",
+    "author-label": "Autor",
+    "author-select-label": "Církev, matrika, soud, jméno atd.",
+    "location-label": "Lokalita",
+    "tags-label": "Štítky",
+    "results-header": "Výsledky",
+    "no-title": "Bez názvu"
+  },
+  "tags": {
+    "доступні онлайн копії": "dostupné online kopie",
+    "адміністрація": "správa",
+    "військомат": "vojenská správa",
+    "вірмено-католицизм": "arménskokatolická církev",
+    "греко-католицизм": "řeckokatolická církev",
+    "іслам": "islám",
+    "іудаїзм": "judaismus",
+    "колгосп": "kolchoz",
+    "лютеранство": "luteránství",
+    "метрична книга": "matrika",
+    "народження": "narození",
+    "нотаріат": "notářství",
+    "освіта": "školství",
+    "поліція": "policie",
+    "православ'я": "pravoslaví",
+    "прокуратура": "prokuratura",
+    "протестантизм": "protestantismus",
+    "римо-католицизм": "římskokatolická církev",
+    "розірвання шлюбу": "rozvázání manželství",
+    "розлучення": "rozvody",
+    "смерть": "úmrtí",
+    "спецслужби": "tajné služby",
+    "списки священослужителів": "seznamy duchovních",
+    "сповідальні відомості": "zpovědní seznamy",
+    "старообрядництво": "starověrci",
+    "суд": "soud",
+    "цивільний стан": "civilní matriky",
+    "шлюб": "sňatky",
+    "шлюбні обшуки": "předsvatební zkoušky"
+  },
+  "tags-input": {
+    "search-placeholder": "Filtrovat štítky"
+  },
+  "coordinates-input": {
+    "lat-error": "Zeměpisná šířka musí být číslo",
+    "lng-error": "Zeměpisná délka musí být číslo",
+    "manual-title": "Zadat souřadnice ručně",
+    "fieldset-aria": "Ruční zadání souřadnic",
+    "lat-placeholder": "Šířka (lat)",
+    "lng-placeholder": "Délka (lng)",
+    "radius-placeholder": "Poloměr",
+    "clear-lat-aria": "Vymazat šířku",
+    "clear-lng-aria": "Vymazat délku",
+    "map-dialog-aria": "Vyberte místo na mapě",
+    "done": "Hotovo"
+  },
+  "search-guide": {
+    "trigger-aria": "Otevřít nápovědu",
+    "trigger-label": "Jak hledat?",
+    "title": "Nápověda",
+    "format-title": "Formát",
+    "format-note": "Tato nápověda popisuje formát pole Rychlého vyhledávání. Pro pokročilé vyhledávání použijte formulář na",
+    "format-note-link": "stránce vyhledávání",
+    "format-intro": "Signaturu zadávejte v tomto formátu:",
+    "part-archive": "kód archivu",
+    "part-archive-short": "archiv",
+    "part-dash": "pomlčka",
+    "part-fond": "kód fondu",
+    "part-fond-short": "fond",
+    "part-inventory": "kód inventáře",
+    "part-inventory-short": "inventář",
+    "part-file": "kód spisu",
+    "part-file-short": "spis",
+    "examples": "Příklady:",
+    "scope-title": "Vyhledávání funguje pouze podle signatur",
+    "scope-p1": "Duck Inspector si neklade za cíl katalogizovat samotné spisy — slouží výhradně k ověření, zda jsou spisy dostupné online v různých zdrojích. Neshromažďuje proto nic jiného než signatury spisů.",
+    "scope-p2": "Chcete-li najít signaturu spisu podle místa, období nebo názvu, použijte katalogy samotných archivů nebo jiné zdroje, například:",
+    "letters-title": "Kódy s písmeny (fondy Р a další)",
+    "letters-p1": "Všechny kódy s písmeny zadávejte velkými písmeny, bez mezer a pomlček.",
+    "letters-r-fonds": "Fondy Р",
+    "letters-subcodes": "Podfondy/inventáře/spisy",
+    "letters-volumes": "Svazky/oddíly",
+    "partial-title": "Částečné vyhledávání",
+    "partial-p1": "Při částečném vyhledávání vynechte neznámou část signatury, například:",
+    "symbols-title": "Znaky",
+    "symbols-p1": "Používejte písmena cyrilice, číslice a pomlčky. Latinka se automaticky převádí na cyrilici (DAKHMO → ДАХмО).",
+    "link-custos": "Projekt Custos",
+    "link-ridni": "Projekt Ridni"
+  },
+  "table": {
+    "index-header": "Kód",
+    "checked-prefix": "Zkontrolováno",
+    "not-synced": "Zatím nesynchronizováno",
+    "pre-ussr-fonds": "Fondy do roku 1917",
+    "ussr-fonds": "Fondy po roce 1917",
+    "part-fonds": "Fondy komunistické strany"
+  },
+  "catalog": {
+    "archive-code-label": "{code} archiv",
+    "fond-code-label": "{code} fond",
+    "inventory-code-label": "{code} inventář",
+    "file-code-label": "{code} spis",
+    "fond-title-header": "Název fondu",
+    "inventory-title-header": "Název inventáře",
+    "file-title-header": "Název spisu",
+    "untitled-fond": "Fond {code}",
+    "untitled-inventory": "Inventář {code}",
+    "untitled-file": "Spis {code}",
+    "title-header": "Název",
+    "years-header": "Roky",
+    "years-label": "Roky:",
+    "year-label": "Rok:",
+    "unknown": "neznámo",
+    "authors-label": "Autoři:",
+    "tags-label": "Štítky:",
+    "address-label": "Adresa:",
+    "website-label": "Oficiální web:",
+    "phone-label": "Telefon:",
+    "resource-header": "Zdroj",
+    "url-header": "Odkaz",
+    "no-title": "Bez názvu",
+    "checked-header": "Zkontrolováno"
+  },
+  "archives-page": {
+    "title": "Archivy, knihovny a projekty",
+    "description": "Spadají pod Státní archivní službu Ukrajiny nebo Ministerstvo kultury Ukrajiny."
+  },
+  "authors-page": {
+    "title": "Autoři",
+    "description": "Instituce a osoby, které spisy skutečně vytvořily — například církev, matrika, prokuratura, soud, policie nebo Taras Ševčenko",
+    "search-placeholder": "Hledat autory",
+    "clear-search-aria": "Vymazat vyhledávání",
+    "authors-header": "Autoři",
+    "find-files-aria": "Najít spisy tohoto autora",
+    "report-aria": "Nahlásit chybu"
+  },
+  "resources-page": {
+    "title": "Zdroje",
+    "description": "Weby a služby, na kterých jsou umístěny online kopie",
+    "type-header": "Typ",
+    "copies-header": "Spisů online"
+  },
+  "stats-page": {
+    "title": "Statistika dostupnosti spisů",
+    "description": "Vyberte archiv a zobrazte statistiku podle dnů a zdrojů",
+    "archive-label": "Archiv",
+    "no-archive": "Není vybrán žádný archiv"
+  },
+  "report-table": {
+    "archive-header": "Archiv",
+    "fond-header": "Fond",
+    "inventory-header": "Inventář",
+    "file-header": "Spis",
+    "url-header": "Odkaz",
+    "broken-link": "Něco se pokazilo"
+  },
+  "report-modal": {
+    "trigger": "Zpráva o archivech",
+    "title": "Nové spisy za posledních 24 hodin",
+    "and-others": "a další",
+    "send": "Odeslat do skupiny"
+  },
+  "author-report-modal": {
+    "title": "Opravit autora",
+    "no-changes": "Žádné změny",
+    "name-placeholder": "Název",
+    "info-placeholder": "Popis",
+    "tags-label": "Štítky",
+    "none": "Žádné",
+    "remove-tag-aria": "Odebrat štítek",
+    "new-tag-placeholder": "Nový štítek",
+    "add": "Přidat",
+    "cancel": "Zrušit",
+    "submit": "Odeslat k posouzení"
+  },
+  "online-copies-meter": {
+    "public": "Veřejné",
+    "restricted": "Omezené",
+    "paywall": "Placené",
+    "unknown": "Neznámé"
+  },
+  "resource-badge": {
+    "unknown-resource": "Neznámý zdroj",
+    "ARCHIUM": "ARCHIUM",
+    "FAMILY_SEARCH": "Family Search",
+    "WIKIPEDIA": "Wikizdroje",
+    "BABYN_YAR": "Archiv Babyn Jar",
+    "WEBSITE": "Web",
+    "GOOGLE_DRIVE": "Google Drive",
+    "USHMM": "USHMM",
+    "AROLSEN": "Arolsen",
+    "LIBRARY": "Knihovna",
+    "LIBRARIA": "LIBRARIA"
+  },
+  "breadcrumbs": {
+    "home-aria": "Zpět na seznam archivů"
+  },
+  "collapsible-text": {
+    "collapse": "Zobrazit méně",
+    "expand": "Zobrazit více"
+  },
+  "copyable-code": {
+    "copy": "Kopírovat",
+    "copied": "Zkopírováno!"
+  },
+  "process-diagram": {
+    "catalogs": "Katalogy",
+    "inventories": "Inventáře",
+    "ocr": "OCR",
+    "community": "Práce komunity",
+    "ai": "AI"
+  },
+  "content-translation": {
+    "downloading": "Stahování… {percent}%",
+    "hint": "Strojový překlad obsahu katalogu přímo v prohlížeči. Formulace mohou být přibližné.",
+    "original": "Originál"
   }
 }

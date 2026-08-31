@@ -13,6 +13,7 @@ import { sortByCode } from "@/lib/table";
 import useInventory from "@/hooks/useInventory";
 import { GetInventoryResponse } from "@/app/api/catalog/[archive-code]/[fond-code]/[inventory-code]/route";
 import { getYearsString } from "@/lib/text";
+import { useTranslations } from "next-intl";
 import { editorInventoryHref } from "@/lib/editor-links";
 import { catalogItemLabel } from "@/lib/catalog-links";
 
@@ -27,13 +28,15 @@ const prepareToDownload = (items: TableItem[]) =>
 
 const Details: React.FC<{
   inventory?: GetInventoryResponse;
-}> = ({ inventory }) => (
+}> = ({ inventory }) => {
+  const t = useTranslations("catalog");
+  return (
   <div className="text-sm text-gray-500 max-h-[200px] md:max-h-[320px] overflow-y-auto">
     {inventory?.years.length || inventory?.online_copies?.length ? (
       <ul className="list-inside py-2">
         {Boolean(inventory.years.length) && (
           <li>
-            Роки:&nbsp;<span className="text-foreground">{getYearsString(inventory.years)}</span>
+            {t("years-label")}&nbsp;<span className="text-foreground">{getYearsString(inventory.years)}</span>
           </li>
         )}
         {(inventory.online_copies.filter((copy) => copy.url) as { url: string }[]).map((copy) => (
@@ -51,7 +54,8 @@ const Details: React.FC<{
       </ul>
     ) : null}
   </div>
-);
+  );
+};
 
 interface InventoryTableProps {
   resources?: Resources;
@@ -59,6 +63,7 @@ interface InventoryTableProps {
 }
 
 const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) => {
+  const t = useTranslations("catalog");
   const params = useCyrillicParams();
   const archiveCode = params["archive-code"];
   const fondCode = params["fond-code"];
@@ -71,7 +76,8 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) =
   return (
     <>
       <PagePanel
-        code={`${code} опис`}
+        code={t("inventory-code-label", { code })}
+        isTranslatable
         breadcrumbs={[archiveCode, fondCode, code]}
         title={inventory?.title || undefined}
         description={inventory?.info || undefined}
@@ -108,20 +114,20 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ resources, isAdmin }) =
           },
           {
             field: "title",
-            headerName: "Назва справи",
+            headerName: t("file-title-header"),
             flex: isMobile ? 4 : 9,
             resizable: !isMobile,
             filter: true,
             cellRenderer: (row: { value: number; data: TableItem }) => (
               <NextLink href={`/archives/${archiveCode}/${fondCode}/${code}/${row.data.code}`} className="link">
-                {row.value || `Справа ${row.data.code}`}
+                {row.value || t("untitled-file", { code: row.data.code })}
               </NextLink>
             ),
           },
           {
             field: "years",
-            headerName: "Роки",
-            valueGetter: (params) => (params.data ? getYearsString(params.data.years) : ""),
+            headerName: t("years-header"),
+            valueGetter: (params) => (params.data ? getYearsString(params.data.years, t("unknown")) : ""),
             filter: true,
             hide: isMobile,
           },

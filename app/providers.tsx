@@ -10,6 +10,7 @@ import { SessionProvider } from "next-auth/react";
 import { SessionExpiryWatcher } from "@/components/session-expiry-watcher";
 import { Session } from "next-auth";
 import { NextIntlClientProvider } from "next-intl";
+import { ContentTranslationProvider } from "@/providers/content-translation";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -40,10 +41,12 @@ export const Providers: React.FC<PropsWithChildren<ProvidersProps>> = ({ childre
       <SessionExpiryWatcher />
       <NextThemesProvider defaultTheme="dark" attribute="class">
         <NextIntlClientProvider locale={i18nLocale} messages={i18nMessages} timeZone="UTC">
-          <DonationProvider>
-            <Toast.Provider />
-            <ForeignUserProvider>{children}</ForeignUserProvider>
-          </DonationProvider>
+          <ContentTranslationProvider>
+            <DonationProvider>
+              <Toast.Provider />
+              <ForeignUserProvider>{children}</ForeignUserProvider>
+            </DonationProvider>
+          </ContentTranslationProvider>
         </NextIntlClientProvider>
       </NextThemesProvider>
     </SessionProvider>

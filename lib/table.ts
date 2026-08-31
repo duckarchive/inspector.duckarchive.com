@@ -53,11 +53,18 @@ export const sortByOnlineCopies = (_: any, __: any, a: IRowNode<any>, b: IRowNod
   );
 };
 
-export const getSyncAtLabel = (updatedAt?: Date | string | null, withoutPrefix?: boolean) => {
-  const prefix = withoutPrefix ? "" : "Перевірено ";
+interface SyncAtLabels {
+  /** e.g. «Перевірено»; omitted = no prefix. */
+  prefix?: string;
+  /** Shown when there is no timestamp at all. */
+  notSynced?: string;
+  /** BCP 47 tag for the relative-time wording. */
+  locale?: string;
+}
+
+export const getSyncAtLabel = (updatedAt?: Date | string | null, labels: SyncAtLabels = {}) => {
+  const { prefix, notSynced = "Не синхронізовано", locale = "uk" } = labels;
   return updatedAt
-    ? `${prefix}${intlFormatDistance(new Date(updatedAt), new Date(), {
-        locale: "uk",
-      })}`
-    : "Не синхронізовано";
+    ? `${prefix ? `${prefix} ` : ""}${intlFormatDistance(new Date(updatedAt), new Date(), { locale })}`
+    : notSynced;
 };

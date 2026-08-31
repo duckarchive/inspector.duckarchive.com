@@ -7,6 +7,7 @@ import OnlineCopiesMeter from "./online-copies-meter";
 import { Resource } from "@generated/prisma/client/client";
 import { Link } from "@heroui/react";
 import useIsMobile from "@/hooks/useIsMobile";
+import { useTranslations } from "next-intl";
 
 type TableItem = ResourcesWithCounts[number];
 
@@ -18,6 +19,8 @@ const totalCopies = (item?: TableItem) =>
   item ? item._count.public + item._count.restricted + item._count.paywall + item._count.unknown : 0;
 
 const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
+  const t = useTranslations("resources-page");
+  const tCatalog = useTranslations("catalog");
   const isMobile = useIsMobile();
   return (
     <InspectorDuckTable<TableItem>
@@ -26,7 +29,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
       columns={[
         {
           field: "id",
-          headerName: "Тип",
+          headerName: t("type-header"),
           flex: 0,
           width: 160,
           minWidth: 100,
@@ -40,11 +43,11 @@ const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
         },
         {
           field: "title",
-          headerName: "Назва",
+          headerName: tCatalog("title-header"),
           flex: 4,
           cellRenderer: (row: { value: string; data: TableItem }) => (
             <Link href={row.data.url || ""} target="_blank" rel="noopener noreferrer">
-              {row.value || "Без назви"}
+              {row.value || tCatalog("no-title")}
               <Link.Icon />
             </Link>
           ),
@@ -55,7 +58,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({ resources }) => {
           flex: 0,
           width: 120,
           minWidth: 100,
-          headerName: "Справ онлайн",
+          headerName: t("copies-header"),
           comparator: (_a, _b, nodeA, nodeB) => totalCopies(nodeA.data) - totalCopies(nodeB.data),
           cellRenderer: (row: { data: TableItem }) => <OnlineCopiesMeter counts={row.data._count} />,
         },
