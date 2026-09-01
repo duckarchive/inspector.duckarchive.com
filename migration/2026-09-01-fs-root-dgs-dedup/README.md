@@ -5,7 +5,7 @@ shapes (verified to partition all 2,299,329 FS rows with no third shape):
 
 - **root**: `…?imageGroupNumbers=<DGS>` — whole-film browse link.
 - **specific**: `…?imageGroupNumbers=<DGS>_<seq>_<imgId>` — pinpoints one
-  item (справа) within that film. See [[fs-url-to-dgs-conversion]].
+  item (справа) within that film. See the DAS API notes in `scripts/to-dgs.ts`.
 
 When a catalog target (file or inventory) is linked to **both** a root copy
 and a specific copy for the **same DGS**, the root copy adds nothing — the
@@ -14,9 +14,9 @@ target. This migration removes those redundant root copies.
 
 Scope is narrower than it may sound: of 2,199,134 root copies, only
 **1,607** had a same-target specific sibling. (Most specific-form copies —
-39,318 of 100,195 — are actually unlinked FS blobs with no ref/title, per
-[[online-copies-parsed-conventions]]'s "olibNotes fallback" backlog; those
-don't create redundancy and were left untouched.)
+39,318 of 100,195 — are actually unlinked FS blobs with no ref/title, part of
+the "olibNotes fallback" backlog noted in `migration/2026-08-25-oc-linking-levels/README.md`;
+those don't create redundancy and were left untouched.)
 
 ## Findings
 
