@@ -80,6 +80,12 @@ const OnlineCopyAutolinkModal: React.FC<OnlineCopyAutolinkModalProps> = ({ isOpe
                     FamilySearch-структура, обʼєднання «том»/«частина», латинські омогліфи, маркер «(опис)»,
                     діапазони справ ({preview.wide.files + preview.wide.inventories}).
                   </p>
+                  {preview.already_linked > 0 && (
+                    <p className="text-xs text-muted">
+                      Пропущено {preview.already_linked}: той самий URL уже привʼязано до цієї ж цілі іншим
+                      записом (дублікат-двійник) — такі копії обʼєднуються під час привʼязки, а не автопривʼязкою.
+                    </p>
+                  )}
                 </>
               )}
             </Modal.Body>

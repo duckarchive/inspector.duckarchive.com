@@ -57,6 +57,78 @@ const inferResourceId = async (tx: Tx, url: string): Promise<string> => {
   return match.id;
 };
 
+// ── online-copy edges ──────────────────────────────────────────────────────
+// An online_copies row is one (url ↔ target) edge and the DB enforces one row
+// per (resource_id, url, file_id | inventory_id). When a second row for the same
+// edge turns up — a scraper twin whose `parsed` drifted before source keys
+// existed, a manual add of a url that is already linked — the LINKED row
+// survives and, when the twin is the row the scraper still maintains (keyed and
+// observed more recently), takes over its claim identity (`source_key`,
+// `parsed`); otherwise the next sync would simply re-mint the twin. History
+// follows the survivor; a pending connect on the twin is redundant, except the
+// action being resolved right now (`keepActionId`), which is repointed instead.
+const adoptCopyInto = async (
+  tx: Tx,
+  doomedId: string,
+  survivorId: string,
+  keepActionId?: string,
+): Promise<void> => {
+  if (doomedId === survivorId) return;
+  const [doomed, survivor] = await Promise.all([
+    tx.onlineCopy.findUnique({
+      where: { id: doomedId },
+      select: { source_key: true, parsed: true, availability: true, checked_availability_at: true },
+    }),
+    tx.onlineCopy.findUnique({
+      where: { id: survivorId },
+      select: { source_key: true, checked_availability_at: true },
+    }),
+  ]);
+  if (!doomed || !survivor) throw new ActionExecutionError("Онлайн-копію не знайдено", 404);
+
+  const redundantConnect = {
+    online_copy_id: doomedId,
+    type: "connect_to_online_copy" as const,
+    resolved_at: null,
+    ...(keepActionId ? { id: { not: keepActionId } } : {}),
+  };
+  await tx.fileActions.deleteMany({ where: redundantConnect });
+  await tx.inventoryActions.deleteMany({ where: redundantConnect });
+  await tx.fileActions.updateMany({ where: { online_copy_id: doomedId }, data: { online_copy_id: survivorId } });
+  await tx.inventoryActions.updateMany({ where: { online_copy_id: doomedId }, data: { online_copy_id: survivorId } });
+
+  // delete before the take-over: the claim unique (resource_id, url, source_key)
+  // must be free before the survivor can hold the key
+  await tx.onlineCopy.delete({ where: { id: doomedId } });
+
+  const doomedChecked = doomed.checked_availability_at?.getTime() ?? -Infinity;
+  const survivorChecked = survivor.checked_availability_at?.getTime() ?? -Infinity;
+  const takeOver = doomed.source_key !== null && (survivor.source_key === null || doomedChecked > survivorChecked);
+  if (takeOver) {
+    await tx.onlineCopy.update({
+      where: { id: survivorId },
+      data: {
+        source_key: doomed.source_key,
+        parsed: doomed.parsed,
+        ...(doomed.availability ? { availability: doomed.availability } : {}),
+        ...(doomed.checked_availability_at ? { checked_availability_at: doomed.checked_availability_at } : {}),
+      },
+    });
+  }
+};
+
+/** The row already holding the (resource_id, url, target) edge, if any. */
+const findEdgeTwin = (
+  tx: Tx,
+  copy: { resource_id: string; url: string },
+  target: { inventory_id: string } | { file_id: string },
+  exceptId?: string,
+) =>
+  tx.onlineCopy.findFirst({
+    where: { resource_id: copy.resource_id, url: copy.url, ...target, ...(exceptId ? { id: { not: exceptId } } : {}) },
+    select: { id: true },
+  });
+
 /** Apply the catalog mutation described by an action. Returns the created copy id (add_online_copy). */
 // ── merge_to helpers ───────────────────────────────────────────────────────
 // A blind re-parent trips the unique [code, parent_id] when the target already
@@ -69,7 +141,7 @@ const mergeFileInto = async (tx: Tx, sourceId: string, targetId: string): Promis
     where: { id: sourceId },
     select: {
       authors: { select: { author_id: true } },
-      online_copies: { select: { id: true, resource_id: true, url: true, parsed: true } },
+      online_copies: { select: { id: true, resource_id: true, url: true } },
       locations: { select: { lat: true, lng: true, radius_m: true } },
       years: { select: { start_year: true, end_year: true } },
     },
@@ -86,11 +158,9 @@ const mergeFileInto = async (tx: Tx, sourceId: string, targetId: string): Promis
   await tx.fileAuthor.deleteMany({ where: { file_id: sourceId } });
 
   for (const copy of file.online_copies) {
-    const duplicate = await tx.onlineCopy.findFirst({
-      where: { file_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
-    });
-    if (duplicate) {
-      await tx.onlineCopy.delete({ where: { id: copy.id } });
+    const twin = await findEdgeTwin(tx, copy, { file_id: targetId });
+    if (twin) {
+      await adoptCopyInto(tx, copy.id, twin.id);
     } else {
       await tx.onlineCopy.update({ where: { id: copy.id }, data: { file_id: targetId } });
     }
@@ -145,18 +215,49 @@ const mergeInventoryInto = async (tx: Tx, sourceId: string, targetId: string): P
     )
   `;
 
+  // online copies of colliding files: the target twin may already hold the same
+  // (resource_id, url) edge — the DB allows one row per edge — so those copies
+  // are folded into the target's row (adoptCopyInto's rule, set-based: the
+  // linked survivor takes over the claim identity when the source copy is the
+  // one the scraper maintains), the rest are simply re-pointed.
+  await tx.$executeRaw`DROP TABLE IF EXISTS merge_oc_pairs`;
   await tx.$executeRaw`
-    DELETE FROM online_copies oc
-    USING files src, files tgt
-    WHERE oc.file_id = src.id
-      AND src.inventory_id = ${sourceId}::uuid
-      AND tgt.inventory_id = ${targetId}::uuid
-      AND tgt.code = src.code
-      AND EXISTS (
-        SELECT 1 FROM online_copies dup
-        WHERE dup.file_id = tgt.id AND dup.resource_id = oc.resource_id AND dup.url = oc.url AND dup.parsed = oc.parsed
-      )
+    CREATE TEMP TABLE merge_oc_pairs ON COMMIT DROP AS
+    SELECT oc.id AS doomed_id, dup.id AS survivor_id,
+           oc.source_key AS d_source_key, oc.parsed AS d_parsed,
+           oc.availability AS d_availability, oc.checked_availability_at AS d_checked,
+           (oc.source_key IS NOT NULL
+             AND (dup.source_key IS NULL
+               OR COALESCE(oc.checked_availability_at, '-infinity') > COALESCE(dup.checked_availability_at, '-infinity'))
+           ) AS take_over
+    FROM online_copies oc
+    JOIN files src ON src.id = oc.file_id AND src.inventory_id = ${sourceId}::uuid
+    JOIN files tgt ON tgt.inventory_id = ${targetId}::uuid AND tgt.code = src.code
+    JOIN online_copies dup ON dup.file_id = tgt.id AND dup.resource_id = oc.resource_id AND dup.url = oc.url
   `;
+  await tx.$executeRaw`
+    DELETE FROM file_actions fa USING merge_oc_pairs p
+    WHERE fa.online_copy_id = p.doomed_id AND fa.type = 'connect_to_online_copy' AND fa.resolved_at IS NULL
+  `;
+  await tx.$executeRaw`
+    UPDATE file_actions fa SET online_copy_id = p.survivor_id FROM merge_oc_pairs p WHERE fa.online_copy_id = p.doomed_id
+  `;
+  await tx.$executeRaw`
+    UPDATE inventory_actions ia SET online_copy_id = p.survivor_id FROM merge_oc_pairs p WHERE ia.online_copy_id = p.doomed_id
+  `;
+  // delete before the take-over so the claim unique (resource_id, url, source_key) is free
+  await tx.$executeRaw`DELETE FROM online_copies oc USING merge_oc_pairs p WHERE oc.id = p.doomed_id`;
+  await tx.$executeRaw`
+    UPDATE online_copies dup
+    SET source_key = p.d_source_key,
+        parsed = p.d_parsed,
+        availability = COALESCE(p.d_availability, dup.availability),
+        checked_availability_at = COALESCE(p.d_checked, dup.checked_availability_at),
+        updated_at = now()
+    FROM merge_oc_pairs p
+    WHERE dup.id = p.survivor_id AND p.take_over
+  `;
+  await tx.$executeRaw`DROP TABLE merge_oc_pairs`;
   await tx.$executeRaw`
     UPDATE online_copies oc
     SET file_id = tgt.id
@@ -208,14 +309,12 @@ const mergeInventoryInto = async (tx: Tx, sourceId: string, targetId: string): P
 
   const copies = await tx.onlineCopy.findMany({
     where: { inventory_id: sourceId },
-    select: { id: true, resource_id: true, url: true, parsed: true },
+    select: { id: true, resource_id: true, url: true },
   });
   for (const copy of copies) {
-    const duplicate = await tx.onlineCopy.findFirst({
-      where: { inventory_id: targetId, resource_id: copy.resource_id, url: copy.url, parsed: copy.parsed },
-    });
-    if (duplicate) {
-      await tx.onlineCopy.delete({ where: { id: copy.id } });
+    const twin = await findEdgeTwin(tx, copy, { inventory_id: targetId });
+    if (twin) {
+      await adoptCopyInto(tx, copy.id, twin.id);
     } else {
       await tx.onlineCopy.update({ where: { id: copy.id }, data: { inventory_id: targetId } });
     }
@@ -440,10 +539,21 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       if (!action.online_copy_id) throw new ActionExecutionError("Дія не містить онлайн-копії");
       const id = requireTarget();
       if (entity !== "inventory" && entity !== "file") throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
-      await tx.onlineCopy.update({
+      const target = entity === "inventory" ? { inventory_id: id } : { file_id: id };
+      const copy = await tx.onlineCopy.findUnique({
         where: { id: action.online_copy_id },
-        data: entity === "inventory" ? { inventory_id: id } : { file_id: id },
+        select: { resource_id: true, url: true },
       });
+      if (!copy) throw new ActionExecutionError("Онлайн-копію не знайдено", 404);
+      // the url may already be linked to this very target through a twin row
+      // (parsed drift before source keys, a manual add): fold this copy into
+      // that edge instead of creating a second one — the DB would refuse it.
+      const twin = await findEdgeTwin(tx, copy, target, action.online_copy_id);
+      if (twin) {
+        await adoptCopyInto(tx, action.online_copy_id, twin.id, action.id);
+        return twin.id; // the resolved action is repointed to the surviving row
+      }
+      await tx.onlineCopy.update({ where: { id: action.online_copy_id }, data: target });
       return null;
     }
     case "disconnect_from_online_copy": {
@@ -461,12 +571,13 @@ const applyMutation = async (tx: Tx, entity: EditorEntity, action: ActionRecord)
       if (!url) throw new ActionExecutionError("Дія не містить URL");
       if (entity !== "inventory" && entity !== "file") throw new ActionExecutionError("Онлайн-копії не підтримуються для фондів");
       const resourceId = await inferResourceId(tx, url);
+      const target = entity === "inventory" ? { inventory_id: id } : { file_id: id };
+      // one row per (resource_id, url, target): an already-linked url is a no-op
+      const existing = await findEdgeTwin(tx, { resource_id: resourceId, url }, target);
+      if (existing) return existing.id;
+      // source_key stays NULL: this row is editor-owned, not a scraper claim
       const copy = await tx.onlineCopy.create({
-        data: {
-          url,
-          resource_id: resourceId,
-          ...(entity === "inventory" ? { inventory_id: id } : { file_id: id }),
-        },
+        data: { url, resource_id: resourceId, ...target },
       });
       return copy.id;
     }

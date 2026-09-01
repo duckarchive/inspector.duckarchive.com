@@ -3,6 +3,7 @@ import { resolveDuckUser } from "@/lib/auth";
 import { isEditorQueue, queueEntity } from "@/lib/editor-actions";
 import { ErrorResponse } from "@/types";
 import { ActionExecutionError, resolveAction } from "@/app/api/editor/actions/[entity]/[id]/data";
+import { Prisma } from "@generated/prisma/client/client";
 import { chunk } from "lodash";
 
 interface RouteParams {
@@ -66,6 +67,9 @@ export async function PATCH(
         } catch (error) {
           if (error instanceof ActionExecutionError) {
             errors.push({ id: item.id, message: error.message });
+          } else if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+            // one online-copy row per (resource, url, target) — a duplicate edge is a conflict
+            errors.push({ id: item.id, message: "Цей URL вже привʼязано до цієї цілі (дублікат онлайн-копії)" });
           } else {
             console.error("Error resolving editor action:", error);
             errors.push({ id: item.id, message: "Internal Server Error" });

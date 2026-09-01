@@ -11,6 +11,13 @@ export interface AutolinkPreview {
   strict: AutolinkCounts;
   /** All unambiguous matches, including normalized / FS-blob / том-частина / опис-range ones. */
   wide: AutolinkCounts;
+  /**
+   * Matches held back because another row with the same resource + url is already
+   * linked to that very target (a pre-source-key drift twin). The DB allows one row
+   * per edge; these are folded into the existing edge by the cutover sweep / the
+   * copy's connect action, not by autolink.
+   */
+  already_linked: number;
 }
 
 /**
@@ -18,7 +25,10 @@ export interface AutolinkPreview {
  * `matches(id, target, target_id, is_strict)` — at most one row per copy, only
  * when exactly one candidate fits at the winning priority (ambiguous folds are
  * dropped; ~0 in practice). Copies with a pending action are excluded so a
- * re-run can't double-propose.
+ * re-run can't double-propose, and `guarded` drops a match whose url is already
+ * linked to the proposed target through another row — the DB enforces one row
+ * per (resource_id, url, target), so approving it would fail; such twins are
+ * folded into the existing edge instead (adoptCopyInto / the cutover sweep).
  *
  * Priority per copy: file direct → file том/частина fallback → inventory
  * direct → inventory file-range. Inventories have no stored full_code, so
@@ -111,24 +121,43 @@ const MATCH_CTE = Prisma.sql`
     FROM all_m m JOIN best b ON b.id = m.id AND b.pri = m.pri
     GROUP BY m.id, m.target
     HAVING count(DISTINCT m.target_id) = 1
+  ),
+  guarded AS (
+    SELECT m.*
+    FROM matches m
+    JOIN online_copies oc ON oc.id = m.id
+    WHERE NOT EXISTS (
+      SELECT 1 FROM online_copies o2
+      WHERE o2.resource_id = oc.resource_id AND o2.url = oc.url AND o2.id <> oc.id
+        AND ((m.target = 'file' AND o2.file_id = m.target_id)
+          OR (m.target = 'inventory' AND o2.inventory_id = m.target_id))
+    )
   )
 `;
 
 export const getAutolinkPreview = async (): Promise<AutolinkPreview> => {
   const [row] = await prisma.$queryRaw<
-    Array<{ strict_files: number; wide_files: number; strict_inventories: number; wide_inventories: number }>
+    Array<{
+      strict_files: number;
+      wide_files: number;
+      strict_inventories: number;
+      wide_inventories: number;
+      already_linked: number;
+    }>
   >(Prisma.sql`
     ${MATCH_CTE}
     SELECT
       count(*) FILTER (WHERE target = 'file' AND is_strict)::int AS strict_files,
       count(*) FILTER (WHERE target = 'file')::int AS wide_files,
       count(*) FILTER (WHERE target = 'inventory' AND is_strict)::int AS strict_inventories,
-      count(*) FILTER (WHERE target = 'inventory')::int AS wide_inventories
-    FROM matches
+      count(*) FILTER (WHERE target = 'inventory')::int AS wide_inventories,
+      ((SELECT count(*) FROM matches) - count(*))::int AS already_linked
+    FROM guarded
   `);
   return {
     strict: { files: row?.strict_files ?? 0, inventories: row?.strict_inventories ?? 0 },
     wide: { files: row?.wide_files ?? 0, inventories: row?.wide_inventories ?? 0 },
+    already_linked: row?.already_linked ?? 0,
   };
 };
 
@@ -143,14 +172,14 @@ export const createAutolinkActions = async (strict: boolean, createdBy: string):
     ins_files AS (
       INSERT INTO file_actions (created_by, type, online_copy_id, file_id)
       SELECT ${createdBy}, 'connect_to_online_copy'::"ActionType", id, target_id
-      FROM matches WHERE target = 'file' ${strictFilter}
+      FROM guarded WHERE target = 'file' ${strictFilter}
       ON CONFLICT DO NOTHING
       RETURNING 1
     ),
     ins_inventories AS (
       INSERT INTO inventory_actions (created_by, type, online_copy_id, inventory_id)
       SELECT ${createdBy}, 'connect_to_online_copy'::"ActionType", id, target_id
-      FROM matches WHERE target = 'inventory' ${strictFilter}
+      FROM guarded WHERE target = 'inventory' ${strictFilter}
       ON CONFLICT DO NOTHING
       RETURNING 1
     )
