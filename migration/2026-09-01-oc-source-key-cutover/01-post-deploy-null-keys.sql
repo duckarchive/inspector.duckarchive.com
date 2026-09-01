@@ -26,7 +26,9 @@ upd AS (
   RETURNING 1)
 SELECT 'null-key rows keyed by their text' AS step, count(*) FROM upd;
 
-SELECT 'null-key rows with a text left (twins of a keyed row)' AS what, count(*)
+-- what remains NULL-keyed with a text are the migration's demoted second edges
+-- (a keyed twin holds the same text on the same url) — kept NULL by design
+SELECT 'null-key rows with a text left (demoted second edges, by design)' AS what, count(*)
 FROM online_copies WHERE source_key IS NULL AND parsed <> '';
 
 COMMIT;

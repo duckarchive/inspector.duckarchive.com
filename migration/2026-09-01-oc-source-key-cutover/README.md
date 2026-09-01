@@ -65,15 +65,28 @@ everywhere now: the linked row survives and takes the fresh row's
 
 ## Measured
 
-_(fill from 00-preflight.sql before the migration, and from 03/04/05 output after)_
+Migration applied 2026-09-01 14:45 UTC (second attempt; the first, with the
+two whole-table updates and all indexes live, was cancelled after 40 min —
+see the migration header). `00-preflight.sql` was not run beforehand, so the
+deleted-twin counts are only in the migration's `NOTICE` line of that deploy.
 
-| | |
+| after the migration | |
 |---|---|
-| A. file edge dup groups / rows to delete | |
-| A. inventory edge dup groups / rows to delete | |
-| B. claim dup groups / losers / multi-parent (demoted) | |
-| 04-execute: pairs adopted | |
-| 05-prune: rows pruned | |
+| `online_copies` rows | 3,033,401 |
+| keyed by their text (`source_key = parsed`, awaiting adoption by the keyed sink) | 2,920,614 |
+| demoted second edges (`source_key IS NULL`, `parsed <> ''`) | 112,787 — **all FamilySearch, all file-linked, all range claims** |
+| rows with `parsed = ''` | 0 |
+| `01-post-deploy-null-keys.sql` | 0 rows keyed (nothing was written between migration and deploy) |
+| 04-execute: pairs adopted | _(after the first keyed FS sync)_ |
+| 05-prune: rows pruned | _(after the first keyed FS sync)_ |
+
+The demoted rows are one pattern: an image group whose reference is a
+**range** (`ДАПО-(Р-9106-3-6567-6690+++…)`) was linked to every file of the
+range (here 124 files), so 124 edges share one claim text on one url. One of
+them keeps the key (and is adopted by the keyed sink on the next FS sync), the
+rest stay NULL-keyed but linked; the sink still refreshes their availability
+through its NULL-key/url pass. Legitimate — nothing to do. `06` excludes range
+claims for the same reason.
 
 ## Rollback
 
