@@ -136,6 +136,6 @@ Error cases: `401` no/invalid token, `403` role too low or banned, `404` target 
 
 ## Open Issues
 
-- **Cascade delete erases history:** `online_copy_id` has `onDelete: Cascade`, so executing `remove_online_copy` deletes every action that ever referenced that copy — including the remove action itself. Recommendation for the Prisma repo: switch to `onDelete: SetNull` (the column is already nullable) to preserve the audit trail.
+- ~~**Cascade delete erases history:** `online_copy_id` has `onDelete: Cascade`…~~ Resolved in `@duckarchive/prisma` migration `20260901120000_online_copies_source_key`: both `*_actions.online_copy_id` FKs are `ON DELETE SET NULL`, so deleting a copy keeps its action rows (with a NULL copy). The same migration made the online-copy identity `(resource_id, url, source_key)` and added one-row-per-edge uniques — see AGENT.md "Online-copy identity".
 - Duck API role field: shape TBD (enum vs boolean flags); Inspector reads it via `lib/user.ts` once available.
 - Switchover timing: these endpoints/UI ship together with Inspector's migration to the fond/inventory/file routes.

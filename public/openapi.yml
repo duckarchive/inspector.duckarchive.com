@@ -149,6 +149,9 @@ components:
         id:
           type: string
           format: uuid
+        created_at:
+          type: string
+          format: date-time
         updated_at:
           type: string
           format: date-time
@@ -171,10 +174,15 @@ components:
           type: string
         availability:
           type: string
-          enum: [PUBLIC, RESTRICTED]
+          enum: [PUBLIC, RESTRICTED, PAYWALL]
           nullable: true
         parsed:
           type: string
+          description: The code text the scraper derived for this copy (mutable, refreshed on every sync).
+        source_key:
+          type: string
+          nullable: true
+          description: The scraper's stable id of this claim within its url; null for copies added by editors.
     FileSummary:
       type: object
       properties:

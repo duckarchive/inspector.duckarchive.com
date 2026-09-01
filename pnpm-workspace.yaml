@@ -9,3 +9,8 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   '@duckarchive/framework': true
+overrides:
+  "react-aria": "3.51.0"
+  "react-stately": "3.49.0"
+  "@react-stately/color": "3.8.0"
+  "@react-types/color": "3.2.0"

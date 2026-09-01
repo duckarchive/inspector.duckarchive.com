@@ -3,6 +3,7 @@ import { resolveDuckUser } from "@/lib/auth";
 import { isEditorQueue, queueEntity } from "@/lib/editor-actions";
 import { ErrorResponse } from "@/types";
 import { ActionExecutionError, resolveAction } from "@/app/api/editor/actions/[entity]/[id]/data";
+import { Prisma } from "@generated/prisma/client/client";
 
 interface RouteParams {
   params: Promise<{ entity: string; id: string }>;
@@ -39,6 +40,11 @@ export async function PATCH(req: NextRequest, { params }: RouteParams): Promise<
   } catch (error) {
     if (error instanceof ActionExecutionError) {
       return NextResponse.json({ message: error.message }, { status: error.status });
+    }
+    // the DB keeps one online-copy row per (resource, url, target); a second one
+    // (a race the adopt path in data.ts did not catch) is a conflict, not a 500
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return NextResponse.json({ message: "Цей URL вже привʼязано до цієї цілі (дублікат онлайн-копії)" }, { status: 409 });
     }
     console.error("Error resolving editor action:", error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
