@@ -17,7 +17,7 @@ const ProcessSection: React.FC = async () => {
 
       <ol className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {STEP_KEYS.map((key, i) => (
-          <li key={key} className="flex flex-col gap-2 rounded-xl bg-surface p-6 shadow-surface">
+          <li key={key} className="flex flex-col gap-2 rounded-xl bg-surface p-6">
             <span className="text-label-sm uppercase tracking-wide text-accent">
               {String(i + 1).padStart(2, "0")}
             </span>

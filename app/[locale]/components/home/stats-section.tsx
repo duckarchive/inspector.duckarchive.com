@@ -15,6 +15,17 @@ const StatsSection: React.FC = async () => {
         <p className="max-w-2xl text-body-lg text-muted text-balance">{t("subtitle")}</p>
       </div>
 
+      <dl className="grid grid-cols-1 gap-6 md:grid-cols-4">
+        {TOTAL_KEYS.map((key) => (
+          <div key={key} className="flex flex-col gap-1.5 rounded-xl bg-surface p-6">
+            <dt className="order-2 text-label-sm uppercase tracking-wide text-muted">{t(key)}</dt>
+            <dd className="order-1 text-headline-lg-mobile md:text-headline-lg tracking-tight">
+              {format(homeStats[key])}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
       <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5 rounded-xl bg-surface-secondary p-6">
           <dt className="order-2 text-label-sm uppercase tracking-wide text-muted">{t("checkedLast7Days")}</dt>
@@ -28,17 +39,6 @@ const StatsSection: React.FC = async () => {
             {format(homeStats.communityEditsAppliedLast7Days)}
           </dd>
         </div>
-      </dl>
-
-      <dl className="grid grid-cols-2 gap-6 md:grid-cols-4">
-        {TOTAL_KEYS.map((key) => (
-          <div key={key} className="flex flex-col gap-1.5 rounded-xl bg-surface p-6 shadow-surface">
-            <dt className="order-2 text-label-sm uppercase tracking-wide text-muted">{t(key)}</dt>
-            <dd className="order-1 text-headline-lg-mobile md:text-headline-lg tracking-tight">
-              {format(homeStats[key])}
-            </dd>
-          </div>
-        ))}
       </dl>
     </section>
   );
