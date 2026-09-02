@@ -73,8 +73,16 @@
     "docs": "Dokumentace"
   },
   "footer": {
-    "navigation": "Navigace",
-    "reports": "Reporty"
+    "community": "Komunita",
+    "support-project": "Podpořit projekt",
+    "for-users": "Pro uživatele",
+    "docs": "Dokumentace",
+    "privacy-policy": "Zásady ochrany osobních údajů",
+    "terms": "Podmínky použití",
+    "for-devs": "Pro vývojáře",
+    "api-docs": "Dokumentace API",
+    "mcp": "MCP",
+    "db-backup": "Veřejná záloha databáze"
   },
   "metadata": {
     "title": "Duck Inspector — vyhledávání archivních spisů online",
@@ -382,5 +390,30 @@
     "downloading": "Stahování… {percent}%",
     "hint": "Strojový překlad obsahu katalogu přímo v prohlížeči. Formulace mohou být přibližné.",
     "original": "Originál"
+  },
+  "docs-page": {
+    "title": "Dokumentace",
+    "description": "Jak používat Duck Inspector",
+    "placeholder": "Dokumentace se stále připravuje. Zatím se podívejte do dokumentace API nebo nám napište na Telegramu."
+  },
+  "privacy-policy-page": {
+    "title": "Zásady ochrany osobních údajů",
+    "description": "Jaké údaje sbíráme a jak je používáme",
+    "placeholder": "Zásady ochrany osobních údajů se stále připravují."
+  },
+  "terms-page": {
+    "title": "Podmínky použití",
+    "description": "Pravidla používání služby",
+    "placeholder": "Podmínky použití se stále připravují."
+  },
+  "mcp-page": {
+    "title": "Server MCP",
+    "description": "Přístup ke katalogu Inspektora z AI asistentů",
+    "placeholder": "Server MCP se stále připravuje."
+  },
+  "backup-page": {
+    "title": "Veřejná záloha databáze",
+    "description": "Pravidelné dumpy otevřeného katalogu",
+    "placeholder": "Veřejné dumpy se stále připravují."
   }
 }

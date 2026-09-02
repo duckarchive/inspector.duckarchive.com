@@ -73,8 +73,16 @@
     "docs": "Documentazione"
   },
   "footer": {
-    "navigation": "Navigazione",
-    "reports": "Report"
+    "community": "Comunità",
+    "support-project": "Sostieni il progetto",
+    "for-users": "Per gli utenti",
+    "docs": "Documentazione",
+    "privacy-policy": "Informativa sulla privacy",
+    "terms": "Termini e condizioni",
+    "for-devs": "Per gli sviluppatori",
+    "api-docs": "Documentazione API",
+    "mcp": "MCP",
+    "db-backup": "Backup pubblico del DB"
   },
   "metadata": {
     "title": "Duck Inspector — ricerca di file d'archivio online",
@@ -382,5 +390,30 @@
     "downloading": "Download… {percent}%",
     "hint": "Traduzione automatica dei contenuti del catalogo nel browser. La formulazione può essere approssimativa.",
     "original": "Originale"
+  },
+  "docs-page": {
+    "title": "Documentazione",
+    "description": "Come usare Duck Inspector",
+    "placeholder": "La documentazione è ancora in preparazione. Nel frattempo consulta la documentazione API o scrivici su Telegram."
+  },
+  "privacy-policy-page": {
+    "title": "Informativa sulla privacy",
+    "description": "Quali dati raccogliamo e come li usiamo",
+    "placeholder": "L'informativa sulla privacy è ancora in preparazione."
+  },
+  "terms-page": {
+    "title": "Termini e condizioni",
+    "description": "Regole di utilizzo del servizio",
+    "placeholder": "I termini e le condizioni sono ancora in preparazione."
+  },
+  "mcp-page": {
+    "title": "Server MCP",
+    "description": "Accedi al catalogo di Inspector dagli assistenti IA",
+    "placeholder": "Il server MCP è ancora in preparazione."
+  },
+  "backup-page": {
+    "title": "Backup pubblico del database",
+    "description": "Dump periodici del catalogo aperto",
+    "placeholder": "I dump pubblici sono ancora in preparazione."
   }
 }

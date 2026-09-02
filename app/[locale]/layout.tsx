@@ -37,30 +37,27 @@ const LocaleLayout: React.FC<LocaleLayoutProps> = async ({ children, params }) =
         <DuckFooter
           siteUrl={siteConfig.url}
           columns={[
+            // The framework appends YouTube/Telegram/WhatsApp to the first
+            // column, so "community" is the only column it can live in.
             {
-              title: tFooter("navigation"),
+              title: tFooter("community"),
+              items: [{ label: tFooter("support-project"), path: "https://ko-fi.com/duckarchive" }],
+            },
+            {
+              title: tFooter("for-users"),
               items: [
-                { label: t("search"), path: "/search" },
-                { label: t("archives"), path: "/archives" },
-                { label: t("resources"), path: "/resources" },
-                { label: t("authors"), path: "/authors" },
+                { label: tFooter("docs"), path: "/docs" },
+                { label: tFooter("privacy-policy"), path: "/privacy-policy" },
+                { label: tFooter("terms"), path: "/terms" },
               ],
             },
             {
-              title: tFooter("reports"),
+              title: tFooter("for-devs"),
               items: [
-                { label: t("daily-updates"), path: "/daily-updates" },
-                { label: t("stats"), path: "/stats" },
-              ],
-            },
-            {
-              title: "Duck Archive",
-              items: [
-                { label: "Моя качка", path: "https://duckarchive.com" },
-                {
-                  label: "Справна Качка",
-                  path: "https://chromewebstore.google.com/detail/%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BD%D0%B0-%D0%BA%D0%B0%D1%87%D0%BA%D0%B0/gldlgeliohimejlfpgihbplkchibadim",
-                },
+                { label: tFooter("api-docs"), path: "/reference" },
+                { label: tFooter("mcp"), path: "/mcp" },
+                { label: tFooter("db-backup"), path: "/backup" },
+                { label: "GitHub", path: "https://github.com/duckarchive/inspector.duckarchive.com" },
               ],
             },
           ]}

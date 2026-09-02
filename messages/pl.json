@@ -73,8 +73,16 @@
     "docs": "Dokumentacja"
   },
   "footer": {
-    "navigation": "Nawigacja",
-    "reports": "Raporty"
+    "community": "Społeczność",
+    "support-project": "Wesprzyj projekt",
+    "for-users": "Dla użytkowników",
+    "docs": "Dokumentacja",
+    "privacy-policy": "Polityka prywatności",
+    "terms": "Regulamin",
+    "for-devs": "Dla programistów",
+    "api-docs": "Dokumentacja API",
+    "mcp": "MCP",
+    "db-backup": "Publiczna kopia bazy"
   },
   "metadata": {
     "title": "Duck Inspector — wyszukiwanie archiwów online",
@@ -382,5 +390,30 @@
     "downloading": "Pobieranie… {percent}%",
     "hint": "Tłumaczenie maszynowe treści katalogu w przeglądarce. Sformułowania mogą być przybliżone.",
     "original": "Oryginał"
+  },
+  "docs-page": {
+    "title": "Dokumentacja",
+    "description": "Jak korzystać z Duck Inspector",
+    "placeholder": "Dokumentacja jest jeszcze przygotowywana. Na razie zajrzyj do dokumentacji API lub napisz do nas na Telegramie."
+  },
+  "privacy-policy-page": {
+    "title": "Polityka prywatności",
+    "description": "Jakie dane zbieramy i jak ich używamy",
+    "placeholder": "Polityka prywatności jest jeszcze przygotowywana."
+  },
+  "terms-page": {
+    "title": "Regulamin",
+    "description": "Zasady korzystania z serwisu",
+    "placeholder": "Regulamin jest jeszcze przygotowywany."
+  },
+  "mcp-page": {
+    "title": "Serwer MCP",
+    "description": "Dostęp do katalogu Inspektora z asystentów AI",
+    "placeholder": "Serwer MCP jest jeszcze przygotowywany."
+  },
+  "backup-page": {
+    "title": "Publiczna kopia bazy danych",
+    "description": "Regularne zrzuty otwartego katalogu",
+    "placeholder": "Publiczne zrzuty są jeszcze przygotowywane."
   }
 }
