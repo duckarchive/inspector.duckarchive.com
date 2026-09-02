@@ -80,7 +80,7 @@
     "privacy-policy": "Polityka prywatności",
     "terms": "Regulamin",
     "for-devs": "Dla programistów",
-    "api-docs": "Dokumentacja API",
+    "api-docs": "API",
     "mcp": "MCP",
     "db-backup": "Publiczna kopia bazy"
   },
@@ -395,16 +395,6 @@
     "title": "Dokumentacja",
     "description": "Jak korzystać z Duck Inspector",
     "placeholder": "Dokumentacja jest jeszcze przygotowywana. Na razie zajrzyj do dokumentacji API lub napisz do nas na Telegramie."
-  },
-  "privacy-policy-page": {
-    "title": "Polityka prywatności",
-    "description": "Jakie dane zbieramy i jak ich używamy",
-    "placeholder": "Polityka prywatności jest jeszcze przygotowywana."
-  },
-  "terms-page": {
-    "title": "Regulamin",
-    "description": "Zasady korzystania z serwisu",
-    "placeholder": "Regulamin jest jeszcze przygotowywany."
   },
   "mcp-page": {
     "title": "Serwer MCP",

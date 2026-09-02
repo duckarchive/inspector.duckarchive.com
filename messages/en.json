@@ -80,7 +80,7 @@
     "privacy-policy": "Privacy policy",
     "terms": "Terms and conditions",
     "for-devs": "For developers",
-    "api-docs": "API docs",
+    "api-docs": "API",
     "mcp": "MCP",
     "db-backup": "Public DB backup"
   },
@@ -395,16 +395,6 @@
     "title": "Documentation",
     "description": "How to use Duck Inspector",
     "placeholder": "The documentation is still being written. In the meantime, see the API docs or reach out on Telegram."
-  },
-  "privacy-policy-page": {
-    "title": "Privacy policy",
-    "description": "What data we collect and how we use it",
-    "placeholder": "The privacy policy is still being written."
-  },
-  "terms-page": {
-    "title": "Terms and conditions",
-    "description": "Rules for using the service",
-    "placeholder": "The terms and conditions are still being written."
   },
   "mcp-page": {
     "title": "MCP server",

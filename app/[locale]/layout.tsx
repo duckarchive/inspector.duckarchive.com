@@ -46,7 +46,6 @@ const LocaleLayout: React.FC<LocaleLayoutProps> = async ({ children, params }) =
             {
               title: tFooter("for-users"),
               items: [
-                { label: tFooter("docs"), path: "/docs" },
                 { label: tFooter("privacy-policy"), path: "/privacy-policy" },
                 { label: tFooter("terms"), path: "/terms" },
               ],
@@ -55,8 +54,7 @@ const LocaleLayout: React.FC<LocaleLayoutProps> = async ({ children, params }) =
               title: tFooter("for-devs"),
               items: [
                 { label: tFooter("api-docs"), path: "/reference" },
-                { label: tFooter("mcp"), path: "/mcp" },
-                { label: tFooter("db-backup"), path: "/backup" },
+                { label: tFooter("db-backup"), path: "https://archive.org/search?query=creator%3A%22inspector.duckarchive.com%22" },
                 { label: "GitHub", path: "https://github.com/duckarchive/inspector.duckarchive.com" },
               ],
             },

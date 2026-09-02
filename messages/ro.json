@@ -80,7 +80,7 @@
     "privacy-policy": "Politica de confidențialitate",
     "terms": "Termeni și condiții",
     "for-devs": "Pentru dezvoltatori",
-    "api-docs": "Documentația API",
+    "api-docs": "API",
     "mcp": "MCP",
     "db-backup": "Copie publică a bazei de date"
   },
@@ -395,16 +395,6 @@
     "title": "Documentație",
     "description": "Cum se folosește Duck Inspector",
     "placeholder": "Documentația este încă în lucru. Între timp, consultă documentația API sau scrie-ne pe Telegram."
-  },
-  "privacy-policy-page": {
-    "title": "Politica de confidențialitate",
-    "description": "Ce date colectăm și cum le folosim",
-    "placeholder": "Politica de confidențialitate este încă în lucru."
-  },
-  "terms-page": {
-    "title": "Termeni și condiții",
-    "description": "Regulile de utilizare a serviciului",
-    "placeholder": "Termenii și condițiile sunt încă în lucru."
   },
   "mcp-page": {
     "title": "Server MCP",
