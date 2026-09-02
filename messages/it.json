@@ -72,6 +72,19 @@
     "stats": "Statistiche",
     "docs": "Documentazione"
   },
+  "footer": {
+    "description": "Duck Inspector è un progetto volontario e senza scopo di lucro per la ricerca tra archivi di fascicoli, libri e altri materiali, con collegamenti alle loro copie online.",
+    "community": "Comunità",
+    "support-project": "Sostieni il progetto",
+    "for-users": "Per gli utenti",
+    "docs": "Documentazione",
+    "privacy-policy": "Informativa sulla privacy",
+    "terms": "Termini e condizioni",
+    "for-devs": "Per gli sviluppatori",
+    "api-docs": "API",
+    "mcp": "MCP",
+    "db-backup": "Backup pubblico del DB"
+  },
   "metadata": {
     "title": "Duck Inspector — ricerca di file d'archivio online",
     "description": "Un servizio per cercare file d'archivio disponibili online. Inserisci i dettagli del fascicolo in una semplice finestra di ricerca e ottieni un collegamento alla fonte.",
@@ -378,5 +391,20 @@
     "downloading": "Download… {percent}%",
     "hint": "Traduzione automatica dei contenuti del catalogo nel browser. La formulazione può essere approssimativa.",
     "original": "Originale"
+  },
+  "docs-page": {
+    "title": "Documentazione",
+    "description": "Come usare Duck Inspector",
+    "placeholder": "La documentazione è ancora in preparazione. Nel frattempo consulta la documentazione API o scrivici su Telegram."
+  },
+  "mcp-page": {
+    "title": "Server MCP",
+    "description": "Accedi al catalogo di Inspector dagli assistenti IA",
+    "placeholder": "Il server MCP è ancora in preparazione."
+  },
+  "backup-page": {
+    "title": "Backup pubblico del database",
+    "description": "Dump periodici del catalogo aperto",
+    "placeholder": "I dump pubblici sono ancora in preparazione."
   }
 }

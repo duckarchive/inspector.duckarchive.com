@@ -72,6 +72,19 @@
     "stats": "Estadísticas",
     "docs": "Documentación"
   },
+  "footer": {
+    "description": "Duck Inspector es un proyecto voluntario y sin ánimo de lucro para la búsqueda entre archivos de expedientes, libros y otros materiales, con enlaces a sus copias en línea.",
+    "community": "Comunidad",
+    "support-project": "Apoyar el proyecto",
+    "for-users": "Para usuarios",
+    "docs": "Documentación",
+    "privacy-policy": "Política de privacidad",
+    "terms": "Términos y condiciones",
+    "for-devs": "Para desarrolladores",
+    "api-docs": "API",
+    "mcp": "MCP",
+    "db-backup": "Copia pública de la BD"
+  },
   "metadata": {
     "title": "Duck Inspector — búsqueda de expedientes de archivo en línea",
     "description": "Un servicio para buscar expedientes de archivo disponibles en línea. Ingresa los detalles del expediente en una ventana de búsqueda simple y obtén un enlace a la fuente.",
@@ -378,5 +391,20 @@
     "downloading": "Descargando… {percent}%",
     "hint": "Traducción automática del contenido del catálogo en el navegador. La redacción puede ser aproximada.",
     "original": "Original"
+  },
+  "docs-page": {
+    "title": "Documentación",
+    "description": "Cómo usar Duck Inspector",
+    "placeholder": "La documentación aún se está redactando. Mientras tanto, consulta la documentación de la API o escríbenos por Telegram."
+  },
+  "mcp-page": {
+    "title": "Servidor MCP",
+    "description": "Accede al catálogo del Inspector desde asistentes de IA",
+    "placeholder": "El servidor MCP aún se está preparando."
+  },
+  "backup-page": {
+    "title": "Copia pública de la base de datos",
+    "description": "Volcados periódicos del catálogo abierto",
+    "placeholder": "Los volcados públicos aún se están preparando."
   }
 }

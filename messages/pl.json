@@ -72,6 +72,19 @@
     "stats": "Statystyka",
     "docs": "Dokumentacja"
   },
+  "footer": {
+    "description": "Duck Inspector to wolontariacki, niekomercyjny projekt do międzyarchiwalnego wyszukiwania spraw, ksiąg i innych materiałów, z linkami do ich kopii online.",
+    "community": "Społeczność",
+    "support-project": "Wesprzyj projekt",
+    "for-users": "Dla użytkowników",
+    "docs": "Dokumentacja",
+    "privacy-policy": "Polityka prywatności",
+    "terms": "Regulamin",
+    "for-devs": "Dla programistów",
+    "api-docs": "API",
+    "mcp": "MCP",
+    "db-backup": "Publiczna kopia bazy"
+  },
   "metadata": {
     "title": "Duck Inspector — wyszukiwanie archiwów online",
     "description": "Usługa wyszukiwania archiwalnych spraw dostępnych online. Wpisz dane dotyczące sprawy w prostym oknie wyszukiwania i uzyskaj link do źródła.",
@@ -378,5 +391,20 @@
     "downloading": "Pobieranie… {percent}%",
     "hint": "Tłumaczenie maszynowe treści katalogu w przeglądarce. Sformułowania mogą być przybliżone.",
     "original": "Oryginał"
+  },
+  "docs-page": {
+    "title": "Dokumentacja",
+    "description": "Jak korzystać z Duck Inspector",
+    "placeholder": "Dokumentacja jest jeszcze przygotowywana. Na razie zajrzyj do dokumentacji API lub napisz do nas na Telegramie."
+  },
+  "mcp-page": {
+    "title": "Serwer MCP",
+    "description": "Dostęp do katalogu Inspektora z asystentów AI",
+    "placeholder": "Serwer MCP jest jeszcze przygotowywany."
+  },
+  "backup-page": {
+    "title": "Publiczna kopia bazy danych",
+    "description": "Regularne zrzuty otwartego katalogu",
+    "placeholder": "Publiczne zrzuty są jeszcze przygotowywane."
   }
 }

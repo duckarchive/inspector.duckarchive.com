@@ -72,6 +72,19 @@
     "stats": "Statistici",
     "docs": "Documentație"
   },
+  "footer": {
+    "description": "Duck Inspector este un proiect voluntar și necomercial pentru căutarea între arhive a dosarelor, cărților și altor materiale, cu linkuri către copiile lor online.",
+    "community": "Comunitate",
+    "support-project": "Susține proiectul",
+    "for-users": "Pentru utilizatori",
+    "docs": "Documentație",
+    "privacy-policy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții",
+    "for-devs": "Pentru dezvoltatori",
+    "api-docs": "API",
+    "mcp": "MCP",
+    "db-backup": "Copie publică a bazei de date"
+  },
   "metadata": {
     "title": "Duck Inspector — căutare de dosare de arhivă online",
     "description": "Un serviciu pentru căutarea dosarelor de arhivă disponibile online. Introduceți detaliile dosarului într-o fereastră de căutare simplă și obțineți un link către sursă.",
@@ -378,5 +391,20 @@
     "downloading": "Se descarcă… {percent}%",
     "hint": "Traducere automată a conținutului catalogului în browser. Formulările pot fi aproximative.",
     "original": "Original"
+  },
+  "docs-page": {
+    "title": "Documentație",
+    "description": "Cum se folosește Duck Inspector",
+    "placeholder": "Documentația este încă în lucru. Între timp, consultă documentația API sau scrie-ne pe Telegram."
+  },
+  "mcp-page": {
+    "title": "Server MCP",
+    "description": "Acces la catalogul Inspector din asistenți AI",
+    "placeholder": "Serverul MCP este încă în pregătire."
+  },
+  "backup-page": {
+    "title": "Copie publică a bazei de date",
+    "description": "Dump-uri periodice ale catalogului deschis",
+    "placeholder": "Dump-urile publice sunt încă în pregătire."
   }
 }

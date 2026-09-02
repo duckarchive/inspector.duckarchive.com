@@ -72,6 +72,19 @@
     "stats": "Statistika",
     "docs": "Dokumentace"
   },
+  "footer": {
+    "description": "Duck Inspector je dobrovolnický nekomerční projekt pro meziarchivní vyhledávání spisů, knih a dalších materiálů s odkazy na jejich online kopie.",
+    "community": "Komunita",
+    "support-project": "Podpořit projekt",
+    "for-users": "Pro uživatele",
+    "docs": "Dokumentace",
+    "privacy-policy": "Zásady ochrany osobních údajů",
+    "terms": "Podmínky použití",
+    "for-devs": "Pro vývojáře",
+    "api-docs": "API",
+    "mcp": "MCP",
+    "db-backup": "Veřejná záloha databáze"
+  },
   "metadata": {
     "title": "Duck Inspector — vyhledávání archivních spisů online",
     "description": "Služba pro vyhledávání archivních spisů dostupných online. Zadejte údaje o spisu v jednoduchém vyhledávacím okně a získejte odkaz na zdroj.",
@@ -378,5 +391,20 @@
     "downloading": "Stahování… {percent}%",
     "hint": "Strojový překlad obsahu katalogu přímo v prohlížeči. Formulace mohou být přibližné.",
     "original": "Originál"
+  },
+  "docs-page": {
+    "title": "Dokumentace",
+    "description": "Jak používat Duck Inspector",
+    "placeholder": "Dokumentace se stále připravuje. Zatím se podívejte do dokumentace API nebo nám napište na Telegramu."
+  },
+  "mcp-page": {
+    "title": "Server MCP",
+    "description": "Přístup ke katalogu Inspektora z AI asistentů",
+    "placeholder": "Server MCP se stále připravuje."
+  },
+  "backup-page": {
+    "title": "Veřejná záloha databáze",
+    "description": "Pravidelné dumpy otevřeného katalogu",
+    "placeholder": "Veřejné dumpy se stále připravují."
   }
 }
