@@ -72,6 +72,10 @@
     "stats": "Statistici",
     "docs": "Documentație"
   },
+  "footer": {
+    "navigation": "Navigare",
+    "reports": "Rapoarte"
+  },
   "metadata": {
     "title": "Duck Inspector — căutare de dosare de arhivă online",
     "description": "Un serviciu pentru căutarea dosarelor de arhivă disponibile online. Introduceți detaliile dosarului într-o fereastră de căutare simplă și obțineți un link către sursă.",

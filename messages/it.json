@@ -72,6 +72,10 @@
     "stats": "Statistiche",
     "docs": "Documentazione"
   },
+  "footer": {
+    "navigation": "Navigazione",
+    "reports": "Report"
+  },
   "metadata": {
     "title": "Duck Inspector — ricerca di file d'archivio online",
     "description": "Un servizio per cercare file d'archivio disponibili online. Inserisci i dettagli del fascicolo in una semplice finestra di ricerca e ottieni un collegamento alla fonte.",

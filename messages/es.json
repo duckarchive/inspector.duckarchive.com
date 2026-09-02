@@ -72,6 +72,10 @@
     "stats": "Estadísticas",
     "docs": "Documentación"
   },
+  "footer": {
+    "navigation": "Navegación",
+    "reports": "Informes"
+  },
   "metadata": {
     "title": "Duck Inspector — búsqueda de expedientes de archivo en línea",
     "description": "Un servicio para buscar expedientes de archivo disponibles en línea. Ingresa los detalles del expediente en una ventana de búsqueda simple y obtén un enlace a la fuente.",

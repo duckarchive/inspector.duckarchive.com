@@ -72,6 +72,10 @@
     "stats": "Statystyka",
     "docs": "Dokumentacja"
   },
+  "footer": {
+    "navigation": "Nawigacja",
+    "reports": "Raporty"
+  },
   "metadata": {
     "title": "Duck Inspector — wyszukiwanie archiwów online",
     "description": "Usługa wyszukiwania archiwalnych spraw dostępnych online. Wpisz dane dotyczące sprawy w prostym oknie wyszukiwania i uzyskaj link do źródła.",

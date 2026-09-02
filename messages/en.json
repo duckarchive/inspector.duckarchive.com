@@ -72,6 +72,10 @@
     "stats": "Statistics",
     "docs": "Documentation"
   },
+  "footer": {
+    "navigation": "Navigation",
+    "reports": "Reports"
+  },
   "metadata": {
     "title": "Duck Inspector ― search for Ukrainian archive files online",
     "description": "A service for searching Ukrainian archive files available online. Enter the file details in a simple search window and get a link to the source.",

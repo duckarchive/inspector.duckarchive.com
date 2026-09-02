@@ -72,6 +72,10 @@
     "stats": "Statistika",
     "docs": "Dokumentace"
   },
+  "footer": {
+    "navigation": "Navigace",
+    "reports": "Reporty"
+  },
   "metadata": {
     "title": "Duck Inspector — vyhledávání archivních spisů online",
     "description": "Služba pro vyhledávání archivních spisů dostupných online. Zadejte údaje o spisu v jednoduchém vyhledávacím okně a získejte odkaz na zdroj.",
