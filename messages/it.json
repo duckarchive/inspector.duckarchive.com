@@ -73,6 +73,7 @@
     "docs": "Documentazione"
   },
   "footer": {
+    "description": "Duck Inspector è un progetto volontario e senza scopo di lucro per la ricerca tra archivi di fascicoli, libri e altri materiali, con collegamenti alle loro copie online.",
     "community": "Comunità",
     "support-project": "Sostieni il progetto",
     "for-users": "Per gli utenti",

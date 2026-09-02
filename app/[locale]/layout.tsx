@@ -1,3 +1,4 @@
+import { version } from "@/package.json";
 import { getNav } from "@/app/navigation";
 import LangSync from "@/components/lang-sync";
 import { siteConfig } from "@/config/site";
@@ -36,9 +37,9 @@ const LocaleLayout: React.FC<LocaleLayoutProps> = async ({ children, params }) =
       <div className="shrink-0">
         <DuckFooter
           siteUrl={siteConfig.url}
+          version={version}
+          description={tFooter("description")}
           columns={[
-            // The framework appends YouTube/Telegram/WhatsApp to the first
-            // column, so "community" is the only column it can live in.
             {
               title: tFooter("community"),
               items: [{ label: tFooter("support-project"), path: "https://ko-fi.com/duckarchive" }],

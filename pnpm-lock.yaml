@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@duckarchive/framework':
         specifier: github:duckarchive/framework
-        version: https://codeload.github.com/duckarchive/framework/tar.gz/508398fb9690e5e919dfae023c54f93816c80f2c(48ca70d8e60dcc89bcfbd57719bef894)
+        version: https://codeload.github.com/duckarchive/framework/tar.gz/e6c9e3af713098261f3e155721d353c4327f3e02(48ca70d8e60dcc89bcfbd57719bef894)
       '@duckarchive/map':
         specifier: github:duckarchive/map
         version: https://codeload.github.com/duckarchive/map/tar.gz/a4072d553ff2479606e465315f65372516f5f1bb(@heroui/react@3.2.4(@react-aria/i18n@3.13.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@react-aria/ssr@3.10.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@react-aria/utils@3.34.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-aria-components@1.21.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-aria@3.52.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3))(@heroui/styles@3.2.4(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(swr@2.5.1(react@19.2.8))(tailwindcss@4.3.3)
@@ -206,9 +206,9 @@ packages:
     resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
     engines: {node: '>=6.9.0'}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/508398fb9690e5e919dfae023c54f93816c80f2c':
-    resolution: {gitHosted: true, integrity: sha512-jxq++x4MJ+4pR7oJ6Nin+U8SI7O1SMdp3+kGL2DX00fFgCw9IEiERaPjfXLu0xhqLzVrWU6do/k6uPd++T5j/w==, tarball: https://codeload.github.com/duckarchive/framework/tar.gz/508398fb9690e5e919dfae023c54f93816c80f2c}
-    version: 2.3.0
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/e6c9e3af713098261f3e155721d353c4327f3e02':
+    resolution: {gitHosted: true, integrity: sha512-UoiGYNoOaEICTmeFDkDPz1lk5TTQH0yRMjPXtiYV2+0Mq6Mzq8MmaTeQWM9DQO3d2ZiAMHHm0Er0UN5ZuMoS6w==, tarball: https://codeload.github.com/duckarchive/framework/tar.gz/e6c9e3af713098261f3e155721d353c4327f3e02}
+    version: 2.4.1
     peerDependencies:
       '@heroui/react': ^3.2.2
       '@types/react': ^19.1.8
@@ -3989,7 +3989,7 @@ snapshots:
 
   '@babel/runtime@7.29.7': {}
 
-  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/508398fb9690e5e919dfae023c54f93816c80f2c(48ca70d8e60dcc89bcfbd57719bef894)':
+  '@duckarchive/framework@https://codeload.github.com/duckarchive/framework/tar.gz/e6c9e3af713098261f3e155721d353c4327f3e02(48ca70d8e60dcc89bcfbd57719bef894)':
     dependencies:
       '@heroui/react': 3.2.4(@react-aria/i18n@3.13.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@react-aria/ssr@3.10.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@react-aria/utils@3.34.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@react-spectrum/provider@3.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-aria-components@1.21.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-aria@3.52.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(tailwindcss@4.3.3)
       '@types/react': 19.2.18

@@ -73,6 +73,7 @@
     "docs": "Documentation"
   },
   "footer": {
+    "description": "Duck Inspector is a volunteer, non-commercial project for cross-archive search of files, books and other materials, with links to their online copies.",
     "community": "Community",
     "support-project": "Support the project",
     "for-users": "For users",

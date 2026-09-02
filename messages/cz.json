@@ -73,6 +73,7 @@
     "docs": "Dokumentace"
   },
   "footer": {
+    "description": "Duck Inspector je dobrovolnický nekomerční projekt pro meziarchivní vyhledávání spisů, knih a dalších materiálů s odkazy na jejich online kopie.",
     "community": "Komunita",
     "support-project": "Podpořit projekt",
     "for-users": "Pro uživatele",
