@@ -7,6 +7,9 @@ import { Link, toast } from "@heroui/react";
 
 // const TO_DATE = new Date("2025-10-01T00:00:00Z");
 
+// Temporarily disabled: set back to true to redirect ru-preferring browsers to /friends again.
+const BLOCK_RUSSIAN = false;
+
 const useNoRussians = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -17,6 +20,7 @@ const useNoRussians = () => {
   useEffect(() => {
     if (lang) {
       if (lang.includes("ru")) {
+        if (!BLOCK_RUSSIAN) return;
         router.push("/friends");
       } else if (!lang.includes("uk")) {
         askForDonation();
@@ -25,7 +29,7 @@ const useNoRussians = () => {
   }, [router, pathname, lang, askForDonation]);
 
   useEffect(() => {
-    if (preferredLangs.length > 0) {
+    if (BLOCK_RUSSIAN && preferredLangs.length > 0) {
       const ukPos = preferredLangs.findIndex((l) => l.startsWith("uk"));
       const ruPos = preferredLangs.findIndex((l) => l.startsWith("ru"));
 
